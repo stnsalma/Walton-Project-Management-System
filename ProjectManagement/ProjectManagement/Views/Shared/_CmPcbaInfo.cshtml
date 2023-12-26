@@ -1,0 +1,51 @@
+﻿@using System.Activities.Expressions
+@model ProjectManagement.ViewModels.Commercial.VmSpecification
+
+
+@using (Html.BeginForm("Specification", "Commercial"))
+{
+    
+    <div class="col-lg-12">
+        @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+        @Html.HiddenFor(model => model.PhPcbaInfo.PhPcbaInfoId)
+        @Html.HiddenFor(model=>model.TabIdentity, new{@Value=1})
+        <div class="form-body">
+            <h3 class="form-section">PCBA Information</h3>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">PCBA Vendor*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhPcbaInfo.VendorName, new { @class = "form-control", @placeholder="Vendor1, Vendor2, Vendor3 -Write in Comma Separated Way" })
+                            @Html.ValidationMessageFor(model => model.PhPcbaInfo.VendorName, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Final Vendor</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhPcbaInfo.FinalVendor, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="col-md-offset-3 col-md-9">
+                        @if (Model.PhPcbaInfo.PhPcbaInfoId > 0)
+                        {
+                            <button class="btn sbold uppercase btn-outline blue">Update</button>
+                        }
+                        else
+                        {
+                            <button class="btn sbold uppercase btn-outline green">Save</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

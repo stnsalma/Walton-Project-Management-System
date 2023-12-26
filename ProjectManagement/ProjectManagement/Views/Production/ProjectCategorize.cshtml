@@ -1,0 +1,802 @@
+﻿@*ProjectCategorize*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.DAL.DbModel
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+
+    }
+   
+</style>
+
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Categorization</p>
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Models
+        </div>
+        <div class="tools">
+            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable table-responsive">
+            <table id="tbl22" class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content note">
+                    <tr>
+                        <th>#</th>
+                        <th style="text-align: left;">  Model </th>
+                        <th style="text-align: left;"> Product Family </th>
+                        <th style="text-align: left; text-align: center"> Assembly Category </th>
+                        <th style="text-align: left; text-align: center"> SMT Category </th>
+                        <th style="text-align: left; text-align: center"> Housing Category </th>
+                        <th style="text-align: center;color: green;font-weight: bold"> SAVE </th>
+                        <th style="text-align: center;color:red;font-weight: bold"> COMPLETE </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.GetProjectForCategorization != null)
+                    {
+                        foreach (var items in ViewBag.GetProjectForCategorization)
+                        {
+                            <tr>
+                                <td></td>
+                                <td style="border: 1px solid black">@items.ProjectName</td>
+                                <td style="border: 1px solid black">@items.ProjectType</td>
+                                <td style="border: 1px solid black;text-align: center">
+                                    
+                                    @if (@items.AssemblyCategory != "" && @items.AssemblyCategory != null)
+                                    {
+                                        @items.AssemblyCategory
+                                    }
+                                    else
+                                    {
+                                        <select name="issueList[0].AssemblyCategory" id="AssemblyCategory" class="form-control input-large AssemblyCategory"></select>
+                                    }
+                                    
+                                </td>
+                                <td style="border: 1px solid black; text-align: center">
+                                    @if (@items.SmtCategory != "" && @items.SmtCategory != null)
+                                    {
+                                        @items.SmtCategory
+                                    }
+                                    else
+                                    {
+                                        <select name="issueList[0].SmtCategory" id="SmtCategory" class="form-control input-large SmtCategory"></select>
+                                    }
+                                  
+                                </td>
+                                <td style="border: 1px solid black; text-align: center">
+                                    @if (@items.HousingCategory != "" && @items.HousingCategory != null)
+                                    {
+                                        @items.HousingCategory
+                                    }
+                                    else
+                                    {
+                                        <select name="issueList[0].HousingCategory" id="HousingCategory" class="form-control input-large HousingCategory"></select>
+                                    }
+                                  
+                                </td>
+                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                    <button type="submit" class="btn btn-success saveBtns" style="text-align: center" id="saveBtns">
+                                        <span class="glyphicon glyphicon-save">SAVE</span>
+                                    </button>
+                                </td>
+                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                    <button type="submit" class="btn btn-danger completeBtns" style="text-align: center" id="completeBtns">
+                                        COMPLETE
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box green-dark">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Saved Model
+        </div>
+        <div class="tools">
+            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable table-responsive">
+            <table id="tbl23" class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content note">
+                    <tr>
+                        <th>#</th>
+                        <th style="display:none">Id</th>
+                        <th style="text-align: left;">  Model </th>
+                        <th style="text-align: left;"> Product Family </th>
+                        <th style="text-align: left;"> Assembly Category </th>
+                        <th style="text-align: left;"> SMT Category </th>
+                        <th style="text-align: left;"> Housing Category </th>
+                        <th style="text-align: center;color: green;font-weight: bold"> EDIT </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.GetCompletedCategorization != null)
+                    {
+                        foreach (var items in ViewBag.GetCompletedCategorization)
+                        {
+                            <tr>
+                                <td></td>
+                                <td style="display: none">@items.Id</td>
+                                <td style="border: 1px solid black">@items.ProjectName</td>
+                                <td style="border: 1px solid black">@items.ProductFamily</td>
+                                <td style="border: 1px solid black">
+                                    @items.AssemblyCategory
+                                </td>
+                                <td style="border: 1px solid black">
+                                    @items.SmtCategory
+                                </td>
+                                <td style="border: 1px solid black">
+                                    @items.HousingCategory
+                                </td>
+                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                    <button type="submit" class="btn btn-success editBtns" style="text-align: center" id="editBtns">
+                                        <span class="glyphicon glyphicon-edit">EDIT</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" alt="Loading..." />
+</div>
+
+<div class="modal fade" id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Edit</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <div class="form-group" style="display: none">
+                        <label class="control-label">ID :</label>
+                        <input name="CatIds" id="CatIds" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Model :</label>
+                        <input name="Model1" id="Model1" type="text" class="form-control" disabled="disabled" />
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Product Family :</label>
+                        <input name="ProductFamily1" id="ProductFamily1" type="text" class="form-control" disabled="disabled" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="single" class="control-label">Assembly Category :</label>
+                        <select name="issueList1[0].AssemblyCategory1" id="AssemblyCategory1" class="form-control input-small AssemblyCategory1"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">SMT Category :</label>
+                        <select name="issueList1[0].SmtCategory1" id="SmtCategory1" class="form-control input-small SmtCategory1"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">Housing Category :</label>
+                        <select name="issueList1[0].HousingCategory1" id="HousingCategory1" class="form-control input-small HousingCategory1"></select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave" class="btn green smitModalOfSave" value="Update" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    var data1;
+    $(function () {
+
+        var obj11 = {};
+        var currentRow;
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+
+        $("body").on("click", "#tbl23 .editBtns", function () {
+            $('#loading').show();
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl23');
+
+            var CatIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var Model1 = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var ProductFamily1 = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var AssemblyCategory1 = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var SmtCategory1 = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+            var HousingCategory1 = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#CatIds').val(CatIds);
+            $('#Model1').val(Model1);
+            $('#ProductFamily1').val(ProductFamily1);
+            $('#AssemblyCategory1').text(AssemblyCategory1);
+            $('#SmtCategory1').text(SmtCategory1);
+            $('#HousingCategory1').text(HousingCategory1);
+
+            currentRow = $(this).closest('tr');
+
+            var aa;
+            var bb;
+            var cc;
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+
+                //
+                obj11.AssemblyCategory = ProductFamily1;
+                if (obj11.AssemblyCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAssemblyCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                            aa = "ok";
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $('.AssemblyCategory1').append(option);
+
+                }
+            }//asembly
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category2;
+                //
+                obj11.SmtCategory = ProductFamily1;
+                if (obj11.SmtCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSmtCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category2 = data1;
+                            bb = "ok";
+                        }
+                    });
+                }//end if
+                for (var i1 = 0; i1 < category2.list.length; i1++) {
+                    var option1 = '<option value="' + category2.list[i1].Value + '">' + category2.list[i1].Text + '</option>';
+
+                    $('.SmtCategory1').append(option1);
+                }
+            }//smt
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category3;
+                //
+                obj11.HousingCategory = ProductFamily1;
+                if (obj11.HousingCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetHousingCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category3 = data1;
+                            cc = "ok";
+                            //$('#loading').hide();
+                        }
+                    });
+                }//end if
+                for (var i2 = 0; i2 < category3.list.length; i2++) {
+                    var option2 = '<option value="' + category3.list[i2].Value + '">' + category3.list[i2].Text + '</option>';
+
+                    $('.HousingCategory1').append(option2);
+                }
+            }//housing
+
+
+            if (aa == "ok" && bb == "ok" && cc == "ok") {
+                $('#loading').hide();
+                // HideProgress();
+            }
+        });
+
+
+        $('.smitModalOfSave').on('click', function () {
+
+            $('#draggable').modal('hide');
+
+            var CatIds;
+            var AssemblyCategory1;
+            var SmtCategory1;
+            var HousingCategory1;
+
+            var obj = {};
+
+
+            CatIds = $('#CatIds').val();
+            AssemblyCategory1 = $('#AssemblyCategory1 option:selected').text();
+            SmtCategory1 = $('#SmtCategory1 option:selected').text();
+            HousingCategory1 = $('#HousingCategory1 option:selected').text();
+
+            if (AssemblyCategory1 == "Select Assembly") {
+                AssemblyCategory1 = "";
+            }
+            if (SmtCategory1 == "Select Smt") {
+                SmtCategory1 = "";
+            }
+            if (HousingCategory1 == "Select Housing") {
+                HousingCategory1 = "";
+            }
+            // $('#loading').show();
+            obj.CatIds = CatIds;
+            obj.AssemblyCategory1 = AssemblyCategory1;
+            obj.SmtCategory1 = SmtCategory1;
+            obj.HousingCategory1 = HousingCategory1;
+
+            var datas = JSON.stringify(obj);
+            console.log(datas);
+            $.ajax({
+                url: '@Url.Action("UpdateCategorizeData", "Production")',
+                type: 'POST',
+                data: datas,
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data.data == "OK") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Updated Successfully.",
+                        }).show();
+
+                        $('#loading').hide();
+                       
+                        window.location.reload(true);
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+
+        var tt = $('#tbl22').DataTable({
+
+            "paging": true,
+            "lengthMenu": [[3, 10, 30, 50, -1], [3, 10, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            },
+            "order": [[1, 'asc']]
+        });
+        tt.on('order.dt search.dt', function () {
+            tt.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var tt2 = $('#tbl23').DataTable({
+
+            "paging": true,
+            "lengthMenu": [[10, 30, 50, -1], [10, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            },
+            "order": [[2, 'asc']]
+        });
+        tt2.on('order.dt search.dt', function () {
+            tt2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $("body").on('focus', '.AssemblyCategory', function () {
+
+            var table = document.getElementById('tbl22');
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var pType = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.AssemblyCategory = pType;
+                if (obj11.AssemblyCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAssemblyCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end assembly
+
+        @*$("body").on('focus', '.AssemblyCategory1', function () {
+
+            var table = document.getElementById('tbl23');
+            var rowIndex = $(this).closest('tr').index() + 1;
+
+            var pType = $('#ProductFamily1').val();
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.AssemblyCategory = pType;
+                if (obj11.AssemblyCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAssemblyCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end assembly1*@
+
+        $("body").on('focus', '.SmtCategory', function () {
+
+            var table = document.getElementById('tbl22');
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var pType = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.SmtCategory = pType;
+                if (obj11.SmtCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSmtCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end smt
+        @*$("body").on('focus', '.SmtCategory1', function () {
+
+            var pType = $('#ProductFamily1').val();
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.SmtCategory = pType;
+                if (obj11.SmtCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSmtCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end smt1*@
+        $("body").on('focus', '.HousingCategory', function () {
+
+            var table = document.getElementById('tbl22');
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var pType = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.HousingCategory = pType;
+                if (obj11.HousingCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetHousingCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end housing
+        @*$("body").on('focus', '.HousingCategory1', function () {
+
+            var pType = $('#ProductFamily1').val();
+
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                obj11.HousingCategory = pType;
+                if (obj11.HousingCategory != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetHousingCategory", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });//end housing1*@
+
+        $("body").on("click", "#tbl22 #saveBtns", function () {
+            $('#loading').show();
+            //event.preventDefault();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl22');
+            var row = $(this).closest("tr");
+
+            var model = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var types = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var assembly = $(this).closest('tr').find('.AssemblyCategory option:selected').text();
+            //var assembly1 =$(this).closest('tr').find('#AssemblyCategory option:selected').text();// $("#AssemblyCategory option:selected").html();
+
+            var smtCat = $(this).closest('tr').find('.SmtCategory option:selected').text();// $("#SmtCategory option:selected").html();
+            var housingCat = $(this).closest('tr').find('.HousingCategory option:selected').text();//$("#HousingCategory option:selected").html();
+
+            if (assembly == undefined) {
+                assembly = "";
+            }
+            if (assembly == "Select Assembly") {
+                assembly = "";
+            }
+            if (smtCat == undefined) {
+                smtCat = "";
+            }
+            if (smtCat == "Select Smt") {
+                smtCat = "";
+            }
+            if (housingCat == undefined) {
+                housingCat = "";
+            }
+            if (housingCat == "Select Housing") {
+                housingCat = "";
+            }
+            var obj = {};
+            obj.ProjectName = model;
+            obj.ProductFamily = types;
+            obj.AssemblyCategory = assembly;
+            obj.SmtCategory = smtCat;
+            obj.HousingCategory = housingCat;
+
+            var data2 = JSON.stringify(obj);
+
+            alertify.confirm('Save Data', 'Do you want to Save this?', function () {
+                alertify.success('Successfully Submitted.');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SaveCategorizeData", "Production")',
+                    // data: '{obj:' + JSON.stringify(obj) + '}',
+                    data: data2,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Successfully Submitted.",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+
+                            window.location.reload(true);
+                        }
+                        if (data.data == "Okis") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Updated Successfully.",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+
+                            window.location.reload(true);
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+                , function () {
+                    alertify.error('Cancel');
+                    $('#loading').hide();
+                });
+        });
+        //
+        $("body").on("click", "#tbl22 #completeBtns", function () {
+            $('#loading').show();
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl22');
+            var row = $(this).closest("tr");
+
+            var model = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var types = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+
+
+            var obj = {};
+            obj.ProjectName = model;
+            obj.ProductFamily = types;
+
+            var data2 = JSON.stringify(obj);
+
+            alertify.confirm('Complete', 'Do you want to Complete this?', function () {
+                alertify.success('Completed Successfully.');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CompleteCategorizeData", "Production")',
+                    data: data2,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Completed Successfully.",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+
+                            window.location.reload(true);
+                        }
+
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+                , function () {
+                    alertify.error('Cancel');
+                    $('#loading').hide();
+                });
+        });
+    });
+
+</script>

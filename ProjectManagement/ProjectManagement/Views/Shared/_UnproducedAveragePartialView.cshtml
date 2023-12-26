@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ProjectManagement.Models.SixMonthsUnproducedAverageQtyModel>
+    @{
+        ViewBag.Title = "SixMonthsUnproducedAverageQty";
+    }
+
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">Average Unproduced Quantity</div>@* closed projects with PO date in between 09 to 06 month before today *@
+        </div>
+        <div class="portlet-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Proejct Type</th>
+                            <th class="text-center">Unproduced Average Qty</th>
+                            <th class="text-center">Unproduced(%)</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@v.ProjectType</td>
+                                <td class="text-center">@v.AverageValue</td>
+                                <td class="text-center">@v.Percentage%</td>
+                                <td class="text-center">
+                                    <input type="button" class="btn btn-success btn-sm details" value="Details" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('table').on('click', '.details', function () {
+            var type = $(this).closest('tr').find('td:eq(0)').html();
+            console.log(type);
+            var url = '@Url.Action("UnproducedAverageDetails","Common")';
+            url = url + '?type=' + type;
+            window.location = url;
+        });
+    </script>
+
+

@@ -1,0 +1,23 @@
+﻿
+@model ProjectManagement.Models.Custom_Pm_IncentiveModel
+
+<tr id="@Model.ProjectId" class="tableTrClsForAccessories">
+    @using (Html.BeginCollectionItem("Pm_IncentiveModel.Custom_Pm_IncentiveModel"))
+    {
+        <td id="projectId" class="projectId" style="display:none;">@Model.ProjectId</td>
+        <td style="display:none;" id="monNum" class="monNum">@Model.MonNum</td>
+        
+        <td style="width:300px;" id="incentiveTypes" class="incentiveTypes">@Model.IncentiveTypeForAccessories</td>
+        <td id="proName" class="proName">@Model.ProjectName</td>
+        <td id="employeeCode" class="employeeCode">@Model.EmployeeCode</td>
+        <td id="amount" class="amount">@Model.Amount</td>
+        <td style="width:15%;" id="remarks" class="remarks">@Model.Remarks</td>
+        <td id="deductionAmount" class="deductionAmount">@Model.DeductionAmount</td>
+        <td style="width:15%;" id="d_Remarks" class="d_Remarks">@Model.D_Remarks</td>
+        <td id="finalAmount" class="finalAmount">@Model.FinalAmount</td>
+        <td id="month" class="month">@Model.Month</td>
+        <td id="year" class="year">@Model.Year</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+
+</tr>

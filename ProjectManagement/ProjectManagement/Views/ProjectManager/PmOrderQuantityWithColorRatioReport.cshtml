@@ -1,0 +1,135 @@
+﻿@{
+    ViewBag.Title = "PmOrderQuantityWithColorRatioReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Report</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.DropDownList("ProjectName", new SelectList(ViewBag.ProjectName, "ProjectName", "ProjectName"), "Select One", new { @class = "form-control" })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-container">
+                    <table id="tblReport" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Model Name</th>
+                                <th class="text-center">PM ordered quantity with color ratio</th>
+                                <th class="text-center">Inventory Received Quantity with color ratio</th>
+                                <th class="text-center">Complete(Packing) Production Quantity with color ratio</th>
+                                <th class="text-center">Received handsets Quantity in Ware House with color ratio</th>
+                                <th class="text-center">Handset Sent to Service Centre (Quantity & color ratio)</th>
+                                <th class="text-center">Pending Handset Quantity for Production with color ratio</th>
+                                <th class="text-center">Production Team Comment</th>
+                                <th class="text-center">Cocern PM comment</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ProjectName').chosen();
+    $('#ProjectName').on('change', function () {
+        $('#tblReport tbody').empty();
+        var url = '@Url.Action("GetOrderQuantityReport", "ProjectManager")';
+        var projectName = $('#ProjectName option:selected').text();
+        var model = projectName;
+        model = model.replace(/[.(]4G[.)]|4G/i, '');
+        model = model.trim();
+        console.log(projectName + '>' + model);
+        $.post(url, { projectname: projectName, model: model }, function (data) {
+            //console.log(data);
+            var obj = { total: data[0], totalbreakdown: data[1], warquantity: data[2], servquantity:data[3] };
+            //console.log(obj.total);
+            for (var i = 0; i<obj.total.length; i++) {
+                //-------PmOrderQuantity--------------
+                var pmcolorwiseorderquantity = '';
+                for (var j = 0; j < obj.totalbreakdown.length; j++) {
+                    if (obj.total[i].OrderNumber == obj.totalbreakdown[j].OrderNumber) {
+                        pmcolorwiseorderquantity = pmcolorwiseorderquantity + obj.totalbreakdown[j].Color + ':' + obj.totalbreakdown[j].PmOrderQuantity + '</br>';
+                    }
+                }
+                //-----------Warhouse Receive Quantity----------
+                var warquantitytotal = 0;
+                var warquancolorwise = '';
+                for (var k = 0; k < obj.warquantity.length; k++) {
+                    var wo = obj.warquantity[k].WO.split('_');
+                    $.each(wo, function (index, value) {
+                        if (index == 1) {//order no is at index 1
+                            if (value.match(obj.total[i].OrderNumber)) {
+                                warquantitytotal = parseInt(warquantitytotal) + parseInt(obj.warquantity[k].Counts);
+                                warquancolorwise = warquancolorwise + obj.warquantity[k].Color + ': ' + obj.warquantity[k].Counts + '</br>';
+                            }
+                        }
+                    });
+                }
+                console.log(warquantitytotal + '\n');
+                //-------------Service Center receive quantity--------------
+                var servquantitytotal = 0;
+                var servquantitycolorwise = '';
+                for (k = 0; k < obj.servquantity.length; k++) {
+                    if ((obj.servquantity[k].WO).match(obj.total[i].OrderNumber)) {
+                        //alert('yes');
+                        servquantitytotal = parseInt(servquantitytotal) + parseInt(obj.servquantity[k].Counts);
+                        servquantitycolorwise = servquantitycolorwise + obj.servquantity[k].Color + ': ' + obj.servquantity[k].Counts + '</br>';
+                    }
+                }
+                //---------------------------------------
+                var row = '<tr>'
+                + '<td class="hidden">' + obj.total[i].OrderNumber + '</td>'
+                + '<td class="text-center">' + projectName + ',order no: ' + obj.total[i].OrderNumber + '</td>'
+                + '<td class="text-center">' +
+                    'total:' +
+                    obj.total[i].PmOrderQuantity + '</br>' + pmcolorwiseorderquantity +
+                    '</td>'
+                + '<td class="text-center"></td>'
+                + '<td class="text-center"></td>'
+                + '<td class="text-center">total: ' + warquantitytotal + '</br>' + warquancolorwise + '</td>'
+                + '<td class="text-center">total:'+servquantitytotal+'</br>'+servquantitycolorwise+'</td>'
+                + '<td class="text-center"></td>'
+                + '<td class="text-center"></td>'
+                + '<td class="text-center"></td>'
+                + '</tr>';
+                $('#tblReport tbody').append(row);
+            }
+            $('#tblReport > tbody > tr').each(function () {
+                //var rowno = $(this).index();
+                //console.log(rowno);
+                var qq = $(this).find('td:eq(0)').text();
+                if (qq == 1) {
+                    console.log('row>>'+qq);
+                    warquantitytotal = 0;
+                    warquancolorwise = '';
+                    for (k = 0; k < obj.warquantity.length; k++) {
+                        wo = obj.warquantity[k].WO.split('_');
+                        $.each(wo, function (index, value) {
+                            if (index == 1) {//order no is at index 1
+                                if (!value.match(/[0-9]/)) {
+                                        warquantitytotal = parseInt(warquantitytotal) + parseInt(obj.warquantity[k].Counts);
+                                        warquancolorwise = warquancolorwise + obj.warquantity[k].Color + ': ' + obj.warquantity[k].Counts + '</br>';
+                                }
+                            }
+                        });
+                    }
+                    var currentValue = $(this).find('td:eq(5)').text();
+                    if (!currentValue.match(/[1-9]/)) {
+                        warquantitytotal = 'total: ' + warquantitytotal + '</br>' + warquancolorwise;
+                        $(this).find('td:eq(5)').html(warquantitytotal);
+                    }  
+                }
+            });
+        });
+    });
+</script>

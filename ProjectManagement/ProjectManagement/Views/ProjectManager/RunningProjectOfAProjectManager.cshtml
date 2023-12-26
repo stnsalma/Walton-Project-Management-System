@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "RunningProjectOfAProjectManager";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-title">
+        <h1>
+            Welcome!@ViewBag.UserInfo.UserFullName
+
+            @if (ViewBag.UserInfo.RoleName == "PMHEAD")
+            {
+                <small>Head of Project Management</small>
+
+            }
+
+
+
+
+
+
+
+        </h1>
+
+
+    </div>
+
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Running Projects
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+
+            <a href="javascript:;" class="reload"> </a>
+            @*<a href="javascript:;" class="remove"> </a>*@
+        </div>
+    </div>
+    <div class="portlet-body flip-scroll">
+        <table class="table table-bordered table-striped table-condensed flip-content table-responsive" id="NewProjectTable">
+            <thead class="flip-content">
+                <tr>
+                    @*<th style="display:none;">ProjectMasterID</th>*@
+                    <th> Project Name </th>
+                    <th> Suppiler Name </th>
+                    <th> Type </th>
+            
+                    <th class="numeric"> PO Date </th>
+                    
+                    <th class="numeric"> Shipment Last Date </th>
+
+
+          
+                    <th class="numeric"> Chipset </th>
+                    <th class="numeric"> Action </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var project in Model.ProjectMasters)
+                    {
+                        <tr>
+                            <td style="display:none;"><input type="hidden" value="@project.ProjectMasterId" id="idProjectMaseterId" class="clsProjectMaseterId" /></td>
+                            <td> @project.ProjectName </td>
+                            <td>@project.SupplierName </td>
+                            <td class="numeric"> @project.ProjectType</td>
+                          
+                            <td class="numeric"> @project.ApproxProjectOrderDate </td>
+                         
+                            <td class="numeric"> @project.ApproxShipmentDate </td>
+                          
+                            <td class="numeric">@project.Chipset  </td>
+
+
+
+                            <td class="numeric">
+
+                                <button class="btn btn-circle btn-sm blue btn-outline" id="btnProjectAssign">H/W Details<i class="icon-doc"> </i></button>
+                                <button class="btn btn-circle btn-sm blue btn-outline" id="btnProjectAssign">S/W Details<i class="icon-doc"> </i></button>
+
+
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

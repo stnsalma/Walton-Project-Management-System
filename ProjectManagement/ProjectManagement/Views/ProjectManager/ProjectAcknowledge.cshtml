@@ -1,0 +1,347 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.ProjectManager.ProjectAcknowledgementViewModel
+
+@{
+    ViewBag.Title = "Project Acknowledgement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .row-header {
+        background-color: #c2def7;
+        margin: 10px 0;
+        font-weight:700;
+    }
+    .rm {
+        font-size: 12px;
+        /*font-family: 'Courier New';*/
+        /*margin: 0px;*/
+        /*background-color: #F8F8F8;*/
+        padding: 10px;
+    }
+
+    .border {
+        border: 1px solid #444;
+        border-radius: 5px 5px 5px 5px !important;
+    }
+
+    legend {
+        margin: 0 20px;
+        width: auto;
+    }
+
+    .right-btn {
+        position: absolute;
+        right: 35px;
+        top: 15px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Add/Update Acknowledgement</span>
+                    <span>
+                        <a href="/ProjectManager/ProjectAcknowledgedList" class="btn green-haze btn-outline btn-circle btn-sm ">Back</a>
+                    </span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                @using (Html.BeginForm("SavePMAcknowledge", "ProjectManager", FormMethod.Post))
+                {
+                <div class="form-group row row_design_detail ">
+
+
+                    <div class="form-group row row_design form-md-line-input has-success">
+                        <label class="control-label col-md-2 col-md-offset-1">Project Name</label>
+                        <div class="col-md-3">
+                            @Model.ProjectName
+                            @Html.HiddenFor(tr => Model.ProjectName)
+                            
+                        </div>
+                        <label class="control-label col-md-3">Plan Id</label>
+                        <div class="col-md-3">
+                            @Model.PlanId
+                            @Html.HiddenFor(tr => Model.PlanId)
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-sm-12">
+
+                        <div class=" row row_design row-header">
+                            <label class="control-label col-md-2 col-md-offset-1"> Process</label>
+                            <label class="control-label col-md-3"> Dates</label>
+                            <label class="control-label col-md-3 "> Actual Date</label>
+                            <label class="control-label col-md-3 "> Acknowledge</label>
+
+                        </div>
+                        @if (Model.SMTAcknowledgements.Count()>0)
+                        {
+                        <fieldset class="border">
+                            <legend>SMT: </legend>
+                            
+                            @for (int i = 0; i < Model.SMTAcknowledgements.Count; i++)
+                            {
+                            <div class="rm">
+                                <div class="row row_design  has-success">
+
+                                    <div class="col-sm-2 col-md-offset-1">
+                                        @Model.SMTAcknowledgements[i].AllType
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].AllType)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].ProjectId)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].Id)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].PlanId)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].OrderNumber)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].PoCategory)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].ProjectName)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].ProcessType)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @(String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy}", Model.SMTAcknowledgements[i].S_Date, Model.SMTAcknowledgements[i].E_Date))
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].S_Date)
+                                        @Html.HiddenFor(tr => Model.SMTAcknowledgements[i].E_Date)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group input-group-sm">
+
+                                            @Html.TextBoxFor(tr=> Model.SMTAcknowledgements[i].AcknowledgeDateText, new { @class = "form-control date_picker", placeholder = "Pick a Date..." })
+
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.SMTAcknowledgements[i].AcknowledgeStatus, "True", new {@name="smtradio" + i +""})
+                                                True
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.SMTAcknowledgements[i].AcknowledgeStatus, "False", new {@name="smtradio" + i +""})
+                                                False
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.SMTAcknowledgements[i].AcknowledgeStatus, "N/A", new {@name="smtradio" + i +""})
+                                                N/A
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                            
+                                        </div>
+                                </div>
+                                <br />
+                            </div>
+                            }
+                        </fieldset>
+
+                        }
+
+                        @if (Model.HousingAcknowledgements.Count()>0)
+                        {
+
+                        <fieldset class="border">
+                            <legend>Housing: </legend>
+                            
+                            @for (int i = 0;  i< Model.HousingAcknowledgements.Count; i++)
+                            {
+                            <div class="rm">
+                                <div class="row row_design  has-success">
+
+                                    <div class="col-sm-2 col-md-offset-1">
+                                        @Model.HousingAcknowledgements[i].AllType
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].AllType)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].ProjectId)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].Id)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].PlanId)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].OrderNumber)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].PoCategory)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].ProjectName)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].ProcessType)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @(String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy}", Model.HousingAcknowledgements[i].S_Date, Model.HousingAcknowledgements[i].E_Date))
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].S_Date)
+                                        @Html.HiddenFor(tr => Model.HousingAcknowledgements[i].E_Date)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group input-group-sm">
+
+                                            @Html.TextBoxFor(tr=>Model.HousingAcknowledgements[i].AcknowledgeDateText, new { @class = "form-control date_picker", placeholder = "Pick a Date..." })
+
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.HousingAcknowledgements[i].AcknowledgeStatus, "True", new {@name="housingradio" + i +""})
+                                                True
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.HousingAcknowledgements[i].AcknowledgeStatus, "False", new {@name="housingradio" + i +""})
+                                                False
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.HousingAcknowledgements[i].AcknowledgeStatus, "N/A", new {@name="housingradio" + i +""})
+                                                N/A
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            }
+                        </fieldset>
+                        }
+                        @if (Model.BatteryAcknowledgements.Count()>0)
+                        {
+
+                        <fieldset class="border">
+                            <legend>Battery: </legend>
+                            
+                            @for (int i = 0; i < Model.BatteryAcknowledgements.Count; i++)
+                            {
+                            <div class="rm">
+                                <div class="row row_design  has-success">
+
+                                    <div class="col-sm-2 col-md-offset-1">
+                                        @Model.BatteryAcknowledgements[i].AllType
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].AllType)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].ProjectId)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].Id)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].PlanId)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].OrderNumber)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].PoCategory)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].ProjectName)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].ProcessType)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @(String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy}", Model.BatteryAcknowledgements[i].S_Date, Model.BatteryAcknowledgements[i].E_Date))
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].S_Date)
+                                        @Html.HiddenFor(tr => Model.BatteryAcknowledgements[i].E_Date)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group input-group-sm">
+
+                                            @Html.TextBoxFor(tr=>Model.BatteryAcknowledgements[i].AcknowledgeDateText, new { @class = "form-control date_picker", placeholder = "Pick a Date..." })
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.BatteryAcknowledgements[i].AcknowledgeStatus, "True", new {@name="batteryradio" + i +""})
+                                                True
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.BatteryAcknowledgements[i].AcknowledgeStatus, "False", new {@name="batteryradio" + i +""})
+                                                False
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.BatteryAcknowledgements[i].AcknowledgeStatus, "N/A", new {@name="batteryradio" + i +""})
+                                                N/A
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            }
+                        </fieldset>
+
+                        }
+                        @if (Model.AssemblyAcknowledgements.Count()>0)
+                        {
+
+                        <fieldset class="border">
+                            <legend>Assebly/Packing: </legend>
+                            
+                            @for (int i = 0; i < Model.AssemblyAcknowledgements.Count; i++)
+                            {
+                            <div class="rm">
+                                <div class="row row_design  has-success">
+
+                                    <div class="col-sm-2 col-md-offset-1">
+                                        @Model.AssemblyAcknowledgements[i].AllType
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].AllType)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].ProjectId)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].Id)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].PlanId)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].OrderNumber)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].PoCategory)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].ProjectName)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].ProcessType)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        @(String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy}", Model.AssemblyAcknowledgements[i].S_Date, Model.AssemblyAcknowledgements[i].E_Date))
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].S_Date)
+                                        @Html.HiddenFor(tr => Model.AssemblyAcknowledgements[i].E_Date)
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group input-group-sm">
+                                            
+                                            @Html.TextBoxFor(tr=>Model.AssemblyAcknowledgements[i].AcknowledgeDateText, new { @class = "form-control date_picker", placeholder = "Pick a Date..." })
+                                     
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="mt-radio-inline">
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.AssemblyAcknowledgements[i].AcknowledgeStatus, "True", new {@name="assemblyradio" + i +""})
+                                                True
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.AssemblyAcknowledgements[i].AcknowledgeStatus, "False", new {@name="assemblyradio" + i +""})
+                                                False
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                @Html.RadioButtonFor(x=>Model.AssemblyAcknowledgements[i].AcknowledgeStatus, "N/A", new {@name="assemblyradio" + i +""})
+                                                N/A
+                                                <span></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+                            }
+                        </fieldset>
+
+                        }
+                    </div>
+
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-4 col-md-8">
+                            <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save All" />
+                        </div>
+                    </div>
+                </div>
+                
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".date_picker").Zebra_DatePicker({ format: 'yyyy/mm/dd' });
+    });
+    
+</script>

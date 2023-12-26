@@ -1,0 +1,3478 @@
+﻿@*<h2>All_QcMembersMonthlyIncentive</h2>*@
+
+@using System
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmAllIncentiveList
+@{
+    ViewBag.Title = "All_QcMembersMonthlyIncentive";
+
+}
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/New_2019/dataTables.fixedColumns.min.js"></script>
+<script src="~/Scripts/New_2019/dataTables.checkboxes.min.js"></script>
+<link href="~/Content/New_2019/dataTables.checkboxes.css" rel="stylesheet" />
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+</style>
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Software Qc Incentive </p>
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Select All Field
+        </div>
+    </div>
+    <div class="portlet-body" style="display: block;">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-6">
+                    <div class="col-lg-3" style="text-align: right">
+                        Select Month
+                    </div>
+                    <div class="col-lg-9" style="text-align: left">
+
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="col-lg-5" style="text-align: right">
+                        Select Year
+                    </div>
+                    <div class="col-lg-7" style="text-align: left">
+
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                        }
+                    </div>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="col-lg-12">
+                <div class="col-lg-6">
+                    <div class="col-lg-3" style="text-align: right">
+                        Role Type
+                    </div>
+                    <div class="col-lg-9" style="text-align: left">
+
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.RoleName, new SelectList(ViewBag.ddlRoles, "Value", "Text"), new { @class = "DDDRoleCls form-control", @id = "DDDRole" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-6" style="text-align: center">
+                    <div class="col-lg-5" style="text-align: right">
+                        Select Person
+                    </div>
+                    <div class="col-lg-7" style="text-align: left">
+                        @if (ViewBag.ddlUsers != null)
+                        {
+                            @Html.DropDownListFor(model => model.EmployeeCode, new SelectList(ViewBag.ddlUsers, "Value", "Text"), new { @class = "dropForPerson form-control", @id = "sltPerson" })
+
+                        }
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="col-lg-12">
+                <div class="col-lg-3"> </div>
+                <div class="form-actions">
+                    <input type="button" id="btnforLoad" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href = '@Url.Action("All_QcMembersMonthlyIncentive", "Software")?months=' + $('option:selected', $('#DDDMonth')).val() + '&years=' + $('option:selected', $('#DDDYear')).val() + '&roles=' + $('option:selected', $('#DDDRole')).val() + '&persons=' + $('option:selected', $('#sltPerson')).val() " />
+
+                </div>
+                <div class="col-lg-3"> </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<br />
+@if (TempData["Message2"] != null)
+{
+    var msgss = TempData["Message2"];
+
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+        <strong>Message:</strong> @msgss
+    </div>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Incentive for Total New Issues/Os Requirement</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl1" id="tbl1">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            @*<th>#</th>*@
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: left;font-size: 12px">Version<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Sw.Vr.No. </th>
+                            <th style="text-align: left; font-size: 12px"> Incentive <br />Claim<br />Area </th>
+                            <th style="text-align: center;font-size: 12px"> Assigned<br />Person </th>
+                            <th style="text-align: center;font-size: 12px"> Critical </th>
+                            <th style="text-align: center;font-size: 12px"> Major </th>
+                            <th style="text-align: center;font-size: 12px">Minor </th>
+                            <th style="text-align: center;font-size: 12px">Base<br />Amount</th>
+                            <th style="text-align: center;font-size: 12px">S_Date</th>
+                            <th style="text-align: center;font-size: 12px">E_Date</th>
+                            <th style="text-align: center;font-size: 12px">Date<br />Diff</th>
+                            <th style="text-align: center;font-size: 12px">Timeline</th>
+                            <th style="text-align: center;font-size: 12px">Issue<br />Amount</th>
+                            <th style="text-align: center;font-size: 12px">Total<br /> Amount </th>
+                            @*<th style="text-align: center;font-size: 12px">Percentage(%) </th>*@
+                            <th style="text-align: center;font-size: 12px">Particular<br />Person<br />Incentive </th>
+                            @*<th style="text-align: center;font-size: 12px">AddedAmount </th>
+                                <th style="text-align: center;font-size: 12px">Added<br />Remarks </th>
+                                <th style="text-align: center;font-size: 12px">Deduction </th>
+                                <th style="text-align: center;font-size: 12px">Deduction<br />Remarks </th>*@
+                            <th style="text-align: center;font-size: 12px">Final<br />Amount </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcIssueDetailModels1.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModels1)
+                            {
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                    <td class="proId" style="display: none;">@item.ProjectMasterId</td>
+                                    <td class="swqcHeadAssignId" style="display: none;">@item.SwQcHeadAssignId</td>
+                                    <td class="testPhaseId" style="display: none;">@item.TestPhaseID</td>
+                                    <td class="versionNo" style="display: none;">@item.SoftwareVersionNo</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td style="text-align: left; font-size: 12px">@Html.DisplayFor(modelItem => item.SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                    <td style="text-align: left; font-size: 12px">@Html.DisplayFor(modelItem => item.TestPhaseName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AssignedPerson)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Critical)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Major)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Minor)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.BaseAmount)</td>
+                                    <td>
+                                        @if (@item.PmToQcHeadAssignTime1 != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd hh:mm:ss tt}", @item.PmToQcHeadAssignTime1)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@item.QcHeadToPmSubmit != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd hh:mm:ss tt}", @item.QcHeadToPmSubmit)
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.DateDiff)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Timeline)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IssueAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    @*<td class="percentage">
+                                            @if (@item.TestPhaseName == "Field (Network Test)")
+                                            {
+                                                <input type="number" value="@item.Percentage" id="percentageId" class="form-control percentageId" onchange="updatePercentageAmount1()" />
+                                            }
+                                            else
+                                            {
+                                                <input type="text" id="percentageId1" value="0" class="form-control percentageId1" disabled="disabled" />
+                                            }@item.AddedAmount
+                                        </td>*@
+                                    <td class="particularIns">
+
+                                        <input type="text" id="ParticularPersonIncentive" class="form-control ParticularPersonIncentive" value="@item.ParticularPersonIncentive" disabled="disabled" />
+
+                                    </td>
+                                    @*<td><input type="number" min="0" value="@item.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount1()" /></td>
+                                        <td><input value="@item.AddAmountRemarks" id="remarks" class="form-control addAmremarks" style="text-align: center;" /></td>
+
+                                        <td class="deduct_issue">
+                                            <input type="number" id="deduct_issueId" min="0" class="form-control deduct_issueId" value="@item.Deduction" onchange="updateAmountDeduction1()" />
+
+                                        </td>
+                                        <td class="deduct_issueRemarks">
+
+                                            <input type="text" id="deduct_issueRemarksId" class="form-control deduct_issueRemarksId" value="@item.DeductionRemarks" />
+
+                                        </td>*@
+                                    <td class="final_Am">
+                                        <input type="text" id="final_Am_Id" class="form-control final_Am_Id" value="" disabled="disabled" />
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+@*<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tblAutoPenalties" id="tblAutoPenalties">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> ReleaseDate </th>
+                            <th style="text-align: center;font-size: 12px">Total<br /> Issue <br /> Percentage</th>
+                            <th style="text-align: center;font-size: 12px"> Assigned<br />Persons </th>
+                            <th style="text-align: center;font-size: 12px"> Total<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Total<br />Penalties </th>
+                            <th style="text-align: center;font-size: 12px"> Penalties<br />Percentage(%) </th>
+                            <th style="text-align: center;font-size: 12px"> Previous<br />Deducted<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Per Person<br /> Penalties </th>
+                            <th style="text-align: center;font-size: 12px"> Final<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px;display: none"> MonthNum </th>
+                            <th style="text-align: center;font-size: 12px"> Month </th>
+                            <th style="text-align: center;font-size: 12px"> Year </th>
+                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcIssueDetailModelsPenalties.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModelsPenalties)
+                            {
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+
+                                    <td>@item.ProjectName</td>
+                                    <td>
+                                        @if (@item.ReleaseDate != null)
+                                        { @String.Format("{0:yyyy-MM-dd}", @item.ReleaseDate) }
+                                    </td>
+                                    <td>@item.TotalIssuePercentage</td>
+                                    <td>@item.AssignedPersons</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>@item.TotalPenalties</td>
+                                    <td>@item.PenaltiesPercentage</td>
+                                    <td>@item.PreviousDeductedAmount</td>
+                                    <td>@item.PerPersonPenalties</td>
+                                    <td>@item.FinalAmount</td>
+                                    <td style="display:none">@item.Months</td>
+                                    <td>@item.Month</td>
+                                    <td>@item.Years</td>
+                                </tr>
+                             
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>*@
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tblAutoPenalties" id="tblAutoPenalties">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            <th style="text-align: center;font-size: 12px;display:none"> IssueVerificationId </th>
+                            <th style="text-align: center;font-size: 12px;display:none"> ProjectMasterId </th>
+                            <th style="text-align: center;font-size: 12px;"> ModelName </th>
+                            <th style="text-align: center;font-size: 12px;"> Module </th>
+                            <th style="text-align: center;font-size: 12px;"> Issue<br />Details </th>
+                            <th style="text-align: center;font-size: 12px;"> Issue<br />Frequency </th>
+                            <th style="text-align: center;font-size: 12px;"> IssueType </th>
+                            <th style="text-align: center;font-size: 12px;"> Status </th>
+                            <th style="text-align: center;font-size: 12px;"> Release<br />Date </th>
+                            <th style="text-align: center;font-size: 12px;"> Adding<br />Date </th>
+                            <th style="text-align: center;font-size: 12px;"> Closing<br />Date </th>
+                            <th style="text-align: center;font-size: 12px;">Monthly <br />Start<br />Date </th>
+                            <th style="text-align: center;font-size: 12px;">Monthly <br />End<br />Date </th>
+                            <th style="text-align: center;font-size: 12px;"> Date<br />Diffs </th>
+                            <th style="text-align: center;font-size: 12px;"> Total<br />Penalties </th>
+                            <th style="text-align: center;font-size: 12px;"> Assigned<br />Persons </th>
+                            <th style="text-align: center;font-size: 12px;"> Particular<br />Persons<br />Penalties </th>
+                            <th style="text-align: center;font-size: 12px;">Final<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px;">Month </th>
+                            <th style="text-align: center;font-size: 12px;display: none">MonNum </th>
+                            <th style="text-align: center;font-size: 12px;">Year </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwIncentive_PenaltiesForIssuesModels.Count != 0)
+                        {
+                            foreach (var item in Model.SwIncentive_PenaltiesForIssuesModels)
+                            {
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                    <td style="display:none">@item.IssueVerificationId</td>
+                                    <td style="display:none">@item.ProjectMasterId</td>
+                                    <td>@item.ModelName</td>
+                                    <td>@item.Module</td>
+                                    <td>@item.IssueDetails</td>
+                                    <td>@item.IssueFrequency</td>
+                                    <td>@item.IssueType</td>
+                                    <td>@item.Status</td>
+                                    <td>
+                                        @if (@item.ReleaseDate !=null)
+                                         { @String.Format("{0:yyyy-MM-dd}", @item.ReleaseDate) }
+                                    </td>
+                                    <td>
+                                        @if (@item.AddingDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.AddingDate)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@item.ClosingDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", item.ClosingDate)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@item.MonthlyStartDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", item.MonthlyStartDate)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@item.MonthlyEndDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}",item.MonthlyEndDate)
+                                        }
+                                    </td>
+                                    <td>@item.DateDiffs</td>
+                                    <td>@item.TotalPenalties</td>
+                                    <td>@item.AssignedPersons</td>
+                                    <td>@item.ParticularPersonsPenalties</td>
+                                    <td>@item.FinalAmount</td>
+                                    <td>@item.Month</td>
+                                    <td style="display:none">@item.MonNum</td>
+                                    <td>@item.Year</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Others</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tblAutoOthers" id="tblAutoOthers">
+                    <thead>
+                        <tr class="trClsforSize1">
+
+                            <th style="text-align: center;font-size: 12px"> Others<br />Type </th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Assigned<br />Persons </th>
+                            <th style="text-align: center;font-size: 12px">EmployeeCode</th>
+                            <th style="text-align: center;font-size: 12px"> Critical </th>
+                            <th style="text-align: center;font-size: 12px"> Major </th>
+                            <th style="text-align: center;font-size: 12px"> Minor </th>
+                            <th style="text-align: center;font-size: 12px"> Base<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Issue<br /> Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Total<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Particular<br />Person<br />Incentive </th>
+                            <th style="text-align: center;font-size: 12px"> Final<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Effective<br />Month </th>
+                            <th style="text-align: center;font-size: 12px"> Month </th>
+                            <th style="text-align: center;font-size: 12px"> Year </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcIssueDetailModelsOthers.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModelsOthers)
+                            {
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+
+                                    @*<td>
+                                            @if (@item.ReleaseDate != null)
+                                            { @String.Format("{0:yyyy-MM-dd}", @item.ReleaseDate) }
+                                        </td>*@
+                                    <td>@item.OthersType</td>
+                                    <td>@item.ProjectName</td>
+                                    <td>@item.AssignedPersons</td>
+                                    <td>@item.EmployeeCode</td>
+                                    <td>@item.Critical</td>
+                                    <td>@item.Major</td>
+                                    <td>@item.Minor</td>
+                                    <td>@item.BaseAmount</td>
+                                    <td>@item.IssueAmount</td>
+                                    <td>@item.TotalAmount</td>
+                                    <td>@item.ParticularPersonIncentive</td>
+                                    <td>@item.FinalAmount</td>
+                                    <td>
+                                        @if (@item.EffectiveMonth != null)
+                                        { @String.Format("{0:yyyy-MM-dd}", @item.EffectiveMonth) }
+                                    </td>
+                                    <td>@item.Month</td>
+                                    <td>@item.Year2</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">New Innovation/Method/Extra work</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl2" id="tbl2">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            @*<th>#</th>*@
+                            <th style="display: none;"></th>
+
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> AssignedBy </th>
+                            <th style="text-align: center;font-size: 12px"> Work Type</th>
+                            <th style="text-align: center;font-size: 12px"> Description </th>
+                            <th style="text-align: center;font-size: 12px"> Effective<br />Date </th>
+                            <th style="text-align: center;font-size: 12px"> Persons </th>
+                            <th style="text-align: center;font-size: 12px"> Base<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> Final<br />Amount </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcNewInnovationModels.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcNewInnovationModels)
+                            {
+                                <tr style="text-align: center" class="trClsforSize">
+                                    <td class="NewInnovationId" style="display: none;">@item.NewInnovationId</td>
+
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AssignedBy)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.WorkType)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                    <td>
+                                        @*@Html.DisplayFor(modelItem => item.EffectiveDate)*@
+                                        @if (@item.EffectiveDate != null)
+                                        {@String.Format("{0:yyyy-MM-dd}", @item.EffectiveDate)}
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.Persons)</td>
+                                    <td>
+                                        @* @Html.DisplayFor(modelItem => item.BaseAmount)*@
+                                        <input type="text" id="newBaseAmount" class="form-control newBaseAmount" value="@item.BaseAmount" disabled="disabled" />
+
+                                    </td>
+                                    <td class="final_Am">
+                                        <input type="text" id="final_Am_Id" class="form-control final_Am_Id" value="" disabled="disabled" />
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Personal Use Findings</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl3" id="tbl3">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            @*<th>#</th>*@
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px">Version<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Sw.Vr.No. </th>
+                            <th style="text-align: center;font-size: 12px"> Incentive <br />Claim<br />Area </th>
+                            <th style="text-align: center;font-size: 12px"> Assigned<br />Person </th>
+                            <th style="text-align: center;font-size: 12px"> Critical </th>
+                            <th style="text-align: center;font-size: 12px"> Major </th>
+                            <th style="text-align: center;font-size: 12px">Minor </th>
+                            <th style="text-align: center;font-size: 12px">Total<br /> Amount </th>
+                            <th style="text-align: center;font-size: 12px">Particular<br />Person<br />Incentive </th>
+                            @*<th style="text-align: center;font-size: 12px">Added<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">Added<br />Remarks </th>
+                                <th style="text-align: center;font-size: 12px">Deduction </th>
+                                <th style="text-align: center;font-size: 12px">Deduction<br />Remarks </th>*@
+                            <th style="text-align: center;font-size: 12px">Final<br />Amount </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcPersonalUseFindingsIssueDetailModels.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcPersonalUseFindingsIssueDetailModels)
+                            {
+                                <tr style="text-align: center" class="trClsforSize">
+                                    <td class="SwQcPrUseFindId" style="display: none;">@item.SwQcPrUseFindId</td>
+                                    <td class="SwQcHeadAssignId" style="display: none;">@item.SwQcHeadAssignId</td>
+                                    <td class="TestPhaseID" style="display: none;">@item.TestPhaseID</td>
+                                    <td class="ProjectMasterId" style="display: none;">@item.ProjectMasterId</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IncentiveClaim)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Persons)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Critical)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Major)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Minor)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    <td>
+                                        <input type="text" id="ParticularPersonIncentive" class="form-control ParticularPersonIncentive" value="@item.ParticularPersonIncentive" disabled="disabled" />
+                                    </td>
+                                    @*<td><input type="number" value="@item.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount2()" /></td>
+                                        <td><input value="@item.AddAmountRemarks" id="remarks" class="form-control addAmremarks" style="text-align: center;" /></td>
+
+                                        <td class="deduct_issue">
+                                            <input type="number" id="deduct_issueId" class="form-control deduct_issueId" value="@item.Deduction" onchange="updateAmountDeduction2()" />
+                                        </td>
+                                        <td class="deduct_issueRemarks">
+                                            <input type="text" id="deduct_issueRemarksId" class="form-control deduct_issueRemarksId" value="@item.DeductionRemarks" />
+                                        </td>*@
+                                    <td class="final_Am">
+                                        <input type="text" id="final_Am_Id" class="form-control final_Am_Id" value="" disabled="disabled" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">CTS Related Testing</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl4" id="tbl4">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            @*<th>#</th>*@
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px">Version<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Sw.Vr.No. </th>
+                            <th style="text-align: center;font-size: 12px"> Incentive <br />Claim<br />Area </th>
+                            <th style="text-align: center;font-size: 12px"> Critical </th>
+                            <th style="text-align: center;font-size: 12px"> Major </th>
+                            <th style="text-align: center;font-size: 12px">Minor </th>
+                            <th style="text-align: center;font-size: 12px">Base<br /> Amount </th>
+                            <th style="text-align: center;font-size: 12px">Total<br /> Amount </th>
+                            <th style="text-align: center;font-size: 12px">Particular<br />Person<br />Incentive </th>
+                            @*<th style="text-align: center;font-size: 12px">Added<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">Added<br />Remarks </th>
+                                <th style="text-align: center;font-size: 12px">Deduction </th>
+                                <th style="text-align: center;font-size: 12px">Deduction<br />Remarks </th>*@
+                            <th style="text-align: center;font-size: 12px">Final<br />Amount </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcIssueDetailModels2.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModels2)
+                            {
+                                <tr style="text-align: center" class="trClsforSize">
+                                    <td class="SwQcHeadAssignId" style="display: none;">@item.SwQcHeadAssignId</td>
+                                    <td class="ProjectMasterId" style="display: none;">@item.ProjectMasterId</td>
+                                    <td class="TestPhaseID" style="display: none;">@item.TestPhaseID</td>
+
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TestPhaseName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Critical)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Major)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Minor)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    <td>
+                                        <input type="text" id="ParticularPersonIncentive" class="form-control ParticularPersonIncentive" value="@item.ParticularPersonIncentive" disabled="disabled" />
+                                    </td>
+                                    @*<td><input type="number" value="@item.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount4()" /></td>
+                                        <td><input value="@item.AddAmountRemarks" id="remarks" class="form-control addAmremarks" style="text-align: center;" /></td>
+
+                                        <td class="deduct_issue">
+                                            <input type="number" id="deduct_issueId" class="form-control deduct_issueId" value="@item.Deduction" onchange="updateAmountDeduction4()" />
+                                        </td>
+                                        <td class="deduct_issueRemarks">
+                                            <input type="text" id="deduct_issueRemarksId" class="form-control deduct_issueRemarksId" value="@item.DeductionRemarks" />
+                                        </td>*@
+                                    <td class="final_Am">
+                                        <input type="text" id="final_Am_Id" class="form-control final_Am_Id" value="" disabled="disabled" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Field Test</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl5" id="tbl5">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            @*<th>#</th>*@
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="display: none;"></th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px">Version<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Sw.Vr.No. </th>
+                            <th style="text-align: center;font-size: 12px"> Incentive <br />Claim<br />Area </th>
+                            <th style="text-align: center;font-size: 12px"> Assigned <br />Persons </th>
+                            <th style="text-align: center;font-size: 12px"> All Issues </th>
+                            <th style="text-align: center;font-size: 12px"> Base<br />Amount </th>
+                            <th style="text-align: center;font-size: 12px"> S_Date </th>
+                            <th style="text-align: center;font-size: 12px"> E_Date </th>
+                            <th style="text-align: center;font-size: 12px"> DateDiff </th>
+                            <th style="text-align: center;font-size: 12px"> Timeline </th>
+                            <th style="text-align: center;font-size: 12px">Total<br /> Amount </th>
+                            <th style="display: none;">SwQcHeadAssignId</th>
+                            <th style="text-align: center;font-size: 12px">Particular<br />Person<br />Incentive </th>
+                            @*<th style="text-align: center;font-size: 12px">Added<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">Added<br />Remarks </th>
+                                <th style="text-align: center;font-size: 12px">Deduction </th>
+                                <th style="text-align: center;font-size: 12px">Deduction<br />Remarks </th>*@
+                            <th style="text-align: center;font-size: 12px">Final<br />Amount </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SwQcIssueDetailModels3.Count != 0)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModels3)
+                            {
+                                <tr style="text-align: center" class="trClsforSize">
+                                    <td class="ProjectMasterId" style="display: none;">@item.ProjectMasterId</td>
+                                    <td class="TestPhaseID" style="display: none;">@item.TestPhaseID</td>
+                                    <td class="EmployeeCode" style="display: none;">@item.EmployeeCode</td>
+
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.TestPhaseName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AssignedPersons)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AllIssues)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.BaseAmount)</td>
+                                    <td>
+                                        @if (@item.PmToQcHeadAssignTime1 != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd hh:mm:ss tt}", @item.PmToQcHeadAssignTime1)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (@item.QcHeadToPmSubmit != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd hh:mm:ss tt}", @item.QcHeadToPmSubmit)
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.DateDiff)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Timeline)</td>
+
+                                    <td>@Html.DisplayFor(modelItem => item.TotalAmount)</td>
+                                    <td style="display:none"> @Html.DisplayFor(modelItem => item.SwQcHeadAssignId)</td>
+                                    <td>
+                                        <input type="text" id="ParticularPersonIncentive" class="form-control ParticularPersonIncentive" value="@item.ParticularPersonIncentive" disabled="disabled" />
+                                    </td>
+                                    @*<td><input type="number" value="@item.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount5()" /></td>
+                                        <td><input value="@item.AddAmountRemarks" id="remarks" class="form-control addAmremarks" style="text-align: center;" /></td>
+
+                                        <td class="deduct_issue">
+                                            <input type="number" id="deduct_issueId" class="form-control deduct_issueId" value="@item.Deduction" onchange="updateAmountDeduction5()" />
+                                        </td>
+                                        <td class="deduct_issueRemarks">
+                                            <input type="text" id="deduct_issueRemarksId" class="form-control deduct_issueRemarksId" value="@item.DeductionRemarks" />
+                                        </td>*@
+                                    <td class="final_Am">
+                                        <input type="text" id="final_Am_Id" class="form-control final_Am_Id" value="" disabled="disabled" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Others</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-1">******</div><div class="col-lg-4">
+                        Others<br />
+                        -------------------
+                    </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                </div>
+                <br /><br /><br />
+
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-3" style="color: brown;"> Others Type </div>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.OthersType, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="col-lg-4" style="color: brown;">Select Project</div>
+                        <div class="col-lg-8">
+                            @{
+                                Debug.Assert(@Model != null, "@Model != null");
+                            }
+                            @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control dropForProject12", @id = "projectNameForOthers" })
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;">Added Amount</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.AddedAmount, new { @class = "form-control", @id = "othersAddedAmount", @type = "number" })
+                        </div>
+                    </div>
+
+                </div>
+                <br /><br />
+                <div class="col-lg-12">
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-3" style="color: brown;">Remarks</label>
+                        <div class="col-lg-9">
+                            @Html.TextAreaFor(model => model.SwQcOthersIncentiveModel.AddAmountRemarks, new { @class = "form-control", @id = "othersAddedRemarks" })
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Deduct Amount</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.Deduction, new { @class = "form-control", @id = "othersDeduct", @type = "number" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Deduct Remarks</label>
+                        <div class="col-lg-8">
+                            @Html.TextAreaFor(model => model.SwQcOthersIncentiveModel.DeductionRemarks, new { @class = "form-control", @id = "others_D_Remarks" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button id="btnAddForOthers" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                    </div>
+                    <div class="col-lg-4"></div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+
+            <br /><br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet box green-haze">
+                            <div class="portlet-body">
+                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+
+                                    <table class="table table-bordered table-striped table-condensed flip-content tblOthers" id="tblOthers" style="overflow-y: auto;overflow-x: auto">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px;">Incentive Type</th>
+                                                <th>P_Name</th>
+                                                <th>EmpCode</th>
+                                                <th>Added<br />Amount </th>
+                                                <th>Added<br />Remarks </th>
+                                                <th>Deduction </th>
+                                                <th>Deduction<br />Remarks </th>
+                                                <th>Final<br />Amount </th>
+                                                <th>Month</th>
+                                                <th>Year</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tBodyOthers" class="tBodyOthers" style="overflow-y: auto;overflow-x: auto">
+
+                                            @foreach (var swQcOthers in Model.SwQcOthersIncentiveModel.Custom_Sw_IncentiveModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Software/Partial/_SwQcOthersIncentive.cshtml", swQcOthers);
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-1">******</div><div class="col-lg-4">
+                        Penalties<br />
+                        -------------------
+                    </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                </div>
+                <br /><br /><br />
+
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;"> Penalties Reason </div>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel2.PenaltiesReason, new { @class = "form-control PenaltiesReason" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="col-lg-4" style="color: brown;">Select Project</div>
+                        <div class="col-lg-8">
+                            @{
+                                Debug.Assert(@Model != null, "@Model != null");
+                            }
+                            @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.ProjectsPenalties, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control projectNameForPenalties", @id = "projectNameForPenalties" })
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Total Penalties</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel2.TotalPenalties, new { @class = "form-control", @id = "penaltiesTotal", @type = "number" })
+                        </div>
+                    </div>
+
+                </div>
+                <br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Assigned Persons</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel2.AssignedPersons, new { @class = "form-control", @id = "assignedPersons", @type = "number", onchange = "AssignedPersonsNo()" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Particular Persons Penalties</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel2.ParticularPersonsPenalties, new { @class = "form-control", @id = "ParticularPersonsPenalties", disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Penalty Remarks</label>
+                        <div class="col-lg-8">
+                            @Html.TextAreaFor(model => model.SwQcOthersIncentiveModel2.PenaltiesRemarks, new { @class = "form-control", @id = "penaltiesRemarks" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button id="btnAddForPenalties" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                    </div>
+                    <div class="col-lg-4"></div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+
+            <br /><br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet box green-haze">
+                            <div class="portlet-body">
+                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                    <table class="table table-bordered table-striped table-condensed flip-content" id="tblPenalties" style="overflow-y: auto;overflow-x: auto">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px;">Penalties Reason</th>
+                                                <th>P_Name</th>
+                                                <th>EmpCode</th>
+                                                <th>Total<br />Penalties</th>
+                                                <th>Assigned<br />Persons</th>
+                                                <th>Particular<br />Persons<br />Penalties</th>
+                                                <th>Penalty<br />Remarks</th>
+                                                <th>F_Amount</th>
+                                                <th>Month</th>
+                                                <th>Year</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tBodyPenalties" class="tBodyPenalties" style="overflow-y: auto;overflow-x: auto">
+                                            @foreach (var swQcOthers in Model.SwQcOthersIncentiveModel2.Custom_Sw_IncentiveModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Software/Partial/_SwQcPenaltiesForIncentive.cshtml", swQcOthers);
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="row brandCls" id="brandCls" style="color:red;background: yellowgreen;display: none">
+    <p style="color:red;font-weight: bold">***     For Brand Incentive Only</p>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="col-lg-12">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase" style="color: red">Brand Incentive Total for Issues</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">
+                            Issues Incentive<br />
+                            -------------------
+                        </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-4" style="color: brown;"> Total Amount </div>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandIssue.TotalAmountForBrand, new { @class = "form-control TotalAmountForBrand", @id = "TotalAmountForBrand", @type = "number", disabled = "disabled" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="control-label col-lg-4" style="color: brown">Percentage (%)</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandIssue.BrandIssueAmountPercentage, new { @class = "form-control", @id = "BrandIssueAmountPercentage", @type = "number", onchange = "BrandIssueAmountPercentageChange()" })
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+
+                        </div>
+
+                    </div>
+                    <br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Final Amount</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandIssue.BrandFinalAmount, new { @class = "form-control", @id = "BrandFinalAmount", @type = "number", disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Remarks</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandIssue.BrandRemarks, new { @class = "form-control", @id = "BrandRemarks" })
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <button id="btnAddForBrandIssue" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                        </div>
+                        <div class="col-lg-4"></div>
+
+                    </div>
+                    <br /><br /><br />
+                </div>
+
+                <br /><br />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                        <table class="table table-bordered table-striped table-condensed flip-content" id="tblBrandIssue" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>Total<br />Issue<br /> Amount</th>
+                                                    <th>Percentage<br /> (%)</th>
+                                                    <th>F_Amount</th>
+                                                    <th>Remarks</th>
+                                                    <th>EmpCode</th>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tBodyBrandIssue" class="tBodyBrandIssue" style="overflow-y: auto;overflow-x: auto">
+                                                @foreach (var swQcOthers in Model.SwQcOthersIncentiveModelBrandIssue.Custom_Sw_IncentiveModels)
+                                                {
+                                                    Html.RenderPartial("~/Views/Software/Partial/_SwQcBrandIssueForIncentive.cshtml", swQcOthers);
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="col-lg-12">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase" style="color: red">Brand Promotion Incentive</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">
+                            Brand Promotion<br />
+                            -------------------
+                        </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-4" style="color: brown;"> Cost </div>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCost, new { @class = "form-control BrandCost", @id = "BrandCost", @type = "number" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <label class="control-label col-lg-4" style="color: brown">Percentage (%)</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostPercentage, new { @class = "form-control", @id = "BrandCostPercentage", @type = "number", onchange = "BrandCostPercentageChange()" })
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Incentive</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostPerPersonIncentive, new { @class = "form-control", @id = "BrandCostPerPersonIncentive", @type = "number", disabled = "disabled" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Added Amount</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostAddedAmount, new { @class = "form-control", @id = "BrandCostAddedAmount", @type = "number" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Remarks</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostAddedRemarks, new { @class = "form-control", @id = "BrandCostAddedRemarks" })
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduction</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostDeduction, new { @class = "form-control", @id = "BrandCostDeduction", @type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduction Remarks</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelBrandCost.BrandCostDeductionRemarks, new { @class = "form-control", @id = "BrandCostDeductionRemarks" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <button id="btnAddForBrandCost" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                        </div>
+                        <div class="col-lg-4"></div>
+
+                    </div>
+                    <br /><br /><br />
+                </div>
+
+                <br /><br />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                        <table class="table table-bordered table-striped table-condensed flip-content" id="tblBrandCost" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cost</th>
+                                                    <th>Distribution<br />Percentage (%)</th>
+                                                    <th>Incentive</th>
+                                                    <th>Added<br />Amount</th>
+                                                    <th>Added<br />Remarks</th>
+                                                    <th>Deduction</th>
+                                                    <th>Deduction<br />Remarks</th>
+                                                    <th>F_Amount</th>
+                                                    <th>EmpCode</th>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tBodyBrandCost" class="tBodyBrandCost" style="overflow-y: auto;overflow-x: auto">
+                                                @foreach (var swQcOthers in Model.SwQcOthersIncentiveModelBrandCost.Custom_Sw_IncentiveModels)
+                                                {
+                                                    Html.RenderPartial("~/Views/Software/Partial/_SwQcBrandCostForIncentive.cshtml", swQcOthers);
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="row" style="display:none">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Total Reward & Penalties</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div>
+                    <table class="table table-bordered table-striped table-condensed flip-content" id="tblRewardPenalties" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                        <thead>
+                            <tr>
+                                <th>Total<br /> Reward</th>
+                                <th>Total<br />Penalties</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.GetRewardAndPenaltiesQc != null)
+                            {
+                                foreach (var items in ViewBag.GetRewardAndPenaltiesQc)
+                                {
+                                    if (@items.TotalReward1 != null && @items.TotalDeduction1 != null)
+                                    {
+                                        @*<tr>
+                                                <td><input id="tRewards" value="@items.TotalReward1" disabled="disabled" /></td>
+                                                <td><input id="tPenalties" value="@items.TotalDeduction1" disabled="disabled" /></td>
+                                            </tr>*@
+                                        <tr>
+                                            <td><input id="tRewards" value="0" disabled="disabled" /></td>
+                                            <td><input id="tPenalties" value="0" disabled="disabled" /></td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br /><br />
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Final Incentive</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-1">******</div><div class="col-lg-4">
+                        Total Incentive<br />
+                        -------------------
+                    </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                </div>
+                <br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-6" style="color: brown;"> 100% Issue Incentive </div>
+                        <div class="col-lg-6">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.HundredPercentIssueAmount, new { @class = "form-control HundredPercentIssueAmount", @id = "HundredPercentIssueAmount", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-6" style="color: brown;"> 65% Issue Incentive </div>
+                        <div class="col-lg-6">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalIssueAmount, new { @class = "form-control FinalIssueAmount", @id = "FinalIssueAmount", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+                <br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;"> Total Incentive </div>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalTotalAmount, new { @class = "form-control FinalTotalAmount", @id = "FinalTotalAmount", disabled = "disabled" })
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Added Amount</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalAddedAmount, new { @class = "form-control", @id = "FinalAddedAmount", @type = "number", onchange = "FinalAddedAmountChange()" })
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <label class="control-label col-lg-4" style="color: brown">Added Remarks</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalAddedRemarks, new { @class = "form-control", @id = "FinalAddedRemarks" })
+                        </div>
+                    </div>
+
+
+                </div>
+                <br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+
+                        <div class="col-lg-4" style="color: brown;">Deduction</div>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalDeduction, new { @class = "form-control FinalDeduction", @id = "FinalDeduction", @type = "number", onchange = "FinalDeductionChange()" })
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Deduction Remarks</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalDeductionRemarks, new { @class = "form-control", @id = "FinalDeductionRemarks" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown">Final Incentive</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModelTotal.FinalIncentive, new { @class = "form-control", @id = "FinalIncentive", disabled = "disabled" })
+                        </div>
+                    </div>
+
+                </div>
+                <br /><br />
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="form-actions">
+    <div class="row">
+        <div class="col-md-6">
+            <input class="btn sbold uppercase btn-outline red-flamingo btnFinalSubmit" type="submit" id="btnFinalSubmit" value="Final Submit" onchange="winLoads()" />
+        </div>
+
+    </div>
+</div>
+<br /><br />
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    var FinalTotalAmounts1 = 0;
+    var AllFinalAmount = 0;
+
+    var roleids = document.getElementById('DDDRole');
+    var roles = roleids.options[roleids.selectedIndex].text;
+
+    //if (proRoleText == "SELECT ROLE") {
+    //    alertify.dialog('alert').set({
+    //        'title': '   ',
+    //        'transition': 'zoom',
+    //        'message': "Please select Role must",
+    //    }).show();
+    //    return false;
+    //}
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "paging": false,
+            "order": [[4, 'asc']]
+            // "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+
+        });
+
+    });
+    function BrandIssueAmountPercentageChange() {
+        var TotalAmountForBrand = $('#TotalAmountForBrand').val();
+        var BrandIssueAmountPercentage = $('#BrandIssueAmountPercentage').val();
+
+        if (TotalAmountForBrand == "") {
+            TotalAmountForBrand = "0";
+        }
+        if (BrandIssueAmountPercentage == "") {
+            BrandIssueAmountPercentage = "0";
+        }
+        if (roles == "BRAND" && TotalAmountForBrand != "0" && BrandIssueAmountPercentage != "0") {
+            var aall = (+TotalAmountForBrand * +BrandIssueAmountPercentage) / 100;
+
+            $('#BrandFinalAmount').val(aall.toFixed(2));
+        }
+    }
+
+    function FinalAddedAmountChange() {
+        var FinalTotalAmount = $('#FinalTotalAmount').val();
+        var FinalAddedAmount = $('#FinalAddedAmount').val();
+        var FinalDeduction = $('#FinalDeduction').val();
+        var finals = 0;
+
+        if (FinalTotalAmount != "") {
+            finals = (+FinalTotalAmount + +FinalAddedAmount - +FinalDeduction);
+            $('#FinalIncentive').val(finals.toFixed(2));
+
+        } else {
+            $('#FinalIncentive').val(FinalTotalAmount);
+        }
+    }
+    function FinalDeductionChange() {
+        var FinalTotalAmount = $('#FinalTotalAmount').val();
+        var FinalDeduction = $('#FinalDeduction').val();
+        var FinalAddedAmount = $('#FinalAddedAmount').val();
+        var finals = 0;
+
+        if (FinalTotalAmount != "") {
+            finals = (+FinalTotalAmount + +FinalAddedAmount - +FinalDeduction);
+            $('#FinalIncentive').val(finals);
+
+        } else {
+            $('#FinalIncentive').val(FinalTotalAmount);
+        }
+    }
+    function BrandCostPercentageChange() {
+        var BrandCost = $('#BrandCost').val();
+        var BrandCostPercentage = $('#BrandCostPercentage').val();
+        var finals = 0;
+
+        if (BrandCost != "" && BrandCostPercentage != "") {
+            finals = (+BrandCost * +BrandCostPercentage) / 100;
+
+            var BrandCostPerPersonIncentive = $('#BrandCostPerPersonIncentive').val(finals);
+
+        } else {
+            $('#BrandCostPerPersonIncentive').val("");
+        }
+    }
+    function AssignedPersonsNo() {
+        var penaltiesTotal = $('#penaltiesTotal').val();
+        var assignedPersons = $('#assignedPersons').val();
+
+        var total = (+penaltiesTotal / +assignedPersons).toFixed(2);
+
+        $('#ParticularPersonsPenalties').text(total);
+        $('#ParticularPersonsPenalties').val(total);
+    }
+    function removeDetailRow(element) {
+
+        var detailRow = $(element).closest('tr');
+
+        if (roles != "BRAND") {
+            var finals = $.trim(detailRow.find(".finalAmount").html());
+
+            var allFinals = +$('#FinalTotalAmount').val();
+
+            var allFinals2 = +allFinals - +finals;
+            $('#FinalTotalAmount').val(allFinals2.toFixed(2));
+            $('#TotalAmountForBrand').val(allFinals2);
+            //
+            var penalFinal = $.trim(detailRow.find(".finalAmounts").html());
+            //
+            var allFinals4 = +$('#FinalTotalAmount').val();
+
+            var allFinals5 = +allFinals4 + +penalFinal;
+            $('#FinalTotalAmount').val(allFinals5.toFixed(2));
+
+            var FinalTotalAmounts = $('#FinalTotalAmount').val();
+            var FinalIncentive = $('#FinalIncentive').val(FinalTotalAmounts);
+
+            $('#TotalAmountForBrand').val(allFinals5.toFixed(2));
+        }
+
+        // BRAND INCENTIVE
+        if (roles == "BRAND") {
+            var finals1 = $.trim(detailRow.find(".finalAmount").html());
+
+            var allFinals1 = +$('#FinalTotalAmount').val();
+
+            var allFinals21 = +allFinals1 - +finals1;
+            $('#FinalTotalAmount').val(allFinals21.toFixed(2));
+            var FinalTotalAmounts1 = $('#FinalTotalAmount').val();
+            var FinalIncentive = $('#FinalIncentive').val(FinalTotalAmounts1);
+            $('#TotalAmountForBrand').val(allFinals21.toFixed(2));
+            ////
+            var penalFinal1 = $.trim(detailRow.find(".finalAmounts").html());
+            //
+            var allFinals41 = +$('#FinalTotalAmount').val();
+
+            var allFinals51 = +allFinals41 + +penalFinal1;
+            $('#FinalTotalAmount').val(allFinals51.toFixed(2));
+
+            var FinalTotalAmounts11 = $('#FinalTotalAmount').val();
+            $('#FinalIncentive').val(FinalTotalAmounts11);
+
+            $('#TotalAmountForBrand').val(FinalTotalAmounts11);
+            //rough//
+            ///
+            var brandTot = $.trim(detailRow.find(".totalAmountForBrand").html());
+            var brandCostfinals = $.trim(detailRow.find(".BrandCostFinalAmount").html());
+
+            if (brandTot == "") {
+                brandTot = "0";
+            }
+            if (brandCostfinals == "") {
+                brandCostfinals = "0";
+            }
+
+            var TotalAmountForBrand = $('#TotalAmountForBrand').val();
+            if (TotalAmountForBrand == "") {
+                TotalAmountForBrand = "0";
+            }
+            if (brandTot != "0" && brandCostfinals == "0") {
+                $('#TotalAmountForBrand').val(brandTot);
+                $('#FinalTotalAmount').val(brandTot);
+                var FinalTotalAmountsB = $('#FinalTotalAmount').val();
+                var FinalIncentiveB = $('#FinalIncentive').val(FinalTotalAmountsB);
+            }
+            //Brand Cost
+
+            if (TotalAmountForBrand != "0" && brandCostfinals != "0") {
+                var tt = $('#FinalTotalAmount').val();
+                var mm = +tt - +brandCostfinals;
+                $('#FinalTotalAmount').val(mm);
+                $('#FinalIncentive').val(mm);
+                // $('#TotalAmountForBrand').val(mm);
+            }
+        }
+
+        $(detailRow).remove();
+    }
+
+    $('#sltPerson').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        placeholder: "SELECT MULTI PROJECT",
+        width: "95%"
+    });
+
+    $(function () {
+        var proRole1 = document.getElementById('DDDRole');
+        var proRoleText1 = proRole1.options[proRole1.selectedIndex].text;
+
+        if (proRoleText1 == "BRAND") {
+            $('#brandCls').show();
+        } else {
+            $('#brandCls').hide();
+        }
+
+        //Final Amount//
+
+
+        $("#tbl1 tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#ParticularPersonIncentive').val())));
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +$.trim($(this).find('#final_Am_Id').val());
+        });
+        //  finalAmountPenal = $.trim($(this).find('td:eq(9)').text());
+        $("#tblAutoPenalties tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('td:eq(17)').text());
+            console.log("incentive :" + final_Am_Id1);
+
+            AllFinalAmount += -final_Am_Id1;
+        });
+        $("#tblAutoOthers tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('td:eq(11)').text());
+            console.log("incentive :" + final_Am_Id1);
+
+            AllFinalAmount += +final_Am_Id1;
+        });
+        $("#tbl2 tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#newBaseAmount').val())));
+            console.log("incentive :" + final_Am_Id1);
+
+            AllFinalAmount += +$.trim($(this).find('#final_Am_Id').val());
+        });
+        $("#tbl3 tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#ParticularPersonIncentive').val())));
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +$.trim($(this).find('#final_Am_Id').val());
+        });
+        $("#tbl4 tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#ParticularPersonIncentive').val())));
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +$.trim($(this).find('#final_Am_Id').val());
+        });
+        $("#tbl5 tr.trClsforSize").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#ParticularPersonIncentive').val())));
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +$.trim($(this).find('#final_Am_Id').val());
+        });
+
+        var HundredPercentIssueAmount = $('#HundredPercentIssueAmount').val(AllFinalAmount.toFixed(2));
+        var FinalIssueAmount = $('#FinalIssueAmount').val((AllFinalAmount * 0.65).toFixed(2));
+
+        var FinalTotalAmounts = $('#FinalTotalAmount').val((AllFinalAmount * 0.65).toFixed(2));
+        console.log("ff-->" + FinalTotalAmounts);
+
+
+        //
+        var tRewards = $('#tRewards').val();
+        if (tRewards == undefined) {
+            tRewards = 0;
+        }
+        var tPenalties = $('#tPenalties').val();
+        if (tPenalties == undefined) {
+            tPenalties = 0;
+        }
+        //
+        var FinalIssueAmount1 = $('#FinalIssueAmount').val();
+
+        if (tPenalties < 0) {
+            tPenalties = -+tPenalties;
+        }
+
+        if (tPenalties > 0 && FinalIssueAmount1 < 0) {
+            FinalTotalAmounts = +tRewards - +tPenalties + +FinalIssueAmount1;
+            FinalTotalAmounts = $('#FinalTotalAmount').val(FinalTotalAmounts.toFixed(2));
+        }
+        else {
+            FinalTotalAmounts = +$('#FinalTotalAmount').val();
+            FinalTotalAmounts = +FinalTotalAmounts + +tRewards - +tPenalties;
+            FinalTotalAmounts = $('#FinalTotalAmount').val(FinalTotalAmounts.toFixed(2));
+        }
+
+        //FinalTotalAmounts = $('#FinalTotalAmount').val();
+        //FinalTotalAmounts = +FinalTotalAmounts + +tRewards - +tPenalties;
+
+        ////FinalIncentive
+        //FinalTotalAmounts = $('#FinalTotalAmount').val(FinalTotalAmounts);
+
+
+        var FinalIncentive = $('#FinalIncentive').val($('#FinalTotalAmount').val());
+        var TotalAmountForBrand = $('#TotalAmountForBrand').val(AllFinalAmount.toFixed(2));
+        //end Final Amount//
+
+
+        $('#btnforLoad').on('click', function (e) {
+            e.preventDefault();
+            var proMon = document.getElementById('DDDMonth');
+            var proMonText = proMon.options[proMon.selectedIndex].text;
+            var months = proMon.options[proMon.selectedIndex].value;
+
+            if (proMonText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+            //
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+            //
+            var proRole = document.getElementById('DDDRole');
+            var proRoleText = proRole.options[proRole.selectedIndex].text;
+
+            if (proRoleText == "SELECT ROLE") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Role must",
+                }).show();
+                return false;
+            }
+
+            var proPerson = document.getElementById('sltPerson');
+            var proPersonText = proPerson.options[proPerson.selectedIndex].text;
+            var proPersonval = proPerson.options[proPerson.selectedIndex].value;
+
+            if (proPersonText == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            if (proRoleText == "BRAND") {
+                $('#brandCls').show();
+            } else {
+                $('#brandCls').hide();
+            }
+
+            if (proRoleText == "DEPUTY" || proRoleText == "QCHEAD") {
+                window.open('@Url.Action("HeadDeputyMonthlyIncentive", "Software")' + '?EmpCode=' + proPersonval + '&Month=' + proMonText + '&MonNum=' + months + '&Year=' + proYearText + '&roles=' + proRoleText);
+
+            }
+
+        });
+
+        $("#btnAddForOthers").on('click', function (e) {
+            e.preventDefault();
+            var incentiveType = $('#SwQcOthersIncentiveModel_OthersType').val();
+            console.log("incentiveType :" + incentiveType);
+
+            if (incentiveType == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Others Type",
+                }).show();
+                return false;
+            }
+
+            var projectNameForOthers = $('#projectNameForOthers option:selected').text();
+            console.log("projectName  :" + projectNameForOthers);
+
+
+            if (projectNameForOthers == "SELECT PROJECT") {
+                projectNameForOthers = "";
+            }
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var personEmpCodetext = $('#sltPerson option:selected').text();
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+            var roles = $('#DDDRole option:selected').text();
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (roles == "SELECT ROLE") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            if (personEmpCodetext == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+            var addedAmount = $('#othersAddedAmount').val();
+            console.log(addedAmount);
+            if (addedAmount == "") {
+                addedAmount = "0";
+            }
+            var othersAddedRemarks = $('#othersAddedRemarks').val();
+            console.log(othersAddedRemarks);
+
+            var othersDeduct = $('#othersDeduct').val();
+            if (othersDeduct == "") {
+                othersDeduct = "0";
+            }
+            var others_D_Remarks = $('#others_D_Remarks').val();
+
+            if ((othersDeduct != "0") && others_D_Remarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Deduct Remarks",
+                }).show();
+                return false;
+            }
+            if (othersDeduct == "0" && addedAmount == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Added Amount Or Deduct Amount",
+                }).show();
+                return false;
+            }
+            var finalAmount = addedAmount - othersDeduct;
+            console.log("finalAmount :" + finalAmount);
+            //
+            var allFinals = +$('#FinalTotalAmount').val();
+
+            var allFinals2 = +allFinals + +finalAmount;
+
+            $('#FinalTotalAmount').val(allFinals2.toFixed(2));
+
+            var FinalTotalAmounts = $('#FinalTotalAmount').val();
+            var FinalIncentive = $('#FinalIncentive').val(FinalTotalAmounts);
+
+            if (roles == "BRAND") {
+                $('#TotalAmountForBrand').val(allFinals2);
+
+            }
+            //
+            $.post('@Url.Action("AddProjectsForOthers", "Software")', {
+                incentiveType: incentiveType,
+                addedAmount: addedAmount,
+                personEmpCode: personEmpCode,
+                projectNameForOthers: projectNameForOthers,
+                monName: monName,
+                monId: monId,
+                yearName: yearName,
+                yearId: yearId,
+                othersAddedRemarks: othersAddedRemarks,
+                othersDeduct: othersDeduct,
+                others_D_Remarks: others_D_Remarks,
+                finalAmount: addedAmount - othersDeduct
+            }, function (data) {
+                console.log(data);
+                $('#tBodyOthers').append(data);
+            });
+
+            $('#SwQcOthersIncentiveModel_OthersType').val("");
+            $('#othersAddedAmount').val("");
+            $('#othersAddedRemarks').val("");
+            $('#othersDeduct').val("");
+            $('#others_D_Remarks').val("");
+
+        });
+
+        $("#btnAddForPenalties").on('click', function (e) {
+            e.preventDefault();
+            var penaltiesReason = $('#SwQcOthersIncentiveModel2_PenaltiesReason').val();
+
+            var projectNameForPenalties = $('#projectNameForPenalties option:selected').text();
+            console.log("projectNameForPenalties  :" + projectNameForPenalties);
+
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var personEmpCodetext = $('#sltPerson option:selected').text();
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+            var roles = $('#DDDRole option:selected').text();
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (roles == "SELECT ROLE") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            if (personEmpCodetext == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            //
+            if (penaltiesReason == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Penalties Reason",
+                }).show();
+                return false;
+            }
+
+            if (projectNameForPenalties == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Project",
+                }).show();
+                return false;
+            }
+            var penaltiesTotal = $('#penaltiesTotal').val();
+            var assignedPersons = $('#assignedPersons').val();
+
+
+            if (penaltiesTotal == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Total Penalties",
+                }).show();
+                return false;
+            }
+
+            if (assignedPersons == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Assigned Persons",
+                }).show();
+                return false;
+            }
+            var ParticularPersonsPenalties = $('#ParticularPersonsPenalties').val();
+            var penaltiesRemarks = $('#penaltiesRemarks').val();
+
+            var finalAmount = $('#ParticularPersonsPenalties').val();
+            console.log("finalAmount :" + finalAmount);
+
+            //
+            var allFinals = +$('#FinalTotalAmount').val();
+
+            var allFinals2 = +allFinals - +finalAmount;
+
+            $('#FinalTotalAmount').val(allFinals2.toFixed(2));
+            var FinalTotalAmounts = $('#FinalTotalAmount').val();
+            //FinalIncentive
+            var FinalIncentive = $('#FinalIncentive').val(FinalTotalAmounts);
+
+            if (roles == "BRAND") {
+                $('#TotalAmountForBrand').val(allFinals2);
+            }
+
+
+            //
+
+            $.post('@Url.Action("AddProjectsForPenalties", "Software")', {
+                penaltiesReason: penaltiesReason,
+                penaltiesTotal: penaltiesTotal,
+                personEmpCode: personEmpCode,
+                projectNameForPenalties: projectNameForPenalties,
+                monName: monName,
+                monId: monId,
+                yearName: yearName,
+                yearId: yearId,
+                assignedPersons: assignedPersons,
+                ParticularPersonsPenalties: ParticularPersonsPenalties,
+                penaltiesRemarks: penaltiesRemarks,
+                finalAmount: finalAmount
+            }, function (data) {
+                console.log(data);
+                $('#tBodyPenalties').append(data);
+            });
+
+            $('#SwQcOthersIncentiveModel2_PenaltiesReason').val("");
+            $('#penaltiesTotal').val("");
+            $('#ParticularPersonsPenalties').val("");
+            $('#penaltiesRemarks').val("");
+            $('#assignedPersons').val("");
+        });
+        $("#btnAddForBrandIssue").on('click', function (e) {
+            e.preventDefault();
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var personEmpCodetext = $('#sltPerson option:selected').text();
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+            var roles = $('#DDDRole option:selected').text();
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (roles == "SELECT ROLE") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            if (personEmpCodetext == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            //
+
+            var totalAmount = $('#TotalAmountForBrand').val();
+
+            var BrandIssueAmountPercentage = $('#BrandIssueAmountPercentage').val();
+
+            if (BrandIssueAmountPercentage == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Percentage",
+                }).show();
+                return false;
+            }
+
+            var finalAmount = +$('#BrandFinalAmount').val();
+            console.log("finalAmount :" + finalAmount.toFixed(2));
+            var barndRemarks = $('#BrandRemarks').val();
+
+
+            //var finalAmount = addedAmount - othersDeduct;
+            //console.log("finalAmount :" + finalAmount);
+            ////
+            //  var allFinals = +$('#FinalTotalAmount').val();
+
+            var allFinals2 = +finalAmount;
+
+            $('#FinalIssueAmount').val(allFinals2.toFixed(2));
+            $('#FinalTotalAmount').val(allFinals2.toFixed(2));
+
+            var FinalTotalAmounts = $('#FinalTotalAmount').val();
+
+
+            FinalTotalAmounts = +FinalTotalAmounts + +tRewards - +tPenalties;
+
+            var FinalIncentive = $('#FinalIncentive').val(FinalTotalAmounts);
+
+
+            ////
+
+
+            $.post('@Url.Action("AddDetailsForBrandIssue", "Software")', {
+                totalAmount: totalAmount,
+                BrandIssueAmountPercentage: BrandIssueAmountPercentage,
+                finalAmount: finalAmount,
+                barndRemarks: barndRemarks,
+                personEmpCode: personEmpCode,
+                monName: monName,
+                monId: monId,
+                yearName: yearName,
+                yearId: yearId
+            }, function (data) {
+                console.log(data);
+                $('#tBodyBrandIssue').append(data);
+            });
+
+            $('#BrandIssueAmountPercentage').val("");
+            $('#BrandRemarks').val("");
+            $('#BrandFinalAmount').val("");
+
+        });
+        $("#btnAddForBrandCost").on('click', function (e) {
+            e.preventDefault();
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var personEmpCodetext = $('#sltPerson option:selected').text();
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+            var roles = $('#DDDRole option:selected').text();
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (roles == "SELECT ROLE") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            if (personEmpCodetext == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            //
+
+            var BrandCost = $('#BrandCost').val();
+            if (BrandCost == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Cost",
+                }).show();
+                return false;
+            }
+
+            var BrandCostPercentage = $('#BrandCostPercentage').val();
+
+            if (BrandCostPercentage == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Percentage",
+                }).show();
+                return false;
+            }
+
+            var BrandCostPerPersonIncentive = $('#BrandCostPerPersonIncentive').val();
+            var BrandCostAddedAmount = $('#BrandCostAddedAmount').val();
+
+            if (BrandCostAddedAmount == "") {
+                BrandCostAddedAmount = "0";
+            }
+
+            var BrandCostAddedRemarks = $('#BrandCostAddedRemarks').val();
+            var BrandCostDeduction = $('#BrandCostDeduction').val();
+            if (BrandCostDeduction == "") {
+                BrandCostDeduction = "0";
+            }
+            var BrandCostDeductionRemarks = $('#BrandCostDeductionRemarks').val();
+
+            if (BrandCostAddedAmount != "0" && BrandCostAddedRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Remarks",
+                }).show();
+                return false;
+            }
+
+            if (BrandCostDeduction != "0" && BrandCostDeductionRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Deduction Remarks",
+                }).show();
+                return false;
+            }
+
+            var finalAmount = +BrandCostPerPersonIncentive + +BrandCostAddedAmount - +BrandCostDeduction;
+
+            var allFinals1 = $('#FinalTotalAmount').val();
+
+            var allFinals2 = +allFinals1 + +finalAmount;
+
+            $('#FinalTotalAmount').val(allFinals2.toFixed(2));
+
+            var FinalTotalAmounts = $('#FinalTotalAmount').val();
+
+            FinalTotalAmounts = +FinalTotalAmounts + +tRewards - +tPenalties;
+            FinalTotalAmounts = $('#FinalTotalAmount').val(FinalTotalAmounts);
+
+
+            var FinalIncentive = $('#FinalIncentive').val($('#FinalTotalAmount').val());
+
+
+
+            $.post('@Url.Action("AddDetailsForBrandCost", "Software")', {
+                BrandCost: BrandCost,
+                BrandCostPercentage: BrandCostPercentage,
+                BrandCostPerPersonIncentive: BrandCostPerPersonIncentive,
+                BrandCostAddedAmount: BrandCostAddedAmount,
+                BrandCostAddedRemarks: BrandCostAddedRemarks,
+                BrandCostDeduction: BrandCostDeduction,
+                BrandCostDeductionRemarks: BrandCostDeductionRemarks,
+                finalAmount: finalAmount,
+                personEmpCode: personEmpCode,
+                monName: monName,
+                monId: monId,
+                yearName: yearName,
+                yearId: yearId
+            }, function (data) {
+                console.log(data);
+                $('#tBodyBrandCost').append(data);
+            });
+
+            $('#BrandCost').val("");
+            $('#BrandCostPercentage').val("");
+            $('#BrandCostPerPersonIncentive').val("");
+            $('#BrandCostAddedAmount').val("");
+            $('#BrandCostAddedRemarks').val("");
+            $('#BrandCostDeduction').val("");
+            $('#BrandCostDeductionRemarks').val("");
+
+        });
+        //Final Submit
+        $("#btnFinalSubmit").on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var issueInsVal = "";
+            var autoPenaltiesVal = "";
+            var extraWorkVal = "";
+            var personalUseVal = "";
+            var ctsTestVal = "";
+            var fieldTestVal = "";
+            var othersVal = "";
+            var penaltiesVal = "";
+            var finalInsVal = "";
+            //for BRAND//
+            var brandIssueVal = "";
+            var brandPromotionVal = "";
+
+            var objIssue = {};
+            var objIssueArr = [];
+
+            var monthName = $('#DDDMonth option:selected').text();
+            var monthNum = $('#DDDMonth option:selected').val();
+            var yearName = $('#DDDYear option:selected').text();
+
+            if (monthName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+
+            var roleName = $('#DDDRole option:selected').text();
+            if (roleName == "SELECT ROLE") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            var personEmpCodetext = $('#sltPerson option:selected').text();
+            if (personEmpCodetext == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            var projectId;
+            var swqcHeadAssignId;
+            var testPhaseId;
+            var versionNo;
+            var projectName;
+            var versionName;
+            var incentiveClaims;
+            var assignedPersons;
+            var critical;
+            var major;
+            var minor;
+            var baseAmount;
+            var sDate;
+            var eDate;
+            var dateDiff;
+            var timeline;
+
+
+            var issueAmount;
+            var totalAmount;
+            var particularIns;
+            var finalAmount;
+            //
+
+            $("#tbl1 tr.trClsforSize").each(function () {
+                objIssue = new Object();
+
+                projectId = $.trim($(this).find('td:eq(0)').text());
+                swqcHeadAssignId = $.trim($(this).find('td:eq(1)').text());
+                testPhaseId = $.trim($(this).find('td:eq(2)').text());
+                versionNo = $.trim($(this).find('td:eq(3)').text());
+                projectName = $.trim($(this).find('td:eq(4)').text());
+                versionName = $.trim($(this).find('td:eq(5)').text());
+
+                incentiveClaims = $.trim($(this).find('td:eq(7)').text());
+                assignedPersons = $.trim($(this).find('td:eq(8)').text());
+                critical = $.trim($(this).find('td:eq(9)').text());
+                major = $.trim($(this).find('td:eq(10)').text());
+                minor = $.trim($(this).find('td:eq(11)').text());
+                baseAmount = $.trim($(this).find('td:eq(12)').text());
+                sDate = $.trim($(this).find('td:eq(13)').text());
+                eDate = $.trim($(this).find('td:eq(14)').text());
+                dateDiff = $.trim($(this).find('td:eq(15)').text());
+                timeline = $.trim($(this).find('td:eq(16)').text());
+                issueAmount = $.trim($(this).find('td:eq(17)').text());
+                totalAmount = $.trim($(this).find('td:eq(18)').text());
+                particularIns = $.trim($(this).find("#ParticularPersonIncentive").val());
+                finalAmount = $.trim($(this).find("#final_Am_Id").val());
+
+                //objIssue
+                objIssue.ProjectId = projectId;
+                objIssue.SwQcHeadAssignId = swqcHeadAssignId;
+                objIssue.TestPhaseId = testPhaseId;
+                objIssue.SoftwareVersionNumber = versionNo;
+                objIssue.ProjectName = projectName;
+                objIssue.SoftwareVersionName = versionName;
+                objIssue.IncentiveClaimArea = incentiveClaims;
+                objIssue.AssignedPersons = assignedPersons;
+                objIssue.Critical = critical;
+                objIssue.Major = major;
+                objIssue.Minor = minor;
+                objIssue.BaseAmount = baseAmount;
+                objIssue.StartDate = sDate;
+                objIssue.EndDate = eDate;
+                objIssue.DateDiffWithHoliday = dateDiff;
+                objIssue.Timeline = timeline;
+
+                objIssue.IssueAmount = issueAmount;
+                objIssue.TotalAmount = totalAmount;
+                objIssue.ParticularPersonIncentive = particularIns;
+                objIssue.FinalAmount = finalAmount;
+
+                objIssue.EmployeeCode = personEmpCode;
+                objIssue.MonNum = monthNum;
+                objIssue.Month = monthName;
+                objIssue.Year = yearName;
+                //objIssueArr
+                objIssueArr.push(objIssue);
+                console.log("objIssueArr---->" + objIssueArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("All_QcMembersMonthlyIncentive", "Software")',
+                data: "{objIssueArr:'" + JSON.stringify(objIssueArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+
+                    console.log(data);
+                    issueInsVal = "yes";
+                    //if (data.data == "ok") {
+                    //    alertify.dialog('alert').set({
+                    //        'title': '   ',
+                    //        'transition': 'zoom',
+                    //        'message': "Incentive Generated Successfully.",
+                    //    }).show();
+                    //    return false;
+                    //}
+                }
+            });//end Ajax Issue
+            //Auto Penalties
+            @*var objAutoPenal = {};
+            var objAutoPenalArr = [];
+
+            var projectNamePenal;
+            var releaseDate;
+            var totalIssuePercentage;
+            var assignedPersonsPenal;
+            var totalAmountPenal;
+            var totalPenalties;
+            var penaltiespercentage;
+            var previousDeductedAmount;
+            var perPersonPenalties;
+            var finalAmountPenal;
+            //
+            $("#tblAutoPenalties tr.trClsforSize").each(function () {
+                objAutoPenal = new Object();
+
+                projectNamePenal = $.trim($(this).find('td:eq(0)').text());
+                releaseDate = $.trim($(this).find('td:eq(1)').text());
+                totalIssuePercentage = $.trim($(this).find('td:eq(2)').text());
+                assignedPersonsPenal = $.trim($(this).find('td:eq(3)').text());
+                totalAmountPenal = $.trim($(this).find('td:eq(4)').text());
+                totalPenalties = $.trim($(this).find('td:eq(5)').text());
+                penaltiespercentage = $.trim($(this).find('td:eq(6)').text());
+                previousDeductedAmount = $.trim($(this).find('td:eq(7)').text());
+                perPersonPenalties = $.trim($(this).find('td:eq(8)').text());
+                finalAmountPenal = $.trim($(this).find('td:eq(9)').text());
+
+                //objAutoPenal
+                objAutoPenal.ProjectName = projectNamePenal;
+                objAutoPenal.ReleaseDate = releaseDate;
+                objAutoPenal.TotalIssuePercentage = totalIssuePercentage;
+                objAutoPenal.AssignedPersons = assignedPersonsPenal;
+                objAutoPenal.TotalAmount = totalAmountPenal;
+                objAutoPenal.TotalPenalties = totalPenalties;
+                objAutoPenal.PenaltiesPercentage = penaltiespercentage;
+                objAutoPenal.PreviousDeductedAmount = previousDeductedAmount;
+                objAutoPenal.PerPersonPenalties = perPersonPenalties;
+                objAutoPenal.FinalAmount = finalAmountPenal;
+
+                objAutoPenal.EmployeeCode = personEmpCode;
+                objAutoPenal.MonNum = monthNum;
+                objAutoPenal.Month = monthName;
+                objAutoPenal.Year = yearName;
+                //objAutoPenalArr
+                objAutoPenalArr.push(objAutoPenal);
+                console.log("objAutoPenalArr---->" + objAutoPenalArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_AutoPenalties", "Software")',
+                data: "{objAutoPenalArr:'" + JSON.stringify(objAutoPenalArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    autoPenaltiesVal = "yes";
+                }
+            });//end Ajax penalties*@
+            var objAutoPenal = {};
+            var objAutoPenalArr = [];
+
+            var IssueVerificationId;
+            var ProjectMasterId;
+            var ModelName;
+            var Module;
+            var IssueDetails;
+            var IssueFrequency;
+            var IssueType;
+            var Status;
+            var ReleaseDate;
+            var AddingDate;
+            var StartDate;
+            var ClosingDate;
+            var MonthlyEndDate;
+            var EmployeeCode;
+            var AssignedPersons;
+            var TotalPenalties;
+            var ParticularPersonsPenalties;
+            var FinalAmount;
+            var Month;
+            var MonNum;
+            var Year;
+            //
+            $("#tblAutoPenalties tr.trClsforSize").each(function () {
+                objAutoPenal = new Object();
+
+                IssueVerificationId = $.trim($(this).find('td:eq(0)').text());
+                ProjectMasterId = $.trim($(this).find('td:eq(1)').text());
+                ModelName = $.trim($(this).find('td:eq(2)').text());
+                Module = $.trim($(this).find('td:eq(3)').text());
+                IssueDetails = $.trim($(this).find('td:eq(4)').text());
+                IssueFrequency = $.trim($(this).find('td:eq(5)').text());
+                IssueType = $.trim($(this).find('td:eq(6)').text());
+                Status = $.trim($(this).find('td:eq(7)').text());
+                ReleaseDate = $.trim($(this).find('td:eq(8)').text());
+                AddingDate = $.trim($(this).find('td:eq(9)').text());
+                ClosingDate = $.trim($(this).find('td:eq(10)').text());
+                StartDate = $.trim($(this).find('td:eq(11)').text());
+                MonthlyEndDate = $.trim($(this).find('td:eq(12)').text());
+                EmployeeCode = personEmpCode;
+                AssignedPersons = $.trim($(this).find('td:eq(15)').text());
+                TotalPenalties = $.trim($(this).find('td:eq(14)').text());
+                ParticularPersonsPenalties = $.trim($(this).find('td:eq(16)').text());
+                FinalAmount = $.trim($(this).find('td:eq(17)').text());
+                Month = $.trim($(this).find('td:eq(18)').text());
+                MonNum = $.trim($(this).find('td:eq(19)').text());
+                Year = $.trim($(this).find('td:eq(20)').text());
+                //personEmpCode
+                //objAutoPenal
+                objAutoPenal.IssueVerificationId = IssueVerificationId;
+                objAutoPenal.ProjectMasterId = ProjectMasterId;
+                objAutoPenal.ModelName = ModelName;
+                objAutoPenal.Module = Module;
+                objAutoPenal.IssueDetails = IssueDetails;
+                objAutoPenal.IssueFrequency = IssueFrequency;
+                objAutoPenal.IssueType = IssueType;
+                objAutoPenal.Status = Status;
+                objAutoPenal.ReleaseDate = ReleaseDate;
+                objAutoPenal.AddingDate = AddingDate;
+                objAutoPenal.ClosingDate = ClosingDate;
+                objAutoPenal.MonthlyStartDate = StartDate;
+                objAutoPenal.MonthlyEndDate = MonthlyEndDate;
+                objAutoPenal.AssignedPersons = AssignedPersons;
+                objAutoPenal.TotalPenalties = TotalPenalties;
+                objAutoPenal.ParticularPersonsPenalties = ParticularPersonsPenalties;
+                objAutoPenal.FinalAmount = FinalAmount;
+            
+                objAutoPenal.EmployeeCode = personEmpCode;
+                objAutoPenal.MonNum = monthNum;
+                objAutoPenal.Month = monthName;
+                objAutoPenal.Year = yearName;
+                //objAutoPenalArr
+                objAutoPenalArr.push(objAutoPenal);
+                console.log("objAutoPenalArr---->" + objAutoPenalArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_AutoPenaltiesForIssues", "Software")',
+                data: "{objAutoPenalArr:'" + JSON.stringify(objAutoPenalArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    autoPenaltiesVal = "yes";
+                }
+            });//end Ajax penalties
+            //Extra
+            var objExtra = {};
+            var objExtraArr = [];
+
+            var extraNewInnovationId;
+            var extraProjectName;
+            var extraAssignedBy;
+            var extraWorkType;
+            var extraDescription;
+
+            var extraEffectiveDate;
+            var extraPersons;
+            var extraBaseAmount;
+            var extraTotalAmount;
+            var extrFinalAmount;
+
+            //
+
+            $("#tbl2 tr.trClsforSize").each(function () {
+                objExtra = new Object();
+
+                extraNewInnovationId = $.trim($(this).find('td:eq(0)').text());
+                extraProjectName = $.trim($(this).find('td:eq(1)').text());
+                extraAssignedBy = $.trim($(this).find('td:eq(2)').text());
+                extraWorkType = $.trim($(this).find('td:eq(3)').text());
+                extraDescription = $.trim($(this).find('td:eq(4)').text());
+                extraEffectiveDate = $.trim($(this).find('td:eq(5)').text());
+                extraPersons = $.trim($(this).find('td:eq(6)').text());
+                extraBaseAmount = $.trim($(this).find("#newBaseAmount").val());
+                extraTotalAmount = $.trim($(this).find("#final_Am_Id").val());
+                extrFinalAmount = $.trim($(this).find("#final_Am_Id").val());
+
+                //objExtra
+                objExtra.NewInnovationId = extraNewInnovationId;
+                objExtra.ProjectName = extraProjectName;
+                objExtra.AssignedBy = extraAssignedBy;
+                objExtra.Description = extraDescription;
+                objExtra.WorkType = extraWorkType;
+                objExtra.EffectiveDate = extraEffectiveDate;
+                objExtra.Persons = extraPersons;
+                objExtra.BaseAmount = extraBaseAmount;
+                objExtra.TotalAmount = extraTotalAmount;
+                objExtra.FinalAmount = extrFinalAmount;
+
+                objExtra.EmployeeCode = personEmpCode;
+                objExtra.MonNum = monthNum;
+                objExtra.Month = monthName;
+                objExtra.Year = yearName;
+                //objExtraArr
+                objExtraArr.push(objExtra);
+                console.log("objExtraArr---->" + objExtraArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_ExtraWork", "Software")',
+                data: "{objExtraArr:'" + JSON.stringify(objExtraArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data.data);
+                    extraWorkVal = "yes";
+                    //if (data.data == "ok") {
+                    //    alertify.dialog('alert').set({
+                    //        'title': '   ',
+                    //        'transition': 'zoom',
+                    //        'message': "Incentive Generated Successfully.",
+                    //    }).show();
+                    //    return false;
+                    //}
+                }
+            });//end Ajax Extra Work
+
+            //Personal Use
+            var objPerUse = {};
+            var objPerUseArr = [];
+
+            //perUs
+            var perUsSwQcPrUseFindId;
+            var perUsProjectId;
+            var perUsSwqcHeadAssignId;
+            var perUsTestPhaseId;
+            var perUsVersionNo;
+            var perUsProjectName;
+            var perUsVersionName;
+            var perUsIncentiveClaims;
+            var perUsCritical;
+            var perUsMajor;
+            var perUsMinor;
+            var perUsTotalAmount;
+            var perUsParticularIns;
+            var perUsFinalAmount;
+            $("#tbl3 tr.trClsforSize").each(function () {
+                objPerUse = new Object();
+
+                perUsSwQcPrUseFindId = $.trim($(this).find('td:eq(0)').text());
+                perUsSwqcHeadAssignId = $.trim($(this).find('td:eq(1)').text());
+                perUsTestPhaseId = $.trim($(this).find('td:eq(2)').text());
+                perUsProjectId = $.trim($(this).find('td:eq(3)').text());
+                perUsProjectName = $.trim($(this).find('td:eq(4)').text());
+                perUsVersionName = $.trim($(this).find('td:eq(5)').text());
+                perUsVersionNo = $.trim($(this).find('td:eq(6)').text());
+                perUsIncentiveClaims = $.trim($(this).find('td:eq(7)').text());
+                perUsCritical = $.trim($(this).find('td:eq(9)').text());
+                perUsMajor = $.trim($(this).find('td:eq(10)').text());
+                perUsMinor = $.trim($(this).find('td:eq(11)').text());
+                perUsTotalAmount = $.trim($(this).find('td:eq(12)').text());
+                perUsParticularIns = $.trim($(this).find("#ParticularPersonIncentive").val());
+                perUsFinalAmount = $.trim($(this).find("#final_Am_Id").val());
+
+                //objPerUse
+                objPerUse.SwQcPrUseFindId = perUsSwQcPrUseFindId;
+                objPerUse.SwQcHeadAssignId = perUsSwqcHeadAssignId;
+                objPerUse.TestPhaseId = perUsTestPhaseId;
+                objPerUse.ProjectId = perUsProjectId;
+                objPerUse.ProjectName = perUsProjectName;
+                objPerUse.SoftwareVersionNumber = perUsVersionNo;
+                objPerUse.SoftwareVersionName = perUsVersionName;
+                objPerUse.IncentiveClaimArea = perUsIncentiveClaims;
+
+                objPerUse.Critical = perUsCritical;
+                objPerUse.Major = perUsMajor;
+                objPerUse.Minor = perUsMinor;
+
+                objPerUse.TotalAmount = perUsTotalAmount;
+                objPerUse.ParticularPersonIncentive = perUsParticularIns;
+                objPerUse.FinalAmount = perUsFinalAmount;
+
+                objPerUse.EmployeeCode = personEmpCode;
+                objPerUse.MonNum = monthNum;
+                objPerUse.Month = monthName;
+                objPerUse.Year = yearName;
+                //objIssueArr
+                objPerUseArr.push(objPerUse);
+                console.log("objPerUseArr---->" + objPerUseArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_PersonalUse", "Software")',
+                data: "{objPerUseArr:'" + JSON.stringify(objPerUseArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+
+                    console.log(data);
+                    personalUseVal = "yes";
+                    //if (data.data == "ok") {
+                    //    alertify.dialog('alert').set({
+                    //        'title': '   ',
+                    //        'transition': 'zoom',
+                    //        'message': "Incentive Generated Successfully.",
+                    //    }).show();
+                    //    return false;
+                    //}
+                }
+            });//end Ajax personalUse
+
+
+            //CTS
+            var objCts = {};
+            var objCtsArr = [];
+
+            //cts
+            var ctsSwqcHeadAssignId;
+            var ctsProjectId;
+            var ctsTestPhaseId;
+            var ctsProjectName;
+            var ctsVersionName;
+            var ctsVersionNo;
+            var ctsIncentiveClaims;
+            var ctsCritical;
+            var ctsMajor;
+            var ctsMinor;
+            var ctsBaseAmount;
+            var ctsTotalAmount;
+            var ctsParticularIns;
+            var ctsFinalAmount;
+            $("#tbl4 tr.trClsforSize").each(function () {
+                objCts = new Object();
+
+                ctsSwqcHeadAssignId = $.trim($(this).find('td:eq(0)').text());
+                ctsProjectId = $.trim($(this).find('td:eq(1)').text());
+                ctsTestPhaseId = $.trim($(this).find('td:eq(2)').text());
+                ctsProjectName = $.trim($(this).find('td:eq(3)').text());
+                ctsVersionName = $.trim($(this).find('td:eq(4)').text());
+                ctsVersionNo = $.trim($(this).find('td:eq(5)').text());
+                ctsIncentiveClaims = $.trim($(this).find('td:eq(6)').text());
+                ctsCritical = $.trim($(this).find('td:eq(7)').text());
+                ctsMajor = $.trim($(this).find('td:eq(8)').text());
+                ctsMinor = $.trim($(this).find('td:eq(9)').text());
+                ctsBaseAmount = $.trim($(this).find('td:eq(10)').text());
+                ctsTotalAmount = $.trim($(this).find('td:eq(11)').text());
+                ctsParticularIns = $.trim($(this).find("#ParticularPersonIncentive").val());
+                ctsFinalAmount = $.trim($(this).find("#final_Am_Id").val());
+
+                //objCts
+                objCts.SwQcHeadAssignId = ctsSwqcHeadAssignId;
+                objCts.ProjectId = ctsProjectId;
+                objCts.TestPhaseId = ctsTestPhaseId;
+                objCts.ProjectName = ctsProjectName;
+                objCts.SoftwareVersionName = ctsVersionName;
+                objCts.SoftwareVersionNumber = ctsVersionNo;
+                objCts.IncentiveClaimArea = ctsIncentiveClaims;
+                objCts.Critical = ctsCritical;
+                objCts.Major = ctsMajor;
+                objCts.Minor = ctsMinor;
+                objCts.BaseAmount = ctsBaseAmount;
+                objCts.TotalAmount = ctsTotalAmount;
+                objCts.ParticularPersonIncentive = ctsParticularIns;
+                objCts.FinalAmount = ctsFinalAmount;
+
+                objCts.EmployeeCode = personEmpCode;
+                objCts.MonNum = monthNum;
+                objCts.Month = monthName;
+                objCts.Year = yearName;
+                //objCtsArr
+                objCtsArr.push(objCts);
+                console.log("objCtsArr---->" + objCtsArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_Cts", "Software")',
+                data: "{objCtsArr:'" + JSON.stringify(objCtsArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    ctsTestVal = "yes";
+                }
+            });//end Ajax ctsTest
+
+
+            //Field By Head
+            var objField = {};
+            var objFieldArr = [];
+
+            var fieldProjectId;
+            var fieldTestPhaseId;
+            var fieldProjectName;
+            var fieldVersionName;
+            var fieldVersionNo;
+            var fieldIncentiveClaims;
+            var fieldAssignedPersons;
+            var fieldCritical;
+            var fieldBaseAmount;
+            var fieldSDate;
+            var fieldEDate;
+            var fieldDdateDiff;
+            var fieldTimeline;
+
+            var fieldTotalAmount;
+            var fieldParticularIns;
+            var fieldFinalAmount;
+            var fieldSwQcHeadAssignId;
+            $("#tbl5 tr.trClsforSize").each(function () {
+                objField = new Object();
+
+                //field
+                fieldProjectId = $.trim($(this).find('td:eq(0)').text());
+                fieldTestPhaseId = $.trim($(this).find('td:eq(1)').text());
+                fieldProjectName = $.trim($(this).find('td:eq(3)').text());
+                fieldVersionName = $.trim($(this).find('td:eq(4)').text());
+                fieldVersionNo = $.trim($(this).find('td:eq(5)').text());
+                fieldIncentiveClaims = $.trim($(this).find('td:eq(6)').text());
+                fieldAssignedPersons = $.trim($(this).find('td:eq(7)').text());
+                fieldCritical = $.trim($(this).find('td:eq(8)').text());
+                fieldBaseAmount = $.trim($(this).find('td:eq(9)').text());
+                fieldSDate = $.trim($(this).find('td:eq(10)').text());
+                fieldEDate = $.trim($(this).find('td:eq(11)').text());
+                fieldDdateDiff = $.trim($(this).find('td:eq(12)').text());
+                fieldTimeline = $.trim($(this).find('td:eq(13)').text());
+
+                fieldTotalAmount = $.trim($(this).find('td:eq(14)').text());
+                fieldSwQcHeadAssignId = $.trim($(this).find('td:eq(15)').text());
+                fieldParticularIns = $.trim($(this).find("#ParticularPersonIncentive").val());
+                fieldFinalAmount = $.trim($(this).find("#final_Am_Id").val());
+
+                //objField
+                objField.ProjectId = fieldProjectId;
+                objField.TestPhaseId = fieldTestPhaseId;
+                objField.ProjectName = fieldProjectName;
+                objField.SoftwareVersionName = fieldVersionName;
+                objField.SoftwareVersionNumber = fieldVersionNo;
+                objField.IncentiveClaimArea = fieldIncentiveClaims;
+                objField.AssignedPersons = fieldAssignedPersons;
+                objField.Critical = fieldCritical;
+                objField.BaseAmount = fieldBaseAmount;
+                objField.StartDate = fieldSDate;
+                objField.EndDate = fieldEDate;
+                objField.DateDiffWithHoliday = fieldDdateDiff;
+                objField.Timeline = fieldTimeline;
+
+                objField.TotalAmount = fieldTotalAmount;
+                objField.SwQcHeadAssignId = fieldSwQcHeadAssignId;
+                objField.ParticularPersonIncentive = fieldParticularIns;
+                objField.FinalAmount = fieldFinalAmount;
+
+                objField.EmployeeCode = personEmpCode;
+                objField.MonNum = monthNum;
+                objField.Month = monthName;
+                objField.Year = yearName;
+                //objField
+                objFieldArr.push(objField);
+                console.log("objFieldArr---->" + objFieldArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_FieldByHead", "Software")',
+                data: "{objFieldArr:'" + JSON.stringify(objFieldArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    fieldTestVal = "yes";
+                }
+            });//end Ajax fieldTest
+
+            //Others
+            var objOthers = {};
+            var objOthersArr = [];
+
+
+            var othersOthersType;
+            var othersProjectName;
+            var othersAddedAmount;
+            var othersAddAmountRemarks;
+            var othersDeduction;
+            var othersDeductionRemarks;
+            var othersFinalAmount;
+
+            $("#tblOthers tr.tableTrCls").each(function () {
+                objOthers = new Object();
+
+                //others
+                othersOthersType = $.trim($(this).find('td:eq(1)').text());
+                othersProjectName = $.trim($(this).find('td:eq(2)').text());
+                othersAddedAmount = $.trim($(this).find('td:eq(4)').text());
+                othersAddAmountRemarks = $.trim($(this).find('td:eq(5)').text());
+                othersDeduction = $.trim($(this).find('td:eq(6)').text());
+                othersDeductionRemarks = $.trim($(this).find('td:eq(7)').text());
+                othersFinalAmount = $.trim($(this).find('td:eq(8)').text());
+
+                //objOthers
+                objOthers.OthersType = othersOthersType;
+                objOthers.ProjectName = othersProjectName;
+                objOthers.AddedAmount = othersAddedAmount;
+                objOthers.AddAmountRemarks = othersAddAmountRemarks;
+                objOthers.Deduction = othersDeduction;
+                objOthers.DeductionRemarks = othersDeductionRemarks;
+                objOthers.FinalAmount = othersFinalAmount;
+
+                objOthers.EmployeeCode = personEmpCode;
+                objOthers.MonNum = monthNum;
+                objOthers.Month = monthName;
+                objOthers.Year = yearName;
+                //objField
+                objOthersArr.push(objOthers);
+                console.log("objOthersArr---->" + objOthersArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_Others", "Software")',
+                data: "{objOthersArr:'" + JSON.stringify(objOthersArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    othersVal = "yes";
+                }
+            });//end Ajax others
+
+            //Penalties
+            var objPenalties = {};
+            var objPenaltiesArr = [];
+
+            //penalties
+            var penaltiesPenaltiesReason;
+            var penaltiesProjectName;
+            var penaltiesTotalPenalties;
+            var penaltiesAssignedPersons;
+            var penaltiesParticularPersonsPenalties;
+            var penaltiesPenaltiesRemarks;
+            var penaltiesFinalAmount;
+            $("#tblPenalties tr.tableTrCls").each(function () {
+                objPenalties = new Object();
+
+                //penalties
+                penaltiesPenaltiesReason = $.trim($(this).find('td:eq(1)').text());
+                penaltiesProjectName = $.trim($(this).find('td:eq(2)').text());
+                penaltiesTotalPenalties = $.trim($(this).find('td:eq(4)').text());
+                penaltiesAssignedPersons = $.trim($(this).find('td:eq(5)').text());
+                penaltiesParticularPersonsPenalties = $.trim($(this).find('td:eq(6)').text());
+                penaltiesPenaltiesRemarks = $.trim($(this).find('td:eq(7)').text());
+                penaltiesFinalAmount = $.trim($(this).find('td:eq(8)').text());
+
+                //objPenalties
+                objPenalties.PenaltiesReason = penaltiesPenaltiesReason;
+                objPenalties.ProjectName = penaltiesProjectName;
+                objPenalties.TotalPenalties = penaltiesTotalPenalties;
+                objPenalties.AssignedPersons = penaltiesAssignedPersons;
+                objPenalties.ParticularPersonsPenalties = penaltiesParticularPersonsPenalties;
+                objPenalties.PenaltiesRemarks = penaltiesPenaltiesRemarks;
+                objPenalties.FinalAmount = penaltiesFinalAmount;
+
+                objPenalties.EmployeeCode = personEmpCode;
+                objPenalties.MonNum = monthNum;
+                objPenalties.Month = monthName;
+                objPenalties.Year = yearName;
+                //objField
+                objPenaltiesArr.push(objPenalties);
+                console.log("objPenaltiesArr---->" + objPenaltiesArr);
+            });
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_Penalties", "Software")',
+                data: "{objPenaltiesArr:'" + JSON.stringify(objPenaltiesArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    penaltiesVal = "yes";
+                }
+            });//end Ajax penalties
+
+
+            //var brandPromotionVal = "";
+            if (roles == "BRAND") {
+                //BrandIssue
+                var objBrandIssue = {};
+                var objBrandIssueArr = [];
+
+                //brandIssue
+                var brandIssuetotalAmountForBrand;
+                var brandIssuebrandIssueAmountPercentage;
+                var brandIssuebrandFinalAmount;
+                var brandIssuebrandRemarks;
+                $("#tblBrandIssue tr.tableTrCls").each(function () {
+                    objBrandIssue = new Object();
+
+                    //brandIssue
+                    brandIssuetotalAmountForBrand = $.trim($(this).find('td:eq(1)').text());
+                    brandIssuebrandIssueAmountPercentage = $.trim($(this).find('td:eq(2)').text());
+                    brandIssuebrandFinalAmount = $.trim($(this).find('td:eq(3)').text());
+                    brandIssuebrandRemarks = $.trim($(this).find('td:eq(4)').text());
+
+                    //objBrandIssue
+                    objBrandIssue.TotalAmountForBrand = brandIssuetotalAmountForBrand;
+                    objBrandIssue.BrandIssueAmountPercentage = brandIssuebrandIssueAmountPercentage;
+                    objBrandIssue.BrandIssuebrandFinalAmount = brandIssuebrandFinalAmount;
+                    objBrandIssue.BrandIssuebrandRemarks = brandIssuebrandRemarks;
+
+                    objBrandIssue.EmployeeCode = personEmpCode;
+                    objBrandIssue.MonNum = monthNum;
+                    objBrandIssue.Month = monthName;
+                    objBrandIssue.Year = yearName;
+                    //objBrandIssueArr
+                    objBrandIssueArr.push(objBrandIssue);
+                    console.log("objBrandIssueArr---->" + objBrandIssueArr);
+                });
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveSwIncentive_BrandIssues", "Software")',
+                    data: "{objBrandIssueArr:'" + JSON.stringify(objBrandIssueArr) + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        console.log(data);
+                        brandIssueVal = "yes";
+                    }
+                });//end Ajax brandIssue
+
+
+                //BrandCost
+                var objBrandCost = {};
+                var objBrandCostArr = [];
+
+                //brandCost
+                var brandCostBrandCost;
+                var brandCostBrandCostPercentage;
+                var brandCostBrandCostPerPersonIncentive;
+                var brandCostBrandCostAddedAmount;
+                var brandCostBrandCostAddedRemarks;
+                var brandCostBrandCostDeduction;
+                var brandCostBrandCostDeductionRemarks;
+                var brandCostBrandCostFinalAmount;
+                $("#tblBrandCost tr.tableTrCls").each(function () {
+                    objBrandCost = new Object();
+
+                    //brandIssue
+                    brandCostBrandCost = $.trim($(this).find('td:eq(1)').text());
+                    brandCostBrandCostPercentage = $.trim($(this).find('td:eq(2)').text());
+                    brandCostBrandCostPerPersonIncentive = $.trim($(this).find('td:eq(3)').text());
+                    brandCostBrandCostAddedAmount = $.trim($(this).find('td:eq(4)').text());
+                    brandCostBrandCostAddedRemarks = $.trim($(this).find('td:eq(5)').text());
+                    brandCostBrandCostDeduction = $.trim($(this).find('td:eq(6)').text());
+                    brandCostBrandCostDeductionRemarks = $.trim($(this).find('td:eq(7)').text());
+                    brandCostBrandCostFinalAmount = $.trim($(this).find('td:eq(8)').text());
+
+                    //objBrandCost
+                    objBrandCost.BrandCost = brandCostBrandCost;
+                    objBrandCost.BrandCostPercentage = brandCostBrandCostPercentage;
+                    objBrandCost.BrandCostPerPersonIncentive = brandCostBrandCostPerPersonIncentive;
+                    objBrandCost.BrandCostAddedAmount = brandCostBrandCostAddedAmount;
+                    objBrandCost.BrandCostAddedRemarks = brandCostBrandCostAddedRemarks;
+                    objBrandCost.BrandCostDeduction = brandCostBrandCostDeduction;
+                    objBrandCost.BrandCostDeductionRemarks = brandCostBrandCostDeductionRemarks;
+                    objBrandCost.BrandCostFinalAmount = brandCostBrandCostFinalAmount;
+
+                    objBrandCost.EmployeeCode = personEmpCode;
+                    objBrandCost.MonNum = monthNum;
+                    objBrandCost.Month = monthName;
+                    objBrandCost.Year = yearName;
+                    //objBrandIssueArr
+                    objBrandCostArr.push(objBrandCost);
+                    console.log("objBrandCostArr---->" + objBrandCostArr);
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveSwIncentive_BrandCost", "Software")',
+                    data: "{objBrandCostArr:'" + JSON.stringify(objBrandCostArr) + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        console.log(data);
+                        brandPromotionVal = "yes";
+                    }
+                });//end Ajax brandPromotion
+            }
+
+
+            //Final
+            var objFinal = {};
+            var objFinalArr = [];
+
+            //
+            //final
+            var hundredPercentIssueAmount = $('#HundredPercentIssueAmount').val();
+            var finalTotalAmount = $('#FinalTotalAmount').val();
+            var finalAddedAmount = $('#FinalAddedAmount').val();
+            var finalAddedRemarks = $('#FinalAddedRemarks').val();
+            var finalDeduction = $('#FinalDeduction').val();
+            var finalDeductionRemarks = $('#FinalDeductionRemarks').val();
+            var finalIncentive = $('#FinalIncentive').val();
+
+            if (finalAddedAmount == "") {
+                finalAddedAmount = "0";
+            }
+            if (finalDeduction == "") {
+                finalDeduction = "0";
+            }
+
+            if (finalAddedAmount != "0" && finalAddedRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Added Remarks",
+                }).show();
+                return false;
+            }
+            if (finalDeduction != "0" && finalDeductionRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Deduction Remarks",
+                }).show();
+                return false;
+            }
+            objFinal.HundredPercentIssueAmount = hundredPercentIssueAmount;
+            objFinal.FinalTotalAmount = finalTotalAmount;
+            objFinal.FinalAddedAmount = finalAddedAmount;
+            objFinal.FinalAddedRemarks = finalAddedRemarks;
+            objFinal.FinalDeduction = finalDeduction;
+            objFinal.FinalDeductionRemarks = finalDeductionRemarks;
+            objFinal.FinalIncentive = finalIncentive;
+
+            objFinal.PerPersonReward = tRewards;
+            objFinal.PerPersonPenalties = tPenalties;
+            objFinal.FinalIssueAmount = $('#FinalIssueAmount').val();
+
+            objFinal.EmployeeCode = personEmpCode;
+            objFinal.MonNum = monthNum;
+            objFinal.Month = monthName;
+            objFinal.Year = yearName;
+            objFinal.RoleName = roleName;
+
+            objFinalArr.push(objFinal);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_Incentive", "Software")',
+                data: "{objFinalArr:'" + JSON.stringify(objFinalArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    finalInsVal = "yes";
+                    if (data.data == "ok") {
+                        $('#loading').hide();
+
+                        window.location.reload(true);
+                        window.location = '@Url.Action("All_QcMembersMonthlyIncentive", "Software")';
+
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Incentive Generated Successfully.",
+                        }).show();
+                        return false;
+                    }
+                    else {
+                        $('#loading').hide();
+                        window.location.reload(true);
+                        window.location = '@Url.Action("All_QcMembersMonthlyIncentive", "Software")';
+
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Incentive Already Generated.",
+                        }).show();
+
+                        return false;
+                    }
+                }
+            });//end Ajax Finals
+
+
+        });//end Final Submit Button
+
+    });//document ready end
+
+
+    function winLoads() {
+        windows.load();
+    }
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>
+
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>

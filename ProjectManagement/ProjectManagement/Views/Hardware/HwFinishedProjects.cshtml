@@ -1,0 +1,195 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Screening Test Complete Projects
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-scrollable table-hover dtTable" id="tblScreeningCompleteProjects" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Assign Date </th>
+                            <th class="text-center"> Finish Date </th>
+                            <th class="text-center"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetScreeningTestCompleteProjects)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                <td class="hidden" id="hwQcAssignId">@item.ProjectMasterId</td>
+                                <td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>
+                                <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.AddedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center"> @item.UpdatedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center">
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnDownload">Download</button>
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnDetails" id="btnScreeningCompleteDetails">Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Running Test Complete Projects
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblRunningCompleteProjects">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Assign Date </th>
+                            <th class="text-center"> Finish Date </th>
+                            <th class="text-center"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetRunningTestCompleteProjects)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                <td class="hidden" id="hwQcAssignId">@item.ProjectMasterId</td>
+                                <td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>
+                                <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.AddedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center"> @item.UpdatedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center">
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnDownload">Download</button>
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnFgReport" id="btnScreeningCompleteDetails">Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Finished Good Test Complete Projects
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblFinishedGoodCompleteProjects">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Assign Date </th>
+                            <th class="text-center"> Finish Date </th>
+                            <th class="text-center"> Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetFinishedGoodTestCompleteProjects)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                <td class="hidden" id="hwQcAssignId">@item.ProjectMasterId</td>
+                                <td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>
+                                <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.AddedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center"> @item.UpdatedDate.ToString("dd/MM/yyyy") </td>
+                                <td class="text-center">
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnDownload">Download</button>
+                                    <button class="btn purple black btn-outline btn-sm btn-circle pull-right btnFgReport" id="btnScreeningCompleteDetails">Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.btnDetails').click(function () {
+        currentRow = $(this).closest('tr');
+        var projectId = $(this).closest('tr').find('td:eq(1)').text().trim();
+        var hwQcAssignId = $(this).closest('tr').find('td:eq(2)').text().trim();
+        var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(3)').text().trim();
+        var projectName = $(this).closest('tr').find('td:eq(4)').text().trim();
+        //alert(projectName);
+        console.log(projectName);
+        $('#DetailsProjectMasterId').val(projectId);
+        $('#DetailsProjectName').val(projectName);
+
+        var url = '@Url.Action("HwDisplayScreeningTest", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+        window.open(url);
+        //Approval
+        //$('#responsive').modal({
+        //    show: true,
+        //    backdrop: 'static'
+        //});
+    });
+
+    $('[class*="btnFgReport"]').click(function () {
+        //alert();
+
+        currentRow = $(this).closest('tr');
+        var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(3)').text().trim();
+        var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+        window.open(url);
+
+    });
+    
+    $('[class*="btnDownload"]').click(function () {
+        //alert();
+
+        currentRow = $(this).closest('tr');
+        var projectName = $(this).closest('tr').find('td:eq(4)').text().trim();
+        var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(3)').text().trim();
+        var url = '@Url.Action("GetAllDoc", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId+'&projectName='+encodeURIComponent( projectName);
+        window.open(url);
+
+    });
+    
+
+</script>

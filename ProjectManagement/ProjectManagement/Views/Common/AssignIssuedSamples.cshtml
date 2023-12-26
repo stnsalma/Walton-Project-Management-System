@@ -1,0 +1,87 @@
+﻿@model IEnumerable<ProjectManagement.Models.SampleTrackerModel>
+@{
+    ViewBag.Title = "AssignIssuedSamples";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Assign Issued Samples</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table">
+                    <table class="table table-bordered dtTable" id="tblSampleAssign">
+                        <thead>
+                            <tr>
+                                <th>Tracker ID</th>
+                                <th>Model</th>
+                                <th>Issue Quantity</th>
+                                <th>Issue Purpose</th>
+                                <th>Issued By</th>
+                                <th>Issue Date</th>
+                                <th>Assign Quantity</th>
+                                <th>Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model)
+                            {
+                                if (v.SampleIssuedBy != null)
+                                {
+                                    <tr>
+                                        <td class="trackerId">@v.SampleTrackerId</td>  
+                                        <td>@v.Model</td> 
+                                        <td class="issueQuantity">@v.SampleIssueQuantity</td> 
+                                        <td>@v.SampleIssuePurpose</td> 
+                                        <td>@v.SampleIssuedByName</td> 
+                                        <td>@v.SampleIssueDate</td> 
+                                        <td><input type="number" min="0" value="@v.NumberOfSample" class="form-control assignQuantity"/></td> 
+                                        <td><input type="text" value="@v.Remarks" class="form-control txtRemarks"/></td>                                        
+                                        <td>
+                                        @if (v.NumberOfSample == null)
+{
+    <input type="button" class="btn btn-success btnAssign" value="Assign" />
+}    
+                                        </td>
+                                    </tr>
+                                }   
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('.btnAssign').on('click', function () {
+            var url = '@Url.Action("SaveAssignSampleIssue","Common")';
+            var row = $(this).closest('tr');
+            row.find('.btnAssign').addClass('hidden');
+            var assignQuantity = row.find('.assignQuantity').val();
+            var issueQuantity = row.find('.issueQuantity').text();
+            var remarks = row.find('.txtRemarks').val();
+            var id = row.find('.trackerId').text();
+            console.log('ID:' + id + ', Assign Quantity-' + assignQuantity + 'issue quantity:' + issueQuantity + ', Remarks:' + remarks);
+            if (assignQuantity != '' && assignQuantity > 0) {
+                if (assignQuantity <= issueQuantity) {
+                    $.post(url, { id: id, assignQuantity: assignQuantity, remarks: remarks }, function (data) {
+                        console.log(data);
+                        alertify.success('Saved');
+                    });
+                } else {
+                    alertify.error('Assign quantity can not be greater than issue quantity');
+                }
+            } else {
+                alertify.error('Please enter assign quantity.');
+                row.find('.btnAssign').removeClass('hidden');
+            }
+        });
+    });
+</script>
+

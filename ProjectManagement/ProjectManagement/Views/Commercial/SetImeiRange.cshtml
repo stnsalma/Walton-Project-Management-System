@@ -1,0 +1,229 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmImeiRange
+@{
+    ViewBag.Title = "SetImeiRange";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+
+}
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Set IMEI Range
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        @using (Html.BeginForm("SetImeiRange", "Commercial"))
+        {
+            <div class="col-lg-12">
+                <div class="form-body">
+                    <h4 class="form-section">@Html.ActionLink("Back to List", "ImeiRangeRequests")</h4>
+                    @Html.HiddenFor(model => model.ProjectMasterId)
+                    @Html.HiddenFor(model => model.PurchaseOrderFormId)
+                    @Html.HiddenFor(model => model.BabtRawId)
+                    @Html.HiddenFor(model => model.ProjectName)
+                    @Html.HiddenFor(model => model.PurchaseOrderQuantiy)
+                    @Html.HiddenFor(model => model.TacNo)
+                    @Html.HiddenFor(model => model.RemainingQuantity)
+                    @Html.HiddenFor(model => model.RequestedQuantity)
+                    @Html.HiddenFor(model => model.AllocatedFrom)
+                    @*@Html.HiddenFor(model => model.SampleStartImei)
+                    @Html.HiddenFor(model => model.SampleEndImei)*@
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Project Name</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", disabled="true" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Purchase Oder</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.PurchaseOrderQuantiy, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">TAC NO.</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.TacNo, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Remaining for Allocation</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.RemainingQuantity, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Requested Quantity</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.RequestedQuantity, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Can be Allocated From</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.AllocatedFrom, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Given Quantity</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.GivenQuantity, new { @class = "form-control"})
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Sample End IMEI</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.SampleStartImei, new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.SampleStartImei, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Sample End IMEI</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.SampleEndImei, new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.SampleStartImei, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9">
+                                    @*@if (@Model.PhAccessory.PhAccessoriesId > 0)
+                                        {
+                                            <button class="btn sbold uppercase btn-outline blue">Update</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn sbold uppercase btn-outline green">Save</button>
+                                        }*@
+                                    <button class="btn sbold uppercase btn-outline green">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var givenQuantity = $('#GivenQuantity').val();
+        if (givenQuantity > 0) {
+            var remaining = new Number($("#RemainingQuantity").val());
+
+            var noc = $('#TacNo').val();
+            var quantity = $('#GivenQuantity').val();
+            var alloc = $('#AllocatedFrom').val();
+            if (remaining < parseInt(quantity)) {
+                alertify.alert("Given qunatity can't be bigger then Remaining Qauntity !!!");
+                $('#GivenQuantity').val(0);
+            } else {
+                var url = '@Url.Action("GetRange", "Commercial")';
+                $.post(url, { qty: quantity, alloc: alloc, noc: noc }).done(function (data) {
+                    $('#SampleStartImei').val(data.StartImeiRange);
+                    $('#SampleEndImei').val(data.EndImeiRange);
+                });
+            }
+        }
+
+        $('#GivenQuantity').keyup(function (e) {
+            e.preventDefault();
+            var remaining = new Number($("#RemainingQuantity").val());
+            
+            var noc = $('#TacNo').val();
+            var quantity = $('#GivenQuantity').val();
+            var alloc = $('#AllocatedFrom').val();
+            if (remaining < parseInt(quantity)) {
+                alertify.alert("Given qunatity can't be bigger then Remaining Qauntity !!!");
+                $('#GivenQuantity').val(0);
+            } else {
+                var url = '@Url.Action("GetRange", "Commercial")';
+                $.post(url, { qty: quantity, alloc: alloc, noc: noc }).done(function (data) {
+                    $('#SampleStartImei').val(data.StartImeiRange);
+                    $('#SampleEndImei').val(data.EndImeiRange);
+                });
+            }
+           
+        });
+    })
+   
+</script>
+

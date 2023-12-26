@@ -1,0 +1,366 @@
+﻿@model IEnumerable<ProjectManagement.ViewModels.Management.HwCmProjectFinalApprovalViewModel>
+
+@{
+    ViewBag.Title = "HwCmProjectFinalApproval";
+}
+<style type="text/css">
+    .modal-custom-dialog {
+        width: 70%;
+        margin-left: 15%;
+    }
+
+    @@media (max-width: 768px) {
+        .modal-custom-dialog {
+            width: 70%;
+            margin-left: 2%;
+        }
+    }
+</style>
+
+<div class="row">
+
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+<!-- BEGIN BORDERED TABLE PORTLET-->
+    
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-settings font-red"></i>
+                <span class="caption-subject font-red sbold uppercase">Final Decision</span>
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body flip-scroll">
+            <table class="table table-striped table-scrollable table-bordered" id="sample_1">
+
+                <thead>
+                    <tr>
+                    <tr>
+
+                        @*<th class="numeric">
+                @Html.DisplayNameFor(model => model.ProjectMasterId)
+            </th>*@
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.ProjectName)
+                        </th>
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.SupplierName)
+                        </th>
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.ProjectType)
+                        </th>
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.OsName)
+                        </th>
+                        @*<th class="numeric">
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </th>*@
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.ProcessorName)
+                        </th>
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.Chipset)
+                        </th>
+                        <th class="numeric">
+                            @Html.DisplayNameFor(model => model.Remark)
+                        </th>
+
+                        <th class="numeric">
+                            @*@Html.DisplayNameFor(model => model.ApproxProjectFinishDate)*@
+                            Project Finish Date
+                        </th>
+                        <th class="numeric">
+                            Approval Decision
+                        </th>
+                        <th></th>
+                    </tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+{
+    <tr>
+        <td class="numeric hidden">
+            <!--class="hiddenColumn"-->
+            @Html.DisplayFor(modelItem => item.ProjectMasterId)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.ProjectName)
+        </td>
+        <td class="numeric hidden">
+            <!--class="hiddenColumn"-->
+            @Html.DisplayFor(modelItem => item.HwQcInchargeAssignId)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.SupplierName)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.ProjectType)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.OsName)
+        </td>
+        @*<td class="numeric">
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>*@
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.ProcessorName)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.Chipset)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.Remark)
+        </td>
+        <td class="numeric">
+            @Html.DisplayFor(modelItem => item.ApproxProjectFinishDate)
+        </td>
+        <td class="text-center">
+            <div class="row btn-group">
+                <div class="col-lg-12">
+                    @*<button id="btnApprove" class=" btn btn-success btn-sm btn-circle btnApprove" type="button">
+                        <i class="fa fa-check"></i>
+                    </button>
+                    <button id="btnDecline" class=" btn btn-danger btn-sm btn-circle btnDecline" type="button">
+                        <i class="fa fa-times"></i>
+                    </button>*@
+                    <input type="submit" class="btn btn-success btn-sm mt-ladda-btn" value="Decision" onclick="goToController('@Url.Action("FinalDecision", "Management", new { id = @item.ProjectMasterId })')" />
+                </div>
+            </div>
+        </td>
+        <td>
+            <button id="btnDetails" class=" btn btn-warning btn-outline btnDetails" data-toggle="modal" type="button">
+                Details
+            </button>
+        </td>
+        @*<td>
+            <input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Sreening Issues" onclick="goToController('@Url.Action("FinalDecision", "Management", new { id = @item.ProjectMasterId })')" />
+        </td>*@
+    </tr>
+}
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="Approval" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h2 class="modal-title">Approval</h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>ProjectMasterId</label>
+                    <input type="text" id="ApprovalProjectMasterId" name="ProjectMasterId" class="form-control input" disabled />
+                </div>
+                <div class="form-group">
+                    <label>ProjectName</label>
+                    <input type="text" id="ApprovalProjectName" name="ProjectName" class="form-control input" disabled/>
+                </div>
+                <div class="form-group">
+                    <label>Additional Reminder</label>
+                    <textarea id="approveComment" name="comment" class="form-control input " rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <button id="FinalApprove" type="button" class="btn green FinalApprove">Save Approve</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- Decline modal -->
+<div class="modal fade bs-modal-sm" id="Decline" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Decline</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>ProjectMasterId</label>
+                    <input type="text" id="DeclineProjectMasterId" name="ProjectMasterId" class="form-control input" disabled />
+                </div>
+                <div class="form-group">
+                    <label>ProjectName</label>
+                    <input type="text" id="DeclineProjectName" name="ProjectName" class="form-control input" disabled />
+                </div>
+                <div class="form-group">
+                    <label>Additional Reminder</label>
+                    <textarea name="DeclineComment" id="DeclineComment" class="form-control input " rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <button id="FinalDecline" type="button" class="btn red-flamingo">FinalDecline</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade bs-modal-sm" id="decision" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-custom-dialog modal-sm">
+        <div class="modal-content">
+            <div id='commontModalContainer'>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+    
+    <!-- /.modal -->
+<div id="responsive" class="modal fade" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title bold">Project Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>ProjectMasterId</label>
+                    <input type="text" id="DetailsProjectMasterId" name="ProjectMasterId" class="form-control input" disabled />
+                </div>
+                <div class="form-group">
+                    <label>ProjectName</label>
+                    <input type="text" id="DetailsProjectName" name="ProjectName" class="form-control input" disabled />
+                </div>                                     
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                @*<button type="button" class="btn green">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+                      <!-- /.modal -->
+<script>
+    $(function() {
+        var currentRow;
+        $('.btnApprove').click(function() {
+            currentRow = $(this).closest('tr');
+            var projectId = $(this).closest('tr').find('td:eq(0)').text().trim();
+            var projectName = $(this).closest('tr').find('td:eq(1)').text().trim();
+            console.log(projectName);
+            $('#ApprovalProjectMasterId').val(projectId);
+            $('#ApprovalProjectName').val(projectName);
+
+            //Approval
+            $('#Approval').modal({
+                show: true,
+                backdrop: 'static'
+            });
+        });
+        $('.FinalApprove').click(function() {
+            var projectId = $('#ApprovalProjectMasterId').val();
+            var comment = $('#DeclineComment').val();
+            var obj = {};
+            obj.status = "1";
+            obj.projectId = projectId;
+            obj.comment = comment;
+            var data = JSON.stringify(obj);
+            console.log(data);
+            //var data = commonJqueryAjax('HwCmProjectFinalApproval', data);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("HwCmProjectFinalApproval", "Management")',
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function(data) {
+                    if (data.Status == 'success') {
+                        alertify.alert('success', 'success', function() { alertify.success('Ok'); });
+                        $('#Approval').modal('hide');
+                        currentRow.remove();
+                    } else {
+                        alertify.alert(data.Status);
+                    }
+                }
+            });
+            console.log(data);
+                
+
+        });
+
+        $('.btnDecline').click(function() {
+            //Decline
+            currentRow = $(this).closest('tr');
+            var projectId = $(this).closest('tr').find('td:eq(0)').text().trim();
+            var projectName = $(this).closest('tr').find('td:eq(1)').text().trim();
+            console.log(projectName);
+            $('#DeclineProjectMasterId').val(projectId);
+            $('#DeclineProjectName').val(projectName);
+            $('#Decline').modal({
+                show: true,
+                backdrop: 'static'
+            });
+        });
+        $('.FinalDecline').click(function() {
+            var projectId = $('#DeclineProjectMasterId').val();
+            var comment = $('#DeclineComment').val();
+            var obj = {};
+            obj.status = "2";
+            obj.projectId = projectId;
+            obj.comment = comment;
+            console.log(obj);
+            var data = commonJqueryAjax('HwCmProjectFinalApproval', obj);
+            console.log(data);
+
+            if (data.Status == 'declined') {
+                alertify.alert('declined', 'declined', function() { alertify.error('Ok'); });
+                $('#Decline').modal('hide');
+                currentRow.remove();
+            } else {
+                alertify.alert(data.Status);
+            }
+        });
+
+        $('.btnDetails').click(function() {
+            currentRow = $(this).closest('tr');
+            var projectId = $(this).closest('tr').find('td:eq(0)').text().trim();
+            var projectName = $(this).closest('tr').find('td:eq(1)').text().trim();
+            var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(2)').text().trim();
+            console.log(projectName);
+            $('#DetailsProjectMasterId').val(projectId);
+            $('#DetailsProjectName').val(projectName);
+
+            var url = '@Url.Action("HwDisplayScreeningTest", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+            window.open(url);
+            //Approval
+            //$('#responsive').modal({
+            //    show: true,
+            //    backdrop: 'static'
+            //});
+        });
+    });
+    function goToController(url) {
+        //alert("Hello world");
+        $(function () {
+            $.get(url, function (data) {
+                console.log(data);
+                $('#commontModalContainer').html(data);
+                $('#decision').modal('show');
+            });
+        });
+    }
+</script>

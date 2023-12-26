@@ -1,0 +1,52 @@
+﻿@using ProjectManagement.ViewModels.Common
+@model List<ProjectManagement.ViewModels.Common.ModelColorWiseDailySalesViewModel>
+    @{
+        ViewBag.Title = "Model ColorWise Daily Sales";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="row">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Color Wise Activation</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet-body" id="smart-table">
+
+                <table class="table table-striped table-scrollable table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Model Name</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Activated</th>
+                           
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center"> @item.ModelName </td>
+                                    <td class="text-center"> @item.Color </td>
+                                    <td class="text-center"> @item.Activated </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+

@@ -1,0 +1,337 @@
+﻿@using OfficeOpenXml.FormulaParsing.Excel.Functions.Math
+@model ProjectManagement.Models.LcOpeningPermissionOtherProductModel
+@{
+    ViewBag.Title = "LcOpeningOtherProductPrint";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+
+    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">LC Opening Permission Approval for Other Product</div>
+            <div class="tools">
+                <input type="button" class="btn red btn-outline btn-sm btn-circle col-md-offset-1" value="Approval List" onclick="location.href='@Url.Action("LcOpeningApproval", "Common")?projectId=0'" />
+                <button class="btn green btn-outline btn-sm btn-circle pdf" id="pdf">
+                    <i class="fa fa-print"></i>
+                    Print
+                </button>
+                <div class="col-sm-6" id="btnPrint" style="text-align: right;margin-bottom: 20px;">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 table-scrollable">
+                <div style="border: 1px solid black;width: 1030px">
+                    <div class="col-lg-12" id="PDFWrapper">
+                        <div class="portlet-title" style="background: #bfbfbf;">
+                            <h2 style="padding-top: 10px; text-align: center; padding-bottom: 10px;">LC Opening Permission Approval</h2>
+                        </div>
+                        @*<input type="hidden" id="hdID" value="@Model.Id">*@
+
+                        <div class="portlet-body">
+                            <div>
+                                <table class="table table-striped table-scrollable table-bordered table-hover" id="tbl1" style="border: 1px solid black;color:black;width: 100%">
+                                    <thead>
+
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+
+                                            <tr style="font-size: 16px; border: 1px solid black">
+                                                <td style="text-align: center; border: 1px solid black;">Company Name</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.CompanyName)</td>
+                                                <td style="text-align: center; border: 1px solid black;">Date</td>
+                                                <td style="text-align: center; border: 1px solid black;">
+
+                                                    @if (@Model.OpeningDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @Model.OpeningDate)}
+                                                </td>
+
+                                            </tr>
+
+                                            <tr style="font-size: 16px; border: 1px solid black">
+                                                <td style="text-align: center; border: 1px solid black;">Suppliers Name</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.SupplierName)</td>
+                                                <td style="text-align: center; border: 1px solid black;">Suppliers Grade</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.SupplierGrade)</td>
+                                            </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                                <br />
+                                <table class="table table-striped table-scrollable table-bordered table-hover" id="tbl2" style="border: 1px solid black;color:black;width: 100%">
+                                    <thead>
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Product Type</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Products</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Model</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Order No</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Previously Ordered</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Stock Quantity</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">PipeLine Quantity</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Order Quantity</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Total Amount<br />(@Model.Currency)</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">Approx Shipment Date</th>
+                                            <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; ">LC Amount<br/>(@Model.Currency)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null)
+                                        {
+                                            <tr style="font-size: 16px; border: 1px solid black">
+
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.ProductType)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.Product)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.Model)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.OrderNo)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.PreviousOrderQunatity)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.StockQuantity)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.PipeLineQuantity)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.OrderQuantity)</td>
+                                                <td style="text-align: center; border: 1px solid black;">@Html.DisplayFor(modelItem => Model.TotalAmount)</td>
+                                                <td style="text-align: center; border: 1px solid black;">
+
+                                                    @if (@Model.ApproxDateOfShipment != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @Model.ApproxDateOfShipment)}
+
+                                                </td>
+                                                <td style="text-align: center; border: 1px solid black;">
+                                                    @Html.DisplayFor(modelItem => Model.LcAmount)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+
+                                <br />
+                                <table class="table table-striped table-scrollable table-bordered table-hover" id="tbl3" style="border: 1px solid black;color:black;width: 100%">
+                                    <thead>
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <th style="text-align: center;  width: 100px; height: 50px; border: 1px solid black; ">Sl No.</th>
+                                            <th style="text-align: center;  width: 200px; height: 50px; border: 1px solid black; ">Approved By</th>
+                                            <th style="text-align: center;  width: 200px; height: 50px; border: 1px solid black; ">Date</th>
+                                            <th style="text-align: center;  width: 200px; height: 50px; border: 1px solid black; ">PrePared By</th>
+                                            <th style="text-align: center;  width: 200px; height: 50px; border: 1px solid black; ">Checked By</th>
+                                            <th style="text-align: center;  width: 200px; height: 50px; border: 1px solid black; ">Verified By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">01</td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">
+                                                @if (Model != null && Model.ApprovedByName != null)
+                                                {
+                                                    @Html.Raw(Model.ApprovedByName)
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">
+                                                @if (Model != null && Model.ApprovedDate != null)
+                                                {
+                                                    @Html.Raw(Model.ApprovedDate.Value.ToString("dd-MMM-yyyy"))
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;" rowspan="8">
+                                                @if (Model != null && Model.AddedByName != null)
+                                                {
+                                                    @Html.Raw(Model.AddedByName)
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;" rowspan="8">
+                                                @if (Model != null && Model.CeoApprovalByName != null)
+                                                {
+                                                    @Html.Raw(Model.CeoApprovalByName)
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;" rowspan="8">
+                                                @if (Model != null && Model.AccountsApprovalByName != null)
+                                                {
+                                                    @Html.Raw(Model.AccountsApprovalByName)
+                                                }
+                                            </td>
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;">02</td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">03</td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;">04</td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">05</td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">06</td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;">07</td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px; border: 1px solid black;"></td>
+
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;">08</td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;"></td>
+
+                                        </tr>
+
+                                        <tr style="font-size: 16px; border: 1px solid black">
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;" colspan="2">
+                                                Sourcing Approval By:
+                                                @if (Model != null && Model.SourcingApprovalByName != null)
+                                                {
+                                                    @Html.Raw(Model.SourcingApprovalByName)
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;" colspan="2">
+                                                Acknowledged By:
+                                                @if (Model != null && Model.AcknowledgedByName != null)
+                                                {
+                                                    @Html.Raw(Model.AcknowledgedByName)
+                                                }
+                                            </td>
+                                            <td style="text-align: center;height: 50px;  border: 1px solid black;" colspan="2">
+                                                Finance Approval By:
+                                                @if (Model != null && Model.FinanceApprovalByName != null)
+                                                {
+                                                    @Html.Raw(Model.FinanceApprovalByName)
+                                                }
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@*<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+    <script src="~/Scripts/jquery.table2excel.min.js"></script>*@
+<script src="~/Scripts/jquery-print/jQuery.print.min.js"></script>
+<script>
+
+    var checkedValue;
+    var PrintFlag = false;
+    var id;
+    $('input.checkbox-approve').on('change', function () {
+
+        debugger;
+        if ($(this).prop("checked") == true) {
+            id = $("#hdID").val();
+            //$("#btnPrint").show();
+            PrintFlag = true;
+            checkedValue = "approved";
+            UpdateApprovalStatus(checkedValue, id);
+
+        } else {
+            $("#btnPrint").hide();
+            checkedValue = "rejected";
+            PrintFlag = false;
+            UpdateApprovalStatus(checkedValue, id);
+        }
+
+
+    });
+
+    function UpdateApprovalStatus(checkedValue, id) {
+        debugger;
+        $.ajax({
+            url: '@Url.Action("GetLcPermissionDetailsById", "Commercial")',
+            type: 'Post',
+            data: { checkedValue: checkedValue, id: id },
+
+            success: function (data) {
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success("Successfully Updated!");
+            },
+            error: function (data, textStatus, jqXHR) {
+                alert("Update Failed");
+            }
+        });
+
+
+    };
+
+
+
+
+
+    $(function () {
+
+        PrintFlag = false;
+
+        //$("#pdf").on("click", function () {
+        //    debugger;
+        //    var divContents = $("#PDFWrapper").html();
+        //    console.log(divContents);
+        //    var printWindow = window.open('', '', 'height=400,width=800');
+        //    printWindow.document.write('<html><head><title></title>');
+        //    printWindow.document.write('</head><body >');
+        //    printWindow.document.write(divContents);
+        //    printWindow.document.write('</body></html>');
+        //    printWindow.document.close();
+        //    printWindow.print();
+        //});
+
+
+
+    });
+    $('#pdf').click(function () {
+        $('#PDFWrapper').print();
+
+    });
+
+    $("#btnApprove").click(function () {
+        //$(this).val('Approved');
+        $(this).text('Approved');
+        $(this).addClass('fa fa-check');
+        $(this).css("background", "green");
+        $("#chngClass").removeClass('fa fa-times');
+        $("#chngClass").addClass('fa fa-check');
+        PrintFlag = true;
+    });
+</script>

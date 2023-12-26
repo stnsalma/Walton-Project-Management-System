@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ProjectManagement.Models.MkMarketOrderQuantityDetailModel>
+@{
+    ViewBag.Title = "MarketOrderList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Market Order Quantity Detail List
+        </div>
+        <div class="tools">
+            <input type="button" value="New" onclick="location.href='@Url.Action("MarketOrderQuantityDetails", "Marketing")'" class="btn btn-default btn-sm" />
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-bordered" id="tblOrderDetails">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Order<br/>Number</th>
+                        <th>PO Name</th>
+                        <th>NOC<br /> Quantity</th>
+                        <th>Order<br /> Quantity</th>
+                        <th>FOB<br /> Price</th>
+                        <th>FOB<br /> Currency<br /> Type</th>
+                        <th>BTRC<br /> NOC<br /> Price</th>
+                        <th>BTRC<br /> NOC<br /> Currency<br /> type</th>
+                        <th>Custom<br /> Assessment<br /> Price</th>
+                        <th>Custom<br /> Ass.<br /> Currency<br /> Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>@v.ModelName</td>
+                            <td>@v.OrderNumber</td>
+                            <td>@v.PoName</td>
+                            <td>@v.NOC_Quantity</td>
+                            <td>@v.OrderQuantity</td>
+                            <td>@v.FOB_Price</td>
+                            <td>@v.FOB_PriceCurrencyType</td>
+                            <td>@v.BTRC_NOC_Price</td>
+                            <td>@v.BTRC_NOC_PriceCurrencyType</td>
+                            <td>@v.CustomsAssessmentPrice</td>
+                            <td>@v.CustAssPriceCurrencyType</td>
+                            <td>
+                                <input type="button" value="Edit" class="btn btn-success" onclick="location.href = '@Url.Action("MarketOrderQuantityDetails","Marketing")/@v.Id'"/>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var mytable = $('#tblOrderDetails').dataTable();
+    });
+</script>

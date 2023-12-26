@@ -1,0 +1,871 @@
+﻿@*<h2>AftersalesPmIssueVerificationForm</h2>*@
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Software.VmAftersalesPmIssueVerification
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/loadingText.css" rel="stylesheet" />
+
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+</style>
+
+<div class="form-control" style="border:black; background: gray">
+    <p style="color: white;font-size: 20px;"> ****Verification Form for Qc</p>
+    <br />
+    <p></p>
+</div>
+<div class="portlet box yellow-gold">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i> Issue List
+        </div>
+    </div>
+    <div class="portlet-body form" style="display: block;">
+        <div class="table-responsive table-scrollable">
+            <table id="tbl33" class="table table-striped table-bordered table-hover tbl33">
+                <thead class="flip-content">
+                    <tr style="background:gray;color:white;">
+                        <th>#</th>
+                        <th style="">Issue Ref.</th>
+                        <th style="text-align: center;"> ModelName </th>
+                        <th style="text-align: center;"> SoftwareVersion<br />Name</th>
+                        <th style="text-align: center;"> Software<br />VersionNo. </th>
+                        <th style="text-align: center;"> Module </th>
+                        <th style="text-align: center;"> Issue Details </th>
+                        <th style="text-align: center;">Issue Frequency</th>
+                        <th style="text-align: center;"> Issue Type </th>
+                        <th style="text-align: center;"> ASPM Testing<br /> Path/Procedure </th>
+                        <th style="text-align: center;">Result Found </th>
+                        <th style="text-align: center;">Expected Result </th>
+                        <th style="text-align: center;">Number of HSs<br /> ASPM checked <br />for this issue </th>
+                        <th style="text-align: center;">Issue occurence<br /> ratio in HSs </th>
+                        <th style="text-align: center;">Percentage of <br />customers affected<br /> by/complained for<br /> this issue </th>
+                        <th style="text-align: center;">Number of HSs<br /> return against<br /> this issue </th>
+                        <th style="text-align: center;">Any valuable <br />information from <br />ASPM that could <br />help R&D to solve<br /> this Issue </th>
+                        <th style="text-align: center;">Number of <br />Sample Provided<br /> to Qc</th>
+                        @*<th style="text-align: center;">Status </th>*@
+                        <th style="text-align: center;">Document<br />Provided by ASPM </th>
+                        <th style="text-align: center;">Document<br />Provided by Qc </th>
+                        <th style="text-align: center;">Status </th>
+                        <td style="text-align: center;"> Validation Log</td>
+                        <th style="text-align: center;">Details </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.AftersalesPmIssueVerificationModels.Any())
+                    {
+
+                        for (int i = 0; i < Model.AftersalesPmIssueVerificationModels.Count; i++)
+                        {
+                            if (Model.AftersalesPmIssueVerificationModels[i].Id > 0)
+                            {
+                                <tr style="text-align: center" class="trForRowRv" id="trForRowRv">
+                                    <td></td>
+                                    <td style="" class="issueIds" id="issueIds">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Id)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ModelName)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].SoftwareVersionNo)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Module)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueDetails)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueFrequency)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueType)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].TestingPath)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ResultFound)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ExpectedResult)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfHSsChecked)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].HSsIssueRatio)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ComplainPercentage)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfHSsReturn)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueSolvingInfo)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfSample)</td>
+                                    @*<td style="color:darkorange;font-weight: bold">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Status)</td>*@
+                                    <td>
+                                        <div class="file-preview-thumbnails">
+                                            <div class="">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.AftersalesPmIssueVerificationModels[i].SupportingDocument, new { @class = "clsRmv" })
+                                                        @if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails != null && Model.AftersalesPmIssueVerificationModels[i].FilesDetails.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    @for (int m = 0; m < Model.AftersalesPmIssueVerificationModels[i].FilesDetails.Count; m++)
+                                                                    {
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".jpg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".png" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".mp4" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".jpeg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".txt" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".xls" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".wav")
+                                                                        {
+                                                                            <td style="border:2px solid black;">
+                                                                                <div class="col-lg-2">
+                                                                                    <embed class="" src="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath" style="width: 40px;height: 60px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath">Download</a>
+                                                                                </div>
+                                                                                <div class="col-lg-2" style="width: 50px;"></div>
+                                                                            </td>
+
+                                                                        }
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".zip" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".pdf" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".docx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".xlsx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".rar" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".pptx")
+                                                                        {
+                                                                            var urls = Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+                                                                                <td>
+                                                                                    <div class="col-lg-2" style="width: 40px; height: 60px;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:40px;height:60px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="width: 50px;"></div>
+                                                                                </td>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tr>
+                                                            </table>
+
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="file-preview-thumbnails">
+                                            <div class="">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.AftersalesPmIssueVerificationModels[i].DocumentUploadedByQc, new { @class = "clsRmv" })
+                                                        @if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1 != null && Model.AftersalesPmIssueVerificationModels[i].FilesDetails1.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    @for (int m = 0; m < Model.AftersalesPmIssueVerificationModels[i].FilesDetails1.Count; m++)
+                                                                    {
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".jpg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".png" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".mp4" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".jpeg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".txt" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".xls" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".wav")
+                                                                        {
+                                                                            <td style="border:2px solid black;">
+                                                                                <div class="col-lg-2">
+                                                                                    <embed class="" src="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath" style="width: 40px;height: 60px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath">Download</a>
+                                                                                </div>
+                                                                                <div class="col-lg-2" style="width: 50px;"></div>
+                                                                            </td>
+
+                                                                        }
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".zip" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".pdf" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".docx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".xlsx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".rar" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".pptx")
+                                                                        {
+                                                                            var urls = Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last2 = urls[k].Split('-').Last();
+                                                                                var lastNameForM2 = Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath;
+
+                                                                                lastNameForM2 = Path.GetFileName(last2);
+                                                                                <td>
+                                                                                    <div class="col-lg-2" style="width: 40px; height: 60px;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM2, new { style = "width:40px;height:60px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath" target="_blank">Download</a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="width: 50px;"></div>
+                                                                                </td>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tr>
+                                                            </table>
+
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status == "ACCEPTED" || Model.AftersalesPmIssueVerificationModels[i].Status == "VALIDATED"
+                                            || Model.AftersalesPmIssueVerificationModels[i].Status == "NOTVALIDATED" || Model.AftersalesPmIssueVerificationModels[i].Status == "CONFIRMED"
+                                            || Model.AftersalesPmIssueVerificationModels[i].Status == "ForwardedForFullSwCheck" || Model.AftersalesPmIssueVerificationModels[i].Status == "FullSoftwareConfirmed"
+                                            || Model.AftersalesPmIssueVerificationModels[i].Status == "ForwardedForFOTATest" || Model.AftersalesPmIssueVerificationModels[i].Status == "FOTATestConfirmed"
+                                            || Model.AftersalesPmIssueVerificationModels[i].Status == "CLOSED" || Model.AftersalesPmIssueVerificationModels[i].Status == "QCAPPROVED" || Model.AftersalesPmIssueVerificationModels[i].Status == "QCDECLINED")
+                                        {
+                                            <p style="color:brown;font-weight: bold">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Status)</p>
+                                        }
+                                        else if (Model.AftersalesPmIssueVerificationModels[i].Status == "ForwardToSupplier")
+                                        {
+                                            <button type="submit" class="btn btn-success btnQcApprove blink" id="btnQcApprove">
+                                                <span class="glyphicon glyphicon-ok-sign"></span> QC APPROVED
+                                            </button>
+                                           <br/><br/>
+                                            <button type="submit" class="btn btn-danger btnQcDecline blink" id="btnQcDecline">
+                                                <span class="glyphicon glyphicon-remove"></span> QC DECLINED
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-success btnAccepted blink" id="btnAccepted">
+                                                <span class="glyphicon glyphicon-ok-sign"></span> ACCEPTED
+                                            </button>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status == "ACCEPTED")
+                                        {
+                                            if (Model.AftersalesPmIssueVerificationModels[i].Status == "VALIDATED" || Model.AftersalesPmIssueVerificationModels[i].Status == "NOTVALIDATED")
+                                            {
+                                                <p>----</p>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn btnOpen" id="btnOpen" style="background: yellow">
+                                                    <span class="glyphicon glyphicon-ok-sign btn-success" style="height: 20px; width: 20px"></span> <span class="glyphicon glyphicon-warning-sign" style="background: red; height: 20px; width: 20px"></span>
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p>----</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn blue" target="_blank" href='@Url.Action("DetailsOfAftersalesPmIssue", "Software", new { issueIds = @Model.AftersalesPmIssueVerificationModels[i].Id})'>
+                                            <span class="glyphicon glyphicon-list-alt"></span> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: red;">Validation Form</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-6">
+                            <label for="recipient-name" class="control-label">Project Name :</label>
+                            <input name="ProjectName" id="ProjectName" disabled="disabled" type="text" class="form-control">
+                        </div>
+                        <div class="form-group" style="display: none;">
+                            <label class="control-label">ID :</label>
+                            <input name="IssueIds1" id="IssueIds1" type="text" class="form-control">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">SW Version :</label>
+                            <input name="softwareVersionName" id="softwareVersionName" disabled="disabled" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">SW Version No.</label>
+                            <input name="softwareVersionNumber" id="softwareVersionNumber" disabled="disabled" type="text" class="form-control">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label class="control-label">Issue/Requirement</label>
+                            <textarea name="issueOrRequirement" rows="5" id="issueOrRequirement" disabled="disabled" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">No of MP HS check : </label>
+                            <input name="noOfMpHsCheck" id="noOfMpHsCheck" type="number" class="form-control">
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Found in Golden HS? :</label>
+                            <select name="foundInGoldenHs" id="foundInGoldenHs" class="form-control">
+                                <option value="0">SELECT</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                                @*<option value="NOT APPLICABLE">NOT APPLICABLE</option>*@
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Found in MP HS? :</label>
+                            <select name="foundInMpHs" id="foundInMpHs" class="form-control">
+                                <option value="0">SELECT</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                                @*<option value="NOT APPLICABLE">NOT APPLICABLE</option>*@
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Validated? :</label>
+                            <select name="validationResult" id="validationResult" class="form-control">
+                                <option value="0">SELECT</option>
+                                <option value="YES">YES</option>
+                                <option value="NO">NO</option>
+                                @*<option value="NOT APPLICABLE">NOT APPLICABLE</option>*@
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Issue Details :</label>
+                            <textarea name="issueDetails" rows="3" id="issueDetails" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Remarks</label>
+                            <textarea name="remarks" rows="3" id="remarks" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="form-group col-lg-12">
+                            <label class="control-label">Document (if available)</label>
+                            <br /><br />
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="col-md-11">
+                                            <table class="File111" id="hh1">
+                                                <tr id="trIdForFile">
+                                                    <td class="filesss" id="filesId">
+
+                                                        <div class="col-md-9" id="fileIdForCr">
+                                                            <input type="file" name="file" id="file" multiple onchange="javascript: updateList();" />
+                                                            <p>Selected files:</p>
+                                                            <div id="fileList"></div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick=" removeDetailRow($(this).closest('tr')); ">
+                                                                <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        <br /><br />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-8">
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave" class="btn green blink smitModalOfSave" value="Save" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div id="qcApprovalModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color: red; font-weight: bold">Qc Feedback For Forwarding to Supplier</h4>
+                <h4 class="modal-title" id="lblIssueIds2" style="display:none;"></h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4" style="font-weight: bold">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblprojectName2" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4" style="font-weight: bold">
+                                            Remarks:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="4" name="txtSupplierDetails2" id="txtSupplierDetails2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel11" id="btnCancel11">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnForwardToSupCon11" id="btnForwardToSupCon11">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="qcDeclineModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color:red;font-weight: bold">Qc Declined Feedback For Forwarding to Supplier</h4>
+                <h4 class="modal-title" id="lblIssueIds22" style="display:none;"></h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4" style="font-weight: bold">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblprojectName22" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4" style="font-weight: bold">
+                                            Declined Remarks:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="4" name="txtSupplierDetails22" id="txtSupplierDetails22"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel22" id="btnCancel22">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnForwardToSupCon22" id="btnForwardToSupCon22">Declined</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    /////sample_1 /////
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+        
+        //
+        $('#btnCancel22').on('click', function () {
+            $('#txtSupplierDetails22').val("");
+        });
+        $('#btnCancel11').on('click', function () {
+            $('#txtSupplierDetails2').val("");
+        });
+    });
+
+    function removeDetailRow(element) {
+        //$(element).remove();
+        document.getElementById('file').value = null;
+        document.getElementById('fileList').innerHTML = "";
+    }
+    function blink_text() {
+        $('.blink').fadeOut(20);
+        $('.blink').fadeIn(500);
+    }
+    setInterval(blink_text, 2000);
+    $(document).ready(function () {
+        var currentRow;
+        var t = $('#tbl33').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[5, 10, 20, 30, 50, -1], [5, 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $('#tbl33').on('click', '.btnOpen', function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+            var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var softwareVersionName = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var softwareVersionNo = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var issueOrRequirement = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#ProjectName').val(projectName);
+            $('#IssueIds1').val(issueIds);
+            $('#softwareVersionName').val(softwareVersionName);
+            $('#softwareVersionNumber').val(softwareVersionNo);
+            $('#issueOrRequirement').val(issueOrRequirement);
+
+            $('#noOfMpHsCheck').val("");
+            $('#foundInGoldenHs').val("0");
+            $('#foundInMpHs').val("0");
+            $('#validationResult').val("0");
+            $('#issueDetails').val("");
+            $('#remarks').val("");
+            $('.file').val("");
+            $('.file').text("");
+        });
+
+        $('.btnAccepted').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var issueIds;
+            var obj = {};
+
+            var row = $(this).closest("tr");
+            issueIds = row.find(".issueIds").html();
+            //alert(issueIds);
+            obj.issueIds = issueIds;
+
+            alertify.confirm('Issue Acceptance', 'Do you want to accept this issue?', function () {
+                alertify.success('Successfully accepted.');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateIssueVerificationStatus", "Software")',
+                    // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                    data: "{issueIds:'" + obj.issueIds + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            window.location = '@Url.Action("AftersalesPmIssueVerificationForm", "Software")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+               , function () {
+                   alertify.error('Cancel');
+                   $('#loading').hide();
+               });
+
+        });
+        debugger;
+        var input = document.getElementById('file');
+        var output = document.getElementById('fileList');
+
+        updateList = function () {
+            var children = "";
+            var children2 = "";
+
+
+            for (var i = 0; i < input.files.length; ++i) {
+                children += '<li>' + input.files.item(i).name + '</li>';
+                children2 = input.files.item(i).name;
+
+            }
+            output.innerHTML = '<ul>' + children + '</ul>';
+        };
+
+
+
+        $('.smitModalOfSave').on('click', function () {
+
+            $('#draggable').modal('hide');
+
+            var issueIds1;
+            var proName;
+            var softVersionName;
+            var softVersionNo;
+            var issueOrRequirement;
+            var noOfMpHsCheck;
+            var foundInGoldenHs;
+            var foundInMpHs;
+            var validationResult;
+            var issueDetails;
+            var remarks;
+
+            issueIds1 = $('#IssueIds1').val();
+            proName = $('#ProjectName').val();
+            softVersionName = $('#softwareVersionName').val();
+            softVersionNo = $('#softwareVersionNumber').val();
+            issueOrRequirement = $('#issueOrRequirement').val();
+            noOfMpHsCheck = $("#noOfMpHsCheck").val().trim();
+            foundInGoldenHs = $('#foundInGoldenHs').val();
+            foundInMpHs = $('#foundInMpHs').val();
+            validationResult = $('#validationResult').val();
+            issueDetails = $('#issueDetails').val();
+            remarks = $('#remarks').val();
+
+            if (noOfMpHsCheck == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Number of MP HS check.",
+                }).show();
+                return false;
+            }
+            if (foundInGoldenHs == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Found in Golden HS.",
+                }).show();
+                return false;
+            }
+            if (foundInMpHs == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Found in MP HS.",
+                }).show();
+                return false;
+            }
+            if (validationResult == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Validated info.",
+                }).show();
+                return false;
+            }
+
+            console.log("all ids :" + issueIds1 + proName + softVersionName + softVersionNo +
+                issueOrRequirement + noOfMpHsCheck + foundInGoldenHs + foundInMpHs + validationResult + issueDetails + remarks);
+
+            $('#loading').show();
+
+            var files = $("#file").get(0).files;
+            var formData = new FormData();
+            formData.append('IssueVerificationId', issueIds1);
+            formData.append('ModelName', proName);
+            formData.append('SoftwareVersionName', softVersionName);
+            formData.append('SoftwareVersionNo', softVersionNo);
+            formData.append('IssueDetails', issueDetails);
+            formData.append('IssueOrRequirement', issueOrRequirement);
+            formData.append('NumberOfMpHsCheck', noOfMpHsCheck);
+            formData.append('FoundInGoldenHs', foundInGoldenHs);
+            formData.append('FoundInMpHs', foundInMpHs);
+            formData.append('ValidationResult', validationResult);
+            formData.append('Remarks', remarks);
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append("file", files[i]);
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveDataIntoValidationReportTable", "Software")',
+                type: 'POST',
+                data: formData,
+                // data: JSON.stringify(obj),
+                // data: "{obj:'" + JSON.stringify(obj) + "'}",
+                //data: "{obj:'" + obj + "'}",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                // dataType: "json",
+                //contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+
+                    if (data == "OK") {
+                        window.location = '@Url.Action("AftersalesPmIssueVerificationForm", "Software")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });//end
+        
+
+
+        $("body").on("click", "#tbl33 #btnQcApprove", function () {
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+            var row = $(this).closest("tr");
+
+            var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            $('#lblIssueIds2').val(issueIds);
+            $('#lblprojectName2').val(projectName);
+            $('#qcApprovalModal').modal();
+        });
+        
+        $("body").on("click", "#tbl33 #btnQcDecline", function () {
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+            var row = $(this).closest("tr");
+
+            var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            $('#lblIssueIds22').val(issueIds);
+            $('#lblprojectName22').val(projectName);
+            $('#qcDeclineModal').modal();
+        });
+        
+        $('.btnForwardToSupCon11').on('click', function () {
+
+            $('#qcApprovalModal').modal('hide');
+
+            var issueIds1;
+            var remarks;
+
+            issueIds1 = $('#lblIssueIds2').val();
+            remarks = $('#txtSupplierDetails2').val();
+            var qcStatus = "QCAPPROVED";
+            $('#loading').show();
+
+          
+            var formData = new FormData();
+            formData.append('IssueVerificationId', issueIds1);
+            formData.append('Remarks', remarks);
+            formData.append('QcStatus', qcStatus);
+
+            $.ajax({
+                url: '@Url.Action("SaveQcFeedback", "Software")',
+                type: 'POST',
+                data: formData,
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                success: function (data) {
+                    console.log("data :" + data);
+
+                    if (data == "OK") {
+                        window.location = '@Url.Action("AftersalesPmIssueVerificationForm", "Software")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });//END
+        $('.btnForwardToSupCon22').on('click', function () {
+
+            $('#qcDeclineModal').modal('hide');
+
+            var issueIds1;
+            var remarks;
+
+            issueIds1 = $('#lblprojectName22').val();
+            remarks = $('#txtSupplierDetails22').val();
+            var qcStatus = "QCDECLINED";
+            
+            if (remarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input Declined Reason."
+                }).show();
+                return false;
+            }
+            $('#loading').show();
+
+
+            var formData = new FormData();
+            formData.append('IssueVerificationId', issueIds1);
+            formData.append('Remarks', remarks);
+            formData.append('QcStatus', qcStatus);
+
+            $.ajax({
+                url: '@Url.Action("SaveQcFeedback", "Software")',
+                type: 'POST',
+                data: formData,
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                success: function (data) {
+                    console.log("data :" + data);
+
+                    if (data == "OK") {
+                        window.location = '@Url.Action("AftersalesPmIssueVerificationForm", "Software")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });//END
+    });
+</script>

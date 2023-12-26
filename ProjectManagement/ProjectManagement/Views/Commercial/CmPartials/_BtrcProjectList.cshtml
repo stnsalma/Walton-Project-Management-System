@@ -1,0 +1,17 @@
+﻿@model ProjectManagement.Models.CustomBtrcProjectModel
+
+<tr id="@Model.ProjectId">
+    @using (Html.BeginCollectionItem("ProjectBtrcNocModel.CustomBtrcProjectModels"))
+    {
+        @Html.HiddenFor(m => m.ProjectId)
+        @Html.HiddenFor(m => m.ProjectName)
+        @Html.HiddenFor(m => m.SampleImei)
+        @Html.HiddenFor(m => m.Quantity)
+        @Html.HiddenFor(m=>m.NocTableId)
+        <td>@Html.LabelForModel(Model.ProjectName)</td>
+        <td>@Html.LabelForModel(Model.SampleImei)</td>
+        <td>@Html.LabelForModel(Model.Quantity)</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>
+

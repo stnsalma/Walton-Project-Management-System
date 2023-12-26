@@ -1,0 +1,257 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@{
+    ViewBag.Title = "Specification";
+}
+@*<script>
+        function submit() {
+            //  alert('Hi');
+            console.log('DUMMY');
+        }
+    </script>*@
+<style type="text/css">
+    .tabColor {
+        color: white !important;
+        background-color: #36c6d3;
+    }
+</style>
+
+
+@{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+            
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+            
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Project Basics
+        </div>
+
+    </div>
+    
+
+    
+
+
+    <div class="portlet-body form">
+        <div class="row">
+            @Html.ValidationSummary(true)
+            
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+              
+                <div class="row">
+                    @Html.Partial("_CmInitialInfo", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (@Model != null && @Model.ProjectMaster.ProjectMasterId > 0)
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Specification
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            @{ int tabNo = 0;}
+            @if (Model.PhPcbaInfo.PhPcbaInfoId == 0)
+            {
+                tabNo = 1;
+            }
+            else if (Model.PhTpLcdInfo.PhTpLcdInfoId == 0)
+            {
+                tabNo = 2;
+            }
+            else if (Model.PhHousingInfo.PhHousingInfoId == 0)
+            {
+                tabNo = 3;
+            }
+            else if (Model.PhCamInfo.PhCamInfoId == 0)
+            {
+                tabNo = 4;
+            }
+            else if (Model.PhChipsetInfo.PhChipsetInfoId == 0)
+            {
+                tabNo = 5;
+            }
+            else if (Model.PhMemoryInfo.PhMemoryInfoId == 0)
+            {
+                tabNo = 6;
+            }
+            else if (Model.PhSensorAndOther.PhSensorAndOthersInfoId == 0)
+            {
+                tabNo = 7;
+            }
+            else if (Model.PhAccessory.PhAccessoriesId == 0)
+            {
+                tabNo = 8;
+            }
+            else if (Model.PhOperatingSyModel.PhOsId == 0)
+            {
+                tabNo = 9;
+            }
+            else if (Model.PhNetworkFreqAndBand.PhNetworkFreqAndBandsId == 0)
+            {
+                tabNo = 10;
+            }
+            else if (Model.PhBatteryInfoModel.PhBatteryInfoId == 0)
+            {
+                tabNo = 11;
+            }
+            else if (Model.PhColorInfoModel.PhColorInfoId == 0)
+            {
+                tabNo = 12;
+            }
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tabbable-line boxless">
+                        <ul class="nav nav-tabs">
+
+                            <li class="@(tabNo == 1 ? "active" : "") @(Model.PhPcbaInfo.PhPcbaInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_1" data-toggle="tab"> PCBA </a>
+                            </li>
+                            <li class="@(tabNo == 2 ? "active" : "") @(Model.PhTpLcdInfo.PhTpLcdInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_2" data-toggle="tab"> TP & LCD </a>
+                            </li>
+                            <li class="@(tabNo == 3 ? "active" : "") @(Model.PhHousingInfo.PhHousingInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_3" data-toggle="tab"> Housing </a>
+                            </li>
+                            <li class="@(tabNo == 4 ? "active" : "") @(Model.PhCamInfo.PhCamInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_4" data-toggle="tab"> Camera </a>
+                            </li>
+                            <li class="@(tabNo == 5 ? "active" : "") @(Model.PhChipsetInfo.PhChipsetInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_5" data-toggle="tab"> Chipset </a>
+                            </li>
+                            <li class="@(tabNo == 6 ? "active" : "") @(Model.PhMemoryInfo.PhMemoryInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_6" data-toggle="tab"> Memory </a>
+                            </li>
+                            <li class="@(tabNo == 7 ? "active" : "") @(Model.PhSensorAndOther.PhSensorAndOthersInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_7" data-toggle="tab"> Sensors </a>
+                            </li>
+                            <li class="@(tabNo == 8 ? "active" : "") @(Model.PhAccessory.PhAccessoriesId > 0 ? "tabColor" : "")">
+                                <a href="#tab_8" data-toggle="tab"> Accessories </a>
+                            </li>
+                            <li class="@(tabNo == 9 ? "active" : "") @(Model.PhOperatingSyModel.PhOsId > 0 ? "tabColor" : "")">
+                                <a href="#tab_9" data-toggle="tab"> OS </a>
+                            </li>
+                            <li class="@(tabNo == 10 ? "active" : "") @(Model.PhNetworkFreqAndBand.PhNetworkFreqAndBandsId > 0 ? "tabColor" : "")">
+                                <a href="#tab_10" data-toggle="tab"> Network & Others </a>
+                            </li>
+                            <li class="@(tabNo == 11 ? "active" : "") @(Model.PhBatteryInfoModel.PhBatteryInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_11" data-toggle="tab"> Battery </a>
+                            </li>
+
+                            <li class="@(tabNo == 12 ? "active" : "") @(Model.PhColorInfoModel.PhColorInfoId > 0 ? "tabColor" : "")">
+                                <a href="#tab_12" data-toggle="tab"> Color </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+
+                            <div class="tab-pane @(tabNo == 1 ? "active" : "")" id="tab_1">
+                                <div class="row">
+                                    @Html.Partial("_CmPcbaInfo", Model)
+                                </div>
+                            </div>
+
+                            <div class="tab-pane @(tabNo == 2 ? "active" : "")" id="tab_2">
+                                <div class="row">
+                                    @Html.Partial("_CmTpLcdInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 3 ? "active" : "")" id="tab_3">
+                                <div class="row">
+                                    @Html.Partial("_CmHousingInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 4 ? "active" : "")" id="tab_4">
+                                <div class="row">
+                                    @Html.Partial("_CmCameraInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 5 ? "active" : "")" id="tab_5">
+                                <div class="row">
+                                    @Html.Partial("_CmChipsetInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 6 ? "active" : "")" id="tab_6">
+                                <div class="row">
+                                    @Html.Partial("_CmMemoryInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 7 ? "active" : "")" id="tab_7">
+                                <div class="row">
+                                    @Html.Partial("_CmSensorsAndOthers", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 8 ? "active" : "")" id="tab_8">
+                                <div class="row">
+                                    @Html.Partial("_CmAccessories", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 9 ? "active" : "")" id="tab_9">
+                                <div class="row">
+                                    @Html.Partial("_CmOperatingSys", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 10 ? "active" : "")" id="tab_10">
+                                <div class="row">
+                                    @Html.Partial("_CmPhNetworkFreqAndBand", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 11 ? "active" : "")" id="tab_11">
+                                <div class="row">
+                                    @Html.Partial("_CmBatteryInfo", Model)
+                                </div>
+                            </div>
+                            <div class="tab-pane @(tabNo == 12 ? "active" : "")" id="tab_12">
+                                <div class="row">
+                                    @Html.Partial("_CmPhColorInfo", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- BEGIN FORM-->

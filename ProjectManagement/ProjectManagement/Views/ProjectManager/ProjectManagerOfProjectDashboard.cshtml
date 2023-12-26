@@ -1,0 +1,168 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.Models.PmTestCounterModel
+
+@using ProjectManagement.Controllers
+@{
+    ViewBag.Title = "HeadOFProjectManagement";
+}
+
+
+<div class="page-head">
+    <div class="page-title col-md-12">
+
+        <div class="col-md-10">
+
+            <p style="color:red;font-weight: bold" class="col-sm-1">Welcome
+                <h1 style="color:darkgoldenrod;font-weight: bold">
+                    @ViewBag.UserInfo.UserFullName !!
+                                                                      
+                </h1>
+            </p>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="note note-danger">
+    <label class="bold">Project Team</label>
+    <i class="icon-calendar pull-right"><label class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+<div class="row">
+    
+    
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("IndividualProjectManagerDashBoard", "ProjectManager")'" class="dashboard-stat dashboard-stat-v2 blue">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.NewProjectCounter)" data-counter="counterup"></span>
+
+                </div>
+                <div class="desc individualdash"> Project Manager Project List</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("ProjectForwardToSoftWareView", "ProjectManager")'" class="dashboard-stat dashboard-stat-v2 red">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.ProjectForwaredToSwCounter)" data-counter="counterup"></span>
+
+                </div>
+                <div class="desc proSoftware"> Project Forward To Software </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("ProjectForwardToHardWareView", "ProjectManager")'" class="dashboard-stat dashboard-stat-v2 green">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.ProjectForwaredToHwCounter)" data-counter="counterup"></span>
+
+                </div>
+                <div class="desc proHardware"> Project Forward To Hardware  </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("TacRequest", "ProjectCommercial")'" class="dashboard-stat dashboard-stat-v2 purple">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>                
+                </div>
+                <div class="desc imeiRange"> Request IMEI Range </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("NocRequest", "ProjectManager")'" class="dashboard-stat dashboard-stat-v2 purple-sharp">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+
+                </div>
+                <div class="desc nocReq"> NOC Request </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("PmOwnReportDashBoard", "ProjectManager")'" class="dashboard-stat dashboard-stat-v2 yellow">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+
+                </div>
+                <div class="desc reportDash"> Report Dashboard </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/Shared/_UserOpinion.cshtml")
+    </div>
+
+</div>
+<div class="clearfix"></div>
+
+
+
+<script>
+    $(function () {
+
+        $('[class*="individualdash"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("IndividualProjectManagerDashBoard", "ProjectManager")';
+            window.location.href = url;
+        });
+        $('[class*="proSoftware"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("ProjectForwardToSoftWareView", "ProjectManager")';
+            window.location.href = url;
+        });
+
+        $('[class*="proHardware"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("ProjectForwardToHardWareView", "ProjectManager")';
+            window.location.href = url;
+        });
+
+        $('[class*="imeiRange"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("TacRequest", "ProjectCommercial")';
+            window.location.href = url;
+        });
+        $('[class*="nocReq"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("NocRequest", "ProjectManager")';
+            window.location.href = url;
+        });
+    });
+</script>
+

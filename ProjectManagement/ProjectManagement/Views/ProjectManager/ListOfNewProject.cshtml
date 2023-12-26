@@ -1,0 +1,308 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.NewProjectsViewModel
+
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+</style>
+<div class="page-head">
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-title">
+        <h1>
+            Welcome!@ViewBag.UserInfo.UserFullName
+
+            @if (ViewBag.UserInfo.RoleName == "PMHEAD")
+            {
+                <small>Head of Project Management</small>
+
+            }
+
+        </h1>
+    </div>
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>New Projects
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+            <a href="javascript:;" class="reload"> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable table-responsive">
+            <table class="table table-bordered table-striped table-condensed flip-content" id="NewProjectTable">
+                <thead class="flip-content">
+                    <tr>
+                        <th class="hidden">ProjectMasterID</th>
+                        <th width="20%"> Project Name </th>
+                        <th> Suppiler Name </th>
+                        <th> Type </th>
+                        <th class="numeric"> Sourcing Type </th>
+                        <th class="numeric"> PO Date </th>
+                        <th class="numeric"> PO Number</th>
+                        <th class="numeric"> Order No</th>
+                        <th class="numeric"> Shipment Taken</th>
+                        <th class="numeric"> LSD</th>
+                        <th class="numeric"> Order Quantity </th>
+                        <th class="numeric"> LastOrder <br />PmName </th>
+                        <th class="numeric"> LastOrder<br />AssignDate </th>
+                        <th class="numeric"> Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var project in Model.ProjectMasters)
+                        {
+                            <tr>
+                                <td style="display:none;"><input type="hidden" value="@project.ProjectMasterId" id="idProjectMaseterId" class="clsProjectMaseterId" /></td>
+                                <td> @project.ProjectName </td>
+                                <td>@project.SupplierName </td>
+                                <td class="numeric"> @project.ProjectType</td>
+                                <td class="numeric"> @project.SourcingType</td>
+                                <td class="numeric">
+                                    @if (project.PoDate != null)
+                                    {
+                                        @project.PoDate.Value.ToString("yyyy-MM-dd")
+                                    }
+                                </td>
+                                <td class="numeric"> @project.PurchaseOrderNumber </td>
+                                <td class="numeric"> @project.OrderNumberOrdinal </td>
+                                <td class="numeric">
+                                    @if (project.ShipmentTaken != null)
+                                    {
+                                        @project.ShipmentTaken.Value.ToString("yyyy-MM-dd")
+                                    }
+                                </td>
+                                <td class="numeric">
+                                    @if (project.LSD != null)
+                                    {
+                                        @project.LSD.Value.ToString("yyyy-MM-dd")
+                                    }
+                                </td>
+                                <td class="numeric"> @project.OrderQuantities </td>
+                                <td class="numeric">@project.LastOrderPmName</td>
+                                <td class="numeric">
+                                    @if (@project.LastAssignDate != null)
+                                    {
+                                        @project.LastAssignDate.Value.ToString("yyyy-MM-dd")
+                                    }
+                            </td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-sm blue btn-outline btnProjectAssign" id="btnProjectAssign">Assign<i class="icon-user"> </i></button>
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--Modal Code-->
+
+<div id="assignProjectManagerModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="lblprojectName"></h4>
+                <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        PO Number:
+                                    </label>
+                                    <div class="col-md-6">
+                                        <h4 class="modal-title" id="lblPurchaseOrderNumber"></h4>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project Manager
+                                        <span class="required"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <select class="form-control" id="ddlProjectManagersName">
+                                            <option value=0>--Select--</option>
+                                            @if (Model != null)
+                                            {
+
+                                                foreach (var pmCmnUserModel in Model.CmnUsers)
+                                                {
+                                                    <option value="@pmCmnUserModel.CmnUserId">@pmCmnUserModel.UserFullName</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Remarks
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" rows="3" name="txtProjectHeadRemarks" id="txtProjectHeadRemarks"></textarea>
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Approx. PM Project Finish Time
+                                        <span class="required"> * </span>
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input class="form-control" name="ApproxPmInchargeToPmFinishDate" id="ApproxPmInchargeToPmFinishDate" type="text" placeholder="yyyy-mm-dd">
+                                    </div>
+                                </div>*@
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnProjectManagerAssign">Assign</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javaScript">
+
+    $('#NewProjectTable').DataTable();
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function refresh() {
+        $.blockUI({ message: '<h1><img src="~/img/loading-spinner-grey.gif" /> LOADING..</h1>' });
+        setTimeout(function () {
+            window.location.reload();
+
+        }, 1000);
+    }
+    $(function () {
+        var date = new Date();
+        //var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        //$('#ApproxPmInchargeToPmFinishDate').datepicker({
+        //    format: 'yyyy-mm-dd',
+        //    autoclose: true,
+        //    startDate: today,
+        //    endDate: 0
+        //});
+    });
+
+    $(document).ready(function () {
+        var currentRow;
+        $('#NewProjectTable').on('click', '.btnProjectAssign', function () {
+            var projectMasterId = $(this).parents('tr').find('input[type="hidden"]').val();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('NewProjectTable');
+            var projectName = table.rows[rowIndex].cells[1].innerHTML;
+            var purchaseOrderNumber = table.rows[rowIndex].cells[6].innerHTML;
+
+            $('#assignProjectManagerModal').modal();
+            $('#lblprojectName').text(projectName);
+            $('#lblprojectMasterId').text(projectMasterId);
+            $('#lblPurchaseOrderNumber').text(purchaseOrderNumber);
+            currentRow = $(this).closest('tr');
+        });
+
+
+        $('#btnProjectManagerAssign').on('click', function () {
+            var projectHeadRemarks = $('#txtProjectHeadRemarks').val();
+            var selectedProjectManagerId = $('#ddlProjectManagersName :selected').val();
+            var projectMsterId = $('#lblprojectMasterId').text();
+            var poNumber = $('#lblPurchaseOrderNumber').text();
+
+
+
+            var projectManagerName = $('#ddlProjectManagersName :selected').text();
+            if (selectedProjectManagerId == 0) {
+                alertify.alert('Alert', 'Please Select a Project Manager to Assign.');
+                $('#assignProjectManagerModal', function () {
+                    alertify.error('Failure');
+                }).close();
+                return false;
+            }
+
+
+            //var pmAproDate = $('#ApproxPmInchargeToPmFinishDate').val();
+
+            //if (projectManagerName != null && (pmAproDate == "" || pmAproDate == null)) {
+            //    $('#assignProjectManagerModal').modal('hide');
+            //    alertify.dialog('alert').set({
+            //        'title': '   ',
+            //        'transition': 'zoom',
+            //        'message': "Please must Select Approx. PM Project Finish Time.",
+            //    }).show();
+
+            //    return false;
+            //}
+
+
+            var obj = {};
+
+            obj.projectHeadRemarks = projectHeadRemarks;
+            obj.selectedProjectManagerId = selectedProjectManagerId;
+            obj.projectMsterId = projectMsterId;
+            obj.poNumber = poNumber;
+           // obj.pmAproDate = pmAproDate;
+            refresh();
+
+            $.ajax({
+                url: '@Url.Action("ProjectAssign", "ProjectManager")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+
+                    if (data == "1") {
+                        $('#txtProjectHeadRemarks').val('');
+
+                        $("#ddlProjectManagersName option:selected").removeAttr("selected");
+                        console.log(projectManagerName);
+
+                        alertify.alert('Project Assign Confirmation', 'Project Successfully Assign to ' + projectManagerName, function () {
+                            alertify.success('OK');
+                        });
+                        currentRow.remove();
+
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        });
+
+
+
+    });
+
+</script>
+@*datatable*@
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>
+@*datatable*@

@@ -1,0 +1,886 @@
+﻿@using System.Web.UI.WebControls
+@using Antlr.Runtime
+@model ProjectManagement.Models.SampleTrackerModel
+@{
+    ViewBag.Title = "SampleTracking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<link href="//cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/buttons/1.6.4/js/dataTables.buttons.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.4/js/buttons.flash.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.4/js/buttons.html5.min.js"></script>
+<script src="//cdn.datatables.net/buttons/1.6.4/js/buttons.print.min.js"></script>
+
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        @*<div class="navbar-header">
+            <a class="navbar-brand" href="#">WebSiteName</a>
+        </div>*@
+        <div class="col-md-12">
+            <input type="button" class="btn btn-danger navbar-btn" onclick="location.href = '@Url.Action("ProjectWiseSampleStatus", "ProjectManager")';" value="ProjectWiseSampleStatus" />
+            <input type="button" class="btn btn-warning navbar-btn" onclick="location.href = '@Url.Action("DeptAndPersonWiseSampleStat", "ProjectManager")';" value="DeptAndPersonWiseSampleStatus" />
+            <button type="button" class="btn btn-info navbar-btn" data-toggle="modal" data-target="#modalExcelDownload">Download My Sample Details in Excel</button>
+        </div>
+    </div>
+</nav>
+
+<div id="modalExcelDownload" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Download Sample Sent By Me</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">From Date</div>
+                    <div class="col-md-9">
+                        <input type="date" class="form-control" id="fromDate" />
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-3">To Date</div>
+                    <div class="col-md-9">
+                        <input type="date" class="form-control" id="toDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="SampleSentByMeExcelExport();">Download</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+@*============================SEND SAMPLE SECTION ======================================*@
+
+    @using (Html.BeginForm("SampleTracking", "Common", FormMethod.Post, new { id = "formSampleTracker" }))
+    {
+        @Html.HiddenFor(i=>i.SampleSentToPersonName)
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Sample Sender Form
+                </div>
+            </div>
+            <div class="portlet-body">
+                <h2>Send Sample to</h2>
+                <div class="row">
+                    @*<div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.Label("Department", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.SampleSentToDept, new SelectList(ViewBag.Roles, "Value", "Text"), "Select One", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.Label("Employee", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.SampleSentToPersonId, new SelectList(ViewBag.Users, "Value", "Text"), "Select One", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.Others, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.Others, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <h2>Other Infos</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.Model, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.Model, new SelectList(ViewBag.Model, "Value", "Text"), "Select One", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.Purpose, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.Purpose, new List<SelectListItem>
+                            {
+                                new SelectListItem()
+                                {
+                                    Text = "Reliability Test",Value = "Reliability Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Sound Test",Value = "Sound Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Heat Test",Value = "Heat Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Optical Test",Value = "Optical Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "RF Test",Value = "RF Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Power Test",Value = "Power Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Software Test",Value = "Software Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Field Test",Value = "Field Test"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Factory QC Purpose",Value = "Factory QC Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Process Purpose",Value = "Process Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Production Purpose",Value = "Production Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Service Purpose",Value = "Service Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Gift Purpose",Value = "Gift Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Branding Purpose",Value = "Branding Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Marketing Purpose",Value = "Marketing Purpose"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "BTRC Purpose",Value = "BTRC Purpose"
+                                }
+                            }, "select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.AdditionalInfo, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.AdditionalInfo, new { @class = "form-control", PlaceHolder = "Processor,RAM,Camera etc." })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.Label("No of Sample", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.NumberOfSample, new { @class = "form-control", type = "number", min = "0" })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.SampleCategory, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.SampleCategory, new List<SelectListItem>
+                            {
+                                new SelectListItem()
+                                {
+                                    Text = "T0",Value = "T0"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T1",Value = "T1"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T2",Value = "T2"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T3",Value = "T3"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Final",Value = "Final"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Finish Good",Value = "Finish Good"
+                                }
+                            }, "select", new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.Color, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.Color, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.Label("Supplier", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.SupplierName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    @*<div class="col-md-6">
+                            <div class="col-md-3">
+                                @Html.LabelFor(@i => i.ReturnStatus, new { @class = "" })
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(@i => i.ReturnStatus, new List<SelectListItem>
+                                {
+                                    new SelectListItem()
+                                    {
+                                        Text = "Permanent",Value = "Permanent"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Returnable",Value = "Returnable"
+                                    }
+                                }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>*@
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            @Html.LabelFor(@i => i.IMEI)
+                        </div>
+                        <div class="col-md-11">
+                            @Html.TextAreaFor(@i => i.IMEI, new { @class = "form-control", placeholder = "IMEI1,IMEI2,IMEI3,........." })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-1">
+                            @Html.LabelFor(@i => i.Remarks)
+                        </div>
+                        <div class="col-md-11">
+                            @Html.TextAreaFor(@i => i.Remarks, new { @class = "form-control", placeholder = "Remarks" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <button class="btn btn-success col-md-offset-4 pull-left" id="btnSave">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @*============================Samples sent by me ======================================*@
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption">
+                Samples sent by me
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblSampleSentByMe">
+                    <thead>
+                        <tr>
+                            @*<th class="text-center">Sample to Dept.</th>*@
+                            <th class="text-center trackerId">Tracking ID</th>
+                            <th class="text-center">Issued By</th>
+                            <th class="text-center">Issued Quantity</th>
+                            <th class="text-center">Issued Date</th>
+                            <th class="text-center">Issue Purpose</th>
+                            <th class="text-center">Sample to Person</th>
+                            <th class="text-center">Sample Sent Date</th>
+                            @*<th class="text-center">Supplier</th>
+                            <th class="text-center">Others</th>*@
+                            <th class="text-center">No of Sample Sent</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">Purpose</th>
+                            <th class="text-center">Additional Info</th>
+                            <th class="text-center">Sample Category</th>
+                            <th class="text-center">IMEIs</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Remarks</th>
+                            <th class="text-center">Received By</th>
+                            <th class="text-center">Receive Date</th>
+                            <th class="text-center">Returned By</th>
+                            <th class="text-center">Return Date</th>
+                            <th class="text-center">Return Quantity</th>
+                            <th class="text-center">Inventory Returned By</th>
+                            <th class="text-center">Inventory Return Quantity</th>
+                            <th class="text-center">Inventory Return Date</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in ViewBag.sample)
+                        {
+                            <tr>
+                                <td class="text-center trackerId">@v.SampleTrackerId</td>
+                                @*<td class="text-center">@v.SampleSentToDept</td>*@
+                                <td class="text-center">@v.SampleIssuedByName</td>
+                                <td class="text-center">@v.SampleIssueQuantity</td>
+                                <td class="text-center">@v.SampleIssueDate</td>
+                                <td class="text-center">@v.SampleIssuePurpose</td>
+                                <td class="text-center">@v.SampleSentToPersonName</td>
+                                <td class="text-center">@String.Format("{0:yyyy-MM-dd}", v.AddedDate)</td> @*added date is sample sent date*@
+                                @*<td class="text-center">@v.SupplierName</td>
+                                <td class="text-center">@v.Others</td>*@
+                                <td class="text-center numberOfSample">@v.NumberOfSample</td>
+                                <td class="text-center">@v.Model</td>
+                                <td class="text-center">@v.Purpose</td>
+                                <td class="text-center">@v.AdditionalInfo</td>
+                                <td class="text-center">@v.SampleCategory</td>
+                                <td class="text-center">@v.IMEI</td>
+                                <td class="text-center">@v.Color</td>
+                                <td class="text-center">@v.Remarks</td>
+                                <td class="text-center receivedByName">@v.ReceivedByName</td>
+                                <td class="text-center receiveDate">@v.ReceiveDate</td>
+                                <td class="text-center returnedByName">@v.ReturnedByName</td>
+                                <td class="text-center returnDate">@v.ReturnDate</td>
+                                <td class="text-center returnQuantity">@v.ReturnQuantity</td>
+                                <td class="text-center inventoryReturnedByName">@v.InventoryReturnedByName</td>
+                                <td class="text-center inventoryReturnQuantity">@v.InventoryReturnQuantity</td>
+                                <td class="text-center inventoryReturnDate">@v.InventoryReturnDate</td>
+                                <td class="text-center actiontd">
+                                    @if (v.InventoryReturnedBy == null)
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails">Edit</button>
+                                        if (User.IsInRole("PM") || User.IsInRole("PMHEAD"))
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturnToInvModal" data-toggle="modal" data-target="#invReturnModal">Return To Inventory</button>
+                                    }
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-danger badge-roundless"><label id="assignedrole">NO ACTION AVAILABLE</label></span>
+                                    }
+                                    
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Modal -->
+<div id="invReturnModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+              <div class="col-md-12">
+                  Remarks
+                  @Html.TextAreaFor(@m => m.InventoryReturnRemarks, new { @class = "form-control", @rows = "5" ,id="txtInvReturnRemarks"})
+              </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" id="btnInvReturnSave" class="btn btn-success">Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+    @*============================SAMPLE SENT TO ME ======================================*@
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                Samples sent To me
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblSampleSentToMe">
+                    <thead>
+                        <tr>
+                            @*<th class="hiddenColumn">ID</th>*@
+                            <th class="text-center">Tracker ID</th>
+                            <th class="text-center">Issued By</th>
+                            <th class="text-center">Issued Quantity</th>
+                            <th class="text-center">Issued Date</th>
+                            <th class="text-center">Issue Purpose</th>
+                            <th class="text-center">Sample to Person</th>
+                            <th class="text-center">No of Sample Sent</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">Purpose</th>
+                            <th class="text-center">Additional Info</th>
+                            <th class="text-center">Sample Category</th>
+                            <th class="text-center">IMEIs</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Remarks</th>
+                            <th class="text-center">Sent by</th>
+                            <th class="text-center">Send Date</th>
+                            <th class="text-center">Received By</th>
+                            <th class="text-center">Receive Date</th>
+                            <th class="text-center">Returned By</th>
+                            <th class="text-center">Return Date</th>
+                            <th class="text-center">Return Quantity</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in ViewBag.SampleToMe)
+                        {
+                            <tr id="person_@v.SampleTrackerId">
+                                <td class="trackerId">@v.SampleTrackerId</td>
+                                @*<td class="text-center">SI-@v.SampleTrackerId</td>*@
+                                <td class="text-center">@v.SampleIssuedByName</td>
+                                <td class="text-center">@v.SampleIssueQuantity</td>
+                                <td class="text-center">@v.SampleIssueDate</td>
+                                <td class="text-center">@v.SampleIssuePurpose</td>
+                                <td class="text-center">@v.SampleSentToPersonName</td>
+                                <td class="text-center numberOfSample">@v.NumberOfSample</td>
+                                <td class="text-center">@v.Model</td>
+                                <td class="text-center">@v.Purpose</td>
+                                <td class="text-center">@v.AdditionalInfo</td>
+                                <td class="text-center">@v.SampleCategory</td>
+                                <td class="text-center">@v.IMEI</td>
+                                <td class="text-center">@v.Color</td>
+                                <td class="text-center">@v.Remarks</td>
+                                <td class="text-center">@v.AddedByName</td>
+                                <td class="text-center">@v.AddedDate</td>
+                                <td class="text-center receivedByName">@v.ReceivedByName</td>
+                                <td class="text-center receiveDate">@v.ReceiveDate</td>
+                                <td class="text-center returnedByName">@v.ReturnedByName</td>
+                                <td class="text-center returnDate">@v.ReturnDate</td>
+                                <td class="text-center returnQuantity">@(v.ReturnQuantity ?? 0)</td>
+                                <td class="text-center actiontd">
+                                    @if (v.ReceiveDate != null)
+                                    {
+                                        if (v.ReturnQuantity < v.NumberOfSample || v.ReturnQuantity==null)
+                                        {
+                                            <button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnReceive">Receive</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @*============================SAMPLE SENT TO MY DEPARTMENT ======================================*@
+                        @{var ishead = false;}
+                        @foreach (var m in ViewBag.SampleToDept)
+                        {
+                            if (m.RoleisHead)
+                            {
+                                ishead = m.RoleisHead;
+                                break;
+                            }
+                        }
+                        @if (ishead)
+                        {
+                            <div class="portlet box green-dark">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        Samples sent To My Dept.
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="table-scrollable">
+                                        <table class="table table-bordered dtTable" id="tblSampleSentToDept">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Tracker ID</th>
+                                                    <th class="text-center">Sample to Dept.</th>
+                                                    <th class="text-center">No of Sample Sent</th>
+                                                    <th class="text-center">Model</th>
+                                                    <th class="text-center">Purpose</th>
+                                                    <th class="text-center">Additional Info</th>
+                                                    <th class="text-center">Sample Category</th>
+                                                    <th class="text-center">IMEIs</th>
+                                                    <th class="text-center">Color</th>
+                                                    <th class="text-center">Remarks</th>
+                                                    <th class="text-center">Sent by</th>
+                                                    <th class="text-center">Send Date</th>
+                                                    <th class="text-center">Received By</th>
+                                                    <th class="text-center">Receive Date</th>
+                                                    <th class="text-center">Returned By</th>
+                                                    <th class="text-center">Return Date</th>
+                                                    <th class="text-center">Return Quantity</th>
+                                                    <th class="text-center">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var v in ViewBag.SampleToDept)
+                                                {
+                                                    <tr id="dept_@v.SampleTrackerId">
+                                                        <td class="trackerId">@v.SampleTrackerId</td>
+                                                        <td class="text-center">@v.SampleSentToDept</td>
+                                                        <td class="text-center numberOfSample">@v.NumberOfSample</td>
+                                                        <td class="text-center">@v.Model</td>
+                                                        <td class="text-center">@v.Purpose</td>
+                                                        <td class="text-center">@v.AdditionalInfo</td>
+                                                        <td class="text-center">@v.SampleCategory</td>
+                                                        <td class="text-center">@v.IMEI</td>
+                                                        <td class="text-center">@v.Color</td>
+                                                        <td class="text-center">@v.Remarks</td>
+                                                        <td class="text-center">@v.AddedByName</td>
+                                                        <td class="text-center">@v.AddedDate</td>
+                                                        <td class="text-center receivedByName">@v.ReceivedByName</td>
+                                                        <td class="text-center">@v.ReceiveDate</td>
+                                                        <td class="text-center">@v.ReturnedByName</td>
+                                                        <td class="text-center">@v.ReturnDate</td>
+                                                        <td class="text-center">@v.ReturnQuantity ?? 0</td>
+                                                        <td class="text-center">
+                                                            @if (v.ReceiveDate != null)
+                                                            {
+                                                                if (v.ReturnQuantity < v.NumberOfSample)
+                                                                {
+                                                                    <button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <button class="btn btn-sm sbold uppercase btn-outline red-haze btnReceive">Receive</button>
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*========================================================== return Submit ===========================================================*@
+    <div id="returnModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Return Sample</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="rowfinder" />
+                                <input type="hidden" id="sampleTrackerId" />
+                                <p>
+                                    No of Sample Received:
+                                    <input type="text" class="form-control" id="txtSampleReceived" readonly="" />
+                                </p>
+                                <p>
+                                    Previous Returned Quantity:
+                                    <input type="text" class="form-control" id="txtPreviousReturnedQuantity" readonly="" />
+                                </p>
+                                <p>
+                                    Return Quantity:
+                                    <input type="number" min="1" class="form-control" id="txtReturnQuantity" />
+                                </p>
+                                <p>
+                                    Remarks:
+                                    <input type="text" id="txtRemarks" class="form-control" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="btnSubmit" onclick="submitReturn();">Submit</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $('#SampleSentToDept').chosen();
+    $('#SampleSentToPersonId').chosen();
+    $('#Model').chosen();
+
+    $('#tblSampleSentByMe').DataTable({        
+        //dom: 'Bfrtip',
+        //buttons: [
+        //    'excel', 'pdf'
+        //]
+    });
+
+    $('#tblSampleSentToMe').DataTable({        
+        
+    });
+
+    $("#formSampleTracker").submit(function (e) {
+        //var deptText = $('#SampleSentToDept option:selected').text();
+        var empText = $('#SampleSentToPersonId option:selected').text();
+        $('#SampleSentToPersonName').val(empText);
+        var others = $('#Others').val();
+        //var supplier = $('#SupplierName').val();
+        var noofsample = $('#NumberOfSample').val();
+        if (empText == 'Select One' && others == '') {
+            alertify.alert('You must select at least one option from "Send Sample to" section');
+            e.preventDefault();
+        }
+        if (noofsample == '') {
+            alertify.error('Please insert number of sample');
+            e.preventDefault();
+        }
+    });
+    //reset dept dropdown
+    $('#SampleSentToPersonId').on('change', function() {
+        $('#SampleSentToDept').prop('selectedIndex',0);
+        $('#SampleSentToDept').trigger("chosen:updated");
+        $('#Others').val('');
+    });
+    //reset person dropdown
+    $('#SampleSentToDept').on('change', function () {
+        $('#SampleSentToPersonId').prop('selectedIndex', 0);
+        $('#SampleSentToPersonId').trigger("chosen:updated");
+        $('#Others').val('');
+    });
+    
+    //reset dropdown on other
+    $('#Others').keyup(function() {
+        $('#SampleSentToPersonId').prop('selectedIndex', 0);
+        $('#SampleSentToPersonId').trigger("chosen:updated");
+    });
+
+    $('#tblSampleSentByMe').on('click', '.btnDetails', function () {
+        var id = $(this).closest('tr').find('.trackerId').text();
+        //alertify.success(id);
+        var url = '@Url.Action("SampleTrackerDetails","Common",new{id="__param__"})';
+        window.open(url.replace('__param__', encodeURIComponent(id)));
+    });
+
+    $('#tblSampleSentToDept').on('click', '.btnReceive', function () {
+        var row = $(this).closest('tr');
+        var id = row.find('.trackerId').text();
+        //alertify.success(id);
+        var url = '@Url.Action("SampleReceive","Common")';
+        $.post(url, { id: id }, function (data) {
+            console.log(data);
+            row.find('.receivedByName').text(data.ReceivedByName);
+            row.find('.receiveDate').text(data.ReceiveDate);
+            row.find('.actiontd').contents().remove();
+            row.find('.actiontd').html('<button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>');
+            alertify.success('received');
+        });
+    });
+
+    $('#tblSampleSentToMe').on('click', '.btnReceive', function () {
+        var row = $(this).closest('tr');
+        var id = row.find('.trackerId').text();
+        //alertify.success(id);
+        var url = '@Url.Action("SampleReceive","Common")';
+        $.post(url, { id: id }, function (data) {
+            console.log(data);
+            var dateString = data.ReceiveDate;
+            var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+            var date = new Date(seconds);
+            date = formatDate(date);
+            row.find('.receivedByName').text(data.ReceivedByName);
+            row.find('.receiveDate').text(date);
+            row.find('.actiontd').contents().remove();
+            row.find('.actiontd').html('<button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>');
+            alertify.success('received');
+        });
+    });
+
+    $('#tblSampleSentToDept').on('click', '.btnReturn', function () {
+        var row = $(this).closest('tr');
+        var tableid = '#tblSampleSentToDept';
+        console.log(tableid);
+        var id = row.find('.trackerId').text();
+        var prequantity = row.find('.returnQuantity').text();
+        var sampleReceived = row.find('.numberOfSample').text();
+        //alertify.success(id);
+        $('#sampleTrackerId').val(id);
+        $('#txtPreviousReturnedQuantity').val(prequantity);
+        $('#txtSampleReceived').val(sampleReceived);
+        $('#rowfinder').val(tableid);
+        $('#returnModal').modal('show');
+    });
+
+    $('#tblSampleSentToMe').on('click', '.btnReturn', function () {
+        var row = $(this).closest('tr');
+        var tableid = '#tblSampleSentToMe';
+        console.log(tableid);
+        var id = row.find('.trackerId').text();
+        var prequantity = row.find('.returnQuantity').text();
+        var sampleReceived = row.find('.numberOfSample').text();
+        //alertify.success(id);
+        $('#sampleTrackerId').val(id);
+        $('#txtPreviousReturnedQuantity').val(prequantity);
+        $('#txtSampleReceived').val(sampleReceived);
+        $('#rowfinder').val(tableid);
+        $('#returnModal').modal('show');
+    });
+
+    function submitReturn() {
+        $('#btnSubmit').prop('disabled', true);
+        var url = '@Url.Action("SampleReturn","Common")';
+        var tableid = $('#rowfinder').val();
+        console.log(tableid);
+        var id = $('#sampleTrackerId').val();
+        //alertify.success(id);
+        var returnquanitity = parseInt($('#txtReturnQuantity').val(), 10);
+        var samplereceived = parseInt($('#txtSampleReceived').val(), 10);
+        var prequantity = parseInt($('#txtPreviousReturnedQuantity').val(), 10);
+        console.log(prequantity);
+        var remarks = $('#txtRemarks').val();
+        var totalreturn = prequantity + returnquanitity;
+        if (totalreturn <= samplereceived && returnquanitity != '' && returnquanitity != 0) {
+            //console.log(totalreturn);
+            $.post(url, { id: id, remarks: remarks, returnquantity: returnquanitity }, function (data) {
+                $('#txtReturnQuantity').val('');
+                $('#returnModal').modal('hide');
+                var dateString = data.ReturnDate;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date = new Date(seconds);
+                date = formatDate(date);
+                //console.log(row);
+                if (tableid == '#tblSampleSentToDept') {
+                    $('#dept_' + data.SampleTrackerId).find('.returnedByName').text(data.ReturnedByName);
+                    $('#dept_' + data.SampleTrackerId).find('.returnDate').text(date);
+                    $('#dept_' + data.SampleTrackerId).find('.returnQuantity').text(data.ReturnQuantity);
+                    $('#dept_' + data.SampleTrackerId).find('.actiontd').contents().remove();
+                    if (samplereceived != data.ReturnQuantity) {
+                        $('#dept_' + data.SampleTrackerId).find('.actiontd').html('<button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>');
+                    }
+                }
+                if (tableid == '#tblSampleSentToMe') {
+                    $('#person_' + data.SampleTrackerId).find('.returnedByName').text(data.ReturnedByName);
+                    $('#person_' + data.SampleTrackerId).find('.returnDate').text(date);
+                    $('#person_' + data.SampleTrackerId).find('.returnQuantity').text(data.ReturnQuantity);
+                    $('#person_' + data.SampleTrackerId).find('.actiontd').contents().remove();
+                    if (samplereceived != data.ReturnQuantity) {
+                        $('#person_' + data.SampleTrackerId).find('.actiontd').html('<button class="btn btn-sm sbold uppercase btn-outline green-haze btnReturn">Return</button>');
+                    }
+                }
+                $('#btnSubmit').prop('disabled', false);
+                alertify.success('returned');
+            });
+        } else {
+            alertify.error("Return Quantity can't be greater than receive quantity!!!");
+            $('#btnSubmit').prop('disabled', false);
+        }
+    }
+    
+    //====return inventory button click=====
+    var globalrow;
+    var trackerId = 0;
+    $('#tblSampleSentByMe tbody').on('click', '.btnReturnToInvModal', function () {
+        var row = $(this).closest('tr');
+        globalrow = row;
+        trackerId = row.find('.trackerId').html();
+        console.log(trackerId);
+    });
+
+    $('#btnInvReturnSave').on('click', function () {
+        var url = '@Url.Action("ReturnSampleToInventory","Common")';
+        console.log(trackerId);
+        var invremarks = $('#txtInvReturnRemarks').val();
+        console.log(invremarks);
+        $.post(url, { id: trackerId, remarks: invremarks }, function (data) {
+            if (data.InventoryReturnedBy != null) {
+                console.log(data);
+                $('#txtInvReturnRemarks').val('');
+                $('#invReturnModal').modal('toggle');
+                globalrow.find('.actiontd').empty();
+                alertify.success('Successfully returned to inventory.');
+            }
+        });
+        
+        
+    });
+    //-------O-------
+    function SampleSentByMeExcelExport() {
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+        var url = '@Url.Action("SampleSentToAndSentByMeExcelExport", "Common")';
+        console.log(fromDate + '>>' + toDate);
+        url = url + '?fromDate=' + fromDate + '&toDate=' + toDate;
+        location.href = url;
+    }
+    
+    function formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [day, month, year].join('-');
+    }
+</script>

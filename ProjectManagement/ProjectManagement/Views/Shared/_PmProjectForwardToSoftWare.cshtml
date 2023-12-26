@@ -1,0 +1,1400 @@
+﻿@using System.Activities.Statements
+@using System.Diagnostics
+@using ProjectManagement.ViewModels.ProjectManager
+@model ProjectManagement.ViewModels.ProjectManager.AssignedProjectListViewModel
+
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" href="favicon.ico" />
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 50px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 99;
+        text-align: center;
+    }
+</style>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-bar-chart font-green-sharp hide"></i>
+            <span class="caption-helper">Project Name:</span> &nbsp;
+            <span class="caption-subject font-green-sharp bold uppercase">
+                @if (Model != null)
+                {
+                    @Model.IndividualProjectViewModel.ProjectMasterModel.ProjectName;
+                }
+            </span>
+        </div>
+    </div>
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Project Info
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse"> </a>
+                <a href="javascript:;" class="reload"> </a>
+            </div>
+        </div>
+        <div class="portlet-body flip-scroll">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="forwardToSoftwareQcTable">
+                    <thead class="flip-content" style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th> Project Name </th>
+                            <th> Suppiler Name </th>
+                            <th> Type </th>
+                            <th class="numeric"> OS Version </th>
+                            <th class="numeric"> PO Date </th>
+                            <th class="numeric"> Shipment Last Date </th>
+                            <th class="numeric"> Qunatity </th>
+                            <th class="numeric"> Main Spec </th>
+                            <th class="numeric"> Name of Sample </th>
+                            <th class="numeric"> Chipset </th>
+                            <th class="numeric"> Assign Date </th>
+                            <th class="numeric"> PM </th>
+                            <th class="numeric"> Os Requirement<br />Analysis </th>
+                            <th class="numeric"> Field Test/<br />Accessories </th>
+                            <th class="numeric"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            <tr>
+                                <td style="display:none;"><input type="hidden" value="@Model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId" id="idProjectMaseterId" class="clsProjectMaseterId" /></td>
+                                <td style="display:none;"><input type="hidden" value="@Model.ProjectPmAssignModel.ProjectPmAssignId" id="idProjectPmAssignId" class="clsProjectPmAssignId" /></td>
+                                <td style="display:none;"><input type="hidden" value="@Model.ProjectPmAssignModel.ProjectManagerUserId" id="idProjectManagerUserId" class="clsProjectManagerUserId" /></td>
+                                <td> @Model.IndividualProjectViewModel.ProjectMasterModel.ProjectName </td>
+                                <td>@Model.IndividualProjectViewModel.ProjectMasterModel.SupplierName </td>
+                                <td class="numeric">@Model.IndividualProjectViewModel.ProjectMasterModel.ProjectType</td>
+                                <td class="numeric"> @(Model.IndividualProjectViewModel.ProjectMasterModel.OsName + " " + @Model.IndividualProjectViewModel.ProjectMasterModel.OsVersion) </td>
+                                @*<td class="form-control"> @Model.IndividualProjectViewModel.ProjectMasterModel.ApproxProjectOrderDate </td>*@
+                                <td class="form-control">@Html.DisplayFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ApproxProjectOrderDate) </td>
+                                <td class="numeric">@Html.DisplayFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ApproxShipmentDate) </td>
+                                <td class="numeric"> @Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                                <td class="numeric">@(Model.IndividualProjectViewModel.ProjectMasterModel.Chipset + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.ProcessorName + " " + @Model.IndividualProjectViewModel.ProjectMasterModel.Ram + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.Rom + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.FrontCamera + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.BackCamera)</td>
+                                <td class="numeric">@Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                                <td class="numeric"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                                @*<td class="numeric">@Model.ProjectPmAssignModel.AssignDate  </td>*@
+                                <td class="numeric">@Html.DisplayFor(model => model.ProjectPmAssignModel.AssignDate)  </td>
+                                <td class="numeric"> @Model.UserName </td>
+                                <td class="numeric">
+                                    <button class="btn btn-circle btn-sm green-dark btn-outline btnAnalysis" style="font-weight: bold" id="btnAnalysis">Assign<i class="icon-control-forward"> </i></button>
+                                </td>
+                                <td class="numeric">
+                                    <button class="btn btn-circle btn-sm red btn-outline btnFieldAccessoriesTest" id="btnFieldAccessoriesTest">Field/Accessories<i class="icon-control-forward"> </i></button>
+                                </td>
+                                <td class="numeric">
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnForwardToSoftWareQc" id="btnProjectAssign">Forward<i class="icon-control-forward"> </i></button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="forwardToSoftwareQcModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Forward To SoftWare QC</h4>
+
+                    <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectPmAssignId" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectManagerUserId" style="display:none;"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="#" id="" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="lblprojectName" class="form-control" style="border: none" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Sample Type:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" id="ddlSampleType">
+                                                <option value=0>--Select--</option>
+                                                <option value="T0">T0</option>
+                                                <option value="T1">T1</option>
+                                                <option value="Golden">Golden Sample</option>
+                                                <option value="FinishGood">Finish Good</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Test Phase :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select name="singleOne" id="singleOne" class="form-control" onchange="SoftNoChange()">
+                                                <option value=0 style="text-align: center">----- Select Test Phase Name -----</option>
+                                                @foreach (var item in ViewBag.ddlTestPhasesList)
+                                                {
+                                                    <option value="@item.TestPhaseID">
+                                                        @if (@item.TestPhaseIsActive == true && (@item.TestPhaseName != ("Accessories Test").Trim() && @item.TestPhaseName != ("Field (Network Test)").Trim()))
+                                                        {
+                                                            @item.TestPhaseName
+                                                        }
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Software Version No:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="number" min="1" id="swVersionNo" class="form-control" onchange="SoftNoChange()" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Version Name:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="versionName" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Number Of Sample:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="number" min="1" id="txtSampleNumber" class="form-control" />
+
+                                        </div>
+                                    </div>
+
+                                    @*<div class="form-group" id="ProjectOrderList" style="display: none;">
+                                            <label class="control-label col-md-3" style="width: 33.666667%;">
+                                                Project Sample Type:
+
+                                            </label>
+                                            <div class="col-md-6">
+                                                <select class="form-control" id="ddlProjectOrderNumber">
+                                                    <option value=0>--Select--</option>
+
+
+
+                                                </select>
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Manager Comment:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" rows="3" name="txtProjectHeadRemarks" id="txtProjectHeadRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToQc">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="forwardToSoftwareQcModalFieldAccess" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="color: red">Field/Accessories Forward To SoftWare QC</h4>
+
+                    <h4 class="modal-title" id="lblprojectMasterIdA" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectPmAssignIdA" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectManagerUserIdA" style="display:none;"></h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="#" id="" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="lblprojectNameA" class="form-control" style="border: none" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Test Phase :
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select name="singleOneA" id="singleOneA" class="form-control" onchange="testPhaseChange()">
+                                                <option value=0 style="text-align: center">----- Select Test Phase Name -----</option>
+                                                @foreach (var item in ViewBag.ddlTestPhasesList)
+                                                {
+                                                    <option value="@item.TestPhaseID">
+                                                        @if (@item.TestPhaseIsActive == true && (@item.TestPhaseName == ("Accessories Test").Trim() || @item.TestPhaseName == ("Field (Network Test)").Trim()))
+                                                        {
+                                                            @item.TestPhaseName
+                                                        }
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="ddlTestsTypeForHid">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Accessories<br /> Test Type:
+                                        </label>
+                                        <div class="col-md-6">
+                                            <select class="form-control" id="ddlTestsType">
+                                                <option value=0>--Select--</option>
+                                                <option value="Handset Usability Test">Handset Usability Test</option>
+                                                <option value="Battery">Battery</option>
+                                                <option value="Earphone">Earphone</option>
+                                                <option value="Glass Protector">Glass Protector</option>
+                                                <option value="Charger">Charger</option>
+                                                <option value="TPU Cover Test">TPU Cover Test</option>
+                                                <option value="Others">Others</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="swVersionNoForHid">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Software Version No:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="number" min="1" id="swVersionNoA" class="form-control" onchange="SoftNoChangeA()" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="swVersionNameForHid">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Version Name:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="versionNameA" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Number Of Sample:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="number" min="1" id="txtSampleNumberA" class="form-control" />
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Manager Comment:
+
+                                        </label>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" rows="3" name="txtProjectHeadRemarksA" id="txtProjectHeadRemarksA"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToQcA">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="forwardOsRequirementModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Assign To SoftWare QC</h4>
+
+                    <h4 class="modal-title" id="lblprojectMasterIdO" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectPmAssignIdO" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectManagerUserIdO" style="display:none;"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="#" id="" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Name:
+                                        </label>
+                                        <div class="col-md-6">
+                                            <input type="text" id="lblprojectNameO" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" style="width: 33.666667%;">
+                                            Project Manager Comment:
+                                        </label>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" rows="3" name="txtProjectHeadRemarksO" id="txtProjectHeadRemarksO"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnOsAssignToQc">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Software Version/OTA/Demo/Halt/MP/Finish Good Test</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="sample_1">
+                    <thead style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th class="text-center"> Assign To<br /> QcHead Date </th>
+                            <th class="text-center"> PmToQcHead<br /> Assign Comment </th>
+                            <th class="text-center"> Project<br />Sample<br /> Type </th>
+                            <th class="text-center"> Test Phase </th>
+                            <th class="text-center"> Number of <br />Sample-->SwQc </th>
+                            <th class="text-center"> Software <br />Version Name </th>
+                            <th class="text-center"> Software <br />Version No. </th>
+                            <th class="text-center">QcHead<br /> Finish Date </th>
+                            <th class="text-center"> QcHead<br /> Comment </th>
+                            <th class="text-center"> Status </th>
+                            <th class="text-center" style="display: none"> 1 </th>
+                            <th class="text-center" style="display: none"> 2 </th>
+                            <th class="text-center" style="display: none"> 3 </th>
+                            <th class="text-center" style="display: none"> 4 </th>
+                            <th class="text-center" style="display: none"> 5</th>
+                            <th class="text-center"> IsMP? </th>
+                            <th class="text-center"> Details </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SwQcHeadAssignInfoForPm)
+                        {
+                        <tr>
+                            <td class="text-center">
+                                @if (@item.PmToQcHeadAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                            </td>
+                            <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                            <td class="numeric text-center"> @item.ProjectManagerSampleType </td>
+                            <td class="numeric text-center"> @item.TestPhaseName </td>
+                            <td class="numeric text-center"> @item.ProjectManagerSampleNo </td>
+                            <td class="text-center"> @item.SoftwareVersionName </td>
+                            <td class="numeric text-center"> @item.SoftwareVersionNo </td>
+                            <td class="numeric text-center">
+                                @if (@item.SwQcHeadToPmSubmitTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToPmSubmitTime)}
+                            </td>
+                            <td class="numeric text-center"> @item.SwQcHeadToPmForwardComment </td>
+                            <td class="numeric text-center"> @item.Status </td>
+                            <td class="numeric text-center" style="display: none"> @item.ProjectMasterId </td>
+                            <td class="numeric text-center" style="display: none"> @item.SwQcHeadAssignId </td>
+                            <td class="numeric text-center" style="display: none"> @item.ProjectPmAssignId </td>
+                            <td class="numeric text-center" style="display: none"> @item.TestPhaseID </td>
+                            <td class="numeric text-center" style="display: none"> @item.ProjectName </td>
+                            <td class="numeric text-center"> @item.IsFinalPhaseMPs </td>
+                            <td class="text-center">
+                                <button class="btn btn-circle btn-sm blue btn-outline btnSwDetails" id="btnSwDetails"><i class="icon-doc"> </i> Details</button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Accessories Test</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="tblAccess">
+                    <thead style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th class="text-center"> Assign To<br /> QcHead Date </th>
+                            <th class="text-center"> PmToQcHead<br /> Assign Comment </th>
+                            <th class="text-center"> Test Phase </th>
+                            <th class="text-center"> Categories </th>
+                            <th class="text-center"> Number of <br />Sample-->SwQc </th>
+                            <th class="text-center"> QcHead <br />Finish<br />Date </th>
+                            <th class="text-center"> QcHead<br /> Comment </th>
+                            <th class="text-center"> Status </th>
+                            <th class="text-center"> Details </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.SwQcAccessoriesAssign != null)
+                        {
+                            foreach (var item in ViewBag.SwQcAccessoriesAssign)
+                            {
+                        <tr>
+                            <td class="text-center">
+                                @if (@item.PmToQcHeadAssignTime != null)
+                                        {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                            </td>
+                            <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                            <td class="numeric text-center"> @item.TestPhaseName </td>
+                            <td class="numeric text-center"> @item.AccessoriesTestType </td>
+                            <td class="numeric text-center"> @item.ProjectManagerSampleNo </td>
+                            <td class="numeric text-center">
+                                @if (@item.SwQcHeadToPmSubmitTime != null)
+                                        {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToPmSubmitTime)}
+                            </td>
+                            <td class="numeric text-center"> @item.SwQcHeadToPmForwardComment </td>
+                            <td class="numeric text-center"> @item.Status </td>
+                            <td class="text-center">
+                                <button class="btn btn-circle btn-sm blue btn-outline btnAccessoriesDetails" id="btnAccessoriesDetails"><i class="icon-doc"> </i> Details</button>
+                            </td>
+                        </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Field Test (PM)</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="tblFieldPm">
+                    <thead style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th class="text-center">Assign to <br /> QcHead Date </th>
+                            <th class="text-center"> PmToQcHead <br />AssignCom. </th>
+                            <th class="text-center"> Test Phase </th>
+                            <th class="text-center"> Number of <br />Sample-->SwQc </th>
+                            <th class="text-center"> Software <br />Version Name </th>
+                            <th class="text-center"> Software <br />Version No. </th>
+                            <th class="text-center"> QcHead <br /> Finish Date </th>
+                            <th class="text-center"> QcHead<br /> Comment </th>
+                            <th class="text-center"> Status </th>
+                            <th class="text-center"> Details </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.SwQcFieldAssignByPm != null)
+                        {
+                            foreach (var item in ViewBag.SwQcFieldAssignByPm)
+                            {
+                        <tr>
+                            <td class="text-center">
+                                @if (@item.PmToQcHeadAssignTime != null)
+                                        {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                            </td>
+                            <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                            <td class="numeric text-center"> @item.TestPhaseName </td>
+                            <td class="numeric text-center"> @item.ProjectManagerSampleNo </td>
+                            <td class="text-center"> @item.SoftwareVersionName </td>
+                            <td class="numeric text-center"> @item.SoftwareVersionNo </td>
+                            <td class="numeric text-center">
+                                @if (@item.SwQcHeadToPmSubmitTime != null)
+                                        {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToPmSubmitTime)}
+                            </td>
+                            <td class="numeric text-center"> @item.SwQcHeadToPmForwardComment </td>
+                            <td class="numeric text-center"> @item.Status </td>
+                            <td class="text-center">
+                                <button class="btn btn-circle btn-sm blue btn-outline btnFieldByPm" id="btnFieldByPm"><i class="icon-doc"> </i> Details</button>
+                            </td>
+                        </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Field Test (QCHEAD)</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="sample_2">
+                    <thead style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th class="text-center">QcHead to Qc<br /> AssignDate </th>
+                            <th class="text-center"> QCHEAD <br />AssignCom. </th>
+                            <th class="text-center"> Test Phase </th>
+                            <th class="text-center"> Software <br />Version Name </th>
+                            <th class="text-center"> Software <br />Version No. </th>
+                            <th class="text-center"> QcHead To<br /> PM SubmitDate </th>
+                            <th class="text-center"> QcHead<br /> Comment </th>
+                            <th class="text-center"> Status </th>
+                            <th class="text-center" style="display: none"> 1 </th>
+                            <th class="text-center" style="display: none"> 2 </th>
+                            <th class="text-center" style="display: none"> 3 </th>
+                            <th class="text-center" style="display: none"> 4 </th>
+                            <th class="text-center" style="display: none"> 5</th>
+                            <th class="text-center"> IsMP? </th>
+                            <th class="text-center"> Details </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.SwQcAssignsFromQcHeadInfo)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    @if (@item.SwQcHeadToQcAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToQcAssignTime)}
+                                </td>
+                                <td class="text-center">@item.SwQcHeadToQcAssignComment</td>
+                                <td class="numeric text-center"> @item.TestPhaseName </td>
+                                <td class="text-center"> @item.SoftwareVersionName </td>
+                                <td class="numeric text-center"> @item.SoftwareVersionNo </td>
+                                <td class="numeric text-center">
+                                    @if (@item.SwQcHeadToPmSubmitTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToPmSubmitTime)}
+                                </td>
+                                <td class="numeric text-center"> @item.SwQcHeadToPmForwardComment </td>
+                                <td class="numeric text-center"> @item.Status </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectMasterId </td>
+                                <td class="numeric text-center" style="display: none"> @item.SwQcHeadAssignId </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectPmAssignId </td>
+                                <td class="numeric text-center" style="display: none"> @item.TestPhaseID </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectName </td>
+                                <td class="numeric text-center"> @item.IsFinalPhaseMPs </td>
+                                <td class="text-center">
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnSwDetailsForQcHeadAssign" id="btnSwDetailsForQcHeadAssign"><i class="icon-doc"> </i> Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Os Requirement Analysis</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover" id="tblOs">
+                    <thead style="background-color: #4a8099;color: white;">
+                        <tr>
+                            <th class="text-center"> Assign To<br /> QcHead Date </th>
+                            <th class="text-center"> PmToQcHead<br /> Assign Comment </th>
+                            <th class="text-center">Qc<br /> Finish Date </th>
+                            @*<th class="text-center"> Qc<br /> Comment </th>*@
+                            <th class="text-center"> Status </th>
+                            <th class="text-center" style="display: none"> 1 </th>
+                            <th class="text-center" style="display: none"> 2 </th>
+                            <th class="text-center" style="display: none"> 3 </th>
+                            <th class="text-center" style="display: none"> 4 </th>
+                            <th class="text-center" style="display: none"> 5</th>
+                            <th class="text-center"> Document<br/>Download </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.OsAssignInfoForPm)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    @if (@item.PmToQcHeadAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                                </td>
+                                <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                                <td class="numeric text-center">
+                                    @if (@item.SwQcHeadToPmSubmitTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToPmSubmitTime)}
+                                </td>
+                                @*<td class="numeric text-center"> @item.SwQcHeadToPmForwardComment </td>*@
+                                <td class="numeric text-center"> @item.Status </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectMasterId </td>
+                                <td class="numeric text-center" style="display: none"> @item.SwQcHeadAssignId </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectPmAssignId </td>
+                                <td class="numeric text-center" style="display: none"> @item.TestPhaseID </td>
+                                <td class="numeric text-center" style="display: none"> @item.ProjectName </td>
+                                <td class="text-center">
+                                    <div class="file-preview-thumbnails text-center">
+                                        <div class="text-center">
+                                            <div class="file-preview-frame file-preview-initial text-center" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                <div class="col-lg-12 text-center">
+                                                    @if (@item.SupportingDocument != null)
+                                                    {
+
+                                                        <input value="@item.SupportingDocument" style="display: none" />
+                                                        for (int m = 0; m < @item.FilesDetails.Count; m++)
+                                                        {
+
+                                                            if (@item.FilesDetails[m].Extention == ".jpg" || @item.FilesDetails[m].Extention == ".png" || @item.FilesDetails[m].Extention == ".mp4" || @item.FilesDetails[m].Extention == ".jpeg" || @item.FilesDetails[m].Extention == ".txt" || @item.FilesDetails[m].Extention == ".xls" || @item.FilesDetails[m].Extention == ".wav")
+                                                            {
+                                                                <div class="col-lg-3 text-center">
+                                                                    <embed class="text-center" src="@item.FilesDetails[m].FilePath" style="width: 100px; height: 100px" />
+                                                                    <br />
+                                                                    <a target="_blank" class="text-center" href="@item.FilesDetails[m].FilePath">Download</a>
+                                                                </div>
+                                                                <div class="col-lg-3 text-center" style="width: 50px;"></div>
+
+                                                            }
+                                                            if (@item.FilesDetails[m].Extention == ".zip" || @item.FilesDetails[m].Extention == ".pdf" || @item.FilesDetails[m].Extention == ".docx" || @item.FilesDetails[m].Extention == ".xlsx" || @item.FilesDetails[m].Extention == ".rar" || @item.FilesDetails[m].Extention == ".pptx")
+                                                            {
+
+                                                                string[] urls = @item.FilesDetails[m].FilePath.Split('|');
+                                                                var last = urls[0].Split('-').Last();
+                                                                var lastNameForM = item.FilesDetails[m].FilePath;
+                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                <div class="col-lg-3 text-center" style="width: 100px; height: 100px;">
+                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled", @class = "text-center" })
+                                                                    <br />
+                                                                    <a class="text-center" href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                </div>
+                                                                <div class="col-lg-3 text-center" style="width: 50px;"></div>
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+<script type="text/javaScript">
+    function SoftNoChange() {
+
+        var obj = {};
+        var testPhase = $('#singleOne').val().trim();
+
+        var projectId = $('#lblprojectMasterId').text();
+        var projectName = $('#lblprojectName').val();
+        var swVersionNo = $('#swVersionNo').val();
+        obj.swVersionNo = swVersionNo;
+        obj.projectId = projectId;
+        obj.testPhase = testPhase;
+
+        if (swVersionNo != 0 && swVersionNo != null && testPhase != "0") {
+            $.ajax({
+                url: '@Url.Action("SoftwareVersionNameLoadForAll", "ProjectManager")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    var items = $.parseJSON(data);
+
+                    if (items != null) {
+
+                        $('#versionName').val(items.SoftwareVersionName);
+                        document.getElementById("versionName").disabled = true;
+
+                    } else {
+                        $('#versionName').val("");
+                        document.getElementById("versionName").disabled = false;
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+        //else {
+        //    $('#versionName').val();
+        //    document.getElementById("versionName").disabled = false;
+        //}
+        // var versionName = $('#versionName').val();
+    }
+    function SoftNoChangeA() {
+
+        var obj = {};
+        var projectId = $('#lblprojectMasterIdA').text();
+        var projectName = $('#lblprojectNameA').val();
+        var swVersionNo = $('#swVersionNoA').val();
+        obj.swVersionNo = swVersionNo;
+        obj.projectId = projectId;
+
+        if (swVersionNo != 0 && swVersionNo != null) {
+            $.ajax({
+                url: '@Url.Action("SoftwareVersionNameLoad", "ProjectManager")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    var items = $.parseJSON(data);
+
+                    if (items != null) {
+
+                        $('#versionNameA').val(items.SoftwareVersionName);
+                        document.getElementById("versionNameA").disabled = false;
+
+                    } else {
+                        $('#versionNameA').val("");
+                        document.getElementById("versionNameA").disabled = false;
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+
+    function testPhaseChange() {
+
+        var testPhase = $('#singleOneA :selected').text().trim();
+
+        if (testPhase == "Accessories Test") {
+            $('#swVersionNoA').val("");
+            document.getElementById("swVersionNoA").disabled = true;
+            document.getElementById("swVersionNoForHid").style.visibility = "hidden";
+
+            $('#versionNameA').val("");
+            document.getElementById("versionNameA").disabled = true;
+            document.getElementById("swVersionNameForHid").style.visibility = "hidden";
+        } else {
+            $('#swVersionNoA').val("");
+            document.getElementById("swVersionNoA").disabled = false;
+
+
+            document.getElementById("swVersionNoForHid").style.visibility = "visible";
+            document.getElementById("swVersionNameForHid").style.visibility = "visible";
+        }
+
+        if (testPhase == "Field (Network Test)") {
+
+            document.getElementById("ddlTestsTypeForHid").style.visibility = "hidden";
+
+        } else {
+
+            document.getElementById("ddlTestsTypeForHid").style.visibility = "visible";
+        }
+    }
+
+    $(document).ready(function () {
+        $('#singleOne').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+        $('#singleOneA').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+
+        $('#forwardToSoftwareQcTable tr > td > .btnForwardToSoftWareQc').click(function () {
+
+            var currentRow;
+
+            var projectMasterId = document.getElementById('idProjectMaseterId').value;
+            var projectPmAssignId = document.getElementById('idProjectPmAssignId').value;
+            var projectManagerUserId = document.getElementById('idProjectManagerUserId').value;
+
+            console.log(projectMasterId + "--->" + projectPmAssignId);
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('forwardToSoftwareQcTable');
+            var projectName = table.rows[rowIndex].cells[3].innerHTML;
+
+            $('#forwardToSoftwareQcModal').modal();
+            $("[name=txtTestValue]").change(function () {
+                $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+            });
+            $('#lblprojectName').val(projectName);
+            $('#lblprojectMasterId').text(projectMasterId);
+            $('#lblProjectPmAssignId').text(projectPmAssignId);
+            $('#lblProjectManagerUserId').text(projectManagerUserId);
+            currentRow = $(this).closest('tr');
+            //console.log(projectName);
+            $('#versionName').val("");
+            document.getElementById("versionName").disabled = true;
+        });
+        //btnAnalysis
+        $('#forwardToSoftwareQcTable tr > td > .btnAnalysis').click(function () {
+
+            var currentRow;
+
+            var projectMasterId = document.getElementById('idProjectMaseterId').value;
+            var projectPmAssignId = document.getElementById('idProjectPmAssignId').value;
+            var projectManagerUserId = document.getElementById('idProjectManagerUserId').value;
+
+            console.log(projectMasterId + "--->" + projectPmAssignId);
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('forwardToSoftwareQcTable');
+            var projectName = table.rows[rowIndex].cells[3].innerHTML;
+
+            $('#forwardOsRequirementModal').modal();
+
+            $('#lblprojectNameO').val(projectName);
+            $('#lblprojectMasterIdO').text(projectMasterId);
+            $('#lblProjectPmAssignIdO').text(projectPmAssignId);
+            $('#lblProjectManagerUserIdO').text(projectManagerUserId);
+            currentRow = $(this).closest('tr');
+
+        });
+
+        $('#forwardToSoftwareQcTable tr > td > .btnFieldAccessoriesTest').click(function () {
+
+            var currentRow;
+
+            var projectMasterId = document.getElementById('idProjectMaseterId').value;
+            var projectPmAssignId = document.getElementById('idProjectPmAssignId').value;
+            var projectManagerUserId = document.getElementById('idProjectManagerUserId').value;
+
+            console.log(projectMasterId + "--->" + projectPmAssignId);
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('forwardToSoftwareQcTable');
+            var projectName = table.rows[rowIndex].cells[3].innerHTML;
+
+            $('#forwardToSoftwareQcModalFieldAccess').modal();
+            $("[name=txtTestValue]").change(function () {
+                $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+            });
+            $('#lblprojectNameA').val(projectName);
+            $('#lblprojectMasterIdA').text(projectMasterId);
+            $('#lblProjectPmAssignIdA').text(projectPmAssignId);
+            $('#lblProjectManagerUserIdA').text(projectManagerUserId);
+            currentRow = $(this).closest('tr');
+
+            $('#versionNameA').val("");
+            document.getElementById("versionNameA").disabled = true;
+        });
+
+        $('#btnOsAssignToQc').on('click', function () {
+
+            $('#loading').show();
+            var pmRemarks = $('#txtProjectHeadRemarksO').val();
+            var projectName = $('#lblprojectNameO').val();
+            var projectMasterId = $('#lblprojectMasterIdO').text();
+            var projectPmAssignId = $('#lblProjectPmAssignIdO').text();
+            var projectManagerUserId = $('#lblProjectManagerUserIdO').text();
+
+            if (pmRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input PM comment",
+                }).show();
+                return false;
+            }
+            var obj = {};
+
+            obj.pmRemarks = pmRemarks;
+            obj.projectMasterId = projectMasterId;
+            obj.projectPmAssignId = projectPmAssignId;
+            obj.projectManagerUserId = projectManagerUserId;
+
+            $.ajax({
+                    url: '@Url.Action("SaveOsRequirementAnalysisData", "ProjectManager")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "ok") {
+                            $('#txtProjectHeadRemarksO').val('');
+                           
+                            alertify.alert('Project Forwarded To Software Qc', 'Project Forwarded To Software Qc.Project Name' + projectName, function () {
+                                alertify.success('Forwarded' + projectName);
+                            });
+                            $('#loading').hide();
+                        } else {
+                            alertify.alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+
+            event.preventDefault(); //Prevent the default submit
+            window.location = '@Url.Action("ProjectForwardToSoftWareView", "ProjectManager")?projectId=' + obj.projectMasterId;
+          
+        });
+
+        $('#btnForwardToQc').on('click', function () {
+
+            $('#loading').show();
+            var pmRemarks = $('#txtProjectHeadRemarks').val();
+            var projectName = $('#lblprojectName').val();
+            var projectMasterId = $('#lblprojectMasterId').text();
+            var projectPmAssignId = $('#lblProjectPmAssignId').text();
+            var sampleNumber = $('#txtSampleNumber').val();
+            var projectManagerUserId = $('#lblProjectManagerUserId').text();
+            var selectedSampleValue = $('#ddlSampleType :selected').val();
+            var testPhase = $('#singleOne').val().trim();
+
+            var swVersionNo = $('#swVersionNo').val();
+            var versionName = $('#versionName').val();
+
+            if (selectedSampleValue == 0) {
+                $('#forwardToSoftwareQcModal').modal('hide');
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Project Sample Type.",
+                }).show();
+                return false;
+
+            }
+
+            if (testPhase == "0") {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '  ',
+                    'transition': 'zoom',
+                    'message': 'Please must select Test Phase Name.'
+                }).show();
+                return false;
+            }
+            if (swVersionNo.length == 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Software Version Number.",
+                }).show();
+                return false;
+
+            }
+            if (versionName == "") {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Version Name.",
+                }).show();
+                return false;
+
+            } else if (versionName.length < 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Version Name.",
+                }).show();
+                return false;
+            }
+            if (sampleNumber.length == 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Number of Sample.",
+                }).show();
+                return false;
+
+            }
+
+
+            if (sampleNumber != "" && selectedSampleValue != "0") {
+                var obj = {};
+
+                obj.pmRemarks = pmRemarks;
+                obj.projectMasterId = projectMasterId;
+                obj.projectPmAssignId = projectPmAssignId;
+                obj.projectManagerUserId = projectManagerUserId;
+                obj.selectedSampleValue = selectedSampleValue;
+                obj.sampleNumber = sampleNumber;
+                obj.testPhase = testPhase;
+                obj.swVersionNo = swVersionNo;
+                obj.versionName = versionName;
+                // var data = commonJqueryAjax('/ProjectManager/ProjectForwardToSoftwareQc', obj);
+
+
+                $.ajax({
+                    url: '@Url.Action("ProjectForwardToSoftwareQc", "ProjectManager")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "ok") {
+                            $('#txtProjectHeadRemarks').val('');
+                            $('#txtSampleNumber').val('');
+                            $('#txtProjectHeadRemarks').val('');
+                            $('#swVersionNo').val('');
+                            $('#versionName').val('');
+
+                            alertify.alert('Project Forwarded To Software Qc', 'Project Forwarded To Software Qc.Project Name' + projectName, function () {
+                                alertify.success('Forwarded' + projectName);
+                            });
+                            $('#loading').hide();
+                        } else {
+                            alertify.alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+
+                event.preventDefault(); //Prevent the default submit
+                window.location = '@Url.Action("ProjectForwardToSoftWareView", "ProjectManager")?projectId=' + obj.projectMasterId;
+                // $('#loading').hide();
+
+            } else {
+                $('#txtSampleNumber').css('border-color', 'red');
+                $('#ddlSampleType').css('border-color', 'red');
+            }
+
+        });
+
+        $('#btnForwardToQcA').on('click', function () {
+
+            $('#loading').show();
+            var pmRemarks = $('#txtProjectHeadRemarksA').val();
+            var projectName = $('#lblprojectNameA').val();
+            var projectMasterId = $('#lblprojectMasterIdA').text();
+            var projectPmAssignId = $('#lblProjectPmAssignIdA').text();
+            var sampleNumber = $('#txtSampleNumberA').val();
+            var projectManagerUserId = $('#lblProjectManagerUserIdA').text();
+            var testPhase = $('#singleOneA').val().trim();
+
+            var testPhaseText = $('#singleOneA :selected').text().trim();
+
+            var swVersionNo = $('#swVersionNoA').val();
+            var versionName = $('#versionNameA').val();
+
+            var ddlTestsType = $('#ddlTestsType :selected').text().trim();
+
+
+            if (testPhase == "0") {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '  ',
+                    'transition': 'zoom',
+                    'message': 'Please must select Test Phase Name.'
+                }).show();
+                return false;
+            }
+
+            if (testPhaseText == "Field (Network Test)") {
+
+                if (swVersionNo.length == 0) {
+                    $('#loading').hide();
+                    $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must provide Software Version Number.",
+                    }).show();
+                    return false;
+
+                }
+                if (versionName == "") {
+                    $('#loading').hide();
+                    $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must provide Version Name.",
+                    }).show();
+                    return false;
+
+                } else if (versionName.length < 0) {
+                    $('#loading').hide();
+                    $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must provide Version Name.",
+                    }).show();
+                    return false;
+                }
+            }
+
+            if (testPhaseText == "Accessories Test") {
+                if (ddlTestsType.trim() == "--Select--") {
+                    $('#loading').hide();
+                    $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Accessories Test Type.",
+                    }).show();
+                    return false;
+                }
+            }
+
+            if (sampleNumber.length == 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModalFieldAccess').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Number of Sample.",
+                }).show();
+                return false;
+
+            }
+
+
+            if (sampleNumber != "") {
+                var obj = {};
+
+                obj.pmRemarks = pmRemarks;
+                obj.projectMasterId = projectMasterId;
+                obj.projectPmAssignId = projectPmAssignId;
+                obj.projectManagerUserId = projectManagerUserId;
+                obj.sampleNumber = sampleNumber;
+                obj.testPhase = testPhase;
+                obj.swVersionNo = swVersionNo;
+                obj.versionName = versionName;
+                obj.accessoriesTest = ddlTestsType;
+
+                $.ajax({
+                    url: '@Url.Action("FieldOrAccessoriesForwardToSoftwareQc", "ProjectManager")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "ok") {
+                            $('#txtProjectHeadRemarksA').val('');
+                            $('#txtSampleNumberA').val('');
+                            $('#txtProjectHeadRemarksA').val('');
+                            $('#swVersionNoA').val('');
+                            $('#versionNameA').val('');
+
+                            alertify.alert('Project Forwarded To Software Qc', 'Project Forwarded To Software Qc.Project Name' + projectName, function () {
+                                alertify.success('Forwarded' + projectName);
+                            });
+                            $('#loading').hide();
+                        } else {
+                            alertify.alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+
+                event.preventDefault(); //Prevent the default submit
+                window.location = '@Url.Action("ProjectForwardToSoftWareView", "ProjectManager")?projectId=' + obj.projectMasterId;
+
+
+            } else {
+                $('#txtSampleNumberA').css('border-color', 'red');
+
+            }
+
+        });
+
+        $('[class*="btnSwDetails"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "sample_1") {
+                var pmAssignDate = $(this).closest("tr").find('td:nth-child(1)').html();
+                var projectId = $(this).closest("tr").find('td:nth-child(11)').html();
+                var swqcInchargeId = $(this).closest("tr").find('td:nth-child(12)').html();
+                var pmAssignId = $(this).closest("tr").find('td:nth-child(13)').html();
+                var testPhaseId = $(this).closest("tr").find('td:nth-child(14)').html();
+                var projectName = $(this).closest("tr").find('td:nth-child(15)').html();
+
+                var url = '@Url.Action("DetailsOfSwQcsAllWorkForPm", "ProjectManager")?projectId=' + projectId + '&swqcInchargeId=' + swqcInchargeId + '&pmAssignId=' + pmAssignId + '&testPhaseId=' + testPhaseId + '&pmAssignDate=' + pmAssignDate + '&projectName=' + projectName;
+                window.location.href = url;
+            }
+
+        });
+
+        $('[class*="btnSwDetailsForQcHeadAssign"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "sample_2") {
+                var swQcAssignDate = $(this).closest("tr").find('td:nth-child(1)').html();
+                var projectId = $(this).closest("tr").find('td:nth-child(9)').html();
+                var swqcInchargeId = $(this).closest("tr").find('td:nth-child(10)').html();
+                var pmAssignId = $(this).closest("tr").find('td:nth-child(11)').html();
+                var testPhaseId = $(this).closest("tr").find('td:nth-child(12)').html();
+                var projectName = $(this).closest("tr").find('td:nth-child(13)').html();
+
+                var url = '@Url.Action("DetailsOfSwQcsAllWorkForPm", "ProjectManager")?projectId=' + projectId + '&swqcInchargeId=' + swqcInchargeId + '&pmAssignId=' + pmAssignId + '&testPhaseId=' + testPhaseId + '&pmAssignDate=' + swQcAssignDate + '&projectName=' + projectName;
+                window.location.href = url;
+            }
+
+        });
+        //
+
+        var t1 = $('#tblAccess').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        var t2 = $('#tblFieldPm').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+    });
+    /////////////New//////////////
+    $('#forwardToSoftwareQc').DataTable({
+        "scrollX": true,
+        "scrollY": 550,
+        "paging": false,
+
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+    });
+
+    ////////////////////////
+</script>
+
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>
+
+
+
+
+
+
+
+
+

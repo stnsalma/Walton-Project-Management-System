@@ -1,0 +1,143 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+@{
+    ViewBag.Title = "Finished Goods Test";
+}
+
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+<link href="/assets/global/plugins/jquery-notific8/jquery.notific8.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+
+<!-- END PAGE LEVEL PLUGINS -->
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome to Finished Goods Test Page
+            @*<small>Issues Raised By:@Html.DisplayFor(model => model.HwQcAssignCustomMasterModel.UserFullName)</small>*@
+        </h1>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i>Assigned Projects
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwProjectBasicInfo", Model)
+            @Html.Hidden("lol", "select project", new { @id = "notific8_show" })
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Hardware Finished Goods Document Upload
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @Html.Partial("_HwQcDocUpload", Model)
+        </div>
+    </div>
+</div>
+
+<div class="portlet box red">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-warning"></i>Hardware Issues
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @Html.Partial("_HwIssueComment", Model)
+        </div>
+    </div>
+</div>
+
+<script>
+    //send projectid to controller for project info
+    $('#btnLoadProject').click(function () {
+        //alert('e');
+        var url = '@Url.Action("HwQcFinishedGoodsTest", "Hardware")?projectId=' + $('option:selected', $('#single')).val();
+        window.location.href = url;
+    });
+
+    $('#btnUploadQcScreeningDoc').click(function (e) {
+        if ($('#txtHwQcDocUploadFile').val() == "") {
+            alertify.alert('Select a file to upload');
+            e.preventDefault();
+        }
+    });
+
+    $('#btnUploadQcScreeningDoc').click(function (e) {
+        if ($('#hwQcInchargeAssignId').val() <= 0) {
+            alertify.alert('load a project first');
+            e.preventDefault();
+        }
+    });
+
+    //load issuename to HwIssueCommentModel
+    $('#ddlIssueMaster').on('change', function () {
+        var issueName = $('option:selected', $('#ddlIssueMaster')).text();
+        $('#hdnIssueName').val(issueName);
+    });
+
+    //load issueTypeName to HwIssueCommentModel
+    $('#ddlIssueType').on('change', function () {
+        var issueTypeName = $('option:selected', $('#ddlIssueType')).text();
+        $('#hdnIssueTypeName').val(issueTypeName);
+    });
+
+    //load issueTypeDetailName to HwIssueCommentModel
+    $('#ddlIssueTypeDetail').on('change', function () {
+        var issueTypeDetailName = $('option:selected', $('#ddlIssueTypeDetail')).text();
+        $('#IssueTypeDetailName').val(issueTypeDetailName);
+    });
+
+    $('#btnSubmitForVerification').click(function (e) {
+        if ($('#hwQcInchargeAssignId').val() <= 0) {
+            alertify.alert('Please Select a project first');
+            e.preventDefault();
+        } else {
+            {
+                var url = '@Url.Action("SubmitForVerification", "Hardware")?hwqcassignId=' + $('#hdnHwQcAssignId').val() + '&isFinishedGoods=' + 1 + '&projectId=' + $('option:selected', $('#single')).val() + '&hwqcinchargeassignId=' + $('#hwQcInchargeAssignId').val();
+                window.location.href = url;
+            }
+        }
+    });
+
+    //==============================================================================================================
+        $('[class*="btnFilePreview"]').on('click', function () {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+
+
+                //  $('#btnModalDataChangeLabel').text(btnId);
+                //  console.log($('#btnModalDataChangeLabel').text());
+
+
+                modalData += '<embed src="@Model.HwQcAssignModel.QcDocUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            }
+
+            // $('#filePreviewModal').modal();
+
+
+        });
+</script>

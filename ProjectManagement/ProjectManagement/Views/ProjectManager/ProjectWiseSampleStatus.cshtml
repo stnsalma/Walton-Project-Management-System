@@ -1,0 +1,131 @@
+﻿@{
+    ViewBag.Title = "ProjectWiseSampleStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="portlet box default">
+    <div class="portlet-title">
+        <div class="caption">
+            Project Wise Sample Return Status
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                @Html.DropDownList("ProjectName", new SelectList(ViewBag.Models, "ProjectName", "ProjectName"), "Select One", new { @class = "form-control" })
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblSampleStat">
+                        <thead>
+                            <tr>
+                                <th class="hiddenColumn">ID</th>
+                                <th class="text-center">Sample to Dept.</th>
+                                <th class="text-center">Sample to Person</th>
+                                <th class="text-center">Supplier</th>
+                                <th class="text-center">Others</th>
+                                <th class="text-center">No of Sample</th>
+                                <th class="text-center">Model</th>
+                                <th class="text-center">Purpose</th>
+                                <th class="text-center">Additional Info</th>
+                                <th class="text-center">Sample Category</th>
+                                <th class="text-center">IMEIs</th>
+                                <th class="text-center">Color</th>
+                                <th class="text-center">Added By</th>
+                                <th class="text-center">Added Date</th>
+                                <th class="text-center">Remarks</th>
+                                <th class="text-center">Received By</th>
+                                <th class="text-center">Receive Date</th>
+                                <th class="text-center">Returned By</th>
+                                <th class="text-center">Return Date</th>
+                                <th class="text-center">Return Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#ProjectName').chosen();
+    var url = '@Url.Action("GetSampleByProjectName","ProjectManager")';
+    $('#ProjectName').on('change', function () {
+        $('#tblSampleStat tbody').empty();
+        var project = $('#ProjectName option:selected').text();
+        $.post(url, { project: project }, function (data) {
+            console.log(data);
+            for (var i = 0; i < data.length; i++) {
+                //format added date
+                if (data[i].AddedDate != null) {
+                    var addedDate = data[i].AddedDate;
+                    var seconds = parseInt(addedDate.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    addedDate = new Date(seconds);
+                    addedDate = formatDate(addedDate);
+                } else {
+                    receiveDate = '-';
+                }
+                //format receive date
+                if (data[i].ReceiveDate != null) {
+                    var receiveDate = data[i].ReceiveDate;
+                    seconds = parseInt(receiveDate.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    receiveDate = new Date(seconds);
+                    receiveDate = formatDate(receiveDate);
+                } else {
+                    receiveDate = '-';
+                }
+                //format return date
+                if (data[i].ReturnDate != null) {
+                    var returnDate = data[i].ReturnDate;
+                    seconds = parseInt(returnDate.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    returnDate = new Date(seconds);
+                    returnDate = formatDate(returnDate);
+                } else {
+                    returnDate = '-';
+                }
+                var row = '<tr>'
+                + '<td class="hiddenColumn">' + data[i].SampleTrackerId + '</td>'
+                + '<td class="text-center">' + (data[i].SampleSentToDept = data[i].SampleSentToDept == null ? '-' : data[i].SampleSentToDept) + '</td>'
+                + '<td class="text-center">' + (data[i].SampleSentToPersonName = data[i].SampleSentToPersonName == null ? '-' : data[i].SampleSentToPersonName) + '</td>'
+                + '<td class="text-center">' + (data[i].SupplierName = data[i].SupplierName == null ? '-' : data[i].SupplierName) + '</td>'
+                + '<td class="text-center">' + (data[i].Others = data[i].Others == null ? '-' : data[i].Others) + '</td>'
+                + '<td class="text-center">' + data[i].NumberOfSample + '</td>'
+                + '<td class="text-center">' + data[i].Model + '</td>'
+                + '<td class="text-center">' + (data[i].Purpose = data[i].Purpose == null ? '-' : data[i].Purpose) + '</td>'
+                + '<td class="text-center">' + (data[i].AdditionalInfo = data[i].AdditionalInfo == null ? '-' : data[i].AdditionalInfo) + '</td>'
+                + '<td class="text-center">' + (data[i].SampleCategory = data[i].SampleCategory == null ? '-' : data[i].SampleCategory) + '</td>'
+                + '<td class="text-center">' + (data[i].IMEI = data[i].IMEI == null ? '-' : data[i].IMEI) + '</td>'
+                + '<td class="text-center">' + (data[i].Color = data[i].Color == null ? '-' : data[i].Color) + '</td>'
+                + '<td class="text-center">' + (data[i].AddedByName = data[i].AddedByName == null ? '-' : data[i].AddedByName) + '</td>'
+                + '<td class="text-center">' + addedDate + '</td>'
+                + '<td class="text-center">' + (data[i].Remarks = data[i].Remarks == null ? '-' : data[i].Remarks) + '</td>'
+                + '<td class="text-center">' + (data[i].ReceivedByName = data[i].ReceivedByName == null ? '-' : data[i].ReceivedByName) + '</td>'
+                + '<td class="text-center">' + receiveDate + '</td>'
+                + '<td class="text-center">' + (data[i].ReturnedByName = data[i].ReturnedByName == null ? '-' : data[i].ReturnedByName) + '</td>'
+                + '<td class="text-center">' + returnDate + '</td>'
+                + '<td class="text-center">' + data[i].ReturnQuantity + '</td>'
+                + '</tr>';
+                $('#tblSampleStat tbody').append(row);
+            }
+        });
+    });
+    
+    function formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [day, month, year].join('-');
+    }
+</script>

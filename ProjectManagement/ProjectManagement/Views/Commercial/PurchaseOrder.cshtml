@@ -1,0 +1,531 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProjectPurchaseOrder
+@{
+    ViewBag.Title = "PurchaseOrder";
+}
+@*<h2>Purchase Order</h2>*@
+
+@using (Html.BeginForm("PurchaseOrder", "Commercial", FormMethod.Post, new { @id = "formPoOrder" }))
+{
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Purchase Order
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+
+            <div class="form-body">
+                <div class="row">
+
+                    @if (TempData["message"] != null)
+                    {
+                        var msgType = TempData["messageType"];
+                        var msg = TempData["message"];
+                        if ((int)msgType == 1)
+                        {
+                            <div class="alert alert-success alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                <strong>Message:</strong> @msg
+                            </div>
+                        }
+                        else if ((int)msgType == 2)
+                        {
+                            <div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                <strong>Message:</strong> @msg
+                            </div>
+                        }
+                        else if ((int)msgType == 3)
+                        {
+                            <div class="alert alert-info alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                <strong>Message:</strong> @msg
+                            </div>
+                        }
+                    }
+
+                </div>
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.ProjectPurchaseOrderFormId)
+                @Html.HiddenFor(model => model.PrintFormId)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.ProjectMasterId)
+                @Html.HiddenFor(model => model.PrintRequired)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.Added)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.AddedDate)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.IsCompleted)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.IsSpareConfirmedDate)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.IsSpareSubmittedDate)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.SpareSubmittedBy)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.IsSpareSubmittedRemark)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.PiDate)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.ReminderMailFor18Month)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.AfterSalesPmComment)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.ProcessTeamComment)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.QcComment)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.FocStatus)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.IsApprovedByCommercial)
+                @Html.HiddenFor(model => model.ProjectPurchaseOrderFormModel.InchargeComment)
+                @Html.HiddenFor(model => model.SendSmtCapacityWarningMail)
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label">P.O No</label>
+                                @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.PurchaseOrderNumber, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.PurchaseOrderNumber, String.Empty, new { @style = "color:red;!important" })
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label">P.O Date</label>
+                                @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.PoDate, "{0:yyyy-MM-dd}", new { @class = "form-control date_picker", @placeholder = "P.O Date" })
+                                @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.PoDate, String.Empty, new { @style = "color:red;!important" })
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label">P.O Type</label>
+                                @Html.DropDownListFor(model => model.ProjectPurchaseOrderFormModel.PoCategory, new List<SelectListItem>
+                                        {
+                                            new SelectListItem { Text = "CBU", Value = "CBU"},
+                                                new SelectListItem { Text = "SKD", Value = "SKD"},
+                                                new SelectListItem { Text = "CKD", Value = "CKD"},
+                                                new SelectListItem { Text = "B-CKD", Value = "B-CKD"},
+                                                new SelectListItem { Text = "C-CKD", Value = "C-CKD"},
+                                                new SelectListItem { Text = "H-CKD", Value = "H-CKD"},
+                                                new SelectListItem { Text = "BC-CKD", Value = "BC-CKD"},
+                                                new SelectListItem { Text = "CH-CKD", Value = "CH-CKD"},
+                                                new SelectListItem { Text = "BH-CKD", Value = "BH-CKD"},
+                                                new SelectListItem { Text = "BCH-CKD", Value = "BCH-CKD"}
+                                        }, "select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.PoCategory, String.Empty, new { @style = "color:red;!important" })
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6"></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">Is Reorder ? </div>
+                        <div class="col-lg-1">@Html.CheckBoxFor(m => m.IsReorder, new { onclick = "reorder_date();" })</div>
+
+                    </div>
+
+                </div>
+                <br />
+                <div class="row projectInfo" id="projectInfo" style="visibility: hidden">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Appx. Finish Date</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.ApproximateFinishDateForReorder, "{0:yyyy-MM-dd}", new { @class = "form-control date_picker", @placeholder = "Appx. Finish Date" })
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Appx. Shipment Date</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.ApproximateShipmentDate, "{0:yyyy-MM-dd}", new { @class = "form-control date_picker", @placeholder = "Appx. Shipment Date" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Appx. Price</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.ApproximatePrice, new { @class = "form-control", @type = "number", @placeholder = "Appx. Price" })
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Final Price</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.FinalPrice, new { @class = "form-control", @type = "number", @placeholder = "Final Price" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row" id="divjigsinfo">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Jigs Total Price($)</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.JigsTotalPrice, new { @class = "form-control", @type = "number", @placeholder = "Jigs Total Price" })
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="col-lg-3">Jigs Unit Price($)</div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.JigsUnitPrice, new { @class = "form-control", @type = "number", @placeholder = "Jigs Unit Price", @readonly = "" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="jumbotron">
+                    <div class="row">
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-2">
+                            @Html.DropDownListFor(model => model.ProjectPurchaseOrderFormModel.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", @onchange = "GetPreviousPurchaseOrder(this.options[this.selectedIndex].text);" })
+                            @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.ProjectName, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                        <div class="col-lg-2">
+                            @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.Quantity, new { @class = "form-control", @placeholder = "Quantity", type = "number" })
+                            @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Quantity, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                        <div class="col-lg-2">
+                            @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.Color, new { @class = "form-control", @placeholder = "Color" })
+                            @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Color, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                        <div class="col-lg-2">
+                            @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.Value, new { @class = "form-control", @placeholder = "Value" })
+                            @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Value, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                        <div class="col-lg-2">
+                            @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.OrderDate, "{0:yyyy-MM-dd}", new { @class = "form-control date_picker", @placeholder = "Order Date" })
+                            @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.OrderDate, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                        <div class="col-lg-1"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">To</label>
+                    @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.Receiver, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Receiver, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Company Name To whome PO Will be Sent</label>
+                    @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.CompanyName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Receiver, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Address</label>
+                    @Html.TextAreaFor(model => model.ProjectPurchaseOrderFormModel.CompanyAddress, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.CompanyAddress, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Subject</label>
+                    @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.Subject, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.Subject, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    @*<label class="control-label">Subject</label>*@
+                    @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.DescriptionHeader, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.DescriptionHeader, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+                <div class="form-group">
+                    @*<label class="control-label">Subject</label>*@
+                    @Html.TextAreaFor(model => model.ProjectPurchaseOrderFormModel.DescriptionBody, new { @class = "form-control", @rows = 5 })
+                    @Html.ValidationMessageFor(model => model.ProjectPurchaseOrderFormModel.DescriptionBody, String.Empty, new { @style = "color:red;!important" })
+                    <span class="help-block"></span>
+                </div>
+
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">Conditions</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control" placeholder="Write a Condition" id="pCondition">
+                            </div>
+                            <div class="col-lg-2">
+                                <button class="btn btn-icon-only " id="btnAddCondition">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-sm-8">
+                                <table class="table table-bordered" id="productTable">
+                                    <thead>
+                                        <tr>
+                                            @*<th>Sl.</th>*@
+
+                                            <th style="width: 90%">Condition</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tcBody" class="tcBody">
+                                        @if (Model.ProjectPurchaseOrderConditionModels != null && Model.ProjectPurchaseOrderConditionModels.Any())
+                                        {
+                                            foreach (var conditionModel in Model.ProjectPurchaseOrderConditionModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Commercial/CmPartials/_PurchaseOrderCondition.cshtml", conditionModel);
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-actions">
+                <div class="col-lg-12" align="right">
+                    <div>
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<style>
+    .date_picker {
+        width: 100%;
+    }
+</style>
+<script type="text/javascript">
+    var serialCount;
+    function GetPreviousPurchaseOrder(ths) {
+        var isReorder = document.getElementById('IsReorder').checked;
+        var projectName = ths;
+        console.log(projectName + "---------->" + isReorder);
+        if (isReorder) {
+            var url = '@Url.Action("GetPrevPurchaseOrder", "Commercial")';
+            $.post(url, { projectName: projectName },
+                function (data) {
+                    $('#ProjectPurchaseOrderFormModel_Receiver').val(data.Receiver);
+                    $('#ProjectPurchaseOrderFormModel_CompanyName').val(data.CompanyName);
+                    $('#ProjectPurchaseOrderFormModel_CompanyAddress').val(data.CompanyAddress);
+                    $('#ProjectPurchaseOrderFormModel_Subject').val(data.Subject);
+                });
+        }
+    }
+
+
+
+
+    $(function () {
+
+        $('#ProjectPurchaseOrderFormModel_ProjectMasterId').on('change', function () {
+            var a = $('#ProjectPurchaseOrderFormModel_ProjectMasterId option:selected').text();
+            $('#ProjectPurchaseOrderFormModel.ProjectName').val(a);
+            var b = $('#ProjectPurchaseOrderFormModel.ProjectName').val();
+            alert(b);
+        });
+        serialCount = 0;
+        var print = $('#PrintRequired').val();
+        if (print == "y") {
+            var orderId = $('#PrintFormId').val();
+            if (parseInt(orderId) > 0) {
+                //window.open("../../RdlcReports/RdlcReport.aspx?id=" + orderId + "^0^0^PurchaseOrder");
+            }
+        }
+
+        $("#btnAdd").on('click', function (e) {
+            e.preventDefault();
+            var productExists = false;
+            $('#tBody input[id="ProjectMasterId"]').each(function (i, element) {
+                if ($(element).val() == $('#ProjectMasterId   option:selected').val()) {
+                    productExists = true;
+                }
+            });
+
+            if (!productExists) {
+                var projectId = parseInt($('#ProjectMasterId   option:selected').val());
+                var model = $('#pModel').val();
+                var quantity = $('#pQuantity').val();
+                var color = $('#pColor').val();
+                var value = $('#pValue').val();
+                var serial = ++serialCount;
+
+                $.post('/Commercial/AddModel', { model: model, quantity: quantity, color: color, value: value, serial: serial }, function (data) {
+                    $('#tBody').append(data);
+                });
+            } else {
+                alertify.error("Data duplicate.");
+            }
+        });
+        $("#btnAddCondition").on('click', function (e) {
+            e.preventDefault();
+            var productExists = false;
+            $('#tBody input[id="ProjectMasterId"]').each(function (i, element) {
+                if ($(element).val() == $('#ProjectMasterId   option:selected').val()) {
+                    productExists = true;
+                }
+            });
+
+            if (!productExists) {
+                var condition = $('#pCondition').val();
+                var serial = ++serialCount;
+
+                $.post('@Url.Action("AddPurchaseOrderCondition", "Commercial")', { condition: condition }, function (data) {
+                    $('#tcBody').append(data);
+                });
+            } else {
+                alertify.error("Data duplicate.");
+            }
+        });
+    });
+
+    function removeDetailRow(element) {
+        var detailRow = $(element).closest('tr');
+        $(detailRow).remove();
+        --serialCount;
+        //if (parseInt($(detailRow).find('input[id="id"]').val()) == 0) {
+        //    $(detailRow).remove();
+        //} else {
+        //    $(detailRow).find('input[id="status"]').val(0);
+        //    $(detailRow).attr('status', 0);
+        //    $(detailRow).hide();
+        //}
+        //updateTotals();
+    }
+
+    $(window).on('load', function () {
+        reorder_date();
+    });
+
+    function reorder_date() {
+
+        if (document.getElementById('IsReorder').checked) {
+            $('#projectInfo').css('visibility', 'visible');
+            $('#divjigsinfo').css('visibility', 'hidden');
+        } else {
+            $('#projectInfo').css('visibility', 'hidden');
+            $('#divjigsinfo').css('visibility', 'visible');
+        }
+    }
+
+    $('#ProjectPurchaseOrderFormModel_PoCategory').on('change', function () {
+        var url = '@Url.Action("WarehouseEntryQuantityThisMonth", "Commercial")';
+        var projectName = $('#ProjectPurchaseOrderFormModel_ProjectName option:selected').text();
+        var sourcingType = $('#ProjectPurchaseOrderFormModel_PoCategory option:selected').val();
+        var poDate = $('#ProjectPurchaseOrderFormModel_PoDate').val();
+        var poQuantity = parseInt($('#ProjectPurchaseOrderFormModel_Quantity').val());
+        console.log(projectName + '>>' + sourcingType + '>>' + poDate);
+        console.log(sourcingType.match(/CKD/g));
+        if (sourcingType.match(/CKD/g) == "CKD") {
+            console.log('PoQuantity=' + poQuantity);
+            if (isNaN(poQuantity) || poDate == '' || projectName == '--Select Project--') {
+                if (isNaN(poQuantity)) {
+                    $('#ProjectPurchaseOrderFormModel_Quantity').focus();
+                    alertify.error('Please input quantity first');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+                if (poDate == '') {
+                    alertify.error('Please input PO date');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+                if (projectName == '--Select Project--') {
+                    alertify.error('Please select a project');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+            } else {
+                $.post(url, { podate: poDate, projectName: projectName, poQuantity: poQuantity }, function (data) {
+                    if (data == true) {
+                        alertify.success('Order quantity is under SMT line capacity.');
+                        $('#SendSmtCapacityWarningMail').val(false);
+                        console.log($('#SendSmtCapacityWarningMail').val());
+                    } else {
+                        alertify.alert(data);
+                        $('#SendSmtCapacityWarningMail').val(true);
+                        console.log($('#SendSmtCapacityWarningMail').val());
+                    }
+                });
+            }
+        }
+    });
+
+    $('#ProjectPurchaseOrderFormModel_Quantity').on('input', function () {
+        var url = '@Url.Action("WarehouseEntryQuantityThisMonth", "Commercial")';
+        var projectName = $('#ProjectPurchaseOrderFormModel_ProjectName option:selected').text();
+        var sourcingType = $('#ProjectPurchaseOrderFormModel_PoCategory option:selected').val();
+        var poDate = $('#ProjectPurchaseOrderFormModel_PoDate').val();
+        var poQuantity = parseInt($('#ProjectPurchaseOrderFormModel_Quantity').val());
+        console.log(projectName + '>>' + sourcingType + '>>' + poDate);
+        console.log(sourcingType.match(/CKD/g));
+        if (sourcingType.match(/CKD/g) == "CKD") {
+            console.log('PoQuantity=' + poQuantity);
+            if (isNaN(poQuantity) || poDate == '' || projectName == '--Select Project--') {
+                if (isNaN(poQuantity)) {
+                    $('#ProjectPurchaseOrderFormModel_Quantity').focus();
+                    alertify.error('Please input quantity first');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+                if (poDate == '') {
+                    alertify.error('Please input PO date');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+                if (projectName == '--Select Project--') {
+                    alertify.error('Please select a project');
+                    $('#ProjectPurchaseOrderFormModel_PoCategory').val($("#ProjectPurchaseOrderFormModel_PoCategory option:first").val());
+                }
+            } else {
+                $.post(url, { podate: poDate, projectName: projectName, poQuantity: poQuantity }, function (data) {
+                    if (data == 'under SMT capacity') {
+                        alertify.success('Order quantity is under SMT line capacity.');
+                        $('#SendSmtCapacityWarningMail').val(false);
+                        console.log($('#SendSmtCapacityWarningMail').val());
+                    } else {
+                        alertify.alert(data);
+                        $('#SendSmtCapacityWarningMail').val(true);
+                        console.log($('#SendSmtCapacityWarningMail').val());
+                    }
+                });
+            }
+        }
+    });
+
+    function addMonths(date, months) {
+        var d = date.getDate();
+        date.setMonth(date.getMonth() + +months);
+        if (date.getDate() != d) {
+            date.setDate(0);
+        }
+        return date;
+    }
+
+    function toDate(dateStr) {
+        var parts = dateStr.split("-");
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    $("#btnAddJigsFixture").on('click', function () {
+        $('.spinner-border').attr('hidden', false);
+        $.post('@Url.Action("AddJigsAndFixtures", "Commercial")', {}, function (data) {
+            $('#jigsFixtureTable tbody').append(data);
+        });
+    });
+
+    $('#ProjectPurchaseOrderFormModel_JigsTotalPrice').bind('input', function () {
+        var poQuantity = parseInt($('#ProjectPurchaseOrderFormModel_Quantity').val());
+        if (!isNaN(poQuantity)) {
+            var jigsTotal = parseInt($('#ProjectPurchaseOrderFormModel_JigsTotalPrice').val());
+            var jigsunitPrice = jigsTotal / poQuantity;
+            $('#ProjectPurchaseOrderFormModel_JigsUnitPrice').val(jigsunitPrice.toFixed(4));
+        }
+    });
+
+    $('#ProjectPurchaseOrderFormModel_Quantity').bind('input', function () {
+        var jigsTotal = parseInt($('#ProjectPurchaseOrderFormModel_JigsTotalPrice').val());
+        if (!isNaN(jigsTotal)) {
+            var poQuantity = parseInt($('#ProjectPurchaseOrderFormModel_Quantity').val());
+            var jigsunitPrice = jigsTotal / poQuantity;
+            $('#ProjectPurchaseOrderFormModel_JigsUnitPrice').val(jigsunitPrice.toFixed(4));
+        }
+    });
+
+    $('#formPoOrder').on('submit', function (e) {
+        console.log($('#ProjectPurchaseOrderFormModel_PoDate').val());
+    });
+</script>

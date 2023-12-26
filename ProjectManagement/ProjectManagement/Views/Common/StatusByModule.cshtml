@@ -1,0 +1,416 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-share font-dark hide"></i>
+            <span class="caption-subject font-dark bold uppercase">Load Project Detail Status By Individual Modules</span>
+        </div>
+
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4">
+                @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+            </div>
+            <div class="col-lg-4"></div>
+        </div>
+        <br />
+        <label id="cmcurrentstat" style="color: green;font-weight: bolder"></label>
+        <br />
+        <label id="mmcurrentstat" style="color: blueviolet;font-weight: bolder"></label>
+        <br />
+        <label id="hwcurrentstat" style="color: red;font-weight: bolder"></label>
+        <br />
+        <label id="pmcurrentstat" style="color: orange;font-weight: bolder"></label>
+        <br />
+        <label id="swcurrentstat" style="color: blue;font-weight: bolder"></label>
+        <hr />
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel panel-heading" style="color: green;font-size: 20px;font-weight: bolder">COMMERCIAL</div>
+                <div class="col-md-12">
+                    <table id="cmProjectStatus" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="text-center bold">Project initialize</td>
+                                <td class="text-center bold">Screening Forward</td>
+                                <td class="text-center bold"> Screening <br />Issue review</td>
+                                @*<td class="text-center bold">Forward for <br /> final approval</td>*@
+                                <td class="text-center bold">PO date</td>
+                            </tr>
+                        </thead>
+                        <tbody id="cmtbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel panel-heading" style="color: blueviolet;font-size: 20px;font-weight: bolder">MANAGEMENT</div>
+                <div class="col-md-12">
+                    <table id="mmProjectStatus" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="text-center bold"> Initial Approval </td>
+                                <td class="text-center bold">Final approval</td>
+                            </tr>
+                        </thead>
+                        <tbody id="mmtbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel panel-heading" style="color: red;font-size: 20px;font-weight: bolder">HARDWARE</div>
+                <div class="col-md-12">
+                    <div id="divhwscreening" class="row">
+                        <div class="col-md-12">
+                            <label>HW Screening</label>
+                            <table id="hwScreeningProjectStatus" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td class="text-center bold">Sourcing Sample<br /> Sent by CM</td>
+                                        <td class="text-center bold">HW Screening <br />Sample Receive</td>
+                                        <td class="text-center bold">HW Screening <br />Engineer Assign</td>
+                                        <td class="text-center bold">HW Screening <br />report submit</td>
+                                        <td class="text-center bold">HW Screening <br />report verified</td>
+                                        <td class="text-center bold">HW Screening <br />report forward</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="hwscrtbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>HW Running</label>
+                            <table id="hwRunningProjectStatus" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td class="text-center bold">HW Running <br />Sample Sent</td>
+                                        <td class="text-center bold">HW Running <br />Sample Receive</td>
+                                        <td class="text-center bold">HW Running <br />Engineer Assign</td>
+                                        <td class="text-center bold">HW Running <br />report submit</td>
+                                        <td class="text-center bold">HW Running <br />report Verified</td>
+                                        <td class="text-center bold">HW Running <br />report forward</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="hwruntbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>HW Finished Goods Test</label>
+                            <table id="hwFinishProjectStatus" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td class="text-center bold">HW FG <br />Sample Sent</td>
+                                        <td class="text-center bold">HW FG <br />Sample Receive</td>
+                                        <td class="text-center bold">HW FG <br />Engineer Assign</td>
+                                        <td class="text-center bold">HW FG <br />report submit</td>
+                                        <td class="text-center bold">HW FG <br />report Verified</td>
+                                        <td class="text-center bold">HW FG <br />report forward</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="hwfintbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel panel-heading" style="color: orange;font-size: 20px;font-weight: bolder">PROJECT MANAGER</div>
+                <div class="col-md-12">
+                    <table id="pmProjectStatus" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="text-center bold"> PM Assined </td>
+                                <td class="text-center bold">Running Test<br /> Forward to HW</td>
+                                <td class="text-center bold">Finished Test<br /> Forward to HW</td>
+                                <td class="text-center bold">Forward to SwQc</td>
+                            </tr>
+                        </thead>
+                        <tbody id="pmtbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel panel-heading" style="color: blue;font-size: 20px;font-weight: bolder">SOFTWARE QC</div>
+                <div class="col-md-12">
+                    <table id="swProjectStatus" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td class="text-center bold"> Software Version </td>
+                                <td class="text-center bold"> QC Incharge<br /> Assined By PM </td>
+                                <td class="text-center bold">QC assign </td>
+                                <td class="text-center bold">Forward QC to PM</td>
+                            </tr>
+                        </thead>
+                        <tbody id="swtbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        $('#ProjectMasterId').on('change', function () {
+            $('#divhwscreening').show();
+            $('#cmcurrentstat').hide();
+            $('#hwcurrentstat').hide();
+            $('#pmcurrentstat').hide();
+            $('#mmcurrentstat').hide();
+            $('#swcurrentstat').hide();
+            //remove previous rows
+            $('#cmtbody').empty();
+            $('#mmtbody').empty();
+            $('#pmtbody').empty();
+            $('#hwscrtbody').empty();
+            $('#hwruntbody').empty();
+            $('#hwfintbody').empty();
+            $('#swtbody').empty();
+            //======================
+            var pId = $('#ProjectMasterId').val();
+            var name = $('#ProjectMasterId option:selected').text();
+
+            $.post('@Url.Action("GetDataByModule", "Common")', { id: pId }, function (data) {
+                console.log(data);
+                var converted = JSON.parse(data);
+                console.log(converted);
+
+                var count = 0;
+                for (var prop in converted) {
+                    count++;
+                }
+                console.log('the count duke is=' + count);
+
+
+                //===========Current status=================
+                if (converted.CmStatusObject.SourcingType == 'OEM' && converted.CmStatusObject.ProjectStatus == 'INITIAL' && converted.HwScreeningStatusObject == null) {
+                    $('#cmcurrentstat').text("Current status:- Source: [Commercial] Screening Forward Pending, Destination: [Hardware]");
+                    $('#cmcurrentstat').show();
+                }
+                if (converted.HwScreeningStatusObject != null && converted.CmStatusObject.PurchaseOrder == null && converted.HwScreeningStatusObject.ScreeningForward == null) {
+                    if (converted.CmStatusObject.SourcingType == "ODM") {
+                        $('#cmcurrentstat').text("Current status:- Source: [Commercial] Purchase Order Pending, Destination: [ProjectManager]");
+                        $('#cmcurrentstat').show();
+                    } else {
+                        $('#hwcurrentstat').text("Current status:- Source: [Hardware] Screening Test Pending, Destination: [Commercial]");
+                        $('#hwcurrentstat').show();
+                    }
+
+                }
+                if (converted.HwRunningStatusObject != null && converted.HwRunningStatusObject.TestPhase != 'FINISHED') {
+                    $('#hwcurrentstat').text("Current status:- Source: [Hardware] Running Test Pending, Destination: [Projectmanager]");
+                    $('#hwcurrentstat').show();
+                }
+                if (converted.HwFinishedStatusObject != null && converted.HwFinishedStatusObject.FinishedForward == null) {
+                    $('#hwcurrentstat').text("Current status:- Source: [Hardware] Finished Goods Test Pending, Destination: [ProjectManager]");
+                    $('#hwcurrentstat').show();
+                }
+                if (converted.CmStatusObject.ProjectStatus == 'NEW') {
+                    $('#mmcurrentstat').text("Current status:- Source: [MANAGEMENT] Initial Approval Pending, Destination: [Commercial]");
+                    $('#mmcurrentstat').show();
+                }
+                if (converted.CmStatusObject.ProjectStatus == 'APPROVED' && converted.CmStatusObject.PurchaseOrder == null) {
+                    $('#cmcurrentstat').text("Current status:- Source: [Commercial] Purchase Order Pending, Destination: [ProjectManager]");
+                    $('#cmcurrentstat').show();
+                }
+                if (converted.CmStatusObject.PurchaseOrder != null && converted.PmStatusObject == null) {
+                    $('#pmcurrentstat').text("Current status:- Source: [ProjectManager] Project Manager Assign Pending, Destination:[ProjectManager]");
+                    $('#pmcurrentstat').show();
+                }
+                if (converted.CmStatusObject.ProjectStatus == 'PARTIAL2' && converted.HwScreeningStatusObject.TestPhase == 'FINISHED') {
+                    if (converted.CmStatusObject.ScreeningIssueReview != null) {
+                        $('#cmcurrentstat').text("Current status:- Source: [Commercial] Screening Issue review Pending, Destination:[Commercial]");
+                        $('#cmcurrentstat').show();
+                    } else {
+                        $('#cmcurrentstat').text("Current status:- Source: [Commercial] Forward for Final Approval Pending, Destination:[Management]");
+                        $('#cmcurrentstat').show();
+                    }
+
+                }
+                if (converted.CmStatusObject.ProjectStatus == 'PARTIAL' && converted.HwScreeningStatusObject.TestPhase == 'FINISHED') {
+                    $('#mmcurrentstat').text("Current status:- Source: [Management] Final Approval Pending, Destination:[Commercial]");
+                    $('#mmcurrentstat').show();
+                }
+                if (converted.PmStatusObject != null) {
+                    if (converted.PmStatusObject.RunningForwardDate == null) {
+                        $('#pmcurrentstat').text("Current status:- Source: [ProjectManager]  Hardware Running Test Forward Pending, Destination:[Hardware]");
+                        $('#pmcurrentstat').show();
+                    }
+                    if (converted.PmStatusObject.SwQcForwardDate == null) {
+                        $('#pmcurrentstat').text("Current status:- Source: [ProjectManager] Software QC Forward Pending, Destination:[SoftwareQC]");
+                        $('#pmcurrentstat').show();
+                    }
+                    if (converted.PmStatusObject.RunningForwardDate == null && converted.PmStatusObject.SwQcForwardDate == null) {
+                        $('#pmcurrentstat').text("Current status:- Source: [ProjectManager] Software QC & Hardware Running Test Forward Pending, Destination:[Hardware & SoftwareQC]");
+                        $('#pmcurrentstat').show();
+                    }
+                    if (converted.HwRunningStatusObject != null && converted.HwRunningStatusObject.TestPhase == 'FINISHED' && converted.PmStatusObject.FinishedForwardDate == null) {
+                        $('#pmcurrentstat').text("Current status:- Source: [ProjectManager]  Forward for Hardware Finished Goods Test Pending, Destination:[Hardware]");
+                        $('#pmcurrentstat').show();
+                    }
+                }
+
+                if (converted.SwStatusObject != null) {
+                    var lastswqc = converted.SwStatusObjects.length - 1;
+                    var version = lastswqc + 1;
+                    if (converted.SwStatusObjects[lastswqc].QcInchargeToQcAssignTime == null) {
+                        $('#swcurrentstat').text("Current status:- Source: [SoftwareQC]  Software QC Version-"+version+" Assign Pending, Destination:[SoftwareQC]");
+                        $('#swcurrentstat').show();
+                    }
+                    if (converted.SwStatusObjects[lastswqc].QcInchargeToPmProjectSubmitTime == null && converted.SwStatusObjects[lastswqc].QcInchargeToQcAssignTime != null) {
+                        $('#swcurrentstat').text("Current status:- Source: [SoftwareQC]  Software QC Version-" + version + " Pending, Destination:[ProjectManager]");
+                        $('#swcurrentstat').show();
+                    }
+                }
+
+                
+
+                //===========cm================
+                if (converted.CmStatusObject != null) {
+
+                    if (converted.CmStatusObject.SourcingType == 'ODM') {
+                        converted.CmStatusObject.ScreeningIssueReviewDone = "ODM";
+                        converted.CmStatusObject.ForwardForFinalApproval = "ODM";
+                        converted.CmStatusObject.ScreeningSampleSent = "ODM";
+                        $('#divhwscreening').hide();
+                    }
+                    if (converted.CmStatusObject.OrderNuber > 1) {
+                        converted.CmStatusObject.ScreeningIssueReviewDone = "Reorder";
+                        converted.CmStatusObject.ForwardForFinalApproval = "Reorder";
+                        converted.CmStatusObject.ScreeningSampleSent = "Reorder";
+                        $('#divhwscreening').hide();
+                    }
+
+                    if (converted.HwScreeningStatusObject != null && converted.HwScreeningStatusObject.ScreeningSampleSent != null) {
+                        converted.CmStatusObject.ScreeningSampleSent = converted.HwScreeningStatusObject.ScreeningSampleSent;
+                    }
+                    $('#cmProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + (converted.CmStatusObject.ProjectInitialize == null ? "-" : moment(converted.CmStatusObject.ProjectInitialize).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.CmStatusObject.ScreeningSampleSent == null ? "-" : (converted.CmStatusObject.ScreeningSampleSent == "Reorder") ? "N/A for Reorder" : (converted.CmStatusObject.ScreeningSampleSent == "ODM") ? "ODM skips screeening" : moment(converted.CmStatusObject.ScreeningSampleSent).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.CmStatusObject.ScreeningIssueReviewDone == null ? "-" : (converted.CmStatusObject.ScreeningIssueReviewDone == "Reorder") ? "N/A for Reorder" : (converted.CmStatusObject.ScreeningIssueReviewDone == "ODM") ? "ODM skips screeening" : moment(converted.CmStatusObject.ScreeningIssueReviewDone).format('llll')) + '</td>' +
+                //'<td class="text-center">' + (converted.CmStatusObject.ForwardForFinalApproval == null ? "-" : (converted.CmStatusObject.ForwardForFinalApproval == "Reorder") ? "N/A for Reorder" : (converted.CmStatusObject.ForwardForFinalApproval == "ODM") ? "ODM skips screeening" : moment(converted.CmStatusObject.ForwardForFinalApproval).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.CmStatusObject.PurchaseOrder == null ? "-" : moment(converted.CmStatusObject.PurchaseOrder).format('llll')) + '</td>' +
+
+                '</tr>');
+                }
+
+                //mm
+                if (converted.CmStatusObject.SourcingType == 'ODM') {
+                    converted.CmStatusObject.InitialApprovalDate = "Approved";
+                    converted.CmStatusObject.FinalApprovalDate = "N/A for ODM";
+                }
+                if ((converted.CmStatusObject.ProjectStatus == 'INITIAL' || converted.CmStatusObject.ProjectStatus == 'PARTIAL' || converted.CmStatusObject.ProjectStatus == 'PARTIAL2') && converted.CmStatusObject.InitialApprovalDate == null) {
+                    converted.CmStatusObject.InitialApprovalDate = converted.CmStatusObject.InitialApprovalDate == null ? "Approved" : converted.CmStatusObject.InitialApprovalDate;
+                }
+                if (converted.CmStatusObject.ProjectStatus == 'APPROVED' && converted.CmStatusObject.FinalApprovalDate == null) {
+                    converted.CmStatusObject.InitialApprovalDate = converted.CmStatusObject.InitialApprovalDate == null ? "Approved" : converted.CmStatusObject.InitialApprovalDate;
+                    converted.CmStatusObject.FinalApprovalDate = "Approved";
+                }
+                if (converted.CmStatusObject.OrderNuber > 1) {
+                    converted.CmStatusObject.InitialApprovalDate = "N/A for reorder";
+                    converted.CmStatusObject.FinalApprovalDate = "N/A for reorder";
+                    $('#divhwscreening').hide();
+                }
+                $('#mmProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + (converted.CmStatusObject.InitialApprovalDate == null ? "-" : (converted.CmStatusObject.InitialApprovalDate == "Approved") ? "Approved" : (converted.CmStatusObject.InitialApprovalDate == "N/A for reorder") ? "N/A for reorder" : (converted.CmStatusObject.InitialApprovalDate == "N/A for ODM") ? "N/A for ODM" : moment(converted.CmStatusObject.InitialApprovalDate).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.CmStatusObject.FinalApprovalDate == null ? "-" : (converted.CmStatusObject.FinalApprovalDate == "Approved") ? "Approved" : (converted.CmStatusObject.FinalApprovalDate == "N/A for reorder") ? "N/A for reorder" : (converted.CmStatusObject.FinalApprovalDate == "N/A for ODM") ? "N/A for ODM" : moment(converted.CmStatusObject.FinalApprovalDate).format('llll')) + '</td>' +
+                '</tr>');
+
+                //pm
+                if (converted.PmStatusObject != null) {
+                    $('#pmProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + (converted.PmStatusObject.PmAssignDate == null ? "-" : moment(converted.PmStatusObject.PmAssignDate).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.PmStatusObject.RunningForwardDate == null ? "-" : moment(converted.PmStatusObject.RunningForwardDate).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.PmStatusObject.FinishedForwardDate == null ? "-" : moment(converted.PmStatusObject.FinishedForwardDate).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.PmStatusObject.SwQcForwardDate == null ? "-" : moment(converted.PmStatusObject.SwQcForwardDate).format('llll')) + '</td>' +
+                '</tr>');
+                }
+
+                //sw
+                if (converted.SwStatusObjects != null) {
+                    for (var i = 0; i < converted.SwStatusObjects.length; i++) {
+                        $('#swProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + 'Version ' + (i + 1) + '</td>' +
+                '<td class="text-center">' + moment(converted.SwStatusObjects[i].ProjectManagerAssignToQcInTime).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.SwStatusObjects[i].QcInchargeToQcAssignTime).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.SwStatusObjects[i].QcInchargeToPmProjectSubmitTime).format('llll') + '</td>' +
+
+                '</tr>');
+
+
+                    }
+                }
+
+
+                //hw screening
+                if (converted.HwScreeningStatusObject != null) {
+                    $('#hwScreeningProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningSampleSent == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningSampleSent).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningSampleReceive == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningSampleReceive).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningAssign == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningAssign).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningSubmit == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningSubmit).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningVerified == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningVerified).format('llll')) + '</td>' +
+                '<td class="text-center">' + (converted.HwScreeningStatusObject.ScreeningForward == null ? "-" : moment(converted.HwScreeningStatusObject.ScreeningForward).format('llll')) + '</td>' +
+
+                '</tr>');
+                }
+
+                //hw running
+                if (converted.HwRunningStatusObject != null) {
+                    $('#hwRunningProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningSampleSent).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningSampleReceive).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningAssign).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningSubmit).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningVerified).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwRunningStatusObject.RunningForward).format('llll') + '</td>' +
+
+                '</tr>');
+                }
+
+                //hw FG
+                if (converted.HwFinishedStatusObject != null) {
+                    $('#hwFinishProjectStatus > tbody:last-child').append('<tr>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedSampleSent).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedSampleReceive).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedAssign).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedSubmit).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedVerified).format('llll') + '</td>' +
+                '<td class="text-center">' + moment(converted.HwFinishedStatusObject.FinishedForward).format('llll') + '</td>' +
+
+                '</tr>');
+                }
+            });
+
+        });
+    })
+</script>
+
+

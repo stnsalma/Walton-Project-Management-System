@@ -1,0 +1,99 @@
+﻿@model ProjectManagement.Models.EarphonePoModel
+@{
+    ViewBag.Title = "EarphonePo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("EarphonePo", "Commercial", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.AddedBy)
+    @Html.HiddenFor(m => m.AddedDate)
+    @Html.HiddenFor(m => m.UpdatedBy)
+    @Html.HiddenFor(m => m.UpdatedDate)
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                Add/Update Earphone PO
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">PO No</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.EarphonePoNo, new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">PO Date</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.EarphonePoDate, new { @class = "form-control date_picker", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Supplier Name</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.SupplierName, new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">Supplier Address</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.SupplierAddress, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Quantity</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control",type="number",min="0" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">Country of Origin</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.CountryOfOrigin, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Description</div>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">Invoice</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.InvoiceNo, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <input type="submit" class="btn btn-success" value="Add" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<style>
+    .date_picker {
+        width: 100%;
+    }
+</style>
+

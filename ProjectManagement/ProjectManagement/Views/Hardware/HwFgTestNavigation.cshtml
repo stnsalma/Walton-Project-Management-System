@@ -1,0 +1,500 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+<input type="hidden" id="hdnHwQcInchargeAssignId" value="@ViewBag.HwQcInchargeAssignId">
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+
+
+<div class="progress">
+    <div class="progress-bar progress-bar-striped active progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="17">
+        <label id="lblProgressbar"></label>
+    </div>
+</div>
+
+
+<div class="portlet light portlet-fit bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-microphone font-dark hide"></i>
+            <span class="caption-subject bold font-dark uppercase"> Hardware Test </span>
+            <span class="caption-helper">@ViewBag.ProjectName</span>
+        </div>
+        <div class="actions">
+            <div class="btn-group">
+                @*<a class="btn red btn-outline btn-circle btn-sm" onclick="location.href='@Url.Action("HwDisplayFgReport", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">
+                        Display Report
+                    </a>*@
+                <a id="btnSubmitTestOnCompletion" class="btn red btn-outline btn-circle btn-sm" style="margin-left: 1px" onclick="location.href='@Url.Action("HwForwardToSubmitForVerification", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">
+                    Submit Test
+                    @*<i class="fa fa-angle-down"></i>*@
+                </a>
+                <a class="btn red btn-outline btn-circle btn-sm" style="margin-left: 1px" onclick="location.href='@Url.Action("HwItemizationForm", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">
+                    Itemization
+                    @*<i class="fa fa-angle-down"></i>*@
+                </a>
+                <a class="btn red btn-outline btn-circle btn-sm" style="margin-left: 1px" onclick="location.href='@Url.Action("HwFieldTest", "Hardware")?hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">
+                    Field Test
+                    @*<i class="fa fa-angle-down"></i>*@
+                </a>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.HwQcInchargeAssign.IsRunningTest != true)
+    {
+        <div class="portlet-body">
+            <div class="row">
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestPcbId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white; font-size: 20px; margin: 5px 5px 0 0"></i>
+                    }
+
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-blue-hoki">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-cog"></i>
+                            </div>
+                            <div class="mt-head-desc"> PCB Material Info </div>
+                            @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId=' + $('#hdnhwqcassignid').val() + '&hwQcInchargeAssignId=' + $('#hdnhwqcinchargeassignid').val() + '&flag=' + 1 ">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestPcbAId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white; font-size: 20px; margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-red">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-wrench"></i>
+                            </div>
+                            <div class="mt-head-desc"> PCBA Component Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId=' + $('#hdnhwqcassignid').val() + '&hwQcInchargeAssignId=' + $('#hdnhwqcinchargeassignid').val() + '&flag=' + 1 ">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestCameraInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white; font-size: 20px; margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-green">
+                            <div class="mt-head-icon">
+                                <i class=" icon-camera"></i>
+                            </div>
+                            <div class="mt-head-desc"> Camera Info </div>
+                            @*<span class="mt-head-date"> 3 Mar, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick=" location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId=' + $('#hdnhwqcassignid').val() + '&hwQcInchargeAssignId=' + $('#hdnhwqcinchargeassignid').val() + '&flag=' + 1 ">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestTpLcdInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white; font-size: 20px; margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-blue-hoki">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-phone"></i>
+                            </div>
+                            <div class="mt-head-desc"> TP+LCD Info </div>
+                            @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick=" location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId=' + $('#hdnhwqcassignid').val() + '&hwQcInchargeAssignId=' + $('#hdnhwqcinchargeassignid').val() + '&flag=' + 1 ">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="portlet-body">
+            <div class="row">
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestSoundInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-red">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-volume-up"></i>
+                            </div>
+                            <div class="mt-head-desc"> Sound Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestFpcConnectionAndSIMSlotInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-green">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-signal"></i>
+                            </div>
+                            <div class="mt-head-desc"> FPC & Sim Slot Info </div>
+                            @*<span class="mt-head-date"> 3 Mar, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestBatteryInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-blue-hoki">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-battery-4"></i>
+                            </div>
+                            <div class="mt-head-desc"> Battery Info </div>
+                            @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestChargerInfoId != null)
+                    {
+                        <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                    }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-red">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-plug"></i>
+                            </div>
+                            <div class="mt-head-desc"> Charger Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="portlet-body">
+            <div class="row">
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestUSBCableInfoId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-green">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-usb"></i>
+                            </div>
+                            <div class="mt-head-desc"> USB Cable Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestEarphoneInterfaceInfoId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-blue-hoki">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-headphones"></i>
+                            </div>
+                            <div class="mt-head-desc"> Earphone Interface Info </div>
+                            @*<span class="mt-head-date"> 3 Mar, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestChargingInfoId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-red">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-bolt"></i>
+                            </div>
+                            <div class="mt-head-desc"> Charging Info </div>
+                            @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestHousingInfoId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-green">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-building"></i>
+                            </div>
+                            <div class="mt-head-desc"> Housing Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="portlet-body">
+            <div class="row">
+
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestCrossMatchInfoId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-blue-hoki">
+                            <div class="mt-head-icon">
+                                <i class="fa fa-random"></i>
+                            </div>
+                            <div class="mt-head-desc"> Cross Match Info </div>
+                            @*<span class="mt-head-date"> 12 Feb, 2016 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3 tile">
+                    @if (ViewBag.HwTestCustomModel.HwTestOverallResultId != null)
+                {
+                <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                    <div class="mt-widget-3">
+                        <div class="mt-head bg-red">
+                            <div class="mt-head-icon">
+                                <i class="glyphicon glyphicon-th"></i>
+                            </div>
+                            <div class="mt-head-desc"> Overall Result </div>
+                            @*<span class="mt-head-date"> 3 Mar, 2015 </span>*@
+                            <div class="mt-head-button">
+                                <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()+'&flag='+1">GO</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    }
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-3 tile">
+                @if (ViewBag.HwTestCustomModel.HwFgBatteryTestMasterId != null)
+                {
+                    <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                <div class="mt-widget-3">
+                    <div class="mt-head bg-green">
+                        <div class="mt-head-icon">
+                            <i class="fa fa-battery-1"></i>
+                        </div>
+                        <div class="mt-head-desc"> Battery Cycle Test </div>
+                        @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                        <div class="mt-head-button">
+                            <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">GO</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3 tile">
+                @if (ViewBag.HwTestCustomModel.HwFgChargerTestId != null)
+                {
+                    <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                <div class="mt-widget-3">
+                    <div class="mt-head bg-blue-hoki">
+                        <div class="mt-head-icon">
+                            <i class="fa fa-plug"></i>
+                        </div>
+                        <div class="mt-head-desc"> Charger SPC Test </div>
+                        @*<span class="mt-head-date"> 25 Jan, 2015 </span>*@
+                        <div class="mt-head-button">
+                            <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">GO</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="col-md-3 tile">
+                @if (ViewBag.HwTestCustomModel.HwFgUsbCableTestId != null)
+                {
+                    <i class="fa fa-check pull-right counter" style="color: white;font-size:20px;margin: 5px 5px 0 0"></i>
+                }
+                <div class="mt-widget-3">
+                    <div class="mt-head bg-red">
+                        <div class="mt-head-icon">
+                            <i class="fa fa-usb"></i>
+                        </div>
+                        <div class="mt-head-desc"> USB Cable Test </div>
+                        @*<span class="mt-head-date"> 3 Mar, 2015 </span>*@
+                        <div class="mt-head-button">
+                            <button type="button" class="btn btn-circle btn-outline white btn-sm" onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwQcInchargeAssignId='+$('#hdnHwQcInchargeAssignId').val()">GO</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $.easing.def = 'easeOutBack';
+
+        //$('[class*="tile"]').click(function() {
+        //    $('[class*="tile"]').animate({ 'opacity': 0 }, 300);
+        //    setTimeout(animate(), 300);
+        //});
+        animate();
+
+        function animate() {
+            var icons = [
+                'fontawesome-adjust',
+                'fontawesome-asterisk',
+                'fontawesome-ban-circle',
+                'fontawesome-beaker',
+                'fontawesome-beer',
+                'fontawesome-bell',
+                'fontawesome-bullhorn',
+                'fontawesome-calendar',
+                'fontawesome-camera',
+                'fontawesome-cog',
+                'fontawesome-coffee',
+                'fontawesome-cog',
+                'fontawesome-comments',
+                'fontawesome-heart',
+                'fontawesome-home',
+                'fontawesome-folder-open'
+            ];
+
+            $('[class*="tile"]').each(function (i) {
+                time = 200 + (100 * i);
+                icon = Math.floor((Math.random() * 16));
+                $(this).css({
+                    'top': '400px',
+                    'left': '200px',
+                }).delay(time).animate({
+                    'opacity': '1',
+                    'top': '0',
+                    'left': '0'
+                }, 700).addClass(icons[icon]);
+            });
+        }
+    });
+
+
+
+    //Code for progressbar
+    var count = $('[class*="counter"]:visible').size();
+    count = count / 17 * 100;
+    count = Math.round(count);
+    //alert(count);
+    $('[class*="progressbar"]:visible').css('width', count + '%');
+    $('#lblProgressbar').html(count + "% completed");
+
+    //if (count <= 99) {
+    //    $('#btnSubmitTestOnCompletion').hide();
+    //    //alert(count);
+    //} else {
+    //    $('#btnSubmitTestOnCompletion').show();
+    //}
+
+
+</script>
+

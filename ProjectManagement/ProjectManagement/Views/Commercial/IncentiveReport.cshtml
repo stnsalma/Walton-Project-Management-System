@@ -1,0 +1,204 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Office.Interop.Excel
+@using ProjectManagement.ViewModels.Commercial
+@model List<ProjectManagement.ViewModels.Commercial.VmIncentivePolicy>
+
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+@*<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>*@
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Incentive
+        </h1>
+
+        <br />
+       
+    </div>
+    <div class="action">
+        <div class="col-md-12">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="export2Word(window.PDFWrapper)">
+                    <i class="fa fa-wordpress"></i>
+                    Export as .doc
+                </button>
+            </div>
+            <div class="col-md-4">
+
+                <button class="btn red btn-outline btn-circle btn-sm pull-right pdf" id="pdf">
+                    <i class="fa fa-save"></i>
+                    Export as PDF
+                </button>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+       
+       
+    </div>
+</div>
+
+<div class="portlet box blue-dark table2excel" id="table2excel">
+    <div class="portlet-title">
+    </div>
+    <div class="portlet-body">
+            <div class="table-toolbar">
+                <div class="row"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>
+                            </div>
+
+                            <div class="tools">
+                                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="col-lg-12" id="PDFWrapper">
+                                <br /><br /><br />  
+                                <div class="col-lg-4"></div>
+                               
+                                <div class="col-lg-4">
+                                    <h1 style="text-align: center;font-weight: bold; font-size: 30px;"> WDTIL</h1>
+                                    <h2 style="text-align: center;font-size: 20px;"> Department: Supply Chain Management </h2>
+                                    <h2 style="text-align: center;font-size: 20px;">  Section: Procurement Import </h2>
+                                    <h2 style="text-align: center;font-size: 20px;"> Incentive Sheet</h2> 
+                                 @foreach (var item1 in ViewBag.GetReports1)
+                                 {
+                                    <h2 style="text-align: center;font-size: 20px;"> @item1.Month, @item1.Year  </h2>
+                                  
+                                 }
+                                </div>
+                              
+                                <br /><br />
+                               
+                                <div class="table-scrollable table-responsive">
+                                    <table class="table table-bordered table-striped table-condensed flip-content" style="left: 0px;border: 1px solid black;color:black">
+                                        <thead class="flip-content">
+                                            <tr style="font-size: 16px; border: 2px solid black">
+                                                @*<th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>*@
+
+                                                <th style="text-align: left; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; "> NAME </th>
+                                                <th style="text-align: center; width: 60px; height: 50px; border: 1px solid black"> ID </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> TOTAL<br/> INCENTIVE </th>
+                                                <th style="text-align: center; width: 60px; height: 50px; border: 1px solid black"> SHARE </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Added<br/>Amount </th>
+                                                <th style="text-align: left; width: 100px; height: 50px; border: 1px solid black"> Remarks </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Deduct<br />Amount </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> D_Remarks </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Reward </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Penalties </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Special<br/>Amount </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> Special<br/>Remarks </th>
+                                                <th style="text-align: center; width: 100px; height: 50px; border: 1px solid black"> NET_AMOUNT </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="text-align: center;font-size: 14px;">
+
+                                            @foreach (var item1 in ViewBag.GetReports)
+                                            {
+                                                <tr class="tableTrCls1" id="trIdForIncentive">
+                                                   
+                                                    <td style ="text-align: left; border: 1px solid black;">@item1.UserFullName</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.UserId</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.TotalAmount</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.Percentage</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.AddedAmount</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.Remarks</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.AmountDeduction</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.DeductionRemarks</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.Reward</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.Penalties</td>
+
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.SpecialAmount</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.SpecialRemarks</td>
+
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.TotalIncentive</td>
+                                                </tr>
+                                            }
+
+
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <br/><br/><br/><br /><br /><br />
+                               
+                                <div class="col-lg-4">
+                                    <h4 style="text-align: left;">____________________</h4>
+                                    <p style="text-align: left;font-size: 20px;color:black"> Prepared By</p>
+                                    <p>
+                                        @foreach (var item1 in ViewBag.GetPreparedUser)
+                                        {
+                                            <div style="text-align: left; font-size: 20px; color: black">Name :@item1.UserFullName</div>
+                                            <div style="text-align: left; font-size: 20px; color: black">ID :@item1.EmployeeCode</div>
+                                        }
+                                    </p>
+                                    @*<label id="Label1"></label>*@
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+          
+    
+
+        <br /><br /><br /><br /><br /><br />
+       
+    </div>
+
+</div>
+
+
+<script>
+
+    $("#pdf").on("click", function () {
+        var divContents = $("#PDFWrapper").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title></title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+
+    // link.download = 'Project team incentive structure' + '_' + '@Request.Params["Month"]' + '_' + '@Request.Params["Year"]'+'.xls';
+
+    function export2Word(element) {
+
+        var html, link, blob, url, css;
+
+        css = (
+          '<style>' +
+          '@Page PDFWrapper{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.PDFWrapper {page: PDFWrapper;}' +
+              '</style>'
+        );
+
+        html = element.innerHTML;
+        blob = new Blob(['\ufeff', css + html], {
+            type: 'application/msword'
+        });
+        url = URL.createObjectURL(blob);
+        link = document.createElement('A');
+        link.href = url;
+        link.download = 'Commercial Incentive' + '_' + '@Request.Params["month"]' + '_' + '@Request.Params["yearId"]' + '.doc';  // default name without extension
+        document.body.appendChild(link);
+        if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'Commercial Incentive' + '_' + '@Request.Params["month"]' + '_' + '@Request.Params["yearId"]' + '.doc'); // IE10-11
+        else link.click();  // other browsers
+        document.body.removeChild(link);
+
+    };
+</script>

@@ -1,0 +1,85 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+<!DOCTYPE html>
+
+@{
+    ViewBag.Title = "HwRunningTestQcAssign";
+}
+
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+<link href="/assets/global/plugins/jquery-notific8/jquery.notific8.min.css" rel="stylesheet" type="text/css" />
+
+<!-- END PAGE LEVEL PLUGINS -->
+@*@Html.Hidden("hdnDuplicateAssignMessage", new { @Value = @ViewBag.duplicatemessage })*@
+<input id="hdnDuplicateAssignMessage" name="hdnDuplicateAssignMessage" type="hidden" value="@ViewBag.duplicatemessage" />
+<div class="caption">
+    <i class="icon-social-dribbble font-red-soft"></i>
+    <span class="caption-subject font-red-soft bold">
+        Hello @Html.Label("UserFullName", "Hardware Incharge", new { @class = "font-blue-soft bold" })! Welcome to Running Test Assign page
+    </span>
+</div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i>Assigned Project
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwProjectBasicInfo", Model)
+            @*@{Html.RenderAction("_HwProjectBasicInfo","Hardware", new{hwQcInchargeAssignId=2})}*@
+            @Html.Hidden("lol", "select project", new { @id = "notific8_show" })
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Hardware Engineer Assign
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @Html.Partial("_HwQcAssign", Model)
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    //get Automatic Serial number column in the HTML Table
+    $('#tblHwQcAssignedByProject tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    $(function() {
+        //Project Basic Info load from dropdown
+        $('#btnLoadProject').click(function () {
+            var url = '@Url.Action("HwRunningTestQcAssign", "Hardware")?projectId=' + $('option:selected', $('#single')).val();
+            window.location.href = url;
+        });
+        
+        //Duplicate Technician Assign Alert
+        if ($("[name=hdnDuplicateAssignMessage]").val() !== "") {
+            alertify.alert($("[name=hdnDuplicateAssignMessage]").val());
+        }
+    });
+    
+    //Assign QC
+    $('#btnSubmitHwQcAssign').click(function (e) {
+        //alert($('#hdnHwQcInchargeAssignId').val());
+        if ($('#hdnHwQcInchargeAssignId').val() <= 0) {
+            //$('#notific8_text').val('Please load a project from above');
+            //$('#notific8_show').trigger('click');
+            alertify.alert('select a project');
+            e.preventDefault();
+        }
+    });
+</script>

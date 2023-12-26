@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>datatables</id>
+    <version>1.0.0</version>
+    <title>datatables</title>
+    <authors>Devoops</authors>
+    <owners>Devoops</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>test for Devoops</description>
+    <summary>test for Devoops</summary>
+    <releaseNotes>test for Devoops</releaseNotes>
+  </metadata>
+</package>

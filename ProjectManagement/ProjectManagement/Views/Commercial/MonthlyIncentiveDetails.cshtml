@@ -1,0 +1,1493 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.ViewModels.Commercial
+@model List<ProjectManagement.ViewModels.Commercial.VmIncentivePolicy>
+
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        /*background-color: #65C1E0;*/
+        background-color: #569450;
+        color: white;
+    }
+
+    .nav-stacked > li.active > a, .nav-stacked > li.active > a:hover, .nav-stacked > li.active > a:focus {
+        background-color: #65C1E0;
+        color: white;
+    }
+</style>
+<style type="text/css">
+    .tabColor {
+        color: white !important;
+        background-color: rgb(209, 234, 170);
+        /*background-color:greenyellow;*/
+    }
+</style>
+<script src="~/Content/html2canvas.js"></script>
+<script src="~/Content/html2canvas.min.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Incentive
+        </h1>
+
+        <br />
+
+    </div>
+    <div class="action">
+        <div class="col-md-12">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <button class="btn green btn-outline btn-circle btn-sm pull-left" onclick="tableToExcel('table2excel', 'Commercial Incentive')">
+                    <i class="fa fa-save"></i>
+                    Export to Excel
+                </button>
+            </div>
+            <div class="col-md-4">
+
+                <button class="btn green btn-outline btn-circle btn-sm pull-right download" id="download">
+                    <i class="fa fa-wordpress"></i>
+                    SAVE IMAGE
+                </button>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+
+
+    </div>
+</div>
+<div class="portlet box green-seagreen  table2excel" id="table2excel">
+    <div class="portlet-title">
+        <div class="caption">
+            Welcome to Monthly Incentive
+        </div>
+
+    </div>
+
+    <div class="portlet-body form">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="todo-ui" style="margin-top: 20px;">
+                    <div class="todo-content">
+                        <div class="table-toolbar">
+                            <div class="row">
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="PDFWrapper">
+
+                            <div class="portlet box green-meadow">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        Incentive Policy of Commercial
+
+                                    </div>
+                                    <div class="tools">
+                                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div style="font-size: 20px;color:red;">Incentive Policy 1 :</div>
+                                    <br/><br/>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl98" class="table table-bordered table-striped table-condensed flip-content tbl98">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive" style="color:red;">
+                                                        <td style="text-align: center">Orders</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl97" class="table table-bordered table-striped table-condensed flip-content tbl97">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive" style="color:red;">
+                                                        <td style="text-align: center">Primary Sales Target</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="primaryParameter" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "PrimarySales")
+                                                                {
+                                                                    @item1.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="primaryParameter_value" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "PrimarySales")
+                                                                {
+                                                                    @item1.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl96" class="table table-bordered table-striped table-condensed flip-content tbl96">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive" style="color:red;">
+                                                        <td style="text-align: center">Feature Phone Service Ratio</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="primaryParameterRatioForFeaturePhone" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForFeaturePhone")
+                                                                {
+
+                                                                    @item1.Parameter
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="primaryParameterValueForFeaturePhone" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForFeaturePhone")
+                                                                {
+                                                                    @item1.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl95" class="table table-bordered table-striped table-condensed flip-content tbl95">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive" style="color:red;">
+                                                        <td style="text-align: center">Smart/Tablet Phone Service Ratio</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="primaryParameterRatioForSmartOrTablet" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                                {
+                                                                    @item1.Parameter
+
+                                                                }
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="primaryParameterValueForSmartOrTablet" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                                {
+                                                                    @item1.ParameterValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                    <br /><br /><br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl94" class="table table-bordered table-striped table-condensed flip-content tbl94">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Orders</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetOrders)
+                                                            {
+
+                                                                @item.Orders
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl93" class="table table-bordered table-striped table-condensed flip-content tbl93">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Primary Sales Target</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="primaryParameter1" style="text-align: center">
+                                                            @if (ViewBag.GetPrimarySaleForIncentive != null)
+                                                            {
+                                                                foreach (var item1 in ViewBag.GetPrimarySaleForIncentive)
+                                                                {
+                                                                    @item1.SalesAmt
+
+                                                                }
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">--> </td>
+                                                        <td id="primaryParameter_value1" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item1.ParameterName == "PrimarySales")
+                                                                {
+                                                                    @item1.ParameterValue
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="PrimaryParameter_Total_Value1" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "PrimarySales")
+                                                                {
+                                                                    @item1.PrimaryParameter_Total_Value1
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl92" class="table table-bordered table-striped table-condensed flip-content tbl92">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Feature Phone Service Ratio</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="serviceIMEIForFeaturePhone" class="ignore" style="text-align: center; display: none;">
+                                                            @foreach (var item1 in ViewBag.GetServiceForFeature)
+                                                            {
+
+                                                                @item1.TotalServiceIMEI
+
+                                                            }
+
+                                                        </td>
+                                                        <td id="salesBarcodeForFeaturePhone" class="ignore" style="text-align: center; display: none;">
+                                                            @foreach (var item1 in ViewBag.GetSalesForFeature)
+                                                            {
+                                                                @item1.TotalSalesBarcode
+
+                                                            }
+
+                                                        </td>
+                                                        <td style="text-align: center;" id="serviceToSalesForFeaturePhone"></td>
+                                                        <td style="text-align: center">--> </td>
+                                                        <td id="primaryParameterValueForFeaturePhone1" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForFeaturePhone")
+                                                                {
+                                                                    @item1.ParameterValue
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center"> =</td>
+                                                        <td style="text-align: center;" id="finalServiceToSalesRatioForFeature"></td>
+
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+
+
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl91" class="table table-bordered table-striped table-condensed flip-content tbl91">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Smart/Tablet Phone Service Ratio</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="serviceIMEIForSmartPhone" class="ignore" style="display: none; visibility: hidden;">
+                                                            @foreach (var item1 in ViewBag.GetServiceForSmart)
+                                                            {
+                                                                @item1.TotalServiceIMEI
+                                                            }
+                                                        </td>
+                                                        <td id="salesBarcodeForSmartPhone" class="ignore" style="text-align: center; display: none; visibility: hidden;">
+                                                            @foreach (var item1 in ViewBag.GetSalesForSmart)
+                                                            {
+                                                                @item1.TotalSalesBarcode
+
+                                                            }
+                                                        </td>
+                                                        <td id="serviceToSalesForSmartPhone" style="text-align: center"></td>
+                                                        <td style="text-align: center">--> </td>
+                                                        <td id="primaryParameterValueForSmartPhone1" style="text-align: center">
+                                                            @foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                                {
+                                                                    @item1.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="finalServiceToSalesRatioForSmart" style="text-align: center"></td>
+
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        @*<div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-3">Total Incentive Amount</label>
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="col-lg-1"><input value="=" id="equals1" class="form-control" readonly="true" style="text-align: center;color:red;" /></div>
+
+                                                    <div class="col-lg-3"><input value="" id="totalIncentiveAmount" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>*@
+                                        <div class="col-lg-8">
+
+                                            <table id="tbl90" class="table table-bordered table-striped table-condensed flip-content tbl90">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Total Incentive Amount</td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center">=</td>
+                                                        <td id="finalServiceToSalesRatioForSmart" style="text-align: center"></td>
+
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+                                    </div>
+
+                                    <br />
+
+                                    <br/>
+                                    <div style="font-size: 20px;color:red;">Incentive Policy 2 :</div>
+                                    <br /><br />
+                                    
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblOrder12" class="table table-bordered table-striped table-condensed flip-content tblOrder12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="perOrder12" style="color:red;">
+                                                        <td style="text-align: center">Per Order</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblLc12" class="table table-bordered table-striped table-condensed flip-content tblLc12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="tblLc12" style="color:red;">
+                                                        <td style="text-align: center">Per LC</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblSeaShipmentFull12" class="table table-bordered table-striped table-condensed flip-content tblSeaShipmentFull12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="tblSeaShipmentFull12" style="color:red;">
+                                                        <td style="text-align: center">Sea Shipment Full</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblSeaShipmentFull12" class="table table-bordered table-striped table-condensed flip-content tblSeaShipmentFull12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="tblSeaShipmentPartial12" style="color:red;">
+                                                        <td style="text-align: center">Sea Shipment Partial</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblAirShipmentFull12" class="table table-bordered table-striped table-condensed flip-content tblAirShipmentFull12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="tblAirShipmentFull12" style="color:red;">
+                                                        <td style="text-align: center">Air Shipment Full</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblAirShipmentPartial12" class="table table-bordered table-striped table-condensed flip-content tblAirShipmentPartial12">
+                                                <tbody>
+                                                    <tr class="tableTrCls11" id="tblAirShipmentPartial12" style="color:red;">
+                                                        <td style="text-align: center">Air Shipment Full</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+
+                                                                    @item.Parameter
+
+                                                                }
+                                                            }
+                                                        </td>
+
+                                                        <td style="text-align: center">------------></td>
+                                                        <td id="parameter_Value1" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+
+
+                                                                    @item.ParameterValue
+                                                                }
+                                                            }
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                 
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblPerOrder13" class="table table-bordered table-striped table-condensed flip-content tblPerOrder13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Per Order</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetOrders)
+                                                            {
+
+                                                                @item.Orders
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>                                  
+                                    <br />                                  
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblPerLC13" class="table table-bordered table-striped table-condensed flip-content tblPerLC13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Per LC</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetLcs)
+                                                            {
+
+                                                                @item.PerLc
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+                                    <br />                                    
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblSeaShipmentFull13" class="table table-bordered table-striped table-condensed flip-content tblSeaShipmentFull13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Sea Shipment Full</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetSeaShipmentFulls)
+                                                            {
+
+                                                                @item.SeaShipmentFull
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>                                    
+                                    <br />
+                                    
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblSeaShipmentPartial13" class="table table-bordered table-striped table-condensed flip-content tblSeaShipmentPartial13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Sea Shipment Partial</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetSeaShipmentPartials)
+                                                            {
+
+                                                                @item.SeaShipmentPartial
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+
+                                    </div>
+
+                                    <br />
+                                    
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblAirShipmentFull13" class="table table-bordered table-striped table-condensed flip-content tblAirShipmentFull13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Air Shipment Full</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetAirShipmentFulls)
+                                                            {
+
+                                                                @item.AirShipmentFull
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+
+                                    <br />
+                                    
+                                    <div class="row">
+                                        <div class="col-lg-8">
+
+                                            <table id="tblAirShipmentPartial13" class="table table-bordered table-striped table-condensed flip-content tblAirShipmentPartial13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center"> Air Shipment Partial</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td id="parameter" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetAirShipmentPartials)
+                                                            {
+
+                                                                @item.AirShipmentFull
+
+                                                            }
+
+                                                        </td>
+
+                                                        <td style="text-align: center">*</td>
+                                                        <td id="parameter_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+                                                                    @item.ParameterValue
+
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td style="text-align: center"> =</td>
+                                                        <td id="orders_Value" style="text-align: center">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+                                                                    @item.OrdersValue
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                       
+                                        <div class="col-lg-8">
+
+                                            <table id="tblTotal13" class="table table-bordered table-striped table-condensed flip-content tblTotal13">
+                                                <tbody>
+                                                    <tr class="tableTrCls1" id="trIdForIncentive">
+                                                        <td style="text-align: center">Total Incentive Amount</td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center"></td>
+                                                        <td style="text-align: center">=</td>
+                                                        <td id="finalTotalInc" style="text-align: center"></td>
+
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+
+                                        </div>
+
+                                        <div class="col-lg-4"></div>
+                                    </div>
+
+                                    <br />
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                <table id="tbl" class="table table-bordered table-striped table-condensed flip-content tbl">
+                                                    <thead class="flip-content note note-success">
+
+                                                        <tr>
+                                                            <th> UserName </th>
+                                                            <th> ID </th>
+                                                            <th> Percentage(%) </th>
+
+                                                            <th>ThisMonthAmount </th>
+                                                            <th>AddedAmount</th>
+                                                            <th>Remarks</th>
+                                                            <th>DeductionAmount</th>
+                                                            <th>DeductionRemarks</th>
+                                                            <th>Incentive</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item1 in ViewBag.GetUserInfo2)
+                                                        {
+                                                            <tr class="tableTrCls1" id="trIdForIncentive">
+                                                                <td style="text-align: center">@item1.UserFullName</td>
+                                                                <td style="text-align: center">@item1.EmployeeCode</td>
+                                                                <td style="text-align: center">@item1.Share</td>
+                                                                <td style="text-align: center">@item1.ThisMonthAmount</td>
+                                                                <td style="text-align: center">@item1.AddedAmount</td>
+                                                                <td style="text-align: center">@item1.Remarks</td>
+                                                                <td style="text-align: center">@item1.AmountDeduction</td>
+                                                                <td style="text-align: center">@item1.DeductionRemarks</td>
+                                                                @if (@item1.FixedIncentive == null)
+                                                                {
+                                                                    <td style="text-align: center">@item1.TotalIncentive</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td style="text-align: center">@item1.FixedIncentive</td>
+                                                                }
+                                                                
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4"></div>
+                                    </div>
+
+                                    <br />
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    $(function () {
+
+        var myJsVariable = '@ViewBag.Selected';
+        $("#DDDMonth").val(myJsVariable);
+
+        var myJsVariable1 = '@ViewBag.SelectedYear';
+        $("#DDDYear").val(myJsVariable1);
+
+
+        var perOderQty;
+        var perOrderValue;
+        var perOrderTotal = 0;
+        var perOrderTotalValues;
+        
+        $("#tblPerOrder13 tr.tableTrCls1").each(function() {
+            perOderQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            perOrderValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+            
+            if (perOderQty == undefined) {
+                perOrderTotal = 0;
+            } else {
+                perOrderTotal = perOderQty * perOrderValue;
+            }
+            perOrderTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(perOrderTotal));
+
+        });
+        
+        var perLcQty;
+        var perLcValue;
+        var perLcTotal = 0;
+        var perLcTotalValues;
+
+        $("#tblPerLC13 tr.tableTrCls1").each(function () {
+            perLcQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            perLcValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (perLcQty == undefined) {
+                perLcTotal = 0;
+            } else {
+                perLcTotal = perLcQty * perLcValue;
+            }
+            perLcTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(perLcTotal));
+
+        });
+        
+        var seaShipmentFullQty;
+        var seaShipmentFullValue;
+        var seaShipmentFullTotal = 0;
+        var seaShipmentFullTotalValues;
+
+        $("#tblSeaShipmentFull13 tr.tableTrCls1").each(function () {
+            seaShipmentFullQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            seaShipmentFullValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (seaShipmentFullQty == undefined) {
+                seaShipmentFullTotal = 0;
+            } else {
+                seaShipmentFullTotal = seaShipmentFullQty * seaShipmentFullValue;
+            }
+            seaShipmentFullTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(seaShipmentFullTotal));
+
+        });
+        
+        var seaShipmentPartialQty;
+        var seaShipmentPartialValue;
+        var seaShipmentPartialTotal = 0;
+        var seaShipmentPartialTotalValues;
+
+        $("#tblSeaShipmentPartial13 tr.tableTrCls1").each(function () {
+            seaShipmentPartialQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            seaShipmentPartialValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (seaShipmentPartialQty == undefined) {
+                seaShipmentPartialTotal = 0;
+            } else {
+                seaShipmentPartialTotal = seaShipmentPartialQty * seaShipmentPartialValue;
+            }
+            seaShipmentPartialTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(seaShipmentPartialTotal));
+
+        });
+
+
+        var airShipmentFullQty;
+        var airShipmentFullValue;
+        var airShipmentFullTotal = 0;
+        var airShipmentFullTotalValues;
+
+        $("#tblAirShipmentFull13 tr.tableTrCls1").each(function () {
+            airShipmentFullQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            airShipmentFullValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (airShipmentFullQty == undefined) {
+                airShipmentFullTotal = 0;
+            } else {
+                airShipmentFullTotal = airShipmentFullQty * airShipmentFullValue;
+            }
+            airShipmentFullTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(airShipmentFullTotal));
+
+        });
+        
+        var airShipmentPartialQty;
+        var airShipmentPartialValue;
+        var airShipmentPartialTotal = 0;
+        var airShipmentPartialTotalValues;
+
+        $("#tblAirShipmentPartial13 tr.tableTrCls1").each(function () {
+            airShipmentPartialQty = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            airShipmentPartialValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (airShipmentPartialQty == undefined) {
+                airShipmentPartialTotal = 0;
+            } else {
+                airShipmentPartialTotal = airShipmentPartialQty * airShipmentPartialValue;
+            }
+            airShipmentPartialTotalValues = $.trim($(this).closest('tr').find('td:eq(6)').text(airShipmentPartialTotal));
+
+        });
+
+     
+
+        var parameter;
+        var parameterValue;
+        var parameterTotal = 0;
+        var ordersValue;
+
+        $("#tbl94 tr.tableTrCls1").each(function () {
+            parameter = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            parameterValue = $.trim($(this).closest('tr').find('td:eq(4)').text());
+            console.log("parameter-->" + parameter + "ParameterValue--->" + parameterValue);
+
+            if (parameter == undefined) {
+
+                parameterTotal = 0;
+                console.log(parameterTotal);
+            } else {
+                parameterTotal = parameter * parameterValue;
+            }
+            ordersValue = $.trim($(this).closest('tr').find('td:eq(6)').text(parameterTotal));
+        });
+        var primaryParameter;
+        var primaryParameter1;
+        var primaryParameterValue1;
+        var primarySalesTarget = 0;
+        var primaryParameterTotalValue1;
+        $("#tbl97 tr.tableTrCls1").each(function () {
+            primaryParameter = $.trim($(this).closest('tr').find('td:eq(2)').text());
+        });
+
+        $("#tbl93 tr.tableTrCls1").each(function () {
+
+            primaryParameter1 = $.trim($(this).closest('tr').find('td:eq(2)').text());
+
+            primaryParameterValue1 = $.trim($(this).closest('tr').find('td:eq(4)').text());
+
+            if (primaryParameter1 == undefined) {
+                primarySalesTarget = 0;
+            } else {
+                primarySalesTarget = ((primaryParameterValue1 * primaryParameter1) / primaryParameter).toFixed(4);
+            }
+
+
+
+            primaryParameterTotalValue1 = $.trim($(this).closest('tr').find('td:eq(6)').text(primarySalesTarget));
+        });
+
+        var serviceIMEIForFeaturePhone;
+        var salesBarcodeForFeaturePhone;
+        var serviceTosalesRatioForFeature;
+        var serviceToSalesForFeaturePhone;
+        var primaryParameterRatioForFeaturePhone;
+        var primaryParameterValueForFeaturePhone1;
+        var finalRatioForFeature = 0;
+        var finalServiceToSalesRatioForFeature;
+
+        $("#tbl96 tr.tableTrCls1").each(function () {
+            primaryParameterRatioForFeaturePhone = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            console.log("primaryParameterRatioForFeaturePhone--->" + primaryParameterRatioForFeaturePhone);
+            primaryParameterValueForFeaturePhone1 = $.trim($(this).closest('tr').find('td:eq(4)').text());
+            console.log("primaryParameterValueForFeaturePhone1--->" + primaryParameterValueForFeaturePhone1);
+        });
+
+        $("#tbl92 tr.tableTrCls1").each(function () {
+            serviceIMEIForFeaturePhone = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            salesBarcodeForFeaturePhone = $.trim($(this).closest('tr').find('td:eq(3)').text());
+
+            serviceTosalesRatioForFeature = ((serviceIMEIForFeaturePhone / salesBarcodeForFeaturePhone) * 100).toFixed(4);
+
+            serviceToSalesForFeaturePhone = $.trim($(this).closest('tr').find('td:eq(4)').text(serviceTosalesRatioForFeature));
+
+            console.log("serviceTosalesRatioForFeature--->" + serviceTosalesRatioForFeature);
+
+
+
+
+            if ((((serviceIMEIForFeaturePhone / salesBarcodeForFeaturePhone) * 100).toFixed(4)) == "NaN") {
+                finalRatioForFeature = 0;
+            } else {
+                finalRatioForFeature = ((primaryParameterRatioForFeaturePhone * primaryParameterValueForFeaturePhone1) / serviceTosalesRatioForFeature).toFixed(4);
+            }
+            console.log("finalRatioForFeature--->" + finalRatioForFeature);
+            finalServiceToSalesRatioForFeature = $.trim($(this).closest('tr').find('td:eq(8)').text(finalRatioForFeature));
+            console.log("finalServiceToSalesRatioForFeature--->" + finalServiceToSalesRatioForFeature);
+        });
+
+        var serviceIMEIForSmartPhone;
+        var salesBarcodeForSmartPhone;
+        var serviceTosalesRatioForSmart;
+        var serviceToSalesForSmartPhone;
+        var primaryParameterRatioForSmartPhone;
+        var primaryParameterValueForSmartPhone1;
+        var finalRatioForSmart = 0;
+        var finalServiceToSalesRatioForSmart;
+
+        $("#tbl95 tr.tableTrCls1").each(function () {
+            primaryParameterRatioForSmartPhone = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            console.log("primaryParameterRatioForSmartPhone--->" + primaryParameterRatioForSmartPhone);
+            primaryParameterValueForSmartPhone1 = $.trim($(this).closest('tr').find('td:eq(4)').text());
+            console.log("primaryParameterValueForSmartPhone1--->" + primaryParameterValueForSmartPhone1);
+        });
+
+        $("#tbl91 tr.tableTrCls1").each(function () {
+            serviceIMEIForSmartPhone = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            salesBarcodeForSmartPhone = $.trim($(this).closest('tr').find('td:eq(3)').text());
+            serviceTosalesRatioForSmart = ((serviceIMEIForSmartPhone / salesBarcodeForSmartPhone) * 100).toFixed(4);
+            console.log(serviceTosalesRatioForSmart + "serviceTosalesRatioForSmart");
+
+            serviceToSalesForSmartPhone = $.trim($(this).closest('tr').find('td:eq(4)').text(serviceTosalesRatioForSmart));
+
+            console.log("serviceTosalesRatioForSmart--->" + serviceTosalesRatioForSmart);
+
+
+
+            if ((((serviceIMEIForSmartPhone / salesBarcodeForSmartPhone) * 100).toFixed(4)) == "NaN") {
+                finalRatioForSmart = 0;
+            } else {
+                finalRatioForSmart = ((primaryParameterRatioForSmartPhone * primaryParameterValueForSmartPhone1) / serviceTosalesRatioForSmart).toFixed(4);
+            }
+            console.log("finalRatioForSmart--->" + finalRatioForSmart);
+            finalServiceToSalesRatioForSmart = $.trim($(this).closest('tr').find('td:eq(8)').text(finalRatioForSmart));
+            console.log("finalServiceToSalesRatioForSmart--->" + finalRatioForSmart);
+        });
+
+        var totalIncentiveAmount;
+        var totalIncentiveAmount1;
+        $("#tbl90 tr.tableTrCls1").each(function () {
+            totalIncentiveAmount = (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart).toFixed(4);
+            console.log("totalIncentiveAmount--------->" + totalIncentiveAmount);
+            totalIncentiveAmount1 = $.trim($(this).closest('tr').find('td:eq(6)').text(totalIncentiveAmount));
+        });
+
+        var totalInc;
+        var totalIncValue;
+        $("#tblTotal13 tr.tableTrCls1").each(function () {
+            totalInc = (+perOrderTotal + +perLcTotal + +seaShipmentFullTotal + +seaShipmentPartialTotal+ +airShipmentFullTotal + +airShipmentPartialTotal).toFixed(4);
+
+            totalIncValue = $.trim($(this).closest('tr').find('td:eq(6)').text(totalInc));
+            console.log("totalInc--->" + totalInc);
+        });
+    });
+
+    $(function () {
+
+        $("#download").click(function () {
+            html2canvas($("#PDFWrapper")[0]).then(function (canvas) {
+                // $("#PDFWrapper").append(canvas);
+                document.body.appendChild(canvas);
+            });
+
+        });
+
+    });
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+          , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+          , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+          , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var cln = table.cloneNode(true);
+            var paras = cln.getElementsByClassName('ignore');
+
+            while (paras[0]) {
+                paras[0].parentNode.removeChild(paras[0]);
+            }
+            var ctx = { worksheet: name || 'Worksheet', table: cln.innerHTML }
+            //window.location.href = uri + base64(format(template, ctx))
+
+            var link = document.createElement("a");
+            link.download = 'Commercial Incentive' + '_' + '@Request.Params["Year"]' + '.xls';
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+        }
+    })()
+</script>

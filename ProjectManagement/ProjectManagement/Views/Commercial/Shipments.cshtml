@@ -1,0 +1,345 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectOrderShipmentModel>
+    @{
+        ViewBag.Title = "Shipments";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <h2>Shipments</h2>
+
+    <!-- Modal -->
+    <div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="vertical-alignment-helper">
+            <div class="modal-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div id='gameContainer'>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="col-lg-12">
+                    @{
+                        if (TempData["message"] != null)
+                        {
+                            var msgType = TempData["messageType"];
+                            var msg = TempData["message"];
+                            if ((int)msgType == 1)
+                            {
+                                <div class="alert alert-success alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                            else if ((int)msgType == 2)
+                            {
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                            else if ((int)msgType == 3)
+                            {
+                                <div class="alert alert-info alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <div class="portlet-title">
+                    <div class="col-lg-2">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">Open Shipment List</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <input type="button" class="btn sbold uppercase btn-outline blue" value="New Shipment" onclick="location.href='@Url.Action("Shipment", "Commercial")?projectId=0'" />
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>PO No</th>
+                                <th>PO Date</th>
+                                <th>PO</th>
+                                <th>Shipment</th>
+                                <th>Added By</th>
+                                <th>Is Finish <br />Good Available?</th>
+                                <th> Finish Good<br /> Details</th>
+                                <th>Action</th>
+                                <th style="display: none"></th>
+                                <th>IsFinal<br />Shipment?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @*@Html.HiddenFor(modelItem => item.ProjectOrderShipmentId)
+                                            @Html.HiddenFor(modelItem => item.ProjectMasterId)*@
+                                        <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoNo)</td>
+                                        <td>
+                                            @if (@item.PoDate1 != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.PoDate1)}
+                                                                                         
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoOrdinal)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ShipmentNoOrdinal)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.AddedByName)</td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FinishGoodCheck)
+
+                                        </td>
+                                        <td class="text-center">
+                                            @if (@item.FinishGoodCheck=="YES")
+                                            {
+                                                 <button type="button" class="btn btn-default btnOpenModal" style="font-weight: bold">
+                                                    <span class="glyphicon glyphicon-plus"></span> Details
+                                                </button>
+                                            }
+                                           
+                                        </td>
+                                        <td>
+                                            <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("Shipment", "Commercial", new { id = item.ProjectOrderShipmentId, projectId = item.ProjectMasterId })'" />
+                                            <input type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle btnClose" value="Close" id="btnClose" onclick="location.href='@Url.Action("ShipmentClose", "Commercial", new { id = item.ProjectOrderShipmentId, poNo=item.PoNo,projectName=item.ProjectName })'" />
+                                            <input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle btnDelete" value="Delete" id="btnDelete" onclick="location.href='@Url.Action("ShipmentDelete", "Commercial", new { id = item.ProjectOrderShipmentId, poNo = item.PoOrdinal, projectName = item.ProjectName, shipmentNo = item.ShipmentNoOrdinal })'" />
+                                            @*<button id='newIssue' class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle" onclick="goToController('/Common/Deny?id=@item.ProjectOrderShipmentId')">Close</button>*@
+                                        </td>
+                                        <td id="prShipmntId" class="prShipmntId" style="display: none">
+                                            @Html.DisplayFor(modelItem => item.ProjectOrderShipmentId)
+                                        </td>
+                                        <td>@item.IsFinalShipment</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="col-lg-2">
+                                <div class="caption font-dark">
+                                    <i class="icon-settings font-dark"></i>
+                                    <span class="caption-subject bold uppercase">Closed Shipment List</span>
+                                </div>
+                                <div class="tools"> </div>
+                            </div>
+                            <div class="col-lg-2">
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_2">
+                                <thead>
+                                    <tr>
+                                        <th>Project Name</th>
+                                        <th>PO No</th>
+                                        <th>PO Date</th>
+                                        <th>PO</th>
+                                        <th>Shipment</th>
+                                        <th>Added By</th>
+                                        <th>Is Finish <br />Good Available?</th>
+                                        <th> Finish Good<br /> Details</th>
+                                        <th>Action</th>
+                                        <th style="display: none"></th>
+                                        <th>IsFinal<br />Shipment?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.ClosedShipments)
+                                    {
+                                    <tr>
+                                        @*@Html.HiddenFor(modelItem => item.ProjectOrderShipmentId)
+                                          @Html.HiddenFor(modelItem => item.ProjectMasterId)*@
+                                        <td>@item.ProjectName</td>
+                                        <td>@item.PoNo</td>
+                                        <td>
+
+                                            @if (@item.PoDate1 != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.PoDate1)}
+                                        </td>
+                                        <td>@item.PoOrdinal</td>
+                                        <td>@item.ShipmentNoOrdinal</td>
+                                        <td>@item.AddedByName</td>
+                                        <td>
+                                            @item.FinishGoodCheck
+                                        </td>
+                                        <td class="text-center">
+                                            @if (@item.FinishGoodCheck == "YES")
+                                            {
+                                                <button type="button" class="btn btn-default btnOpenModal" style="font-weight: bold">
+                                                    <span class="glyphicon glyphicon-plus"></span> Details
+                                                </button>
+                                            }
+                                        </td>
+                                        <td>
+                                            <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("Shipment", "Commercial", new { id = item.ProjectOrderShipmentId, projectId = item.ProjectMasterId })'" />
+                                            @*<button id='newIssue' class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle" onclick="goToController('/Common/Deny?id=@item.ProjectOrderShipmentId')">Close</button>*@
+                                        </td>
+                                        <td id="prShipmntId" class="prShipmntId" style="display: none">
+                                            @item.ProjectOrderShipmentId
+                                        </td>
+                                        <td>@item.IsFinalShipment</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+    <div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="font-weight: bold;color: black;">Finish Good Model Details</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <table class="table table-striped table-scrollable table-bordered table-hove mdTbl" id="mdTbl">
+                            <tr>
+                                <th style="color: red;font-weight: bold">Finish Good<br/> Model</th>
+                                <th style="color: red;font-weight: bold">Order Number</th>
+                                <th style="color: red;font-weight: bold">ApproxFinishGood<br />ManufactureQty</th>
+                            </tr>
+                            <tbody class="mdTbl1"></tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <script type="text/javascript">
+        function goToController(url) {
+            $(function () {
+                $.get(url, function (data) {
+                    console.log(data);
+                    $('#gameContainer').html(data);
+                    $('#gameModal').modal('show');
+                });
+            });
+        }
+        //   $(document).ready(function ()
+        //   {
+        //       $("body").on("click", "#sample_1 .btnClose", function () {
+        //           event.preventDefault();
+
+        //           alertify.confirm('Close A Shipment', 'Do you want to Close this Shipment?', function () {
+        //               alertify.success('Successfully Closed.');
+        //               window.location.reload(true);
+        //               event.preventDefault(); //Prevent the default submit
+        //           }
+        //           , function () {
+        //               alertify.error('Cancel');
+        //               $('#loading').hide();
+        //           });
+        //       });//end btn close
+        //});
+        $(document).ready(function () {
+           
+            $('#sample_1').on('click', '.btnOpenModal', function () {
+              
+                $(".mdTbl tbody.mdTbl1").empty();
+                var obj = {};
+              
+                var rowIndex = $(this).closest('tr').index() + 1;
+                var table = document.getElementById('sample_1');
+                
+                $('#draggable').modal();
+                var proOrderShipId = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+
+                obj.ProjectOrderShipmentId = proOrderShipId;
+
+                $.ajax({
+                    url: '@Url.Action("GetFinishGoodDetails", "Commercial")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                       
+                        console.log("data :" + data);
+                        var body = "";
+                        
+                        for (var i = 0; i < data.length; i++) {
+                            debugger;
+                            body = '<tr class="fGd">';
+                            body += '<td class="proDates"><span>' + data[i].FinishGoodModel + '</span></td>';
+                            body += '<td class="proDates"><span>' + data[i].FinishGoodModelOrderNumber + '</span></td>';
+                            body += '<td class="proDates"><span>' + data[i].ApproxFinishGoodManufactureQty + '</span></td>';
+                            body += '</tr>';
+
+                            $(".mdTbl tbody.mdTbl1").append(body);
+                        }
+                       
+                    }
+                });
+            });
+            
+            $('#sample_2').on('click', '.btnOpenModal', function () {
+
+
+                $(".mdTbl tbody.mdTbl1").empty();
+                var obj = {};
+
+                var rowIndex = $(this).closest('tr').index() + 1;
+                var table = document.getElementById('sample_2');
+
+                $('#draggable').modal();
+                var proOrderShipId = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+
+                obj.ProjectOrderShipmentId = proOrderShipId;
+
+                $.ajax({
+                    url: '@Url.Action("GetFinishGoodDetails", "Commercial")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+
+                        console.log("data :" + data);
+                        var body = "";
+
+                        for (var i = 0; i < data.length; i++) {
+                            debugger;
+                            body = '<tr class="fGd">';
+                            body += '<td class="proDates"><span>' + data[i].FinishGoodModel + '</span></td>';
+                            body += '<td class="proDates"><span>' + data[i].FinishGoodModelOrderNumber + '</span></td>';
+                            body += '<td class="proDates"><span>' + data[i].ApproxFinishGoodManufactureQty + '</span></td>';
+                            body += '</tr>';
+
+                            $(".mdTbl tbody.mdTbl1").append(body);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>

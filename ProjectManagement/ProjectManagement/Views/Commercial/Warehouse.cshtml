@@ -1,0 +1,414 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using Microsoft.Office.Interop.Excel
+@model ProjectManagement.ViewModels.Commercial.VmWarehouseDetails
+@{
+    ViewBag.Title = "Warehouse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Warehouse</h2>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption col-lg-10">
+            Warehouse Entry
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Project Name</div>
+                                        <div class="col-lg-8">
+
+                                            @Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select Project", new { @class = "form-control ddChosen", @id = "projectId", @onchange = "LoadAllData()" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Purchase Order</div>
+                                        <div class="col-lg-8">
+
+
+                                            @if (Model != null)
+                                            {
+                                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.GetPurchaseOrder, "Value", "Text"), "Select Purchase Order", new { @class = "ddChosen1 form-control", @id = "purchaseOrder", @onchange = "LoadAllData1()" })
+                                               
+                                            }
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br /><br />
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Shipment Date</div>
+                                        <div class="col-lg-8">
+                                            @if (Model != null)
+                                            {
+                                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.GetShipment, "Value", "Text"), "Select Shipment Date", new { @class = "form-control ddChosen2", @id = "shipmentId", DataTextFormatString = "{0:yyyy-MM-dd}", @onchange = "LoadAllData2()" })
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Quantity</div>
+                                        <div class="col-lg-8">
+                                           
+                                            
+                                            <input value="" id="shipmentQty" class="form-control" disabled="disabled" style="text-align: center"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <br /><br />
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Warehouse Quantity</div>
+                                        <div class="col-lg-8">
+                                            <input value="" id="warehouseQty" class="form-control" style="text-align: center" onchange="LoadAllData3()" />
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="col-lg-4">Warehouse Entry Date</div>
+                                        <div class="col-lg-8">
+
+                                            <input value="" id="warehouseDate" class="form-control date_picker" style="text-align: center" />
+                                            <input value="" id="projectPurchaseOrderFormId" class="form-control" style="text-align: center;display: none;" />
+                                            <input value="" id="projectOrderShipmentId" class="form-control" style="text-align: center;display: none;" />
+                                            <input value="" id="proName" class="form-control" style="text-align: center;display: none;" />
+                                            <input value="" id="orderNum" class="form-control" style="text-align: center;display: none;" />
+                                            <input value="" id="warehouseTotalQty" class="form-control" style="text-align: center;display: none;" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                               
+                            </div>
+                            <br /><br /><br />
+                            @if (TempData["Message1"] != null)
+                            {
+
+                                var msgss = TempData["Message1"];
+
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msgss
+                                </div>
+
+
+                            }
+                         
+                            <br />
+                            <br /><br />
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <input type="submit" class="btn sbold uppercase btn-outline blue" value="Save" id="saveData" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    $(document).ready(function () {
+        $('#saveData').on('click', function (e) {
+            e.preventDefault();
+            var proId = document.getElementById('projectId');
+            var selectedProjectName = proId.options[proId.selectedIndex].text;
+            var selectedProjectId = proId.options[proId.selectedIndex].value;
+
+            if (selectedProjectName == "Select Project") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Project",
+                }).show();
+                return false;
+            }
+
+
+            var purchaseId = document.getElementById('purchaseOrder');
+            var selectedPurchaseName = purchaseId.options[purchaseId.selectedIndex].text;
+            
+            if (selectedPurchaseName == "Select Purchase Order") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Purchase Order",
+                }).show();
+                return false;
+            }
+
+            var shipId = document.getElementById('shipmentId');
+            var selectedShipDate = shipId.options[shipId.selectedIndex].text;
+
+            if (selectedShipDate == "Select Shipment Date") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Shipment Date",
+                }).show();
+                return false;
+            }
+
+            var shipmentQty = $('#shipmentQty').val();
+            var warehouseQty = $('#warehouseQty').val();
+            
+            if (warehouseQty.length == 0) {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put Warehouse Quantity",
+                }).show();
+                return false;
+            }
+            if (warehouseQty != parseInt(warehouseQty,10)) {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put interger value only for Warehouse Quantity",
+                }).show();
+                return false;
+            }
+            if (warehouseQty > shipmentQty) {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Warehouse Quantity can not be greater than Shipment Quantity",
+                }).show();
+                return false;
+            }
+
+            var warehouseDate = $('#warehouseDate').val();
+            
+            if (warehouseDate.length == 0) {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put Warehouse Entry Date",
+                }).show();
+                return false;
+            }
+
+            var projectPurchaseOrderFormId= $('#projectPurchaseOrderFormId').val();
+            var projectOrderShipmentId = $('#projectOrderShipmentId').val();
+            var proName = $('#proName').val();
+            var orderNum = $('#orderNum').val();
+
+            var warehouseTotalQty = $('#warehouseTotalQty').val();
+
+            if (warehouseTotalQty>shipmentQty) {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please check Warehouse Quantity crossed the Shipment Quantity",
+                }).show();
+                return false;
+            }
+            var obj = {};
+            var objArr = [];
+
+            obj.ProjectMasterId = selectedProjectId;
+            obj.ProjectName = proName;
+            obj.OrderNumber = orderNum;
+            obj.PurchaseOrderNumber = selectedPurchaseName;
+            obj.Quantity = shipmentQty;
+            obj.WarehouseQuantity = warehouseQty;
+            obj.WarehouseDate = warehouseDate;
+            obj.ProjectPurchaseOrderFormId = projectPurchaseOrderFormId;
+            obj.ProjectOrderShipmentId = projectOrderShipmentId;
+            obj.ShipmentDate = selectedShipDate;
+
+            objArr.push(obj);
+            
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveWarehouseDetail", "Commercial")',
+                data: "{objArr:'" + JSON.stringify(objArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                   
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Data saved successfully",
+                        }).show();
+                    
+                }
+            });
+
+            $('#warehouseQty').val('');
+            $('#shipmentQty').val('');
+            $('#warehouseDate').val('');
+            location.reload();
+        });
+    });
+
+    function LoadAllData3() {
+        var proId = document.getElementById('projectId');
+        var selectedProjectId = proId.options[proId.selectedIndex].value;
+
+        var purchaseId = document.getElementById('purchaseOrder');
+        var selectedPurchaseName = purchaseId.options[purchaseId.selectedIndex].text;
+       
+        var shipId = document.getElementById('shipmentId');
+        var selectedShipDate = shipId.options[shipId.selectedIndex].text;
+     
+        var shipmentQty = $('#shipmentQty').val();
+
+        var warehouseQty = $('#warehouseQty').val();
+
+        $.ajax({
+            url: '@Url.Action("GetShipmentTotalQuantity", "Commercial")',
+            type: "GET",
+            dataType: "JSON",
+            data: { ProjectMasterId: selectedProjectId, PurchaseOrderNumber: selectedPurchaseName, ShipmentDate: selectedShipDate, ShipmentQty: shipmentQty },
+            success: function (data) {
+                console.log(data);
+                $('#warehouseTotalQty').empty();
+
+                var items = $.parseJSON(data);
+
+                var ttotal = +warehouseQty + +items[0].WarehouseQuantity;
+
+                $('#warehouseTotalQty').val(+($('#warehouseQty').val()) + +items[0].WarehouseQuantity);
+                $('#warehouseTotalQty').text(+($('#warehouseQty').val()) + +items[0].WarehouseQuantity);
+            }
+        });
+    }
+
+    function LoadAllData() {
+        var proId = document.getElementById('projectId');
+        var selectedProjectName = proId.options[proId.selectedIndex].text;
+        var selectedProjectId = proId.options[proId.selectedIndex].value;
+
+        console.log("selectedProjectName :" + selectedProjectName + "------->" + "selectedProjectId :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetPurchaseOrderResult", "Commercial")',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId },
+            success: function (data) {
+                console.log(data);
+                $('#purchaseOrder').empty();
+                $('#purchaseOrder').append($('<option>', {
+                    value: ' ',
+                    text: 'Select Purchase Order'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    $('#purchaseOrder').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+
+    }
+    function LoadAllData1() {
+        var proId = document.getElementById('projectId');
+        var selectedProjectName = proId.options[proId.selectedIndex].text;
+        var selectedProjectId = proId.options[proId.selectedIndex].value;
+
+        var purchaseId = document.getElementById('purchaseOrder');
+        var selectedParchaseName = purchaseId.options[purchaseId.selectedIndex].text;
+        var selectedParchaseProId = purchaseId.options[purchaseId.selectedIndex].value;
+
+        console.log("selectedProjectName :" + selectedProjectName + "------->" + "selectedProjectId :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetShipmentResult", "Commercial")',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId, purchaseOrderNo: selectedParchaseName },
+            success: function (data) {
+                console.log(data);
+                $('#shipmentId').empty();
+                $('#shipmentId').append($('<option>', {
+                    value: ' ',
+                    text: 'Select Shipment Date'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    $('#shipmentId').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+    }
+    function LoadAllData2() {
+        var proId = document.getElementById('projectId');
+        var selectedProjectName = proId.options[proId.selectedIndex].text;
+        var selectedProjectId = proId.options[proId.selectedIndex].value;
+
+        var purchaseId = document.getElementById('purchaseOrder');
+        var selectedParchaseName = purchaseId.options[purchaseId.selectedIndex].text;
+        var selectedParchaseProId = purchaseId.options[purchaseId.selectedIndex].value;
+
+        var shipId = document.getElementById('shipmentId');
+        var selectedShipDate = shipId.options[shipId.selectedIndex].text;
+
+        console.log("selectedProjectName :" + selectedProjectName + "------->" + "selectedProjectId :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetShipmentQuantityResult", "Commercial")',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId, purchaseOrderNo: selectedParchaseName, shipmentDate: selectedShipDate },
+            success: function (data) {
+                console.log(data);
+                $('#shipmentQty').empty();
+                $('#projectPurchaseOrderFormId').empty();
+                $('#projectOrderShipmentId').empty();
+                $('#proName').empty();
+                $('#orderNum').empty();
+               
+                var items = $.parseJSON(data);
+                $('#shipmentQty').text(items[0].Quantity);
+                $('#shipmentQty').val(items[0].Quantity);
+
+                $('#projectPurchaseOrderFormId').val(items[0].ProjectPurchaseOrderFormId);
+                $('#projectOrderShipmentId').val(items[0].ProjectOrderShipmentId);
+                $('#proName').val(items[0].ProjectName);
+                $('#orderNum').val(items[0].OrderNumber);
+            }
+        });
+    }
+  
+</script>

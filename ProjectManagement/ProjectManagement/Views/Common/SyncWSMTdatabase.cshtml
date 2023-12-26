@@ -1,0 +1,160 @@
+﻿@model ProjectManagement.ViewModels.Common.WSMTSyncVm
+@{
+    ViewBag.Title = "Sync WSMT Database";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Sync WSMT Database</span>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <label class="control-label col-lg-3 ">Select Handset on WSMT <span class="required"> * </span>:</label>
+
+                    <div class="col-lg-3">
+                        @Html.DropDownList("SelectedHandset", new SelectList(Model.WSMTHandsets, "ID", "Title"), "Please select", new { @class = "form-control handset" })
+                    </div>
+                    <label class="control-label col-lg-2 ">RBSY Model <span class="required"> * </span>:</label>
+
+                    <div class="col-lg-4">
+                        @Html.DropDownList("RBSYModel", new SelectList(ViewBag.RBSYModels, "ProductModel", "ProductModel"), "Please select", new { @class = "form-control modelname" })
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <label class="control-label col-lg-3 ">Order <span class="required"> * </span>:</label>
+
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(model => model.OrderNo, new { @class = "form-control orderno" })
+                    </div>
+                    <label class="control-label col-lg-2 ">Production Type  :</label>
+
+                    <div class="col-lg-4">
+                        @Html.DropDownListFor(model => model.ProductionType, new SelectList(new[]
+                                    {
+                                        new SelectListItem { Text = "CKD", Value = "CKD"},
+                                        new SelectListItem { Text = "SKD", Value = "SKD"}
+                                    }, "Value", "Text"), new { @class = "form-control ptype" })
+                    </div>
+
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="col-lg-3 col-lg-offset-4">
+                        <button id="btnsearch" class="btn btn-success btn-circle">Sync BOM</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="successModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" data-attention-animation="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p id="successModalText"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn green">Ok</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- END FORM-->
+
+            </div>
+        </div>
+        <input type="hidden" id="hdnSuccess" />
+    </div>
+    <script>
+        $(document).ready(function () {
+            //debugger;
+            Initialization();
+        });
+        $('#btnsearch').on('click', function () {
+            var vm = {}
+            vm.RBSYModel = $('.modelname').children("option:selected").val();
+            vm.SelectedHandset = $('.handset').children("option:selected").val();
+            vm.ProductionType = $('.ptype').children("option:selected").val();
+            vm.OrderNo = $('.orderno').val();
+            if (vm.RBSYModel == '' || vm.SelectedHandset == '' || vm.OrderNo == '')
+            {
+                $('#successModal').modal('show');
+                $('#successModalText').text('Please provide the required Data!');
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("SyncBomswithWSMT", "Common")',
+                    type: 'GET',
+                    data: vm,
+                    DataType: 'json',
+                    success: function (response) {
+                        Initialization();
+                        $('#successModal').modal('show');
+                        $("#successModalText").empty();
+                        $('#successModalText').append(response.Message);
+                    }
+                });
+            }
+            
+        });
+        var Initialization = function () {
+            $('.orderno').val('');
+            $.ajax({
+                url: '@Url.Action("GetWSMTHandsets", "Common")',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (result) {
+
+                    $('.handset').children('option:not(:first)').remove();
+                    $.each(result, function (key, value) {
+                        $('.handset')
+                            .append($("<option></option>")
+                            .attr("value", value.ID)
+                            .text(value.Title));
+                    });
+
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetRBSYModels", "Common")',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (result) {
+
+                    $('.modelname').children('option:not(:first)').remove();
+                    $.each(result, function (key, value) {
+                        $('.modelname')
+                            .append($("<option></option>")
+                            .attr("value", value.ProductModel)
+                            .text(value.ProductModel));
+                    });
+
+                }
+            });
+        }
+
+    </script>
+</div>
+

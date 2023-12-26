@@ -1,0 +1,349 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.Models
+@*@model ProjectManagement.ViewModels.Hardware.VmHardwareTest*@
+
+<link href="~/assets/global/css/floating-button.css" rel="stylesheet" />
+<link href="~/Content/loader/loader.css" rel="stylesheet" />
+
+<style type="text/css">
+    .pre-scrollable-custom {
+        max-height: 10px;
+        overflow-y: scroll;
+    }
+
+    .scrollable-me {
+        /*padding: 10px 0;
+        margin: 0 .6%;*/
+        overflow-y: scroll;
+        /*height: calc(100vh - 100px);*/
+        max-height: 428px;
+    }
+
+    .scrollable-sixhundred {
+        /*padding: 10px 0;
+        margin: 0 .6%;*/
+        overflow-y: scroll;
+        /*height: calc(100vh - 100px);*/
+        max-height: 600px;
+    }
+</style>
+<style type="text/css">
+    .loadingModal {
+        display: none;
+        position: fixed;
+        z-index: 11000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('../../Content/images/ajax-loader.gif') 50% 50% no-repeat;
+    }
+
+    #d_container.loading {
+        overflow: hidden;
+    }
+
+        /* Anytime the body has the loading class, our
+    modal element will be visible */
+        #d_container.loading .loadingModal {
+            display: block;
+        }
+</style>
+<link href="~/assets/apps/css/jsgantt.css" rel="stylesheet" />
+<script src="~/Scripts/jsgantt.js"></script>
+
+@*<script src="~/Scripts/highcharts.js"></script>*@
+<link href="~/Content/management_dashboard_slide.css" rel="stylesheet" />
+@*<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/drilldown.js"></script>*@
+<script src="https://github.highcharts.com/gantt/highcharts-gantt.src.js"></script>
+@*<script src="~/Scripts/highcharts-3d.js"></script>*@
+@*<script src="~/Scripts/data.js"></script>
+    <script src="~/Scripts/drilldown.js"></script>
+    <script src="~/Scripts/exporting.js"></script>*@
+<script src="~/Scripts/management_scripts/management_dashboard.js"></script>
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Dashboard</label>
+    <i class="icon-calendar pull-right"><label ng-model="date" class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+<div class="row">
+    @if (User.IsInRole("MM") || User.IsInRole("PS") || User.IsInRole("BIHEAD") || User.IsInRole("CEO"))
+    {
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" id="screening">
+            <a onclick="location.href='@Url.Action("SampleSetApprovalDecision", "Management")'" class="dashboard-stat dashboard-stat-v2 blue">
+                <div class="visual">
+                    <i class="fa fa-comments"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-value="@ViewBag.MmDashboardConter.InitialApprovalPending" data-counter="counterup"></span>
+                    </div>
+                    <div class="desc screening"> Initial Approval Pending </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a onclick="location.href='@Url.Action("Approval", "Management")'" class="dashboard-stat dashboard-stat-v2 red">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-value="@ViewBag.MmDashboardConter.FinalApprovalPending" data-counter="counterup"></span>
+                    </div>
+                    <div class="desc running"> Final Approval Pending </div>
+                </div>
+            </a>
+        </div>
+    }
+
+    @if (ViewContext.HttpContext.User.IsInRole("MM") || ViewContext.HttpContext.User.IsInRole("PM") || ViewContext.HttpContext.User.IsInRole("PMHEAD") || ViewContext.HttpContext.User.IsInRole("QCHEAD") || ViewContext.HttpContext.User.IsInRole("ASPM") || ViewContext.HttpContext.User.IsInRole("ASPMHEAD"))
+    {
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a onclick="location.href='@Url.Action("RunningProjecstList", "Management")'" class="dashboard-stat dashboard-stat-v2 green">
+                <div class="visual">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-value="@ViewBag.MmDashboardConter.TotalApproved" data-counter="counterup"></span>
+                    </div>
+                    <div class="desc"> Running Projects </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a onclick="location.href='@Url.Action("CompletedProjecstList", "Management")'" class="dashboard-stat dashboard-stat-v2 purple">
+                <div class="visual">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-value="@ViewBag.MmDashboardConter.Completed" data-counter="counterup"></span>
+                    </div>
+                    <div class="desc"> Completed </div>
+                </div>
+            </a>
+        </div>
+        @*<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a onclick="location.href='@Url.Action("RejectedProjectList", "Common")'" class class="dashboard-stat dashboard-stat-v2 red">
+                <div class="visual">
+                    <i class="fa fa-globe"></i>
+                </div>
+                <div class="details">
+                    <div class="number">
+                        <span data-value="@ViewBag.MmDashboardConter.Rejected" data-counter="counterup"></span>
+                    </div>
+                    <div class="desc"> Rejected </div>
+                </div>
+            </a>
+        </div>*@
+    }
+
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-lg-6">
+                @Html.DropDownList("ddlIsComplete", new SelectList(new[]
+                {
+                    new SelectListItem { Text = "Ongoing Projects", Value = "1", Selected = true },
+                    new SelectListItem { Text = "All Projects", Value = "0"},
+                    new SelectListItem { Text = "Completed Projects", Value = "2"}
+                }, "Value", "Text"), new { @class = "form-control", onchange = "get_chart(this.id)" })
+            </div>
+            <div class="col-lg-6">
+                @Html.DropDownList("ProjectName", new SelectList(ViewBag.ProjectNames, "ProjectName", "ProjectName"), "Select Project", new { @class = "form-control ddChosen" })
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-2">
+        <input type="button" id="showallreports" class="btn btn-success" value="Show All Reports" />
+    </div>
+
+    <div class="col-lg-4">
+        <select id="ProjectMasterId" class="form-control">
+            <option value="">Select Order</option>
+        </select>
+    </div>
+
+</div>
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div id="ganttloaderdiv">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div style="position:relative" class="gantt" id="GanttChartDIV"></div>
+
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-md-12">
+        @Html.Partial("~/Views/Shared/_SmtCapacityExceedLog.cshtml", (List<SmtCapacityExceedLogModel>)ViewBag.SmtExceedLog)
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        @Html.Partial("~/Views/Shared/_UnproducedAveragePartialView.cshtml", (List<SixMonthsUnproducedAverageQtyModel>)ViewBag.Unproduced)
+    </div>
+</div>
+
+@if (ViewContext.HttpContext.User.IsInRole("MM") || ViewContext.HttpContext.User.IsInRole("PS"))
+{
+    <br />
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-dark hide"></i>
+                        <span class="caption-subject font-dark bold uppercase">Recent Activities</span>
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+                    <div class="scrollable-me" data-always-visible="1" data-rail-visible="0">
+                        <ul class="feeds dashboardFeed"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            @Html.Partial("~/Views/Shared/_UserOpinion.cshtml")
+        </div>
+    </div>
+}
+
+
+
+@if (ViewContext.HttpContext.User.IsInRole("MM"))
+{
+    <!-- tile -->
+    <div class="tile">
+        <div class="float menu-share">
+            <i class="fa fa-share my-float"></i>
+        </div>
+        <div class="soc">
+            <a class="facebook" data-toggle="modal" onclick="GetMarketPriceModal()">
+                <i class="fa fa-calculator"></i>
+            </a>
+
+        </div>
+    </div>
+    <!-- tile -->
+}
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ Market Price Modal =======================================================================*@
+    <div id="mktpriceModal" class="modal1 fade modal-full" tabindex="-1" aria-hidden="true" role="dialog">
+        <div class="vertical-alignment-helper">
+            <div class="modal-custom-dialog vertical-align-center">
+                <div class="modal-content">
+                    <div class="modal-body" style="height: 80vh; overflow-y: auto">
+                        <div class="row" id="commontModalContainer">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<script>
+    $(function () {
+        get_recent_notifications_as_feed();
+        //alert($('#ddlIsComplete').val());
+        //makeAllprojectGanttChart("0");
+        get_chart('ddlIsComplete');
+    });
+    function GetMarketPriceModal() {
+        window.open('@Url.Action("MarketPriceCalculator", "Management")');
+
+    }
+
+    $('#showallreports').click(function () {
+        var projectname = $('#ProjectName option:selected').val();
+        if (projectname != "") {
+            var url = '@Url.Action("HwAndSwSummaryForManagement", "Management")?projectName=' + encodeURIComponent(projectname);
+            window.open(url);
+        } else {
+            alertify.alert('Please Select a Project');
+        }
+    });
+
+</script>
+
+<script>
+    $(".tile .float").click(function () {
+        $(this).html(
+            $(this).html() == '<i class="fa fa-times my-float"></i>'
+                ? '<i class="fa fa-share my-float"></i>'
+                : '<i class="fa fa-times my-float"></i>'
+        );
+        $(".tile .soc").toggleClass("pad");
+    });
+</script>
+
+
+

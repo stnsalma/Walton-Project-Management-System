@@ -1,0 +1,78 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@using (Html.BeginForm("Specification", "Commercial"))
+{
+    <div class="col-lg-12">
+        <div class="form-body">
+            <h3 class="form-section">Battery</h3>
+            @Html.HiddenFor(model => model.PhBatteryInfoModel.ProjectMasterId)
+            @Html.HiddenFor(model => model.PhBatteryInfoModel.PhBatteryInfoId)
+            @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+            @Html.HiddenFor(model => model.TabIdentity, new { @Value = 11 })
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Possible Supplier Names*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhBatteryInfoModel.SupplierNames, new { @class = "form-control", @placeholder="Supplier1, Supplier2, Supplier3" })
+                            @Html.ValidationMessageFor(model => model.PhBatteryInfoModel.SupplierNames, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Final Supplier Name</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhBatteryInfoModel.BatterySupplierName, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Battery Rating*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhBatteryInfoModel.BatteryRating, new {@class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhBatteryInfoModel.BatteryRating, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Type*</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhBatteryInfoModel.BatteryType, new SelectList(new[]
+                            {
+                                new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                new SelectListItem { Text = "Li-Ion", Value = "Li-Ion"},
+                                new SelectListItem { Text = "Li-Polymer", Value = "Li-Polymer"}
+                            }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhBatteryInfoModel.BatteryType, String.Empty, new { @style = "color:red;!important" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            @if(@Model.PhBatteryInfoModel.PhBatteryInfoId > 0){
+                            <button class="btn sbold uppercase btn-outline blue">Update</button>
+                            }
+                            else{
+                            <button class="btn sbold uppercase btn-outline green">Save</button>
+                            }
+                            @*<button class="btn sbold uppercase btn-outline blue">Save</button>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

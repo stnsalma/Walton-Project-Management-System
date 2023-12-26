@@ -1,0 +1,23 @@
+﻿@using DayPilot.Web.Mvc
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EventCal</title>
+    <script src="@Url.Content("~/Scripts/DayPilot/daypilot-all.min.js")" type="text/javascript"></script>
+</head>
+<body>
+    <div>
+        @Html.DayPilotCalendar("dpc", new DayPilotCalendarConfig
+{
+    BackendUrl = Url.Content("~/Home/Backend"),
+})
+    </div>
+</body>
+</html>

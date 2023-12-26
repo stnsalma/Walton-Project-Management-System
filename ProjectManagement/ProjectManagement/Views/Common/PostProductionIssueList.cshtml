@@ -1,0 +1,317 @@
+﻿@model ProjectManagement.ViewModels.Common.VmPostProductionIssue
+
+@{
+    ViewBag.Title = "PostProductionIssueList";
+}
+
+<link href="~/Content/loader/loader.css" rel="stylesheet" />
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css" />
+
+<link href="/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+@*<link href="/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
+<link href="/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN THEME GLOBAL STYLES -->
+<link href="/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+<link href="/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME GLOBAL STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link href="/assets/pages/css/blog.min.css" rel="stylesheet" type="text/css" />
+<!-- END PAGE LEVEL STYLES -->
+<!-- BEGIN THEME LAYOUT STYLES -->
+<link href="/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME LAYOUT STYLES -->
+
+<style>
+    .ajs-message.ajs-custom {
+        color: whitesmoke;
+        background: rgba(50,50,50,0.5);
+        border-color: transparent;
+        /*box-shadow: inset 0 50px #ffffff, inset 0 -15px 30px #000000, 0 5px 10px #000000;*/
+        /*box-shadow: inset 0 50px rgba(255,255,255,0.2), inset 0 -15px 30px rgba(0,0,0,0.4), 0 5px 10px rgba(0,0,0,0.5);*/
+        font-weight: bolder;
+    }
+</style>
+
+<div id="post_production_div"></div>
+<div id="ganttloaderdiv">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">View File</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- ModalEnd -->
+
+<script>
+    $(function() {
+        var win = $(window);
+        var ppissue = $('#post_production_div');
+        var url = '@Url.Action("GetPostProductionIssueList", "Common")';//'../Common/GetPostProductionIssueList';
+
+
+        $.post(url, {}, function(data) {
+            console.log(data);
+            var postproductionissues = JSON.parse(data);
+            console.log(postproductionissues);
+            if (postproductionissues.length > 0) {
+                for (var i = 0; i < postproductionissues.length; i++) {
+                    var htmlStr = '<div class="blog-page blog-content-1"> <div class="row"> <div class="col-lg-9"> <div class="blog-post-lg bordered blog-container"> <div class="blog-post-content"> <h2 class="blog-title blog-post-title"> <a class="issuename" href="javascript:;">' + '<b>Model: </b> ' + postproductionissues[i].ProjectName + ', <b>Issue Name: </b>' + postproductionissues[i].IssueName + '</a> </h2> <div class="blog-post-meta"> <img class="img-circle" alt="" width="50" height="50" style="float:left;margin-right:8px" src="' + postproductionissues[i].ProfilePictureUrl + '"> <a class="addedbyname" href="javascript:;">' + postproductionissues[i].AddedByName + '</a> </div><p class="blog-post-desc"><strong>' + postproductionissues[i].Comment + '</strong> </p> <div id="attachmentdiv' + postproductionissues[i].SwQcAllProjectIssueId + '"></div><br/><div class="blog-post-foot"> <div class="blog-post-meta"> <i class="icon-calendar font-blue"></i> <a class="addeddate" href="javascript:;">' + moment(postproductionissues[i].AddedDate).format('llll') + '</a> </div><div class="blog-post-meta"> <i class="icon-bubble font-blue"></i> <a class="commentcounter" id="' + postproductionissues[i].SwQcAllProjectIssueId + '" href="javascript:;"></a> </div></div><br/> <div class="form-group" name="commentsection' + postproductionissues[i].SwQcAllProjectIssueId + '"> <textarea rows="2" name="message" placeholder="Write comment here ..." class="form-control c-square"></textarea> <br/> <input type="hidden" class="swqcallprojectissueId" value="' + postproductionissues[i].SwQcAllProjectIssueId + '"/> <button type="submit" class="btn blue uppercase btn-md sbold btn-block submitissue">Submit</button> </div></div></div></div></div></div>';
+                    ppissue.append(htmlStr);
+                    var attachmentdivId = $('#attachmentdiv' + postproductionissues[i].SwQcAllProjectIssueId);
+                    for (var j = 0; j < postproductionissues[i].UploadedFileGetUrl.length; j++) {
+                        if (postproductionissues[i].ExtensionlList[j] == '.jpg') {
+                            var attachimg = '<img src="' + postproductionissues[i].UploadedFileGetUrl[j] + '" class="img-rounded" data-toggle="modal" alt="unable to load image" data-target="#myModal"  style="width:274px;height:198px;margin:5px">';
+                            attachmentdivId.append(attachimg);
+                        }
+                        //if (postproductionissues[i].ExtensionlList[j] == '.pdf') {
+                        //    //var attachpdf = '<a class="pdfmedia" href="' + postproductionissues[i].UploadedFileGetUrl[j] + '">PDF File</a>';
+                        //    var attachpdf = '<embed width="274" height="198" name="plugin" src="' + postproductionissues[i].UploadedFileGetUrl[j] + '" type="application/pdf">';
+                        //    attachmentdivId.append(attachpdf);
+                        //}
+                    }
+                }
+            } else {
+                alertify.alert('there is no issues for you');
+            }
+            //$('.form-group').hide();
+        });
+
+
+        win.scroll(function() {
+            // alertify.success('hola');
+            if ($(document).height() - win.height() == win.scrollTop()) {
+                $('#ganttloaderdiv').addClass("loader");
+                var lastissueid = $("input:last").val();
+                $.post(url, { swqcallprojectissueid: lastissueid }, function(data) {
+                    console.log(data);
+                    var postproductionissues = JSON.parse(data);
+                    console.log(postproductionissues);
+
+                    for (var i = 0; i < postproductionissues.length; i++) {
+                        var htmlStr = '<div class="blog-page blog-content-1"> <div class="row"> <div class="col-lg-9"> <div class="blog-post-lg bordered blog-container"> <div class="blog-post-content"> <h2 class="blog-title blog-post-title"> <a class="issuename" href="javascript:;">' + '<b>Model: </b> ' + postproductionissues[i].ProjectName + ', <b>Issue Name: </b>' + postproductionissues[i].IssueName + '</a> </h2> <div class="blog-post-meta">  <img class="img-circle" alt="" width="50" height="50" style="float:left;margin-right:8px" src="' + postproductionissues[i].ProfilePictureUrl + '">  <a class="addedbyname" href="javascript:;">' + postproductionissues[i].AddedByName + '</a> </div><p class="blog-post-desc"><strong>' + postproductionissues[i].Comment + '</strong> </p> <div id="attachmentdiv' + postproductionissues[i].SwQcAllProjectIssueId + '"></div><br/><div class="blog-post-foot"> <div class="blog-post-meta"> <i class="icon-calendar font-blue"></i> <a class="addeddate" href="javascript:;">' + moment(postproductionissues[i].AddedDate).format('llll') + '</a> </div><div class="blog-post-meta"> <i class="icon-bubble font-blue"></i> <a class="commentcounter" id="' + postproductionissues[i].SwQcAllProjectIssueId + '" href="javascript:;"></a> </div></div><br/> <div class="form-group" name="commentsection' + postproductionissues[i].SwQcAllProjectIssueId + '"> <textarea rows="2" name="message" placeholder="Write comment here ..." class="form-control c-square"></textarea> <br/> <input type="hidden" class="swqcallprojectissueId" value="' + postproductionissues[i].SwQcAllProjectIssueId + '"/> <button type="submit" class="btn blue uppercase btn-md sbold btn-block submitissue">Submit</button> </div></div></div></div></div></div>';
+                        ppissue.append(htmlStr);
+                        var attachmentdivId = $('#attachmentdiv' + postproductionissues[i].SwQcAllProjectIssueId);
+                        for (var j = 0; j < postproductionissues[i].UploadedFileGetUrl.length; j++) {
+                            if (postproductionissues[i].ExtensionlList[j] == '.jpg') {
+                                var attach = '<img src="' + postproductionissues[i].UploadedFileGetUrl[j] + '" class="img-rounded" data-toggle="modal" alt="unable to load image" data-target="#myModal" style="width:274px;height:198px;margin:5px">';
+                                attachmentdivId.append(attach);
+                            }
+                        }
+                    }
+                    //$('.form-group').hide();
+                    $('#ganttloaderdiv').removeClass("loader");
+                    console.log('Last ID: ' + $("input:last").val());
+                });
+            }
+        });
+
+        $(document).on('click', '.submitissue', function(e) {
+            e.preventDefault();
+            var swqcallprojectissueid = ($(this).prev().attr('value'));
+            var comment = ($("textarea", $(this).parent()).val());
+
+            console.log(swqcallprojectissueid + '.......' + comment);
+            if (comment.trim() != '') {
+                var url1 = '@Url.Action("PostIssueComment", "Common")';//'../Common/PostIssueComment';
+                var ltcomment = {};
+                $.post(url1, { swqcallprojectissueid: swqcallprojectissueid, message: comment }, function(data) {
+                    console.log(data);
+                    ltcomment = JSON.parse(data);
+                    console.log(ltcomment);
+                    commentsHub.server.broadcastComment(ltcomment.PostCommentId, ltcomment.SwQcAllProjectIssueId, ltcomment.Message, ltcomment.CommenterName,
+                        ltcomment.IssueName, ltcomment.ProjectName, ltcomment.PurchaseOrderOrdinals, ltcomment.CommentedDate, ltcomment.ProfilePictureUrl, ltcomment.CommentedBy);
+                    //getLatestComment(ltcomment);
+                    $('input[type=text], textarea').val('');
+                    alertify.success('Comment posted successfully.');
+                });
+            } else {
+                alertify.error("you can't send blank comments");
+            }
+
+        });
+
+        $(document).on('click', '.commentcounter', function(e) {
+            var swqcallprojectissueid = $(this).attr('id');
+
+            var divtoappend = $('div[name=commentsection' + swqcallprojectissueid + ']');
+            var url2 = '../Common/GetIssueCommentById';
+
+            divtoappend.show();
+            e.preventDefault();
+
+            $('.blog-content-2').empty();
+            //alertify.error(swqcallprojectissueid);
+            $.post(url2, { swqcallprojectissueid: swqcallprojectissueid }, function(data) {
+                console.log(data);
+                var postproductionissuecomment = JSON.parse(data);
+                console.log(postproductionissuecomment);
+                var containerdivforcomment = '<div class="blog-page blog-content-2" id="commentcontainer' + swqcallprojectissueid + '"> <div class="row"> <div class="col-lg-12"> <div class="blog-single-content bordered blog-container"> <div class="blog-comments"> <div class="c-comment-list" id="commentlist' + swqcallprojectissueid + '"> </div></div></div></div></div></div>';
+                divtoappend.append(containerdivforcomment);
+                for (var i = 0; i < postproductionissuecomment.length; i++) {
+                    var commentsHtml = '<div class="media"> <div class="media-left" style="float:left;padding-right:8px"> <a href="#"> <img class="media-object" alt="" src="' + postproductionissuecomment[i].ProfilePictureUrl + '"> </a> </div><div class="media-body" id="individualComment' + postproductionissuecomment[i].PostCommentId + '"> <h4 class="media-heading"> <a href="#">' + postproductionissuecomment[i].CommenterName + '</a> on <span class="c-date">' + moment(postproductionissuecomment[i].CommentedDate).format('llll') + '</span> </h4> ' + postproductionissuecomment[i].Message + ' <br/><div class="md-checkbox-inline"> <div class="md-checkbox ' + swqcallprojectissueid + '"> <input id="checkbox' + postproductionissuecomment[i].PostCommentId + '" class="md-check ' + swqcallprojectissueid + '" type="checkbox"> <label for="checkbox' + postproductionissuecomment[i].PostCommentId + '" style="color:red"> <span class="inc"></span> <span class="check"></span> <span class="box"></span> APPROVED </label> </div></div></div></div>';
+                    $('#commentlist' + swqcallprojectissueid).append(commentsHtml);
+                }
+                for (var j = 0; j < postproductionissuecomment.length; j++) {
+                    if (postproductionissuecomment[j].IsApproved == 1) {
+                        $('#checkbox' + postproductionissuecomment[j].PostCommentId).attr('checked', true);
+                        $('.' + swqcallprojectissueid).attr("disabled", "");
+                        if ('@ViewBag.RoleCheck' == 'MM') {
+                            $('#checkbox' + postproductionissuecomment[j].PostCommentId).removeAttr("disabled");
+                        }
+                        break;
+                    }
+                }
+                window.location.hash = '#' + swqcallprojectissueid;
+                //$('div[name=commentsection' + swqcallprojectissueid + ']').css('position','absolute');
+                //$('div[name=commentsection' + swqcallprojectissueid + ']').toggleClass('expand');
+            });
+        });
+
+        $(document).on('click', '.md-check', function () {
+            var chkboxid = $(this).attr('id');
+            var postcommentid = chkboxid.replace(/^\D+/g, '');//get only numbers from string
+            var swqcallprojectissueid=$(this).attr('class').replace(/^\D+/g, '');//get only numbers from string
+            var url3 = '../Common/ApporveComment';
+            if ('@ViewBag.RoleCheck' == 'MM') {
+                if (this.checked) {
+                    console.log('approved comment id....' + postcommentid);
+                    $('.' + swqcallprojectissueid).attr("disabled", "");
+                    $(this).removeAttr("disabled");
+                    $.post(url3, { swqcallprojectissueid: swqcallprojectissueid, postcommentid: postcommentid, approve: 1 }, function(data) {
+
+                    });
+                }
+                if (!this.checked) {
+                    $('.' + swqcallprojectissueid).removeAttr("disabled");
+                    if ('@ViewBag.RoleCheck' =='MM') {
+                        $.post(url3, { swqcallprojectissueid: swqcallprojectissueid,postcommentid:postcommentid,approve:0 }, function(data) {
+
+                        });
+                    }
+                }
+            } else {
+                alertify.alert('You do not have permission');
+                $(this).attr('checked', false);
+            }
+        });
+
+            $(document).on('click', '.img-rounded', function () {
+                var imagesrc = $(this).attr('src');
+                var imgappendHtml = '<img src="' + imagesrc + '" class="img-responsive" data-toggle="modal" alt="unable to load image" data-target="#myModal" style="width:auto;height:auto;margin:5px">';
+                //alert(imagesrc);
+                $('.modal-body').append(imgappendHtml);
+            });
+
+            $('#myModal').on('hidden.bs.modal', function () {
+                $('.modal-body').empty();
+            });
+        })
+</script>
+
+@section scripts{
+
+    <script>
+
+        // Declare a proxy to reference the hub.
+        var commentsHub = $.connection.myHub;
+        $.connection.hub.logging = true;
+
+        // Start the connection.
+        commentsHub.client.counterComment = function (data) {
+            console.log('commentsHub.client.counterComment' + data);
+            if (data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    console.log(data[i].SwQcAllProjectIssueId + '....' + data[i].CommentCounter);
+                    $('#' + data[i].SwQcAllProjectIssueId).text(data[i].CommentCounter + ' comments');
+                }
+            } else {
+                console.log('got exception');
+            }
+
+        };
+
+        commentsHub.client.broadcastCommentToAll = function (postCommentId, swallqcissueId, comment, commenterName, issueName, projectName, purchaseOrderOrdinals, commentedDate, profilePictureUrl,commentedBy) {
+            console.log('commentsHub.client.broadcastCommentToAll' + ',' + comment);
+
+            //alertify.set('notifier','transition','fade');
+
+            if (@ViewContext.HttpContext.User.Identity.Name != commentedBy) {
+                var msg = alertify.notify('default message', 'custom', 2, function () { console.log('dismissed'); });
+                msg.delay(20).setContent(commenterName + ' commented on issue - "' + issueName + '"(Project:' + projectName + ', Purchase Orders - ' + purchaseOrderOrdinals + ') : ' + comment + '.');
+                $('body').one('click', function () {
+                    msg.dismiss();
+                });
+            }
+
+
+
+            var divtoappend = $('div[name=commentsection' + swallqcissueId + ']');
+            var containerdivforcomment = '<div class="blog-page blog-content-2" id="commentcontainer' + swallqcissueId + '"> <div class="row"> <div class="col-lg-12"> <div class="blog-single-content bordered blog-container"> <div class="blog-comments"> <div class="c-comment-list" id="commentlist' + swallqcissueId + '"> </div></div></div></div></div></div>';
+            var commentsHtml = '<div class="media"> <div class="media-left" style="float:left;padding-right:8px"> <a href="#"> <img class="media-object" alt="" src="' + profilePictureUrl + '"> </a> </div><div class="media-body" id="individualComment' + postCommentId + '"> <h4 class="media-heading"> <a href="#">' + commenterName + '</a> on <span class="c-date">' + moment(commentedDate).format('llll') + '</span> </h4> ' + comment + ' <br/><div class="md-checkbox-inline"> <div class="md-checkbox"> <input id="checkbox' + postCommentId + '" class="md-check '+swallqcissueId+'" type="checkbox"> <label for="checkbox' + postCommentId + '" style="color:red"> <span class="inc"></span> <span class="check"></span> <span class="box"></span> APPROVED </label> </div></div></div></div>';
+
+            if ($('#commentcontainer' + swallqcissueId)[0]) {
+                //$('.blog-content-2').empty();
+                $('#commentlist' + swallqcissueId).prepend(commentsHtml);
+            } else {
+                //divtoappend.show();
+                divtoappend.append(containerdivforcomment);
+                $('#commentlist' + swallqcissueId).prepend(commentsHtml);
+            }
+
+        };
+
+
+        $.connection.hub.start().done(function () {
+            commentsHub.server.getCommentsCounter();
+            //commentsHub.server.broadcastComment();
+        });
+    </script>
+}
+
+<!-- BEGIN CORE PLUGINS -->
+@*<script src="/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>*@
+<script src="/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+
+<script src="/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="/assets/global/scripts/app.min.js" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->

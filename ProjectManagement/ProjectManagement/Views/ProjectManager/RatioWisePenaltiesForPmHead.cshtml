@@ -1,0 +1,110 @@
+﻿@*<h2>RatioWisePenaltiesForPmHead</h2>*@
+@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.Models.NinetyFiveProductionRewardModel
+
+<div class="row">
+
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Ratio Wise PM Incharge Penalties
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box green-haze">
+                <div class="portlet-body">
+                    <div>
+                        <table class="table table-bordered table-striped table-condensed flip-content" id="tblPoPenaltiesData" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                            <thead>
+                                <tr>
+                                    <th>ProjectName</th>
+                                    <th>Orders</th>
+                                    <th>EmployeeCode</th>
+                                    <th>ProjectType</th>
+                                    <th>ShipmentType</th>
+                                    <th>PoDate</th>
+                                    <th>LSD</th>
+                                    <th>PoVsLSD<br />Diff</th>
+                                    <th>VesselDate</th>
+                                    <th>LSDVsVessel <br />Diff.For Deduct</th>
+                                    <th>DeductPoint</th>
+                                    <th>FeatureBase</th>
+                                    <th>SmartBase</th>
+                                    <th>PoReward</th>
+                                    <th>PerDayDeduction</th>
+                                    <th>TotalPenalties</th>
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetRatioWisePenaltiesForPmHead != null)
+                                {
+                                    foreach (var items in ViewBag.GetRatioWisePenaltiesForPmHead)
+                                    {
+                                        <tr>
+                                            <td>@items.ProjectName</td>
+                                            <td>@items.Orders</td>
+                                            <td>@items.EmployeeCode</td>
+                                            <td>@items.ProjectType</td>
+                                            <td>@items.ShipmentType</td>
+                                            <td>
+                                                @if (@items.PoDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                            </td>
+                                            <td>
+                                                @if (@items.LSD != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.LSD)}
+                                            </td>
+                                            <td>@items.PoVsLSDDiff</td>
+                                            <td>
+                                                @if (@items.VesselDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.VesselDate)}
+                                            </td>
+                                            <td>@items.LsdVsVesselDiffForDeduct</td>
+                                            <td>@items.DeductPoint</td>
+                                            <td>@items.FeatureBase</td>
+                                            <td>@items.SmartBase</td>
+                                            <td>@items.PoReward</td>
+                                            <td>@items.PerDayDeduction</td>
+                                            <td>@items.Penalties</td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+
+        var t = $('#tblPoPenaltiesData').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[ 10, 20, 30, 50, -1], [ 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+        });
+        //t.on('order.dt search.dt', function() {
+        //    t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function(cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+    });
+</script>

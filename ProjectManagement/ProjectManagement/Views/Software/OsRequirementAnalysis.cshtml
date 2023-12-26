@@ -1,0 +1,493 @@
+﻿@*<h2>OsRequirementAnalysis</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Software.AssignMuliplePersonViewModel
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .DTFC_LeftBodyWrapper {
+        position: relative;
+        top: -11px !important;
+        left: 0px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .DTFC_LeftBodyLiner {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        height: 200px;
+        max-height: 200px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+@using (@Html.BeginForm("OsRequirementAnalysis", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-title">
+                    <div class="col-lg-6">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">Os Requirement Analysis</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                    <div class="col-lg-6">
+
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table class="table table-bordered table-striped table-condensed flip-content tbl1" id="tbl1">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="text-center" style="display: none;"> ProjectMasterId </th>
+                                    <th class="text-center" style="display: none;"> SwQcAssignId </th>
+                                    <th class="text-center" style="display: none;"> SwQcHeadUserId </th>
+                                    <th class="text-center"> Project Name </th>
+                                    <th class="text-center">Project Type</th>
+                                    <th class="text-center">Po<br />Category</th>
+                                    <th class="text-center">Order</th>
+                                    <th class="text-center">Assign <br />UserName</th>
+                                    <th class="text-center">PM Name</th>
+                                    <th class="text-center">PM Remarks</th>
+                                    <th class="text-center">Categories</th>
+                                    <th class="text-center">Project <br />Assign <br />Time</th>
+                                    <th class="text-center">Supporting   <br />Document</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Update<br />Supporting<br />Document</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.OsRequirementAnalysisData != null)
+                                {
+                                    foreach (var item in ViewBag.OsRequirementAnalysisData)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td style="display: none" id="ss1" class="dd1">@item.ProjectMasterId</td>
+                                            <td style="display: none" id="ss2" class="dd2">@item.SwQcAssignId</td>
+                                            <td style="display: none" id="ss3" class="dd3">@item.SwQcHeadAssignId</td>
+                                            <td class="text-center">@item.ProjectName</td>
+                                            <td class="text-center">@item.ProjectType</td>
+                                            <td class="text-center">@item.SourcingType</td>
+                                            <td class="text-center">@item.OrderNuber</td>
+                                            <td class="text-center">@item.AssignUserName</td>
+                                            <td class="text-center">@item.ProjectManagerUserName</td>
+                                            <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                                            <td class="text-center">@item.AccessoriesTestType</td>
+                                            <td class="text-center">
+                                                @if (@item.PmToQcHeadAssignTime != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @item.PmToQcHeadAssignTime)
+                                                }
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="file-preview-thumbnails">
+                                                    <div class="">
+                                                        <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                            <div class="col-lg-12">
+                                                                @if (@item.SupportingDocument != null)
+                                                                {
+
+                                                                    <input value="@item.SupportingDocument" style="display: none" />
+                                                                    for (int m = 0; m < @item.FilesDetails.Count; m++)
+                                                                    {
+
+                                                                        if (@item.FilesDetails[m].Extention == ".jpg" || @item.FilesDetails[m].Extention == ".png" || @item.FilesDetails[m].Extention == ".mp4" || @item.FilesDetails[m].Extention == ".jpeg" || @item.FilesDetails[m].Extention == ".txt" || @item.FilesDetails[m].Extention == ".xls" || @item.FilesDetails[m].Extention == ".wav")
+                                                                        {
+                                                                            <div class="col-lg-3">
+                                                                                <embed class="" src="@item.FilesDetails[m].FilePath" style="width: 100px; height: 100px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@item.FilesDetails[m].FilePath">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                        }
+                                                                        if (@item.FilesDetails[m].Extention == ".zip" || @item.FilesDetails[m].Extention == ".pdf" || @item.FilesDetails[m].Extention == ".docx" || @item.FilesDetails[m].Extention == ".xlsx" || @item.FilesDetails[m].Extention == ".rar" || @item.FilesDetails[m].Extention == ".pptx")
+                                                                        {
+
+                                                                            string[] urls = @item.FilesDetails[m].FilePath.Split('|');
+                                                                            var last = urls[0].Split('-').Last();
+                                                                            var lastNameForM = item.FilesDetails[m].FilePath;
+                                                                            lastNameForM = Path.GetFileName(last);
+
+                                                                            <div class="col-lg-3" style="width: 100px; height: 100px;">
+                                                                                @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+                                                                                <br />
+                                                                                <a href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="width: 50px;"></div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">@item.Status</td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btnOpenModal">
+                                                    <span class="glyphicon glyphicon-plus"></span> UpdateDoc
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-title">
+                    <div class="col-lg-6">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">Submitted Projects</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                    <div class="col-lg-6">
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table class="table table-bordered table-striped table-condensed flip-content tbl2" id="tbl2">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="text-center" style="display: none;"> ProjectMasterId </th>
+                                    <th class="text-center" style="display: none;"> SwQcAssignId </th>
+                                    <th class="text-center" style="display: none;"> SwQcHeadUserId </th>
+                                    <th class="text-center"> Project Name </th>
+                                    <th class="text-center">Project Type</th>
+                                    <th class="text-center">Po<br />Category</th>
+                                    <th class="text-center">Order</th>
+                                    <th class="text-center">Assign <br />UserName</th>
+                                    <th class="text-center">PM Name</th>
+                                    <th class="text-center">PM Remarks</th>
+                                    <th class="text-center">Categories</th>
+                                    <th class="text-center">Project <br />Assign <br />Time</th>
+                                    <th class="text-center">Supporting   <br />Document</th>
+                                    <th class="text-center">Status</th>
+                                    @*<th class="text-center">Update<br />Supporting<br />Document</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.OsRequirementAnalysisDoneData != null)
+                                {
+                                    foreach (var item in ViewBag.OsRequirementAnalysisDoneData)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td style="display: none" id="ss1" class="dd1">@item.ProjectMasterId</td>
+                                            <td style="display: none" id="ss2" class="dd2">@item.SwQcAssignId</td>
+                                            <td style="display: none" id="ss3" class="dd3">@item.SwQcHeadAssignId</td>
+                                            <td class="text-center">@item.ProjectName</td>
+                                            <td class="text-center">@item.ProjectType</td>
+                                            <td class="text-center">@item.SourcingType</td>
+                                            <td class="text-center">@item.OrderNuber</td>
+                                            <td class="text-center">@item.AssignUserName</td>
+                                            <td class="text-center">@item.ProjectManagerUserName</td>
+                                            <td class="text-center">@item.PmToQcHeadAssignComment</td>
+                                            <td class="text-center">@item.AccessoriesTestType</td>
+                                            <td class="text-center">
+                                                @if (@item.PmToQcHeadAssignTime != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @item.PmToQcHeadAssignTime)
+                                                }
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="file-preview-thumbnails text-center">
+                                                    <div class="text-center">
+                                                        <div class="file-preview-frame file-preview-initial text-center" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                            <div class="col-lg-12 text-center">
+                                                                @if (@item.SupportingDocument != null)
+                                                                {
+
+                                                                    <input value="@item.SupportingDocument" style="display: none" />
+                                                                    for (int m = 0; m < @item.FilesDetails.Count; m++)
+                                                                    {
+
+                                                                        if (@item.FilesDetails[m].Extention == ".jpg" || @item.FilesDetails[m].Extention == ".png" || @item.FilesDetails[m].Extention == ".mp4" || @item.FilesDetails[m].Extention == ".jpeg" || @item.FilesDetails[m].Extention == ".txt" || @item.FilesDetails[m].Extention == ".xls" || @item.FilesDetails[m].Extention == ".wav")
+                                                                        {
+                                                                            <div class="col-lg-3 text-center">
+                                                                                <embed class="text-center" src="@item.FilesDetails[m].FilePath" style="width: 100px; height: 100px" />
+                                                                                <br />
+                                                                                <a target="_blank" class="text-center" href="@item.FilesDetails[m].FilePath">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3 text-center" style="width: 50px;"></div>
+
+                                                                        }
+                                                                        if (@item.FilesDetails[m].Extention == ".zip" || @item.FilesDetails[m].Extention == ".pdf" || @item.FilesDetails[m].Extention == ".docx" || @item.FilesDetails[m].Extention == ".xlsx" || @item.FilesDetails[m].Extention == ".rar" || @item.FilesDetails[m].Extention == ".pptx")
+                                                                        {
+
+                                                                            string[] urls = @item.FilesDetails[m].FilePath.Split('|');
+                                                                            var last = urls[0].Split('-').Last();
+                                                                            var lastNameForM = item.FilesDetails[m].FilePath;
+                                                                            lastNameForM = Path.GetFileName(last);
+
+                                                                            <div class="col-lg-3 text-center" style="width: 100px; height: 100px;">
+                                                                                @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled",@class="text-center" })
+                                                                                <br />
+                                                                                <a class="text-center" href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3 text-center" style="width: 50px;"></div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">@item.Status</td>
+                                            @*<td>
+                                                    <button type="button" class="btn btn-danger btnOpenModal">
+                                                        <span class="glyphicon glyphicon-plus"></span> UpdateDoc
+                                                    </button>
+                                                </td>*@
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+
+    <div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="font-weight: bold; color: black;">Update Supporting Document</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group" style="display: none;">
+                            <label class="control-label">Ids :</label>
+                            <input name="ProIds" id="ProIds" type="text" class="form-control">
+                        </div>
+                        <div class="form-group" style="display: none;">
+                            <label class="control-label">swQcAssignId :</label>
+                            <input name="swQcAssignId" id="swQcAssignId" type="text" class="form-control">
+                        </div>
+                        <div class="form-group" style="display: none;">
+                            <label class="control-label">swQcHeadUserId :</label>
+                            <input name="swQcHeadUserId" id="swQcHeadUserId" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                Project Name:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="ProjectName" id="ProjectName" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                Order:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="Orders" id="Orders" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                PO Category:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="PoCategory" id="PoCategory" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <br /><br /><br /><br />
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label" style="font-weight: bold">Supporting Document :</label><br /><br />
+                            <div class="col-lg-8">
+                                <input type="file" name="issueList1[0].FileId" id="FileId1" />
+                            </div>
+                            <div class="col-lg-2 ">
+                                <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr')); ">
+                                    <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                    <input type="submit" id="smitModalOfSave" class="btn green smitModalOfSave" value="Save changes" />
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var t2 = $('#tbl2').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t2.on('order.dt search.dt', function () {
+            t2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $('#tbl1').on('click', '.btnOpenModal', function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl1');
+            var proIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var swQcAssignId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var swQcHeadUserId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var order = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+            var poCategory = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#ProIds').val(proIds);
+            $('#swQcAssignId').val(swQcAssignId);
+            $('#swQcHeadUserId').val(swQcHeadUserId);
+            $('#ProjectName').val(projectName);
+            $('#Orders').val(order);
+            $('#PoCategory').val(poCategory);
+
+        });
+
+        $('#tbl2').on('click', '.btnOpenModal', function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl2');
+            var proIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var swQcAssignId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var swQcHeadUserId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var order = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+            var poCategory = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#ProIds').val(proIds);
+            $('#swQcAssignId').val(swQcAssignId);
+            $('#swQcHeadUserId').val(swQcHeadUserId);
+            $('#ProjectName').val(projectName);
+            $('#Orders').val(order);
+            $('#PoCategory').val(poCategory);
+
+        });
+
+        $('#smitModalOfSave').click(function (e) {
+            e.preventDefault();
+
+            var proIds = $("#ProIds").val();
+            console.log("ProIds :" + proIds);
+
+            var swQcAssignId = $('#swQcAssignId').val();
+            var swQcHeadUserId = $('#swQcHeadUserId').val();
+
+            var obj = {};
+            obj.proIds = proIds;
+            obj.swQcAssignId = swQcAssignId;
+            obj.swQcHeadUserId = swQcHeadUserId;
+
+            $('#form1').trigger('submit');
+            $('#loading').hide();
+        });
+    });
+</script>

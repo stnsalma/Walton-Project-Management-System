@@ -1,0 +1,51 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+
+    <div class="col-lg-12">
+        @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMaster.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control" })</div>
+                    <div class="col-md-1">
+                        <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("Specification", "Commercial")?projectId=' + $('option:selected', $('#ProjectMaster_ProjectMasterId')).val()" />
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Supplier</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.ProjectMaster.SupplierName, new { @class = "form-control", @disabled = "true" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Supplier Model</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.ProjectMaster.SupplierModelName, new { @class = "form-control", @disabled = "true" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Walton Model</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.ProjectMaster.ProjectName, new { @disabled = "true", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+
+

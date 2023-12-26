@@ -1,0 +1,186 @@
+﻿@model IEnumerable<ProjectManagement.Models.MaterialWastageMasterModel>
+    @{
+        ViewBag.Title = "PendingApprovals";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <style type="text/css">
+        .modal-fullscreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .modal-content {
+            height: 100%;
+            width: 100%;
+        }
+
+        .modal-body {
+            max-height: calc(100vh - 210px);
+            overflow-y: auto;
+        }
+    </style>
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Pending Wastage Material Approval
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <table class="table table-striped table-bordered table-hover" id="tblApprovalPending">
+                        <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Month Name</th>
+                                <th>Year Number</th>
+                                <th>Added Date</th>
+                                <th>Added By</th>
+                                <th>Model</th>
+                                <th>Incharge Approved By</th>
+                                <th>COO Approved By</th>
+                                <th>Management Approved By</th>
+                                <th>See Detail</th>
+                                <th>Top Sheet</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(modelItem => item.Id)
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ReportName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MonthName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.YearNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AddedDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.AddedByName)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProjectVarientName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.InchargeApproverName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.CooApprovername)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ManagementApproverName)
+                                    </td>
+                                    <td>@Html.ActionLink("Details", "Details", new { id = item.Id })</td>
+                                    <td>
+                                        <button class="btn btn-info" title="Details" onclick="get_recommendations($(this))"><i class="fa fa-info-circle"></i></button>
+                                        <button class="btn btn-success" title="Top Sheet" onclick="get_topsheet($(this))"><i class="fa fa-bars"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="recomModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="height: 400px">
+            <div class="modal-content" id="partialTable">
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="topSheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Top Sheet</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="topSheetTable">
+                    <div id="prntDiv"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="makePdf" class="btn btn-primary">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jQuery.print.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //var table = $('#tblApprovalPending').removeAttr('width').DataTable({
+            //    scrollY: "400px",
+            //    scrollX: true,
+            //    scrollCollapse: true,
+            //    paging: false,
+            //    columnDefs: [
+            //        //{ width: 200, targets: 0 }
+            //    ],
+            //    fixedColumns: true
+            //});
+
+            $('#makePdf').click(function () {
+                var ele = document.getElementById('printFooter');
+                ele.removeChild(ele.childNodes[0]);
+                $('#printFooter').append("<p>" + "This document generated from WPMS. No sign needed." + "</p>");
+                $('#prntDiv').print();
+
+            });
+        });
+
+        function get_recommendations(ths) {
+            var id = ths.closest('tr').find('input[type="hidden"]').val();
+            $.ajax({
+                url: '@Url.Action("GetRecommendations", "MaterialWastage")',
+                type: "GET",
+                data: { id: id },
+                dataType: "json",
+                //contentType: "application/json",
+                success: function (result) {
+                    console.log(result);
+                    $('div#partialTable').html(result);
+                    $("#recomModal").modal("show");
+                },
+                error: function () { }
+            });
+        }
+
+
+        function get_topsheet(ths) {
+            var id = ths.closest('tr').find('input[type="hidden"]').val();
+            $.ajax({
+                url: '@Url.Action("GetTopSheet", "MaterialWastage")',
+                type: "GET",
+                data: { id: id },
+                dataType: "json",
+                //contentType: "application/json",
+                success: function (result) {
+                    console.log(result);
+                    $('div#prntDiv').html(result);
+                    $("#topSheetModal").modal("show");
+                },
+                error: function () { }
+            });
+        }
+    </script>
+

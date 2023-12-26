@@ -1,0 +1,274 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.AftersalesPm.VmAftersalesIncentive
+@*<h2>AftersalesPm_IssueDetails</h2>*@
+
+<link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .thing {
+        word-break: break-all;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .fixedHeader-floating {
+        left: 131px !important;
+    }
+
+    .datepicker {
+        /*top: 8px;
+        left: 243.375px;*/
+        /*display: block;*/
+        z-index: 9999;
+    }
+
+    .page-sidebar {
+        width: 235px;
+        float: left;
+        position: relative;
+        margin-right: -100%;
+    }
+</style>
+<style>
+    /*.ui-datepicker-calendar {
+        display: none;
+    }*/
+    body {
+        background: #EEE;
+        color: #444;
+        line-height: 1.4em;
+    }
+
+    #myDatepicker1 {
+        z-index: -999;
+    }
+
+    #myDatepicker2 {
+        z-index: -999;
+    }
+</style>
+
+<div class="note note-success">
+    <p style="color: black;font-weight:bold;font-size: 20px;">Aftersales Issue Details</p>
+</div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Incentive Effective Date
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left"></div><br /><br />
+                    <div class="col-lg-12">
+
+                    </div>
+                </div>
+                <div class="col-lg-3" style="float: left">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left">Incentive Month & Year</div><br /><br />
+                    <div class="col-lg-12">
+                        <input class="form-control myDatepicker1" id="myDatepicker1" value="@Model.MonYear" style="float: left" type="text" readonly="true" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-12"></div><br /><br />
+                    @*<div class="form-actions col-lg-12">
+                            <input type="button" id="btnSearch1" class="btn sbold uppercase btn-outline blue" value="LOAD" />
+                        </div>*@
+                    <div class="form-actions col-lg-12">
+                        <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("AftersalesPm_IssueDetails", "AfterSalesPm")?MonYear='+$('#myDatepicker1').val()" />
+                    </div>
+                </div>
+                <div class="col-lg-2" style="float: left">
+
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box purple">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Project Details
+        </div>
+        <div class="tools">
+            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div class="table-scrollable table-responsive">
+            <table id="tbl22" class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content note note-success">
+                    <tr>
+                        <th>#</th>
+                        <th style="display:none">Id</th>
+                        <th>Model</th>
+                        <th>Title</th>
+                        <th>IncidentDetails</th>
+                        <th>Categories</th>
+                        <th>Issue</th>
+                        <th>Raise Date</th>
+                        <th>Assign <br />Remarks</th>
+                        <th>Assigned<br />Person</th>
+                        <th>Solution Date</th>
+                        <th>Days<br />Passed</th>
+                        <th>Solution</th>
+                        <th>Incentive</th>
+                        <th>IsSaved?</th>
+                        <th style="font-weight: bold;text-align: center"> Action</th>
+                    </tr>
+                </thead>
+                <tbody class="proDetails">
+                    @if (ViewBag.GetAftersalesIssueDetails != null)
+                    {
+                        foreach (var items in ViewBag.GetAftersalesIssueDetails)
+                        {
+                            <tr class="trClsforSize">
+                                <td></td>
+                                <td id="GeneralIncidentId" style="display:none">@items.GeneralIncidentId</td>
+                                <td>@items.ProjectName</td>
+                                <td>@items.GeneralIncidentTitle</td>
+                                <td>@items.GeneralIncidentDetails</td>
+                                <td>@items.GeneralIncidentCategories</td>
+                                <td>@items.Issues</td>
+                                <td>
+                                    @if (@items.RaiseDate != null)
+                                    {
+                                        @String.Format("{0:yyyy-MM-dd}", @items.RaiseDate)
+                                    }
+                                </td>
+                                <td>
+                                    @items.AssignedRemarks
+                                </td>
+                                <td>
+                                    @items.AssignedPerson
+                                </td>
+                                <td>
+                                    @if (@items.SolutionDate != null)
+                                    {
+                                        @String.Format("{0:yyyy-MM-dd}", @items.SolutionDate)
+                                    }
+                                </td>
+                                <td>
+                                    @items.DaysPassed
+                                </td>
+                                <td>
+                                    @items.Solution
+                                </td>
+                                <td>@items.Incentive</td>
+                                <td>
+                                    @if (@items.GeneralCount != 0)
+                                    {
+                                        <p style="color:green;font-weight:bold;text-align:center">DONE</p>
+                                    }
+                                </td>
+                                <th style="text-align: center;font-weight: bold">
+                                    <button type="button" class="btn btn-danger btnDetails" id="btnDetails">
+                                        <span class="glyphicon glyphicon-edit"></span> PERCENTAGE
+                                    </button>
+                                </th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script type="text/javascript">
+    $('#myDatepicker1').datepicker({
+        format: "MM,yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    //var MonYear = $('#myDatepicker1').val();
+
+    //$('#myDatepicker1').text(MonYear);
+
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+
+
+        var t = $('#tbl22').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            // "scrollY": 340,
+            // "scrollX": true,
+            "order": [[1, 'desc']]
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        $("body").on("click", "#tbl22 .btnDetails", function () {
+            // $('#tbl22').on('click', '.btnDetails', function () {
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl22');
+            var ids = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+
+            var proMon = $("#myDatepicker1").val();
+            var sP = proMon.split(',');
+
+            var monName = sP[0];
+            var years = sP[1];
+
+
+            if (proMon == null) {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month & Year",
+                }).show();
+                return false;
+            }
+            if (proMon != null) {
+                window.open('@Url.Action("AftersalesPm_IssuePercentage", "AftersalesPm")' + '?monName=' + monName + '&years=' + years + '&ids=' + ids);
+            }
+
+        });
+    });
+</script>

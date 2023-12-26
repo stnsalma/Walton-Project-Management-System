@@ -1,0 +1,98 @@
+﻿@model ProjectManagement.Models.ProjectMasterModel
+@{
+    ViewBag.Title = "SpecComparison";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">Spec Comparison</div>
+        <div class="actions">
+            <input type="button" class="btn btn-circle btn-danger" value="compare" id="btnCompare"/>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+                </div>
+                <div class="col-md-6">
+                    @Html.DropDownList("Id", new SelectList(ViewBag.ForeignProjects, "Id", "ModelName"), "--Select One--", new { @class = "form-control ddChosen", required = "required" })
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-striped table-hover" id="tblCompare">
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#btnCompare').on('click', function (e) {
+        var url = '@Url.Action("Compare","Common")';
+        var projectId = $('#ProjectMasterId option:selected').val();
+        var projectName = $('#ProjectMasterId option:selected').text();
+        var otherProjectId = $('#Id option:selected').val();
+        var otherProjectName = $('#Id option:selected').text();
+        if (projectName != '--Select One--' && otherProjectName != '--Select One--') {
+            $('#tblCompare tbody').empty();
+            //alert(projectId + '...' + otherProjectId);
+            $.post(url, { projectId: projectId, otherProjectId: otherProjectId }, function(data) {
+                console.log(data);
+                var row = '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Model Name</td>'
+                    + '<td class="text-center">' + data.project.ProjectName + '</td>'
+                    + '<td class="text-center">' + data.otherProject.ModelName + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Brand</td>'
+                    + '<td class="text-center">Walton</td>'
+                    + '<td class="text-center">' + data.otherProject.Brand + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Sim</td>'
+                    + '<td class="text-center"> Sim Slot: ' + (data.project.SimSlotNumber == null ? "No Data" : data.project.SimSlotNumber) + ', Slot Type: ' + (data.project.SlotType == null ? "No Data" : data.project.SlotType) + '</td>'
+                    + '<td class="text-center">Sim Slot: ' + (data.otherProject.SimSlotNumber == null ? "No Data" : data.otherProject.SimSlotNumber) + ', Slot Type: ' + (data.otherProject.SimSlotType == null ? "No Data" : data.otherProject.SimSlotType) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Display & Resolution</td>'
+                    + '<td class="text-center">Size: ' + (data.project.DisplaySize == null ? "No Data" : data.project.DisplaySize) + ', Resolution: ' + (data.project.DisplayResulution == null ? "No Data" : data.project.DisplayResulution) + ', Display Type: ' + (data.project.DisplaySpeciality == null ? "No Data" : data.project.DisplaySpeciality) + '</td>'
+                    + '<td class="text-center">Size: ' + (data.otherProject.DisplaySize == null ? "No Data" : data.otherProject.DisplaySize) + ', Resolution: ' + (data.otherProject.Resolution == null ? "No Data" : data.otherProject.Resolution) + ', Display Type: ' + (data.otherProject.DisplayType == null ? "No Data" : data.otherProject.DisplayType) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Camera</td>'
+                    + '<td class="text-center"> Front Camera: ' + (data.project.FrontCam == null ? "No Data" : data.project.FrontCam) + ', Main Camera: ' + (data.project.BackCam == null ? "No Data" : data.project.BackCam) + '</td>'
+                    + '<td class="text-center">Front Camera: ' + (data.otherProject.FrontCamera == null ? "No Data" : data.otherProject.FrontCamera) + ', Main Camera: ' + (data.otherProject.BackCamera == null ? "No Data" : data.otherProject.BackCamera) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Memory</td>'
+                    + '<td class="text-center"> RAM: ' + (data.project.Ram == null ? "No Data" : data.project.Ram) + ', ROM: ' + (data.project.Rom == null ? "No Data" : data.project.Rom) + '</td>'
+                    + '<td class="text-center"> RAM: ' + (data.otherProject.RAM == null ? "No Data" : data.otherProject.RAM) + ', ROM: ' + (data.otherProject.ROM == null ? "No Data" : data.otherProject.ROM) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">OS</td>'
+                    + '<td class="text-center"> OS: ' + (data.project.OsName == null ? "No Data" : data.project.OsName) + ', Version: ' + (data.project.OsVersion == null ? "No Data" : data.project.OsVersion) + '</td>'
+                    + '<td class="text-center"> OS: ' + (data.otherProject.OperatingSystem == null ? "No Data" : data.otherProject.OperatingSystem) + ', Version: ' + (data.otherProject.OsVersion == null ? "No Data" : data.otherProject.OsVersion) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Processor</td>'
+                    + '<td class="text-center"> Chipset: ' + (data.project.ChipsetName == null ? "No Data" : data.project.ChipsetName) + ', CPU: ' + (data.project.CpuName == null ? "No Data" : data.project.CpuName) + ', Frequency: ' + (data.project.ChipsetFrequency == null ? "No Data" : data.project.ChipsetFrequency) + ', Core: ' + (data.project.ChipsetCore == null ? "No Data" : data.project.ChipsetCore) + '</td>'
+                    + '<td class="text-center"> Chipset: ' + (data.otherProject.Chipset == null ? "No Data" : data.otherProject.Chipset) + ', CPU: ' + (data.otherProject.CPU == null ? "No Data" : data.otherProject.CPU) + '</td>'
+                    + '</tr>'
+                    + '<tr>'
+                    + '<td class="bold text-center" style="color:firebrick">Battery</td>'
+                    + '<td class="text-center"> Capacity: ' + (data.project.BatteryRating == null ? "No Data" : data.project.BatteryRating) + ', Type: ' + (data.project.BatteryType == null ? "No Data" : data.project.BatteryType) + '</td>'
+                    + '<td class="text-center"> Capacity: ' + (data.otherProject.BatteryCapacity == null ? "No Data" : data.otherProject.BatteryCapacity) + ', Type: ' + (data.otherProject.BatteryType == null ? "No Data" : data.otherProject.BatteryType) + '</td>'
+                    + '</tr>';
+                $('#tblCompare tbody').append(row);
+            });
+        }
+    });
+</script>
+

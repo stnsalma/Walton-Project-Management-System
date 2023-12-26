@@ -1,0 +1,84 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@using (Html.BeginForm("Specification", "Commercial"))
+{
+    <div class="col-lg-12">
+        @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+        @Html.HiddenFor(model => model.PhChipsetInfo.PhChipsetInfoId)
+        @Html.HiddenFor(model => model.TabIdentity, new { @Value = 5 })
+        <div class="form-body">
+            <h3 class="form-section">Chipset Information</h3>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Chipset Name*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhChipsetInfo.ChipsetName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhChipsetInfo.ChipsetName, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Frequency*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhChipsetInfo.ChipsetFrequency, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhChipsetInfo.ChipsetFrequency, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Bit*</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhChipsetInfo.Bit, new SelectList(new[]
+                            {
+                                new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                new SelectListItem { Text = "32 Bit", Value = "32"},
+                                new SelectListItem { Text = "64 Bit", Value = "64"}
+                            }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhChipsetInfo.Bit, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Core*</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhChipsetInfo.Core, new SelectList(new[]
+                        {
+                            new SelectListItem { Text = "Select", Value = "", Selected = true },
+                            new SelectListItem { Text = "Single Core", Value = "Single Core"},
+                            new SelectListItem { Text = "Dual Core", Value = "Dual Core"},
+                            new SelectListItem { Text = "Dual Core", Value = "Dual Core"},
+                            new SelectListItem { Text = "Dual Core", Value = "Dual Core"},
+                            new SelectListItem { Text = "Dual Core", Value = "Dual Core"},
+                        }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhChipsetInfo.Bit, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="col-md-offset-3 col-md-9">
+                        @if (Model.PhChipsetInfo.PhChipsetInfoId > 0)
+                        {
+                            <button class="btn sbold uppercase btn-outline blue">Update</button>
+                        }
+                        else
+                        {
+                            <button class="btn sbold uppercase btn-outline green">Save</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

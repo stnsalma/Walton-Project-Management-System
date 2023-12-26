@@ -1,0 +1,60 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.VmNocReq
+@{
+    ViewBag.Title = "NocRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>NocRequest</h2>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Project Info
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+
+            <a href="javascript:;" class="reload"> </a>
+
+        </div>
+    </div>
+    <div class="portlet-body flip-scroll">
+        <div class="row">
+            
+            <div class="col-md-12">
+                <div class="col-md-6 col-md-offset-1">@Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control" })</div>
+                <div class="col-md-5">
+                    <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Noc List" onclick="location.href='@Url.Action("NocRequest", "ProjectManager")?projectId=' + $('option:selected', $('#ProjectMasterId')).val()" />
+               
+                    <input type="button" class="btn sbold uppercase btn-outline blue" value="New Noc" onclick="location.href='@Url.Action("PmtoBtrcNocRequest", "ProjectManager")?projectId=' + $('option:selected', $('#ProjectMasterId')).val()" />
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="col-lg-12">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Purchase Order Number</th>
+                        <th>Final Sample IMEI</th>
+                        <th>Action</th>
+                    </tr>
+                    @if (Model.ProjectBtrcNocModels.Any())
+                    {
+                        foreach (var v in Model.ProjectBtrcNocModels)
+                        {
+                            <tr>
+                                <td>@v.ProjectName</td>
+                                <td>@v.PoNo</td>
+                                <td>@v.FinalSampleImei</td>
+                                <td><button type="button" class="btn btn-xs btn-success btn-circle btnFilePreview " title="View Details" id="btnFileUpload" onclick="location.href='@Url.Action("PmtoBtrcNocRequest", "ProjectManager", new { projectId = @v.ProjectMasterId, orderId=@v.ProjectPurchaseOrderFormId, imei = @v.FinalSampleImei })'">Upload File</button></td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,181 @@
+﻿@model ProjectManagement.Models.ChargerPoModel
+@{
+    ViewBag.Title = "ChargerPo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ChargerPo", "Commercial", FormMethod.Post))
+{
+    @Html.HiddenFor(m=>m.Id)
+    @Html.HiddenFor(m=>m.AddedBy)
+    @Html.HiddenFor(m=>m.AddedDate)
+    @Html.HiddenFor(m=>m.UpdatedBy)
+    @Html.HiddenFor(m=>m.UpdatedDate)
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">Charger PO</div>  
+            <div class="tools">
+                <input type="button" value="List" class="btn btn-warning" onclick="window.location.href='@Url.Action("AccessoriesPoList","Commercial")'"/>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        PO no
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.ChargerPoNo, new { @class = "form-control",required="" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Date
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.ChargerPoDate, new { @class = "form-control date_picker" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Supplier
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.SupplierName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Order No
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.OrderNo, new { @class = "form-control",type="number" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Invoice
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.InvoiceNo, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        SL no
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.SlNo, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Description
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Supllier Address
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.SupplierAddress, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Quantity
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" ,type="number",min="0",required=""})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Voltage rating
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.VoltageRating, new { @class = "form-control" ,required=""})
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Current rating
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.CurrentRating, new { @class = "form-control", required="" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Port Type
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.PortType, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Charger type
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.ChargerType, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-2">
+                        Country of Origin
+                    </div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.CountryOfOrigin, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Remarks</div>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <input type="submit" class="btn btn-success" value="Add"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+    .date_picker {
+        width: 100%;
+    }
+</style>
+

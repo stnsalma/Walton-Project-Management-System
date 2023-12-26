@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0d6ca62e9516424ba46102eaf3afd714" Name="Diagram1">
+        <EntityTypeShape EntityType="WALTON.MRPModel.ArchivedScheduleDetail" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.BomProductModel" Width="1.5" PointX="7.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.BOM" Width="1.5" PointX="10" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.DailyProductionCapacity" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.DailyScheduleDetail" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.MasterSchedule" Width="1.5" PointX="3" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.Phase" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.PipelineStage" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.ProductType" Width="1.5" PointX="7.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.SafetyLevel" Width="1.5" PointX="9.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.ScheduleDetail" Width="1.5" PointX="5.25" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.StockCategory" Width="1.5" PointX="6.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.TimeLinePhase" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.TimeLineTaskLog" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.UOM" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="WALTON.MRPModel.WaltonOffDay" Width="1.5" PointX="10.75" PointY="9.75" IsExpanded="true" />
+        <AssociationConnector Association="WALTON.MRPModel.FK_ArchivedScheduleDetails_MasterSchedule" ManuallyRouted="false" />
+        <AssociationConnector Association="WALTON.MRPModel.FK_BOMs_BOMs" ManuallyRouted="false" />
+        <AssociationConnector Association="WALTON.MRPModel.FK_MasterSchedule_Phase" ManuallyRouted="false" />
+        <AssociationConnector Association="WALTON.MRPModel.FK_ScheduleDetails_MasterSchedule" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

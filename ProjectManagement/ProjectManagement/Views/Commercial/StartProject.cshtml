@@ -1,0 +1,385 @@
+﻿@model ProjectManagement.Models.ProjectMasterModel
+
+@{
+    ViewBag.Title = "StartProject";
+}
+<script src="~/Scripts/datetime/core.js"></script>
+<script src="~/Scripts/datetime/zebra_datepicker.js"></script>
+<script src="~/Scripts/required_if.js"></script>
+
+<script>
+    $(function () {
+        $(document).on('submit', 'form', function () {
+            var buttons = $(this).find('[type="submit"]');
+            if ($(this).valid()) {
+                buttons.each(function (btn) {
+                    $(buttons[btn]).prop('disabled', true);
+                });
+            } else {
+                buttons.each(function (btn) {
+                    $(buttons[btn]).prop('disabled', false);
+                });
+            }
+        });
+        $('#ProjectMasterModel_ApproxProjectOrderDate').Zebra_DatePicker();
+       
+    });
+</script>
+<div id=""></div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Project Open
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <!-- BEGIN FORM-->
+        @using (Html.BeginForm("StartProject", "Commercial", FormMethod.Post, new { @class = "form-horizontal portlet-body" }))
+        {
+            @Html.ValidationSummary(true)
+            if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+
+            <div class="form-body">
+                <h3 class="form-section">Project Info</h3>
+                
+                @*<div class="row">
+                   
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control" })</div>
+                        <div class="col-md-1">
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("StartProject", "Commercial")?projectId=' + $('option:selected', $('#ProjectDropdownId')).val()" />
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>*@
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Project Name</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model=>model.ProjectMasterId)
+                                @Html.HiddenFor(model=>model.SupplierName)
+                                @Html.HiddenFor(model=>model.Added)
+                                @Html.HiddenFor(model=>model.AddedDate)
+                                @Html.HiddenFor(model=>model.IsActive)
+                                @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.ProjectName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Project Type</label>
+                            <div class="col-md-9">
+
+                                @Html.DropDownListFor(model => model.ProjectTypeId, new SelectList(new[]
+                                {
+                                new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                new SelectListItem { Text = "Smart Phone", Value = "1"},
+                                new SelectListItem { Text = "Feature Phone", Value = "2"},
+                                new SelectListItem { Text = "Walpad/Tablet", Value = "3"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectTypeId, String.Empty, new { @style = "color:red;!important" })
+
+
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.Suppliers, "Value", "Text"), new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.SupplierName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier Model</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.SupplierModelName, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.SupplierModelName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Approx Price</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ApproximatePrice, new { type = "number", min = "0", step = "0.01", @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.ApproximatePrice, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">No Of Sample</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.NumberOfSample, new { type = "number", min = "0", step = "0.01", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.NumberOfSample, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Approx Finish Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ApproxProjectFinishDate, new { @class = "form-control date_picker", required = "required" })
+                                @Html.ValidationMessageFor(model => model.ApproxProjectFinishDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Trust Level</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.SupplierTrustLevel, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "HIGH", Value = "HIGH"},
+                                    new SelectListItem { Text = "LOW", Value = "LOW"},
+                                    new SelectListItem { Text = "MEDIUM", Value = "MEDIUM"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SupplierTrustLevel, String.Empty, new { @style = "color:red;!important", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Approx PO Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ApproxProjectOrderDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.ApproxProjectOrderDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Approx Shipment Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ApproxShipmentDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.ApproxShipmentDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">OS Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.OsName, new { @class = "form-control " })
+                                @Html.ValidationMessageFor(model => model.OsName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">OS Version</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.OsVersion, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.OsVersion, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Display Size</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.DisplaySize, new { type = "number", min = "0", step = "0.01", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DisplaySize, String.Empty, new { @style = "color:red;!important"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Display Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.DisplayName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DisplayName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                @*-------------------------*@
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">CPU Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ProcessorName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProcessorName, String.Empty, new { @style = "color:red;!important"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">CPU Clock Speed</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ProcessorClock, new { type = "number", min = "0", step = "0.01", @class = "form-control", placeholder = "GHz" })
+                                @Html.ValidationMessageFor(model => model.ProcessorClock, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Chipset</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.Chipset, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Chipset, String.Empty, new { @style = "color:red;!important"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Front Camera</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.FrontCamera, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.FrontCamera, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Back Camera</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.BackCamera, new { @class = "form-control " })
+                                @Html.ValidationMessageFor(model => model.BackCamera, String.Empty, new { @style = "color:red;!important"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">RAM</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.Ram, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Ram, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ROM</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.Rom, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Rom, String.Empty, new { @style = "color:red;!important"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Battery</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.Battery, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Battery, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Sim Slot No.</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.SimSlotNumber, new { @class = "form-control", type = "number"})
+                                @Html.ValidationMessageFor(model => model.SimSlotNumber, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Slot Type</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.SlotType, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SlotType, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Final Price</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.FinalPrice, new { type = "number", min = "0", step = "0.01", @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save" />
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- END FORM-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#SupplierId').on('change', function() {
+            $('#SupplierName').val($('#SupplierId option:selected').text());
+        });
+    });
+</script>

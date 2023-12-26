@@ -1,0 +1,529 @@
+﻿@using ProjectManagement.DAL.DbModel
+@using ProjectManagement.ViewModels.ProjectManager
+@model List<AssignProjectsViewModel>
+    @*datatable *@
+    <link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+    @*datatable *@
+
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome!@ViewBag.UserInfo.UserFullName
+
+                @if (ViewBag.UserInfo.RoleName == "PMHEAD")
+                {
+                    <small>Head of Project Management</small>
+
+                }
+
+            </h1>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+
+                        <span class="caption-subject #569450 sbold uppercase">List of Assigned Projects</span>
+                    </div>
+                </div>
+                <div class="portlet box #E2E8E4">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black">
+                            <i class="fa fa-cogs"></i>Assigned Projects
+                        </div>
+                        <div class="tools" style="background-color:#32C5D2;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    @*id="NewProjectTable">*@
+                    <div class="portlet-body">
+                        <div class="table-scrollable" style="overflow: auto;">
+                            <table id="NewProjectTable" class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content" style="background-color:  #32C5D2;color: white">
+                                    <tr>
+                                        <th class="hidden">ProjectMasterID</th>
+                                        <th class="text-center"> Project Name </th>
+                                        <th class="text-center"> Suppiler Name </th>
+                                        <th class="text-center"> Type </th>
+                                        <th class="text-center"> OS Version </th>
+                                        <th class="text-center"> PO Date </th>
+                                        <th class="text-center"> PO Number </th>
+                                        <th class="text-center">  Shipment Taken </th>
+                                        <th class="text-center">  LSD </th>
+                                        <th class="text-center"> Qunatity </th>
+                                        <th class="text-center"> Trust level </th>
+                                        <th class="text-center"> Chipset </th>
+                                        <th class="text-center"> Assign Date </th>
+                                        <th class="text-center"> PM </th>
+                                        <th class="hidden"></th>
+                                        <th class="hidden"></th>
+                                        <th class="text-center"> Hw Details </th>
+                                        <th class="text-center"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.GetAssignedProjectList != null)
+                                    {
+                                        foreach (var items in ViewBag.GetAssignedProjectList)
+                                        {
+
+                                            //var project = t.ProjectMasterModel;
+                                            //var projectAssignInfo = t.ProjectPmAssignModel;
+
+                                            //var pmUsers = t.PmCmnUserModel;
+                                            <tr>
+                                                <td class="hidden clsProjectMaseterId">@items.ProjectMasterId</td>
+                                                <td class="text-center"> @items.ProjectName </td>
+                                                <td class="text-center">@items.SupplierName </td>
+                                                <td class="text-center"> @items.ProjectType</td>
+                                                <td class="text-center"> @(items.OsName + " " + @items.OsVersion) </td>
+                                                <td class="text-center">
+                                                    @if (@items.PoDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                                </td>
+                                                <td class="text-center pOorderId">@items.PurchaseOrderNumber</td>
+                                                <td class="text-center">
+                                                    @if (@items.ShipmentTaken != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.ShipmentTaken)}
+                                                </td>
+                                                <td class="text-center">
+                                                    @if (@items.LSD != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.LSD)}
+                                                </td>
+                                                <td class="text-center"> @items.NumberOfSample </td>
+                                                <td class="text-center"> @items.SupplierTrustLevel </td>
+                                                <td class="text-center"> @items.Chipset  </td>
+                                                <td class="text-center">
+                                                    @if (@items.AssignDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.AssignDate)}
+
+                                                </td>
+                                                <td class="text-center assignPersonName" id="assignPersonName">
+
+                                                    @items.UserFullName
+                                                </td>
+                                                <td class="text-center" style="display: none">
+                                                    <input type="hidden"
+                                                           value="@items.ProjectMasterId" id="ProMasID">
+                                                </td>
+
+                                                <td class="text-center" style="display: none">
+                                                    <input type="hidden" value="@items.ProjectManagerUserId" class="pmUserIdForDeleting">
+                                                </td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-circle btn-sm blue btn-outline btnProjectAssignHwDetails">
+                                                        Details<i class="icon-doc">
+
+                                                        </i>
+                                                    </button>
+                                                </td>
+
+                                                <td class="text-center">
+                                                    <button class="btn btn-circle btn-sm red btn-outline btnProjectReAssign">
+                                                        Re-Assign<i class="icon-users"> </i>
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+                                            @*<tr>
+                                                    <td class="hidden clsProjectMaseterId">@project.ProjectMasterId</td>
+                                                    <td class="text-center"> @project.ProjectName </td>
+                                                    <td class="text-center">@project.SupplierName </td>
+                                                    <td class="text-center"> @project.ProjectType</td>
+                                                    <td class="text-center"> @(project.OsName + " " + @project.OsVersion) </td>
+                                                    <td class="text-center">
+                                                        @if (project.PoDate != null)
+                                                        {
+                                                            @project.PoDate.Value.ToString("yyyy-MM-dd")
+                                                        }
+                                                    </td>
+                                                    <td class="text-center pOorderId">@project.PurchaseOrderNumber</td>
+                                                    <td class="text-center">
+                                                        @if (project.ShipmentTaken != null)
+                                                        {
+                                                            @project.ShipmentTaken.Value.ToString("yyyy-MM-dd")
+                                                        }
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if (project.LSD != null)
+                                                        {
+                                                            @project.LSD.Value.ToString("yyyy-MM-dd")
+                                                        }
+                                                    </td>
+                                                    <td class="text-center"> @project.NumberOfSample </td>
+                                                    <td class="text-center"> @project.SupplierTrustLevel </td>
+                                                    <td class="text-center"> @project.Chipset  </td>
+                                                    <td class="text-center">
+
+                                                        @if (projectAssignInfo.AssignDate != null)
+                                                        {
+                                                            @projectAssignInfo.AssignDate.ToString("yyyy-MM-dd")
+                                                        }
+                                                    </td>
+                                                    <td class="text-center assignPersonName" id="assignPersonName">
+
+                                                        @pmUsers.UserFullName
+                                                    </td>
+                                                    <td class="text-center" style="display: none">
+                                                        <input type="hidden"
+                                                               value="@project.ProjectMasterId" id="ProMasID">
+                                                    </td>
+
+                                                    <td class="text-center" style="display: none">
+                                                        <input type="hidden"
+                                                               value="@projectAssignInfo.ProjectManagerUserId" class="pmUserIdForDeleting">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-circle btn-sm blue btn-outline btnProjectAssignHwDetails">
+                                                            Details<i class="icon-doc">
+
+                                                            </i>
+                                                        </button>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <button class="btn btn-circle btn-sm red btn-outline btnProjectReAssign">
+
+                                                            Re-Assign<i class="icon-users"> </i>
+                                                        </button>
+                                                    </td>
+
+                                                </tr>*@
+                                        }
+                                    }
+
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!----Modal for Qc Re Assign--->
+    <div id="PmInchargeToPmReAssignModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="font-weight: bold;color: black;">Delete and Re-Assign project to PM</h4>
+                    <h4 class="modal-title" id="lblPmprojectMasterId1" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblPmPOorder1" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblPmAssignUserId" style="display:none;"></h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+
+                            <label for="recipient-name" class="control-label">Project Name :</label>
+                            <input name="lblPmprojectName1" id="lblPmprojectName1" disabled="disabled" type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label">Assigned Persons Name :</label>
+                            <input name="lblAssignPersonName1" id="lblAssignPersonName1" disabled="disabled" type="text" class="form-control">
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label"><span class="required"> * </span>Delete any Assigned PM : </label>
+                            <input name="lblDeletedPersonName1" id="lblDeletedPersonName1" disabled="disabled" type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label"><span class="required"> * </span>Remarks, why you are deleting User ?</label>
+                            <textarea name="PmInchargeDeletePmComment" id="PmInchargeDeletePmComment" class="form-control"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="singleOne" class="control-label"><span class="required"> * </span>Assign New PM's : </label>
+                            <select name="singleOne" id="singleOne" class="form-control">
+                                <option value=0 style="text-align: center">----- Select New Project Manager -----</option>
+                                @if (ViewBag.GetPmCmnUsers != null)
+                                {
+                                    foreach (var item in ViewBag.GetPmCmnUsers)
+                                    {
+                                        <option value="@item.CmnUserId">
+                                            @item.UserFullName
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Comments :</label>
+                            <textarea name="PmInchargeReassignToPmComment" id="PmInchargeReassignToPmComment" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label"><span class="required"> * </span>Approx. PM Project Finish Time</label>
+
+                            <input class="form-control" name="ApproxPmInchargeToPmFinishDate" id="ApproxPmInchargeToPmFinishDate" type="text" placeholder="yyyy-mm-dd">
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnReAssignToQcConfirm">Confirm</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    <script>
+        $('#NewProjectTable').DataTable();
+
+        $(document).ready(function () {
+
+
+            var currentRow;
+            $('#NewProjectTable').on('click', '.btnProjectReAssign', function () {
+                var projectMasterId = $(this).parents('tr').find('input:hidden[id=ProMasID]').val();
+                var rowIndex = $(this).closest('tr').index() + 1;
+                var table = document.getElementById('NewProjectTable');
+                var projectName = table.rows[rowIndex].cells[1].innerHTML;
+                console.log(projectMasterId + "-------->" + projectName);
+                //var poNumber = $(this).parents('tr').find('input:hidden[class=pOorderId]').val();
+                //console.log("po number------>" + poNumber);
+                var poNumber = table.rows[rowIndex].cells[6].innerHTML;
+                console.log("po number------>" + poNumber);
+                var assignPersonNames = table.rows[rowIndex].cells[13].innerHTML;
+
+                console.log("assignPersonName  :" + assignPersonNames);
+
+                //pmUserIdForDeleting
+                var assignPersonDeletingId = $(this).parents('tr').find('input:hidden[class=pmUserIdForDeleting]').val();
+                console.log("assignPersonDeletingId  :" + assignPersonDeletingId);
+
+                $('#PmInchargeToPmReAssignModal').modal();
+                $('#lblPmprojectName1').val(projectName);
+                $('#lblPmprojectMasterId1').val(projectMasterId);
+                $('#lblAssignPersonName1').val(assignPersonNames);
+                $('#lblDeletedPersonName1').val(assignPersonNames);
+                $('#lblPmPOorder1').val(poNumber);
+                $('#lblPmAssignUserId').val(assignPersonDeletingId);
+                console.log("po number------>" + poNumber);
+
+                currentRow = $(this).closest('tr');
+            });
+
+        });
+
+
+        $(function () {
+            $('#NewProjectTable').on('click', '.btnProjectAssignHwDetails', function () {
+                var tableId = $(this).closest('table').prop('id');
+                if (tableId === "NewProjectTable") {
+                    //var projectId = $(this).closest("tr").find($("[class*=clsProjectMaseterId]")).html();
+                    var projectId = $(this).closest("tr").find('td:nth-child(1)').html();
+                    var projectName = $(this).closest("tr").find('td:nth-child(2)').html();
+                    var url = '@Url.Action("PmHeadHwAndSwSummary", "ProjectManager")?projectMasterId=' + projectId + '&projectName=' + encodeURIComponent(projectName);
+                    window.open(url);
+                }
+
+            });
+
+            @*$('[class*="btnProjectAssignSwDetails"]').click(function (e) {
+            e.preventDefault();
+
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "NewProjectTable") {
+                var projectId = $(this).closest("tr").find('td:nth-child(1)').html();
+                var swqcInchargeAsngId = 0;
+                swqcInchargeAsngId = $(this).closest("tr").find('td:nth-child(19)').html();
+
+                if (swqcInchargeAsngId > 0) {
+                    var url = '@Url.Action("DetailsOfSwQcTestCase", "Software")?projectId=' + projectId + '&swqcInchargeAsngId=' + swqcInchargeAsngId;
+                    window.open(url);
+                } else {
+                    var url = '@Url.Action("DetailsOfSwQcTestCase", "Software")?projectId=' + projectId + '&swqcInchargeAsngId=' + 0;
+                    window.open(url);
+                }
+            }
+
+        });*@
+
+            var date = new Date();
+            var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            $('#ApproxPmInchargeToPmFinishDate').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                //startDate: today,
+                //endDate: 0
+            });
+
+            $('#singleOne').chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, nothing found!",
+                width: "95%"
+            });
+
+            $('#btnReAssignToQcConfirm').on('click', function (e) {
+                e.preventDefault();
+                var pmAssignPeopleDelete = $('#lblDeletedPersonName1').val();
+
+                var pmAssignPeopleReassign = $('#singleOne').val();
+                // var pmAssignPeopleReassign1 = $('#singleOne').text();
+
+                console.log("reassign value :" + pmAssignPeopleReassign);
+                //console.log("reassign text :" + pmAssignPeopleReassign1);
+
+                var pmInchargeDeleteQcComment1 = $('#PmInchargeDeletePmComment').val();
+
+                if (pmAssignPeopleDelete != null && (pmInchargeDeleteQcComment1.length == 0 || pmInchargeDeleteQcComment1 == null || pmInchargeDeleteQcComment1 == "undefined")) {
+                    $('#PmInchargeToPmReAssignModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must write Remarks, why you are deleting User?",
+                    }).show();
+
+                    return false;
+                }
+                if (pmAssignPeopleReassign == 0) {
+                    $('#PmInchargeToPmReAssignModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Assign New Project Manager.",
+                    }).show();
+
+                    return false;
+                }
+                //Approx. QC completion Time
+                var pmAproDate = $('#ApproxPmInchargeToPmFinishDate').val();
+
+                if (pmAssignPeopleReassign != null && (pmAproDate == "" || pmAproDate == null)) {
+                    $('#PmInchargeToPmReAssignModal').modal('hide');
+                    // alert("Please must Load a Project which you want to submit to QcInchare..");
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Approx. PM completion Time.",
+                    }).show();
+
+                    return false;
+                }
+
+
+                var projectMasterId = $('#lblPmprojectMasterId1').val();
+                var approxPmInchargeToPmFinishDate = $('#ApproxPmInchargeToPmFinishDate').val();
+                var pmInchargeDeleteQcComment = $('#PmInchargeDeletePmComment').val();
+                var projectHeadRemarks = $('#PmInchargeReassignToPmComment').val();
+                var multideleteValue = $('#lblDeletedPersonName1').val();
+                var multiReassignValue = $('#singleOne').val();
+                var poNumber = $('#lblPmPOorder1').val();
+                var multideleteID = $('#lblPmAssignUserId').val();
+
+                console.log("poNumber  :" + poNumber);
+                console.log(projectMasterId);
+                console.log(approxPmInchargeToPmFinishDate);
+                console.log(pmInchargeDeleteQcComment);
+                console.log(projectHeadRemarks);
+                console.log(multideleteValue);
+                console.log(multiReassignValue);
+                console.log(poNumber);
+                console.log(multideleteID);
+
+                alertify.confirm('Confirm message', 'Do you want to Proceed this?', function () {
+                    alertify.success('Ok');
+                    refresh();
+                    e.preventDefault();
+                    var obj = {};
+
+                    obj.projectMasterId = projectMasterId;
+                    obj.approxPmInchargeToPmFinishDate = approxPmInchargeToPmFinishDate;
+                    obj.pmInchargeDeleteQcComment = pmInchargeDeleteQcComment;
+                    obj.projectHeadRemarks = projectHeadRemarks;
+                    obj.multideleteValue = multideleteValue;
+                    obj.multiReassignValue = multiReassignValue;
+                    obj.poNumber = poNumber;
+                    obj.multideleteID = multideleteID;
+
+                    console.log(obj.projectMasterId);
+                    console.log(obj.approxPmInchargeToPmFinishDate);
+                    console.log(obj.pmInchargeDeleteQcComment);
+                    console.log(obj.projectHeadRemarks);
+                    console.log(obj.multideleteValue);
+                    console.log(obj.multiReassignValue);
+                    console.log(obj.poNumber);
+                    console.log(obj.multideleteID);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("PmReassignFromPmIncharge", "ProjectManager")',
+                        data: "{ projectMasterId: '" + obj.projectMasterId
+                            + "', approxPmInchargeToPmFinishDate: '" + obj.approxPmInchargeToPmFinishDate
+                            + "', pmInchargeDeleteQcComment: '" + obj.pmInchargeDeleteQcComment
+                            + "', projectHeadRemarks: '" + obj.projectHeadRemarks
+                            + "', multideleteValue: '" + obj.multideleteValue
+                            + "', multiReassignValue: '" + obj.multiReassignValue
+                            + "', poNumber: '" + obj.poNumber
+                            + "', multideleteID: '" + obj.multideleteID
+                            + "'}",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data) {
+
+                            if (!data.success) {
+                                if (data.errors.name) {
+                                    //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+
+                                }
+                            }
+                            else {
+                                //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+
+                                console.log(data);
+
+                            }
+                        }
+                    });
+                    e.preventDefault(); //Prevent the default submit
+                    window.location = '@Url.Action("ListofAssignedProject", "ProjectManager")';
+                    //refresh();
+
+                }
+                    , function () {
+                        alertify.error('Cancel');
+
+                    });
+
+            });
+
+        });
+        function refresh() {
+            $.blockUI({ message: '<h1><img src="~/img/loading-spinner-grey.gif" /> LOADING..</h1>' });
+            setTimeout(function () {
+                window.location.reload();
+
+            }, 1000);
+        }
+    </script>
+    @*datatable*@
+    <script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+    <script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+    <script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>
+    @*datatable*@

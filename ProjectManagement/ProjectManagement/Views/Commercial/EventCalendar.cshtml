@@ -1,0 +1,120 @@
+﻿
+<h2>EventCalender</h2>
+<div id="calender"></div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p id="poDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>      
+        </div>
+    </div>
+</div>
+
+<style>
+    #calender {
+        background-color: white
+    }
+</style>
+
+<link href="~/Scripts/fullcalendar-3.9.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/Scripts/fullcalendar-3.9.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+@section Scripts{
+<script src="~/Scripts/fullcalendar-3.9.0/lib/jquery-ui.min.js"></script>
+<script src="~/Scripts/fullcalendar-3.9.0/fullcalendar.min.js"></script>
+<script src="~/Scripts/fullcalendar-3.9.0/lib/moment.min.js"></script>
+    @* ReSharper disable once DuplicatingLocalDeclaration *@
+    <script>
+        $(document).ready(function() {
+            var events = [];
+          
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetCalendarEvents", "Commercial")',
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        events.push({
+                            //title: v.Title + ', ' + v.Description,                      
+                            //description: v.Description,
+                            //start: v.Start,
+                            //end:v.End,
+                            //color: "#006B00",
+                            //allDay:true
+                            //moment(startdate, "DD-MM-YYYY").add('days', 5);
+                            //   start: moment(v.Title.split(':').pop()).add(1),
+                            //console.log(str.slice(str.lastIndexOf('-')+1));​
+
+
+                            title: v.Title1 + ' ' + moment(v.Title2).format("YYYY-MM-DD"),
+                            start: moment(v.Start),
+                            description: "<br/><br/><b>SupplierName:</b> " + v.SupplierName + ' <br/>' + "ShipmentType: " + v.ShipmentType + '<br/> ' + "Quantity: " + v.Quantity + ' <br/>' + "PoCategory: "
+                                + v.PoCategory + ' <br/>' + "OrderNumber: " + v.OrderNuber + ' <br/>' + "ApproxShipmentDate: " + moment(v.ApproxShipmentDate).format("YYYY-MM-DD")
+                                + ' <br/>' + "ChainaInspectionDate: " + moment(v.ChainaInspectionDate).format("YYYY-MM-DD") + ' <br/>' + "WarehouseEntryDate: " + moment(v.WarehouseEntryDate).format("YYYY-MM-DD"),
+                            color: v.CmColor,
+                            allDay: true
+                        });
+                    });
+                    
+                    //events.push({
+                    //    title: data.Title+', '+data.Description,
+                    //    description: data.Description,
+                    //    start: data.Start,
+                    //    color: '#006B00',                      
+                    //    allDay: true,                       
+                    //});
+                    generateCalender(events);
+                },
+                error: function(error) {
+                    alert('failed');
+                }
+            });
+
+          
+        });
+        function generateCalender(events) {
+              $('#calender').fullCalendar('destroy');
+              $('#calender').fullCalendar({
+              //  backgroundColor: '#F9F8F9',
+                contentHeight: 400,
+                defaultDate: new Date(),
+                timeFormat: 'h(:mm)a',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month, basicWeek,basicDay,agenda'
+                },
+                eventLimit: 3,
+                eventColor: '#378006',           
+                events: events,
+                eventClick: function(calEvent,jsEvent,view) {
+                    $('#myModal #eventTitle').text(calEvent.title);
+                    
+                    //important////
+                    //var $description = $('<div/>');
+                    //$description.append($('<p/>').html('<b>Start:</b>' + calEvent.start.format("YYYY-MM-DD")));
+                    //if (calEvent.end != null) {
+                    //    $description.append($('<p/>').html('<b>End:</b>' + calEvent.end.format("YYYY-MM-DD")));
+                    //}
+                    //$description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+                    //$('#myModal #poDetails').empty().html($description);
+                    //$('#myModal').modal();
+                    //important///
+
+                    var $description = $('<div/>');
+                    $description.append($('<p/>').html('<b class="bold">Start:</b>' + calEvent.start.format("YYYY-MM-DD")));
+                    $description.append($('<p/>').html('<b class="bold">Description:</b>' + calEvent.description));
+                    $('#myModal #poDetails').empty().html($description);
+                    $('#myModal').modal();
+                }
+            });
+        }
+    </script>
+}

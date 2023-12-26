@@ -1,0 +1,617 @@
+﻿@*<h2>WpmsAllProjects</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Common.VmWpmsAllProjectDetails
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+@using (@Html.BeginForm("WpmsAllProjects", "Common", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box green-seagreen">
+                <div class="portlet-title">
+                    <div class="caption">
+                        All WPMS Project List
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <br />
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2" style="color: brown;"></div>
+                            <div class="col-lg-8" style="color: brown;">
+                                <div class="col-lg-3" style="color: brown; font-weight: bold">Select Project</div>
+                                <div class="col-lg-9">
+                                    @if (ViewBag.GetAllModels != null)
+                                    {
+                                    @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.GetAllModels, "Value", "Text"), "ALL", new { @class = "dropForProject form-control ddChosen", @id = "dropForProject", @onchange = "LoadOrders()", Value = @Model.ProjectName })
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2" style="color: brown;"></div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2" style="color: brown;"></div>
+                            <div class="col-lg-8" style="color: brown;">
+                                <div class="col-lg-3" style="color: brown; font-weight: bold">Orders</div>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.Orders, new SelectList(ViewBag.ProjectOrderLists, "Value", "Text"), "ALL", new { @class = "ProjectMasterId2 form-control", @id = "ProjectMasterId2" })
+                                </div>
+                            </div>
+                            <div class="col-lg-4" style="color: brown;"></div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2" style="color: brown;"></div>
+                            <div class="col-lg-8" style="color: brown;">
+                                <div class="col-lg-3" style="color: brown; font-weight: bold">Select Status</div>
+                                <div class="col-lg-9">
+                                    @if (ViewBag.GetAllProStatus != null)
+                                    {
+                                    @Html.DropDownListFor(model => model.ProjectStatus, new SelectList(ViewBag.GetAllProStatus, "Value", "Text"), "ALL", new { @class = "dropForProjectStatus form-control ", @id = "dropForProjectStatus" })
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2" style="color: brown;"></div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-2" style="color: brown;"></div>
+                            <div class="col-lg-8" style="color: brown;">
+                                <div class="col-lg-3" style="color: brown; font-weight: bold">Initial Appoval Pending</div>
+                                <div class="col-lg-9">
+                                    @if (ViewBag.GetAllProInitialAppoval != null)
+                                    {
+                                    @Html.DropDownListFor(model => model.InitialApprovalPendings, new SelectList(ViewBag.GetAllProInitialAppoval, "Value", "Text"), "ALL", new { @class = "dropForInitialAppoval form-control ", @id = "dropForInitialAppoval" })
+                                    }
+
+                                </div>
+                            </div>
+                            <div class="col-lg-2" style="color: brown;"></div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-lg-4" style="color: brown;"></div>
+                            <div class="col-lg-4" style="color: brown;">
+                                <input type="button" id="btnLoad" class="btn sbold uppercase btn-outline blue" value="LOAD" onclick="location.href = '@Url.Action("WpmsAllProjects", "Common")?ProjectName=' + $('option:selected', $('#dropForProject')).text()+ '&Orders=' + $('option:selected', $('#ProjectMasterId2')).text()+ '&ProStatus=' + $('option:selected', $('#dropForProjectStatus')).text()+ '&InitialApproval=' + $('option:selected', $('#dropForInitialAppoval')).text() " />
+                            </div>
+                            <div class="col-lg-4" style="color: brown;"></div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box green-seagreen">
+                <div class="portlet-title">
+                    <div class="caption">
+                        Project Details
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <br />
+                    <div class="table-responsive  table-scrollable">
+                        <table class="table table-striped table-bordered table-hover table-responsive  table-scrollable tbl1" id="tbl1">
+                            <thead class="flip-content">
+                                <tr class="trClsforSize" style="font-weight: bold">
+                                    <th style="text-align: center; font-size: 12px; "> ProjectMasterId </th>
+                                    <th style="text-align: center; font-size: 12px;"> ProjectName </th>
+                                    <th style="text-align: center; font-size: 12px;"> Project Model</th>
+                                    <th style="text-align: center; font-size: 12px"> Order<br />Number </th>
+                                    <th style="text-align: center; font-size: 12px;color: red"> IsActive Project?</th>
+                                    <th style="text-align: center; font-size: 12px"> Project <br />CreationDate </th>
+                                    <th style="text-align: center; font-size: 12px"> SupplierName </th>
+                                    <th style="text-align: center; font-size: 12px"> ProjectStatus </th>
+                                    <th style="text-align: center; font-size: 12px"> Initial Approval Pending </th>
+                                    <th style="text-align: center; font-size: 12px"> Po Date </th>
+                                    <th style="text-align: center; font-size: 12px"> ProjectManager Name </th>
+                                    <th style="text-align: center; font-size: 12px">Market <br />ClearanceDate</th>
+                                    <th style="text-align: center; font-size: 12px; color: red"> IsActive Order?</th>
+                                    <th style="text-align: center; font-size: 12px"> OrderQuantity </th>
+                                    <th style="text-align: center; font-size: 12px"> Details </th>
+                                    <th style="text-align: center; font-size: 12px;display: none"> Hidden Value </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (ViewBag.GetProjectSpec != null)
+                                {
+                                    foreach (var item in ViewBag.GetProjectSpec)
+                                    {
+                                <tr class="trClsforSize" style="text-align: center">
+                                    <td style="text-align: left">@item.ProjectMasterId</td>
+                                    <td style="text-align: left">@item.ProjectName</td>
+                                    <td style="text-align: left">@item.ProjectModel</td>
+                                    <td style="text-align: left">@item.Orders</td>
+                                    <td style="text-align: left">@item.IsActiveStatus</td>
+                                    <td style="text-align: left">
+                                        @if (@item.ProjectCreationDate != null)
+                                                {
+                                                @String.Format("{0:yyyy-MM-dd}", @item.ProjectCreationDate)
+                                                }
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.SupplierName
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.ProjectStatus
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.InitialApprovalPendings
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.PoDate
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.ProjectManagerName
+                                    </td>
+                                    <td style="text-align: left">
+                                        @if (@item.MarketClearanceDate != null)
+                                                {
+                                                @String.Format("{0:yyyy-MM-dd}", @item.MarketClearanceDate)
+                                                }
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.IsActiveOrder
+                                    </td>
+                                    <td style="text-align: left">
+                                        @item.OrderQuantity
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btnDetails" id="btnDetails">
+                                            Details
+                                        </button>
+                                    </td>
+                                    <td style="display: none">
+                                        <input type="text" value="@item.Ram" class="Ram" id="Ram" style="display: none" />
+                                        <input type="text" value="@item.Rom" class="Rom" id="Rom" style="display: none" />
+                                        <input type="text" value="@item.SupplierTrustLevel" class="SupplierTrustLevel" id="SupplierTrustLevel" style="display: none" />
+                                        <input type="text" value="@item.OsName" class="OsName" id="OsName" style="display: none" />
+
+
+                                        <input type="text" value="@item.OsVersion" class="OsVersion" id="OsVersion" style="display: none" />
+                                        <input type="text" value="@item.DisplaySize" class="DisplaySize" id="DisplaySize" style="display: none" />
+                                        <input type="text" value="@item.DisplayName" class="DisplayName" id="DisplayName" style="display: none" />
+                                        <input type="text" value="@item.ProcessorName" class="ProcessorName" id="ProcessorName" style="display: none" />
+
+                                        <input type="text" value="@item.ProcessorClock" class="ProcessorClock" id="ProcessorClock" style="display: none" />
+                                        <input type="text" value="@item.Chipset" class="Chipset" id="Chipset" style="display: none" />
+                                        <input type="text" value="@item.FrontCamera" class="FrontCamera" id="FrontCamera" style="display: none" />
+                                        <input type="text" value="@item.FrontCam" class="FrontCam" id="FrontCam" style="display: none" />
+
+                                        <input type="text" value="@item.BackCam" class="BackCam" id="BackCam" style="display: none" />
+                                        <input type="text" value="@item.BackCamera" class="BackCamera" id="BackCamera" style="display: none" />
+                                        <input type="text" value="@item.Battery" class="Battery" id="Battery" style="display: none" />
+                                        <input type="text" value="@item.SimSlotNumber" class="SimSlotNumber" id="SimSlotNumber" style="display: none" />
+
+                                        <input type="text" value="@item.ProjectNameForScreening" class="ProjectNameForScreening" id="ProjectNameForScreening" style="display: none" />
+                                        <input type="text" value="@item.PcbaFinalVendor" class="PcbaFinalVendor" id="PcbaFinalVendor" style="display: none" />
+
+                                        <input type="text" value="@item.PcbaVendorName" class="PcbaVendorName" id="PcbaVendorName" style="display: none" />
+                                        <input type="text" value="@item.DisplayResulution" class="DisplayResulution" id="DisplayResulution" style="display: none" />
+                                        <input type="text" value="@item.Color" class="Color" id="Color" style="display: none" />
+                                        <input type="text" value="@item.BatteryType" class="BatteryType" id="BatteryType" style="display: none" />
+                                        <input type="text" value="@item.BatteryRating" class="BatteryRating" id="BatteryRating" style="display: none" />
+                                        <input type="text" value="@item.DisplayResulution" class="SecondGen" id="SecondGen" style="display: none" />
+
+                                        <input type="text" value="@item.FlashLight" class="FlashLight" id="FlashLight" style="display: none" />
+                                        <input type="text" value="@item.BatteryCoverLogoType" class="BatteryCoverLogoType" id="BatteryCoverLogoType" style="display: none" />
+                                        <input type="text" value="@item.SpecialSensor" class="SpecialSensor" id="SpecialSensor" style="display: none" />
+                                        <input type="text" value="@item.Gps" class="Gps" id="Gps" style="display: none" />
+
+                                        <input type="text" value="@item.Otg" class="Otg" id="Otg" style="display: none" />
+                                        <input type="text" value="@item.HallSensor" class="HallSensor" id="HallSensor" style="display: none" />
+                                        <input type="text" value="@item.Gyroscope" class="Gyroscope" id="Gyroscope" style="display: none" />
+                                        <input type="text" value="@item.Compass" class="Compass" id="Compass" style="display: none" />
+
+                                        <input type="text" value="@item.Lsensor" class="Lsensor" id="Lsensor" style="display: none" />
+                                        <input type="text" value="@item.Psensor" class="Psensor" id="Psensor" style="display: none" />
+                                        <input type="text" value="@item.Gsensor" class="Gsensor" id="Gsensor" style="display: none" />
+                                        <input type="text" value="@item.ChipsetCore" class="ChipsetCore" id="ChipsetCore" style="display: none" />
+
+                                        <input type="text" value="@item.ChipsetBit" class="ChipsetBit" id="ChipsetBit" style="display: none" />
+                                        <input type="text" value="@item.ChipsetFrequency" class="ChipsetFrequency" id="ChipsetFrequency" style="display: none" />
+                                        <input type="text" value="@item.ChipsetName" class="ChipsetName" id="ChipsetName" style="display: none" />
+                                        <input type="text" value="@item.CpuName" class="CpuName" id="CpuName" style="display: none" />
+                                        <input type="text" value="@item.FrontCamBsi" class="FrontCamBsi" id="FrontCamBsi" style="display: none" />
+                                        <input type="text" value="@item.FrontCamSensor" class="FrontCamSensor" id="FrontCamSensor" style="display: none" />
+                                    </td>
+                                </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="deniedModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 1200px; margin-left: -220px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color:red;font-weight: bold;text-align: center">Project Specification Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                @*<div class="form-group col-lg-12">*@
+                                <div class="control-label col-md-12" style="font-weight: bold">
+                                    <input type="text" id="lblprojectName" class="form-control" style="font-weight: bold;text-align: center" />
+                                </div>
+                                <br />
+                                <div class="form-group col-lg-12">
+                                    <div class="col-md-12" style="float: left;margin-left: 10px;width: 1150px !important">
+
+                                        <div class="table-responsive  table-scrollable">
+                                            <table class="table table-striped table-bordered table-hover table-responsive  table-scrollable">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Ram</td>
+                                                        <td style="border: 1px solid black;width:380px !important"><input type="text" id="lblRam" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">Rom</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblRom" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">SupplierTrustLevel</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblSupplierTrustLevel" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">OsName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblOsName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">OsVersion</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblOsVersion" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">DisplaySize</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblDisplaySize" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">DisplayName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblDisplayName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">ProcessorName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblProcessorName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">ProcessorClock</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblProcessorClock" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">Chipset</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblChipset" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">FrontCamera</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblFrontCamera" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">FrontCam</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblFrontCam" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">BackCam</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBackCam" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">BackCamera</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBackCamera" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Battery</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBattery" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">SimSlotNumber</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblSimSlotNumber" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">ProjectNameForScreening</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblProjectNameForScreening" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">PcbaFinalVendor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblPcbaFinalVendor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    @*//*@
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">PcbaVendorName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblPcbaVendorName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">DisplayResulution</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblDisplayResulution" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Color</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblColor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">BatteryType</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBatteryType" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">BatteryRating</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBatteryRating" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">DisplayResulution</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblDisplayResulution" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">FlashLight</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblFlashLight" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">BatteryCoverLogoType</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblBatteryCoverLogoType" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">SpecialSensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblSpecialSensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">Gps</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblGps" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Otg</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblOtg" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">HallSensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblHallSensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Gyroscope</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblGyroscope" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">Compass</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblCompass" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Lsensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblLsensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">Psensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblPsensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">Gsensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblGsensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">ChipsetCore</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblChipsetCore" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">ChipsetBit</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblChipsetBit" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">ChipsetFrequency</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblChipsetFrequency" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">ChipsetName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblChipsetName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">CpuName</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblCpuName" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border: 1px solid black;width:320px !important">FrontCamBsi</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblFrontCamBsi" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                        <td style="border: 1px solid black;width:320px !important">FrontCamSensor</td>
+                                                        <td style="border: 1px solid black; width: 380px !important"><input type="text" id="lblFrontCamSensor" class="form-control" style="border: 1px solid black; width: 380px !important; " readonly="readonly" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <input type="text" id="lblprojectId" class="form-control" style="border: none;display: none" />
+                                    </div>
+                                </div>
+                                @*</div>*@
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2" style="color: red;font-weight: bold">OK</button>
+                @*<button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnDeclined" id="btnDeclined">Confirm</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //var selectedStatus = document.getElementById('dropForProjectStatus');
+    //var selectedStatus1 = selectedStatus.options[selectedStatus.selectedIndex].text;
+    //var selectedStatus2 = selectedStatus.options[selectedStatus.selectedIndex].value;
+
+    //////
+    //var selectedInitial = document.getElementById('dropForInitialAppoval');
+    //var selectedStatus3 = selectedInitial.options[selectedInitial.selectedIndex].text;
+    //var selectedStatus4 = selectedInitial.options[selectedInitial.selectedIndex].value;
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+    });
+    function LoadOrders() {
+        var selectedProject = document.getElementById('dropForProject');
+        var selectedProjectName = selectedProject.options[selectedProject.selectedIndex].text;
+        var selectedProjectId = selectedProject.options[selectedProject.selectedIndex].value;
+
+        console.log("selectedProjectName  :" + selectedProjectName);
+        console.log("selectedProjectId  :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetProjectOrders", "Common")',
+            type: "GET",
+            dataType: "JSON",
+            data: { ProjectName: selectedProjectName },
+            success: function (data) {
+                console.log(data);
+                $('#ProjectMasterId2').empty();
+                $('#ProjectMasterId2').append($('<option>', {
+                    value: 'ALL',
+                    text: 'ALL'
+                }));
+                var items = $.parseJSON(data);
+
+                $.each(items, function (i, item) {
+                    $('#ProjectMasterId2').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+    }
+    $(document).ready(function () {
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "order": [[1, 'desc']]
+        });
+        //t.on('order.dt search.dt', function () {
+        //    t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+
+        $("body").on("click", "#tbl1 #btnDetails", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl1');
+
+            var proIds = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var proName = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var orders = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var ram = $(this).parents('tr').find('input:hidden[id=Ram]').val();
+            var rom = $(this).parents('tr').find('input:hidden[id=Rom]').val();
+
+            var SupplierTrustLevel = $(this).parents('tr').find('input:hidden[id=SupplierTrustLevel]').val();
+            var OsName = $(this).parents('tr').find('input:hidden[id=OsName]').val();
+            var OsVersion = $(this).parents('tr').find('input:hidden[id=OsVersion]').val();
+            var DisplaySize = $(this).parents('tr').find('input:hidden[id=DisplaySize]').val();
+
+            var DisplayName = $(this).parents('tr').find('input:hidden[id=DisplayName]').val();
+            var ProcessorName = $(this).parents('tr').find('input:hidden[id=ProcessorName]').val();
+            var ProcessorClock = $(this).parents('tr').find('input:hidden[id=ProcessorClock]').val();
+            var Chipset = $(this).parents('tr').find('input:hidden[id=Chipset]').val();
+            var FrontCamera = $(this).parents('tr').find('input:hidden[id=FrontCamera]').val();
+            var FrontCam = $(this).parents('tr').find('input:hidden[id=FrontCam]').val();
+
+            var BackCam = $(this).parents('tr').find('input:hidden[id=BackCam]').val();
+            var BackCamera = $(this).parents('tr').find('input:hidden[id=BackCamera]').val();
+            var Battery = $(this).parents('tr').find('input:hidden[id=Battery]').val();
+            var SimSlotNumber = $(this).parents('tr').find('input:hidden[id=SimSlotNumber]').val();
+            var ProjectNameForScreening = $(this).parents('tr').find('input:hidden[id=ProjectNameForScreening]').val();
+            var PcbaFinalVendor = $(this).parents('tr').find('input:hidden[id=PcbaFinalVendor]').val();
+
+
+
+            var PcbaVendorName = $(this).parents('tr').find('input:hidden[id=PcbaVendorName]').val();
+            var DisplayResulution = $(this).parents('tr').find('input:hidden[id=DisplayResulution]').val();
+            var Color = $(this).parents('tr').find('input:hidden[id=Color]').val();
+            var BatteryType = $(this).parents('tr').find('input:hidden[id=BatteryType]').val();
+            var BatteryRating = $(this).parents('tr').find('input:hidden[id=BatteryRating]').val();
+            var DisplayResulution = $(this).parents('tr').find('input:hidden[id=DisplayResulution]').val();
+            var FlashLight = $(this).parents('tr').find('input:hidden[id=FlashLight]').val();
+            var BatteryCoverLogoType = $(this).parents('tr').find('input:hidden[id=BatteryCoverLogoType]').val();
+            var SpecialSensor = $(this).parents('tr').find('input:hidden[id=SpecialSensor]').val();
+            var Gps = $(this).parents('tr').find('input:hidden[id=Gps]').val();
+            var Otg = $(this).parents('tr').find('input:hidden[id=Otg]').val();
+
+            var HallSensor = $(this).parents('tr').find('input:hidden[id=HallSensor]').val();
+            var Gyroscope = $(this).parents('tr').find('input:hidden[id=Gyroscope]').val();
+            var Compass = $(this).parents('tr').find('input:hidden[id=Compass]').val();
+            var Lsensor = $(this).parents('tr').find('input:hidden[id=Lsensor]').val();
+            var Psensor = $(this).parents('tr').find('input:hidden[id=Psensor]').val();
+            var Gsensor = $(this).parents('tr').find('input:hidden[id=Gsensor]').val();
+            var ChipsetCore = $(this).parents('tr').find('input:hidden[id=ChipsetCore]').val();
+            var ChipsetBit = $(this).parents('tr').find('input:hidden[id=ChipsetBit]').val();
+            var ChipsetFrequency = $(this).parents('tr').find('input:hidden[id=ChipsetFrequency]').val();
+            var ChipsetName = $(this).parents('tr').find('input:hidden[id=ChipsetName]').val();
+            var CpuName = $(this).parents('tr').find('input:hidden[id=CpuName]').val();
+            var FrontCamBsi = $(this).parents('tr').find('input:hidden[id=FrontCamBsi]').val();
+            var FrontCamSensor = $(this).parents('tr').find('input:hidden[id=FrontCamSensor]').val();
+
+            $('#lblprojectName').val(proName + " (" + orders + ")");
+            $('#lblprojectId').val(proIds);
+            $('#lblRam').val(ram);
+            $('#lblRom').val(rom);
+            $('#lblSupplierTrustLevel').val(SupplierTrustLevel);
+            $('#lblOsName').val(OsName);
+
+            $('#lblOsVersion').val(OsVersion);
+            $('#lblDisplaySize').val(DisplaySize);
+            $('#lblDisplayName').val(DisplayName);
+            $('#lblProcessorName').val(ProcessorName);
+            $('#lblProcessorClock').val(ProcessorClock);
+            $('#lblChipset').val(Chipset);
+            $('#lblFrontCamera').val(FrontCamera);
+            $('#lblFrontCam').val(FrontCam);
+
+            $('#lblBackCam').val(BackCam);
+            $('#lblBackCamera').val(BackCamera);
+            $('#lblBattery').val(Battery);
+            $('#lblSimSlotNumber').val(SimSlotNumber);
+            $('#lblProjectNameForScreening').val(ProjectNameForScreening);
+            $('#lblPcbaFinalVendor').val(PcbaFinalVendor);
+
+            $('#lblPcbaVendorName').val(PcbaVendorName);
+            $('#lblDisplayResulution').val(DisplayResulution);
+            $('#lblColor').val(Color);
+            $('#lblBatteryType').val(BatteryType);
+            $('#lblBatteryRating').val(BatteryRating);
+            $('#lblDisplayResulution').val(DisplayResulution);
+            $('#lblFlashLight').val(FlashLight);
+            $('#lblBatteryCoverLogoType').val(BatteryCoverLogoType);
+            $('#lblSpecialSensor').val(SpecialSensor);
+            $('#lblGps').val(Gps);
+            $('#lblOtg').val(Otg);
+            $('#lblHallSensor').val(HallSensor);
+            $('#lblGyroscope').val(Gyroscope);
+            $('#lblCompass').val(Compass);
+            $('#lblLsensor').val(Lsensor);
+
+
+            $('#lblPsensor').val(Psensor);
+            $('#lblGsensor').val(Gsensor);
+            $('#lblChipsetCore').val(ChipsetCore);
+            $('#lblChipsetBit').val(ChipsetBit);
+
+            $('#lblChipsetFrequency').val(ChipsetFrequency);
+            $('#lblChipsetName').val(ChipsetName);
+            $('#lblCpuName').val(CpuName);
+            $('#lblFrontCamBsi').val(FrontCamBsi);
+            $('#lblFrontCamSensor').val(FrontCamSensor);
+
+
+            $('#deniedModal').modal();
+        });
+    });
+</script>

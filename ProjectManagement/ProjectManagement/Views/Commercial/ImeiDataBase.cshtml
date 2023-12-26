@@ -1,0 +1,136 @@
+﻿@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Commercial.VmImeiDataBase
+
+@{
+    ViewBag.Title = "ImeiDataBase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">Digi-tech TAC(SKD/CKD)</div>
+
+    </div>
+    <div class="portlet-body">
+        <div><input class="btn sbold uppercase btn-outline red" type="submit" value="Export to Excel" onclick="fnExcelReport()"/></div>
+        @using (Html.BeginForm("ImeiDataBase", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control date_picker" })
+                            @Html.ValidationMessageFor(model => model.StartDate, String.Empty, new { @style = "color:red;!important", })
+                        </div>
+                        <div class="col-md-5">
+                            @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control date_picker" })
+                            @Html.ValidationMessageFor(model => model.EndDate, String.Empty, new { @style = "color:red;!important", })
+                        </div>
+                        <div class="col-md-2">
+                            <input class="btn sbold uppercase btn-outline blue" type="submit" value="Get Data" />
+                        </div>
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+            </div>
+            <br />
+            <table class="table table-bordered" id="imei_db_table">
+                <tr>
+                    <th>TAC</th>
+                    <th>Model Name</th>
+                    <th>TAC Range</th>
+                    <th>IMEI Range</th>
+                    <th>Date</th>
+                </tr>
+
+                @foreach (var i in Model.TacList)
+                {
+                    var cnt = Model.ProjcetBabts.Count(x => x.TacNo == @i);
+                    var mdItem = Model.ProjcetBabts.FirstOrDefault(x => x.TacNo == @i);
+                    <tr>
+                        <td rowspan="@cnt">@i</td>
+                        <td rowspan="@cnt">@mdItem.ProjectName</td>
+                        <td rowspan="@cnt">TAC 000000 x to TAC 999999 x</td>
+                        <td>@Html.DisplayFor(modelItem => mdItem.ImeiRangeFrom) to @Html.DisplayFor(modelItem => mdItem.ImeiRangeTo)</td>
+                        <td>@Html.DisplayFor(modelItem => mdItem.UpdatedDate)</td>
+                        @*@foreach (var item in Model.ProjcetBabts.Where(n=>n.TacNo == i))
+                        {
+                            <tr>
+                                
+                            </tr>
+                        }*@
+                    </tr>
+                    var dt = Model.ProjcetBabts.Where(x => x.TacNo == @i && x.ImeiRangeFrom != mdItem.ImeiRangeFrom).ToList();
+                    if (dt.Any())
+                    {
+                        foreach (var v in dt)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => v.ImeiRangeFrom) to @Html.DisplayFor(modelItem => v.ImeiRangeTo)</td>
+                                <td>@Html.DisplayFor(modelItem => v.UpdatedDate)</td>
+                            </tr>
+
+                        }
+                    }
+
+                }
+
+                @*@foreach (var item in Model.ProjcetBabts)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.TacNo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                            <td>TAC 000000 x to TAC 999999 x</td>
+                            <td>@Html.DisplayFor(modelItem => item.ImeiRangeFrom) to @Html.DisplayFor(modelItem => item.ImeiRangeTo)</td>
+                            <td>@Html.DisplayFor(modelItem => item.UpdatedDate)</td>
+                        </tr>
+                    }*@
+
+            </table>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+    });
+
+
+
+    function fnExcelReport() {
+        var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+        var textRange; var j = 0;
+        tab = document.getElementById('imei_db_table'); // id of table
+
+        for (j = 0 ; j < tab.rows.length ; j++) {
+            tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+            //tab_text=tab_text+"</tr>";
+        }
+
+        tab_text = tab_text + "</table>";
+        tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+        tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+        tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+        {
+            txtArea1.document.open("txt/html", "replace");
+            txtArea1.document.write(tab_text);
+            txtArea1.document.close();
+            txtArea1.focus();
+            sa = txtArea1.document.execCommand("SaveAs", true, "Say Thanks to Sumit.xlsx");
+        }
+        else                 //other browser not tested on IE 11
+            sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+        return (sa);
+    }
+</script>
+
+

@@ -1,0 +1,185 @@
+﻿@model IEnumerable<ProjectManagement.Models.MaterialWastageItemModel>
+
+    @{
+        ViewBag.Title = "AddItem";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Purchase Order
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+
+            <div class="form-body">
+                @using (Html.BeginForm("AddItem", "MaterialWastage", FormMethod.Post, new { @id = "formPoOrder" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true)
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Item Code</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="itemCode" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Item Detail</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="itemDetail" />
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Bom Unit</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="bomUnit" />
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Wastage Percentage</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="wastagePercentage" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Assembly Material Fault</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="assemblyMaterialFault" />
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Assembly ProcessFault</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="assemblyProcessFault" />
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Repair Material Fault</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="repairMaterialFault" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Repair Process Fault</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="repairProcessFault" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="control-label col-md-2">Total Wastage Fault</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="totalWastageFault" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">BOM Type</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="bomType" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Month Name</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="monthName" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Month Number</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="monthNumber" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2">Year Number</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="yearNumber" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Create" class="btn btn-default" />
+                            </div>
+                        </div>
+
+
+                        <br />
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-sm-8">
+                                <table class="table table-bordered" id="productTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Code</th>
+                                            <th>Item Detail</th>
+                                            <th>Bom Unit</th>
+                                            <th>Wastage Percentage</th>
+                                            <th>Assembly Material Fault</th>
+                                            <th>Assembly Process Fault</th>
+                                            <th>Repair Material Fault</th>
+                                            <th>Repair Process Fault</th>
+                                            <th>Total Wastage Fault</th>
+                                            <th>BOM Type</th>
+                                            <th>Month Name</th>
+                                            <th>Month Number</th>
+                                            <th>Year Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tcBody" class="tcBody">
+                                        @if (Model != null && Model.Any())
+                                        {
+                                            foreach (var materialWastageItemModel in Model)
+                                            {
+                                                Html.RenderPartial("~/Views/Shared/_MaterialItemAdd.cshtml", materialWastageItemModel);
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-2"></div>
+                        </div>
+
+                    </div>
+                }
+
+                <div>
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+

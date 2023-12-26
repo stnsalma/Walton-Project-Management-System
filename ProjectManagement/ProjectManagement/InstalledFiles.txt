@@ -1,0 +1,15 @@
+﻿--Simple injector
+Install-Package SimpleInjector -Version 3.1.5
+Install-Package SimpleInjector.Integration.Web.Mvc -Version 3.1.5
+
+--EntityFramework 6.1.3
+Install-Package EntityFramework
+
+--nuget GridMvc
+Install-Package Grid.Mvc -Version 3.0.0
+
+--NUGET aUTOMAPER
+Install-Package AutoMapper -Version 4.2.1
+
+--NUGET BeginCollectionItem html helper
+Install-Package BeginCollectionItem

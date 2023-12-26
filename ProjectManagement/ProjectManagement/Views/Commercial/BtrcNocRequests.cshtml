@@ -1,0 +1,62 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectBtrcNocModel>
+@{
+    ViewBag.Title = "BtrcNocRequests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>BTRC NOC Request</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                @*<div class="col-lg-2">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">TAC Requests</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>*@
+                @*<div class="col-lg-2">
+                        <input type="button" class="btn sbold uppercase btn-outline blue" value="New LC" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=0'" />
+                    </div>*@
+
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover dtTable" id="sample_1">
+                    <thead>
+                        <tr>
+                            <th>Project tName</th>
+                            <th>PO No</th>
+                            <th>PO Quantity</th>
+                            <th>Project Manager</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PoNo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PurchaseOrderQuantity)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectManagerName)</td>
+                                    <td>
+                                        <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Download Doc" onclick="location.href='@Url.Action("NocDocuments", "Commercial", new { nocId = item.ProjectBrtcNocId })'" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>

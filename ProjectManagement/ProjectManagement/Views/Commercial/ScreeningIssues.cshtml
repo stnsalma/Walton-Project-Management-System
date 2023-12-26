@@ -1,0 +1,142 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmScreeningIssues
+<script type="text/javascript">
+    
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+    function on_success(data) {
+        $('#flag').empty();
+        var res;
+        if (data == "e") {
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! No Decision selected</div>';
+            $('#flag').append(res);
+            $('#screeningSubmit').prop('disabled', false);
+        }
+        else if (data == "r") {
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Uable to save. Please write a remarks if the decision is not solvable.</div>';
+            $('#flag').append(res);
+            $('#screeningSubmit').prop('disabled', false);
+        }
+        else if (data == "err") {
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error occured during the transaction. Please contact with administrator.</div>';
+            $('#flag').append(res);
+            $('#screeningSubmit').prop('disabled', false);
+            
+        }
+        else if (data == "ok") {
+            res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Data saved successfully.</div>';
+            $('#flag').append(res);
+
+        }
+        alertify.success("success");
+    }
+    function on_failure() {
+        alertify.error("error");
+    }
+    function decisionOnChange(value, context) {
+        $('#flag').empty();
+        var textB;
+        if (value == "") {
+            textB = context.closest('tr');
+            $("input[type=text]", textB).val("");
+            $("input[type=text]", textB).attr("disabled", "disabled");
+            $("input[type=text]", textB).css("background-color", "");
+        } else {
+            textB = context.closest('tr');
+            $("input[type=text]", textB).removeAttr("disabled");
+            if (value != "Solvable") {
+                $("input[type=text]", textB).css("background-color", "#e28a8a");
+            } else {
+                $("input[type=text]", textB).css("background-color", "#94e28a");
+            }
+            
+        }
+
+    }
+</script>
+
+@using (Ajax.BeginForm("ScreeningIssues", "Commercial", new AjaxOptions { HttpMethod = "POST", OnBegin = "submit", OnSuccess = "on_success", OnFailure = "on_failure" }))
+{
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Screening Issues</h4>
+
+    </div>
+    <div class="modal-body">
+        <div id="flag">
+
+        </div>
+        <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+            <thead>
+                <tr>
+                    <th>Issue Name</th>
+                    <th>Issue Detail</th>
+                    <th>Decision</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.HiddenFor(model => model.ProjectMasterId)
+                @if (Model.HwInchargeIssueModels.Any())
+                {
+                    var len = Model.HwInchargeIssueModels.Count();
+                    for (int i = 0; i < len; i++)
+                    {
+                        <tr>
+                            @Html.HiddenFor(model => Model.HwInchargeIssueModels[i].HwInchargeIssuesId)
+                            @Html.HiddenFor(model => Model.HwInchargeIssueModels[i].ProjectMasterId)
+                            <td>@Html.DisplayFor(model => Model.HwInchargeIssueModels[i].HwIssue)</td>
+                            <td>@Html.DisplayFor(model => Model.HwInchargeIssueModels[i].HwIssueDetail)</td>
+                            <td>
+                                @Html.DropDownListFor(model => Model.HwInchargeIssueModels[i].CommercialDecision, new SelectList(new[]
+                                {
+                                    new SelectListItem {Text = "Select", Value = ""},
+                                    new SelectListItem {Text = "Solvable", Value = "Solvable"},
+                                    new SelectListItem {Text = "Unsolvable", Value = "Unsolvable"},
+                                    new SelectListItem {Text = "Denied", Value = "Denied"}
+                                }, "Value", "Text", Model.HwInchargeIssueModels[i].CommercialDecision), new { @class = "form-control", @onchange = "decisionOnChange(this.options[this.selectedIndex].value, this);" })
+                        </td>
+                        @if (Model.HwInchargeIssueModels[i].CommercialDecision != null)
+                        {
+                            <td>@Html.TextBoxFor(model => Model.HwInchargeIssueModels[i].Remarks, new { @class = "form-control" })</td>
+                        }
+                        else
+                        {
+                            <td>@Html.TextBoxFor(model => Model.HwInchargeIssueModels[i].Remarks, new { @class = "form-control", disabled = "disabled" })</td>
+                        }
+
+
+                    </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">There are no issue found for this report</td>
+
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" id="screeningSubmit">Save changes</button>
+    </div>
+}

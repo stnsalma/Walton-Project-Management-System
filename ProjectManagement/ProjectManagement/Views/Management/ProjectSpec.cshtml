@@ -1,0 +1,327 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.Models.ProjectMasterModel
+@{
+    ViewBag.Title = "ProjectSpec";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-12">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">Project Specification : @Model.ProjectName</span>
+            </div>
+        </div>
+        
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover">
+                <tr>
+                    <td class="bold text-center">Supllier Model Name</td>
+                    <td>@Model.SupplierModelName</td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Sim </td>
+                    <td>
+                        Sim slot:
+                        @if (Model.SimSlotNumber == 2)
+                        {
+                            @Html.Raw("Dual Sim")
+                        }
+                        @if (Model.SimSlotNumber == 1)
+                        {
+                            @Html.Raw("Single Sim")
+                        }
+                        @if (Model.SimSlotNumber == null)
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        ,Sim Type:
+                        @if (@Model.SlotType != null)
+                        {
+                            @Model.SlotType
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Display & Resolution</td>
+                    <td>
+                        Size:
+                        @if (@Model.DisplaySize != null)
+                        {
+                            @Model.DisplaySize @Html.Raw(" inch")
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        ,Resolution:
+                        @if (@Model.DisplayResulution != null)
+                        {
+                            @Model.DisplayResulution
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        },TP Vendor:
+                        @if (@Model.TpFinalVendor != null)
+                        {
+                            @Model.TpFinalVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        },LCD Vendor:
+                        @if (@Model.LcdFinalVendor != null)
+                        {
+                            @Model.LcdFinalVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Camera</td>
+                    <td>
+                        Front Camera:
+                        @if (@Model.FrontCam != null)
+                        {
+                            @Model.FrontCam 
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , Back Camera:
+                        @if (@Model.BackCam != null)
+                        {
+                            @Model.BackCam
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }, Camera Vendor:
+                        @if (@Model.CameraVendor != null)
+                        {
+                            @Model.CameraVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Memory</td>
+                    <td>
+                        RAM:
+                        @if (@Model.Ram != null)
+                        {
+                            @Model.Ram 
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , RAM Vendor:
+                        @if (@Model.RamVendor != null)
+                        {
+                            @Model.RamVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }, ROM:
+                        @if (@Model.Rom != null)
+                        {
+                            @Model.Rom
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }, ROM Vendor:
+                        @if (@Model.RomVendor != null)
+                        {
+                            @Model.RomVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Operating System</td>
+                    <td>
+                        OS Name:
+                        @if (@Model.OsName != null)
+                        {
+                            @Model.OsName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , Version:
+                        @if (@Model.OsVersion != null)
+                        {
+                            @Model.OsVersion
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Processor</td>
+                    <td>
+                        Frequency:
+                        @if (@Model.ChipsetFrequency != null)
+                        {
+                            @Model.ChipsetFrequency 
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , Core:
+                        @if (@Model.ChipsetCore != null)
+                        {
+                            @Model.ChipsetCore
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }, Bit:
+                        @if (@Model.ChipsetBit != null)
+                        {
+                            @Model.ChipsetBit
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , CPU:
+                        @if (@Model.CpuName != null)
+                        {
+                            @Model.CpuName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }, Chipset:
+                        @if (@Model.ChipsetName != null)
+                        {
+                            @Model.ChipsetName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Battery</td>
+                    <td>
+                        Capacity:
+                        @if (@Model.BatteryRating != null)
+                        {
+                            @Model.BatteryRating
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                        , Type:
+                        @if (@Model.BatteryType != null)
+                        {
+                            @Model.BatteryType
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        } Battery Supplier:
+                        @if (@Model.BatterySupplierName != null)
+                        {
+                            @Model.BatterySupplierName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Charger</td>
+                    <td>
+                        Charger Rating:
+                        @if (@Model.ChargerRating != null)
+                        {
+                            @Model.ChargerRating
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        },Charger Supplier:
+                        @if (@Model.ChargerSupplierName != null)
+                        {
+                            @Model.ChargerSupplierName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Headphone</td>
+                    <td>
+                        Earphone Supplier:
+                        @if (@Model.EarphoneSupplierName != null)
+                        {
+                            @Model.EarphoneSupplierName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bold text-center">Others</td>
+                    <td>
+                        PCBA Vendor:
+                        @if (@Model.PcbaFinalVendor != null)
+                        {
+                            @Model.PcbaFinalVendor
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        },Housing Vendor:
+                        @if (@Model.HousingFinalVendorName != null)
+                        {
+                            @Model.HousingFinalVendorName
+                        }
+                        else
+                        {
+                            @Html.Raw("No Data")
+                        }
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

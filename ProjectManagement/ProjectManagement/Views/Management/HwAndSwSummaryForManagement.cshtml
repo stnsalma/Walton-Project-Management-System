@@ -1,0 +1,306 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+<h2 class="text-center">Hardware Report Summary : @ViewBag.ProjectName</h2>
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Screening Test Status
+        </div>
+        @*<div class="pull-right">
+                <input class="form-control" type="text" ng-model="search"/>
+            </div>*@
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblScreeningQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Order No </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Done By </th>
+                            <th class="text-center"> Checked By </th>
+                            <th class="text-center"> HW Incharge Remarks </th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.HwScreeningTests)
+                        {
+                            <tr>
+                                <td class="hidden hdnHwQcInchargeAssignId">@i.HwQcInchargeAssignId</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">@i.OrderNuber</td>
+                                <td class="text-center">@i.ProjectName</td>
+                                <td class="text-center">@i.SupplierModelName</td>
+                                <td class="text-center">@i.UserFullName</td>
+                                <td class="text-center">@i.VerifierName</td>
+                                <td class="text-center">@i.Remark</td>
+                                <td class="text-center">
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnHwScrDetails" id="btnHwScrDetails"><i class="icon-doc"> </i> Details</button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Running Test Status
+        </div>
+        @*<div class="pull-right">
+                <input class="form-control" type="text" ng-model="search"/>
+            </div>*@
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblRunningQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Order No </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Done By </th>
+                            <th class="text-center"> Checked By </th>
+                            <th class="text-center"> HW Incharge Remarks </th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.HwRunningTests)
+                        {
+                            <tr>
+                                <td class="hidden hdnHwQcInchargeAssignId">@i.HwQcInchargeAssignId</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">@i.OrderNuber</td>
+                                <td class="text-center">@i.ProjectName</td>
+                                <td class="text-center">@i.SupplierModelName</td>
+                                <td class="text-center">@i.UserFullName</td>
+                                <td class="text-center">@i.VerifierName</td>
+                                <td class="text-center">@i.Remark</td>
+                                <td class="text-center">
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnHwRunDetails" id="btnHwRunDetails"><i class="icon-doc"> </i> Details</button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Finished Goods Test Status
+        </div>
+        @*<div class="pull-right">
+                <input class="form-control" type="text" ng-model="search"/>
+            </div>*@
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblFinishedGoodsQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Order No </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier Model Name </th>
+                            <th class="text-center"> Done By </th>
+                            <th class="text-center"> Checked By </th>
+                            <th class="text-center"> HW Incharge Remarks </th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.HwFgTests)
+                        {
+                            <tr>
+                                <td class="hidden hdnHwQcInchargeAssignId">@i.HwQcInchargeAssignId</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">@i.OrderNuber</td>
+                                <td class="text-center">@i.ProjectName</td>
+                                <td class="text-center">@i.SupplierModelName</td>
+                                <td class="text-center">@i.UserFullName</td>
+                                <td class="text-center">@i.VerifierName</td>
+                                <td class="text-center">@i.Remark</td>
+                                <td class="text-center">
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnHwFgDetails" id="btnHwFgDetails"><i class="icon-doc"> </i> Details</button>
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<h2 class="text-center">Software Report Summary : @ViewBag.ProjectName</h2>
+<div class="portlet-body flip-scroll">
+    <div class="table-scrollable">
+        <table class="table table-bordered table-striped table-condensed flip-content" id="forwardToSoftwareQcTable">
+            <thead class="flip-content">
+                <tr>
+                    @*<th style="display:none;">ProjectMasterID</th>*@
+                    <th class="text-center"> Order No </th>
+                    <th class="text-center"> Version </th>
+                    <th class="text-center"> Assign Date </th>
+                    <th class="text-center"> Finish Date </th>
+                    <th class="text-center"> QC Incharge Comment </th>
+                    <th class="text-center"> Project Type </th>
+                    <th class="text-center"> Status </th>
+                    <th class="text-center"> Action </th>
+                    @*<th class="numeric"> PO Date </th>
+                        <th class="numeric"> Shipment Last Date </th>
+                        <th class="numeric"> Qunatity </th>
+                        <th class="numeric"> Main Spec </th>
+                        <th class="numeric"> Name of Sample </th>
+                        <th class="numeric"> Chipset </th>
+                        <th class="numeric"> Assign Date </th>
+                        <th class="numeric"> PM </th>
+                        <th class="numeric"> Action </th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var version = 0;
+                    foreach (var item in ViewBag.SwQcInchargeAssignModels)
+                    {
+
+                        version = version + 1;
+                        <tr>
+                            <td id="idProjectMaseterId" class="hidden text-center clsProjectMaseterId">@item.ProjectMasterId</td>
+                            <td id="idProjectPmAssignId" class="hidden text-center clsProjectPmAssignId">@item.ProjectPmAssignId</td>
+                            <td id="idSwQcInchargeAssignId" class="hidden text-center clsSwQcInchargeAssignId">@item.SwQcInchargeAssignId</td>
+                            <td style="display: none;"><input type="hidden" value="@item.ProjectManagerUserId" id="idProjectManagerUserId" class="clsProjectManagerUserId" /></td>
+                            <td class="text-center"> @item.OrderNuber </td>
+                            <td class="text-center"> version @version </td>
+                            <td class="text-center"> @item.ProjectManagerAssignToQcInTime.ToString("dd/MM/yyyy") </td>
+                            <td class="text-center">@item.SwQcInchargeEndTime.ToString("dd/MM/yyyy") </td>
+                            <td class="text-center">@item.SwQcInchargeEndComment</td>
+                            <td class="numeric"> @item.ProjectManagerSampleType </td>
+                            <td class="numeric"> @item.Status </td>
+                            <td class="text-center">
+                                <button class="btn btn-circle btn-sm blue btn-outline btnSwDetails" id="btnSwDetails"><i class="icon-doc"> </i> Details</button>
+                            </td>
+                            @*<td class="numeric"> @Model.IndividualProjectViewModel.ProjectMasterModel.ApproxProjectOrderDate </td>
+                            <td class="numeric">@Model.IndividualProjectViewModel.ProjectMasterModel.ApproxShipmentDate </td>
+                            <td class="numeric"> @Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                            <td class="numeric">@(Model.IndividualProjectViewModel.ProjectMasterModel.Chipset + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.ProcessorName + " " + @Model.IndividualProjectViewModel.ProjectMasterModel.Ram + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.Rom + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.FrontCamera + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.BackCamera)</td>
+                            <td class="numeric">@Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                            <td class="numeric"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                            <td class="numeric">@Model.ProjectPmAssignModel.AssignDate  </td>
+                            <td class="numeric"> @Model.UserName </td>*@
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+
+
+<script>
+    $(function () {
+        //get Automatic Serial number column in the HTML Table
+        $('#tblFinishedGoodsQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(2)').html(index++);
+        });
+
+        //get Automatic Serial number column in the HTML Table
+        $('#tblRunningQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(2)').html(index++);
+        });
+
+        //get Automatic Serial number column in the HTML Table
+        $('#tblScreeningQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(2)').html(index++);
+        });
+
+        $('[class*="btnHwFgDetails"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "tblFinishedGoodsQcStatus") {
+                //var projectId = $(this).closest("tr").find($("[class*=clsProjectMaseterId]")).html();
+                var hwQcInchargeAssignId = $(this).closest("tr").find('td:nth-child(1)').html();
+                //var projectName = $(this).closest("tr").find('td:nth-child(4)').html();
+                //alert(hwQcInchargeAssignId);
+                var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+                // window.location.href = url;
+                window.open(url);
+            }
+
+        });
+
+        $('[class*="btnHwRunDetails"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "tblRunningQcStatus") {
+                //var projectId = $(this).closest("tr").find($("[class*=clsProjectMaseterId]")).html();
+                var hwQcInchargeAssignId = $(this).closest("tr").find('td:nth-child(1)').html();
+                //var projectName = $(this).closest("tr").find('td:nth-child(4)').html();
+                //alert(hwQcInchargeAssignId);
+                var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+                //window.location.href = url;
+                window.open(url);
+            }
+
+        });
+
+        $('[class*="btnHwScrDetails"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "tblScreeningQcStatus") {
+                //var projectId = $(this).closest("tr").find($("[class*=clsProjectMaseterId]")).html();
+                var hwQcInchargeAssignId = $(this).closest("tr").find('td:nth-child(1)').html();
+                //var projectName = $(this).closest("tr").find('td:nth-child(4)').html();
+                //alert(hwQcInchargeAssignId);
+                var url = '@Url.Action("HwDisplayScreeningTest", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+                // window.location.href = url;
+                window.open(url);
+            }
+
+        });
+
+        $('[class*="btnSwDetails"]').click(function () {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "forwardToSoftwareQcTable") {
+                var projectId = $(this).closest("tr").find('td:nth-child(1)').html();
+                var swqcInchargeAsngId = $(this).closest("tr").find('td:nth-child(3)').html();
+                //var projectName = $(this).closest("tr").find('td:nth-child(4)').html();
+                //alert(hwQcInchargeAssignId);
+                var url = '@Url.Action("DetailsOfSwQcTestCase", "Software")?projectId=' + projectId + '&swqcInchargeAsngId=' + swqcInchargeAsngId + '&projectName=' + '@ViewBag.ProjectName';
+                //window.location.href = url;
+                window.open(url);
+            }
+
+        });
+    });
+</script>
+
+

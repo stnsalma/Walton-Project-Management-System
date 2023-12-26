@@ -1,0 +1,1078 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.Models.SpareClaimModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script src="~/Content/icheck/icheck.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+
+<div class="portlet box blue-hoki">
+    <div class="portlet-title">
+        <div class="caption">
+            Welcome to Monthly Incentive for FOC Claim
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+
+        <br /><br /><br />
+        <div class="caption" style="color:brown; font-weight: bold">
+            New FOC claim for approving :
+        </div>
+        <br />
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                    <table id="newTable" class="table table-bordered table-striped table-condensed flip-content newTable">
+                        <thead class="flip-content note note-info">
+                            <tr>
+                                <th style="text-align: center;display: none;"> ProjectId </th>
+                                <th style="text-align: center;"> ProjectName </th>
+                                <th style="text-align: center;"> OrderNumber </th>
+                                <th style="text-align: center;"> Po<br />Category </th>
+                                <th style="text-align: center;"> Spare<br />ClaimDate </th>
+                                <th style="text-align: center;">Warehouse<br />ReceiveDate </th>
+                                <th style="text-align: center;">Quantity</th>
+                                <th style="text-align: center;">Remarks</th>
+                                <th style="text-align: center;">SpareClaim<br />Incentive</th>
+                                <th style="text-align: center;">Month<br />Range</th>
+                                <th style="text-align: center;"> Month </th>
+                                <th style="text-align: center;">Year </th>
+                                <th style="text-align: center;">Action </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item1 in ViewBag.GetNewSpareComplainData)
+                            {
+                                <tr class="newTabData" id="newTabData">
+                                    <td style="text-align: center;display: none;">@item1.ProjectId</td>
+                                    <td style="text-align: center;">@item1.ProjectName</td>
+                                    <td style="text-align: center;">@item1.OrderNumber</td>
+                                    <td style="text-align: center;">@item1.PoCategory</td>
+                                    <td style="text-align: center;">
+                                        @item1.SpareClaimDate.ToString("yyyy-MM-dd")
+                                    </td>
+                                    <td style="text-align: center;">@item1.WarehouseReceiveDate.ToString("yyyy-MM-dd")</td>
+                                    <td style="text-align: center;">@item1.Quantity</td>
+                                    <td style="text-align: center;">@item1.Remarks</td>
+                                    <td style="text-align: center;">@item1.SpareClaimIncentive</td>
+                                    <td style="text-align: center;">@item1.MonthRange</td>
+                                    <td style="text-align: center;">@item1.Month</td>
+                                    <td style="text-align: center;">@item1.YearName</td>
+                                    <td>
+                                        <div class="col-sm-12">
+
+                                            <button class="btn btn-circle btn-sm blue btn-outline btnForApproved" id="btnForApproved">Approved</button>
+
+                                            <button class="btn btn-circle btn-sm red btn-outline btnForDeclined" id="btnForDeclined">Declined</button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="todo-ui" style="margin-top: 20px;">
+                    <div class="todo-content">
+                        <div class="table-toolbar">
+                            <div class="row">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="portlet box blue-soft">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        Incentive Policy
+
+                                    </div>
+                                    <div class="tools">
+                                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="row border border-after-blue-dark">
+                                        <br />
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-lg-2">
+                                            Select Month
+                                        </div>
+                                        <div class="col-lg-7">
+
+                                            <div class="col-lg-3">
+
+                                                @{
+                                                    List<SelectListItem> listItems = new List<SelectListItem>();
+
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "Select Month",
+                                                        Value = "0"
+                                                    });
+
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "January",
+                                                        Value = "1"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "February",
+                                                        Value = "2",
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "March",
+                                                        Value = "3"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "April",
+                                                        Value = "4"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "May",
+                                                        Value = "5"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "June",
+                                                        Value = "6"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "July",
+                                                        Value = "7"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "August",
+                                                        Value = "8"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "September",
+                                                        Value = "9"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "October",
+                                                        Value = "10"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "November",
+                                                        Value = "11"
+                                                    });
+                                                    listItems.Add(new SelectListItem
+                                                    {
+                                                        Text = "December",
+                                                        Value = "12"
+                                                    });
+                                                }
+                                                @Html.DropDownList("DDDMonth", new SelectList(listItems, "Value", "Text"), new { @class = "form-control DDDMonthCls1" })
+
+                                            </div>
+
+                                            <div class="col-lg-2">
+                                                @{
+                                                    List<SelectListItem> listItems2 = new List<SelectListItem>();
+                                                   
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2017",
+                                                        Value = "2017"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2018",
+                                                        Value = "2018"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2019",
+                                                        Value = "2019"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2020",
+                                                        Value = "2010"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2021",
+                                                        Value = "2021"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2022",
+                                                        Value = "2022"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2023",
+                                                        Value = "2023"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2024",
+                                                        Value = "2024"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2025",
+                                                        Value = "2025"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2026",
+                                                        Value = "2026"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2027",
+                                                        Value = "2027"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2028",
+                                                        Value = "2028"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2029",
+                                                        Value = "2029"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2030",
+                                                        Value = "2030"
+                                                    }); 
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2031",
+                                                        Value = "2031"
+                                                    });
+                                                    listItems2.Add(new SelectListItem
+                                                    {
+                                                        Text = "2032",
+                                                        Value = "2032"
+                                                    });
+                                                }
+                                                @Html.DropDownList("DDDYear", new SelectList(listItems2, "Value", "Text"), "Select Year", new { @class = "form-control DDDYearCls" })
+                                            </div>
+                                            <div class="col-lg-2"></div>
+                                            <div class="col-lg-3">
+                                                <input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Generate Incentive"
+                                                       onclick="location.href='@Url.Action("IncentiveForSpareClaim", "Commercial")?monId=' + $('option:selected', $('#DDDMonth')).val()+'&yearId=' + $('option:selected', $('#DDDYear')).val()" />
+
+
+                                            </div>
+                                            <div class="col-lg-1"></div>
+
+                                        </div>
+                                        <div class="col-lg-1"></div>
+                                        <br /><br /><br />
+                                    </div>
+
+                                    <br /><br /><br />
+                                    @if (TempData["Message2"] != null)
+                                    {
+
+                                        var msgss = TempData["Message2"];
+
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                            <strong>Message:</strong> @msgss
+                                        </div>
+
+
+                                    }
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color: red;">Per FOC Claim</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item in ViewBag.GetIncentives)
+                                                        {
+
+                                                            if (item != null && item.ParameterName == "PerSpareClaim")
+                                                            {
+                                                                <input value="@item.Parameter" id="perSpareClaim_parameter1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-2">
+
+                                                        <input value="------------>" id="muliplication1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item != null && item.ParameterName == "PerSpareClaim")
+                                                            {
+
+                                                                <input value="@item.ParameterValue" id="perSpareClaim_value1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                            }
+                                                        }
+
+
+                                                    </div>
+
+                                                    <div class="col-lg-3">
+
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div class="col-lg-8">
+                                                <label class="control-label col-lg-2" style="color:red;">Other Fields</label>
+                                                <div class="col-lg-2">
+                                                    @foreach (var item1 in ViewBag.GetIncentives)
+                                                    {
+                                                        if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                        {
+
+                                                            <input value="@item1.Parameter" id="perSpareClaimOthers_parameter1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                        }
+                                                    }
+
+                                                </div>
+                                                <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                <div class="col-lg-2">
+                                                    @foreach (var item1 in ViewBag.GetIncentives)
+                                                    {
+                                                        if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                        {
+
+                                                            <input value="@item1.ParameterValue" id="perSpareClaimOthers_value1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                        }
+                                                    }
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+                                            </div>
+                                            <div class="col-lg-4"></div>
+
+
+                                        </div>
+                                    </div>
+                                    <br /><br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2"> Total FOC Claim</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetTotalSpareClaims)
+                                                        {
+                                                            <input value="@item1.TotalSpareClaim" id="perTotalSpareClaim_parameter1" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1">
+
+                                                        <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PerSpareClaim")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="perSpareClaim_value2" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                    <div class="col-lg-3">
+                                                        @*@foreach (var item1 in ViewBag.GetIncentives)
+                                                            {
+                                                            if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                            {
+
+                                                            <input value="@item1.ParameterValue" id="perSpareClaimOthers_value3" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                            }*@
+                                                        <input value="" id="perSpareClaim_value3" class="form-control" readonly="true" style="text-align: center;" />
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2"> Other Fields</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="perSpareClaimOthers_parameter2" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1">
+
+                                                        <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                    </div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="perSpareClaimOthers_value2" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                    <div class="col-lg-3">
+                                                        @*@foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "Other Fields: Consumable, mechanical and so on")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="perSpareClaimOthers_value3" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }*@
+                                                        <input value="" id="perSpareClaimOthers_value3" class="form-control" readonly="true" style="text-align: center;" />
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+
+                                            <div class="col-lg-8">
+
+                                                --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                            </div>
+                                            <div class="col-lg-4">
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-8">
+                                                <label class="control-label col-lg-3">Total Incentive Amount</label>
+                                                <div class="col-lg-1"></div>
+                                                <div class="col-lg-3"></div>
+                                                <div class="col-lg-1"><input value="=" id="equals1" class="form-control" readonly="true" style="text-align: center;color:red;" /></div>
+
+                                                <div class="col-lg-3"><input value="" id="totalIncentiveAmount" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                <div class="col-lg-1"></div>
+                                            </div>
+                                            <div class="col-lg-4"></div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                <table id="insTable" class="table table-bordered table-striped table-condensed flip-content insTable">
+                                                    <thead class="flip-content note note-success">
+                                                        <tr>
+                                                            <th style="text-align: center;"> UserName </th>
+                                                            <th style="text-align: center;"> ID </th>
+                                                            <th style="text-align: center;">ThisMonth Amount </th>
+                                                            <th style="text-align: center;">AddedAmount</th>
+                                                            <th style="text-align: center;">Remarks</th>
+                                                            <th style="text-align: center;">DeductionAmount</th>
+                                                            <th style="text-align: center;">DeductionRemarks</th>
+                                                            <th style="text-align: center;"> Incentive </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach (var item1 in ViewBag.GetUserInfoForSpareClaim)
+                                                        {
+                                                        <tr class="insTableTr" id="insTableTr">
+                                                            <td><input value="@item1.UserFullName" id="userNames" class="form-control userNames" disabled="disabled" style="text-align: center;" /></td>
+                                                            <td><input value="@item1.EmployeeCode" id="userIds" class="form-control userIds" disabled="disabled" style="text-align: center;" /></td>
+                                                            <td><input value="" id="thisMonthAmount" class="form-control thisMonthAmount" disabled="disabled" style="text-align: center;" /></td>
+                                                            <td><input type="number" value="@item1.AddedAmount" id="addedAmount" min="1" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount21()" /></td>
+                                                            <td><input value="@item1.Remarks" id="remarks" class="form-control remarks" style="text-align: center;" /></td>
+                                                            <td><input type="number" value="@item1.AmountDeduction" id="amountDeduction" min="1" class="form-control amountDeduction" style="text-align: center;" onchange="updateAmountDeduction21()" /></td>
+                                                            <td><input value="@item1.DeductionRemarks" id="deductionRemarks" class="form-control deductionRemarks" style="text-align: center;" /></td>
+                                                            <td><input value="" id="incentive" class="form-control incentive" disabled="disabled" style="text-align: center;" /></td>
+                                                        </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <br />
+                                    <br />
+
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <br /><br />
+                                            <input id="incentiveSubmit" type="button" value="Submit" class="btn btn-group-circle btn-success center" />
+                                            <br /><br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+
+
+    ///////////////////////////
+
+    $(function () {
+        var myJsVariable = '@ViewBag.Selected';
+        $("#DDDMonth").val(myJsVariable);
+
+        var myJsVariable1 = '@ViewBag.SelectedYear';
+        $("#DDDYear").val(myJsVariable1);
+
+        console.log("myJsVariable :" + myJsVariable);
+        console.log("myJsVariable1 :" + myJsVariable1);
+        
+
+        if (myJsVariable == 0 && myJsVariable1 == "") {
+
+            /////////////////////////
+            var perTotalSpareClaim_parameter11 = $('#perTotalSpareClaim_parameter1').val();
+            var perSpareClaim_value21 = $('#perSpareClaim_value2').val();
+
+
+            var totalSpareClaim1 = 0;
+           
+            totalSpareClaim1 = perTotalSpareClaim_parameter11 * perSpareClaim_value21;
+            var perSpareClaimOthers_value311 = 0;
+            var perSpareClaimOthers_parameter21 = $.trim($('#perSpareClaimOthers_parameter2').val());
+            var perSpareClaimOthers_value21 = $.trim($('#perSpareClaimOthers_value2').val());
+
+            var perSpareClaimOthers_value31 = $.trim($('#perSpareClaimOthers_value3').val());
+
+            perSpareClaimOthers_value311 = perSpareClaimOthers_parameter21 * perSpareClaimOthers_value21;
+            perSpareClaimOthers_value31 = $.trim($('#perSpareClaimOthers_value3').val("0"));
+
+
+            var totalSpareClaim11 = $('#perSpareClaim_value3').val(totalSpareClaim1);
+            var perSpareClaimOthers_value31 = $('#perSpareClaimOthers_value3').val("0");
+
+            var totalIncentiveAmount1 = (+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(4);
+            if (totalIncentiveAmount11 == undefined) {
+                totalIncentiveAmount1 = 0;
+            }
+            else {
+                totalIncentiveAmount1 = (+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(4);
+            }
+
+            var totalIncentiveAmount11 = $('#totalIncentiveAmount').val(totalIncentiveAmount1);
+
+            var thisMonthAmount1=0;
+            var incentive11=0;
+
+            $("#insTable tr.insTableTr").each(function () {
+                var a = (+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(2);
+                if (a== "NaN") {
+                    thisMonthAmount1 = $.trim($(this).find('#thisMonthAmount').val("0"));
+                } else {
+                    thisMonthAmount1 = $.trim($(this).find('#thisMonthAmount').val((+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(2)));
+
+                }
+                var b = (+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(2);
+               
+                if (b == "NaN") {
+                    incentive11 = $.trim($(this).find('#incentive').val("0"));;
+                } else {
+                    incentive11 = $.trim($(this).find('#incentive').val((+totalSpareClaim1 + +perSpareClaimOthers_value31).toFixed(2)));
+
+                }
+            });
+
+        } else {
+            /////////////////////////
+            var perTotalSpareClaim_parameter113 = $('#perTotalSpareClaim_parameter1').val();
+            var perSpareClaim_value213 = $('#perSpareClaim_value2').val();
+
+            var totalSpareClaim13 = 0;
+           
+            totalSpareClaim13 = perTotalSpareClaim_parameter113 * perSpareClaim_value213;
+            var perSpareClaimOthers_value3113 = 0;
+            var perSpareClaimOthers_parameter213 = $.trim($('#perSpareClaimOthers_parameter2').val());
+            var perSpareClaimOthers_value213 = $.trim($('#perSpareClaimOthers_value2').val());
+
+            var perSpareClaimOthers_value313 = $.trim($('#perSpareClaimOthers_value3').val());
+
+            perSpareClaimOthers_value3113 = perSpareClaimOthers_parameter213 * perSpareClaimOthers_value213;
+            perSpareClaimOthers_value313 = $.trim($('#perSpareClaimOthers_value3').val(perSpareClaimOthers_value3113));
+
+
+            var totalSpareClaim113 = $('#perSpareClaim_value3').val(totalSpareClaim13);
+            var perSpareClaimOthers_value313 = $('#perSpareClaimOthers_value3').val();
+
+            var totalIncentiveAmount13 = (+totalSpareClaim13 + +perSpareClaimOthers_value313).toFixed(4);
+
+            var totalIncentiveAmount113 = $('#totalIncentiveAmount').val(totalIncentiveAmount13);
+
+            var thisMonthAmount13;
+            var incentive113;
+
+            $("#insTable tr.insTableTr").each(function () {
+                thisMonthAmount13 = $.trim($(this).find('#thisMonthAmount').val((+totalSpareClaim13 + +perSpareClaimOthers_value313).toFixed(2)));
+                incentive113 = $.trim($(this).find('#incentive').val((+totalSpareClaim13 + +perSpareClaimOthers_value313).toFixed(2)));
+
+            });
+        }
+
+    });
+
+
+    $('#btnforname').on('click', function(e) {
+        e.preventDefault();
+        var myJsVariable = '@ViewBag.Selected';
+        $("#DDDMonth").val(myJsVariable);
+
+        var myJsVariable1 = '@ViewBag.SelectedYear';
+        $("#DDDYear").val(myJsVariable1);
+        
+        console.log("myJsVariable :" + myJsVariable);
+        console.log("myJsVariable1 :" + myJsVariable1);
+
+    });
+
+    //var perTotalSpareClaim_parameter1;
+    //var perSpareClaim_value2;
+    //var totalSpareClaim = 0;
+    //var perSpareClaimOthers_value31 = 0;
+    //var perSpareClaimOthers_parameter2;
+    //var perSpareClaimOthers_value2;
+    //var perSpareClaimOthers_value3;
+    //var totalSpareClaim1;
+    //var perSpareClaimOthers_value32;
+    //var thisMonthAmount;
+    //var incentive1;
+    //var totalIncentiveAmount;
+    //var totalIncentiveAmount1;
+
+    //$('#btnforname').on('click', function (e) {
+    //    e.preventDefault();
+        
+    //     perTotalSpareClaim_parameter1 = $('#perTotalSpareClaim_parameter1').val();
+    //     perSpareClaim_value2 = $('#perSpareClaim_value2').val();
+
+
+       
+    //    if (perTotalSpareClaim_parameter1 == 0) {
+    //        totalSpareClaim = 0;
+
+    //    } else {
+    //        totalSpareClaim = perTotalSpareClaim_parameter1 * perSpareClaim_value2;
+    //    }
+
+       
+    //     perSpareClaimOthers_parameter2 = $.trim($('#perSpareClaimOthers_parameter2').val());
+    //     perSpareClaimOthers_value2 = $.trim($('#perSpareClaimOthers_value2').val());
+
+    //     perSpareClaimOthers_value3 = $.trim($('#perSpareClaimOthers_value3').val());
+
+    //    if (perSpareClaimOthers_value3 == undefined) {
+    //        perSpareClaimOthers_value3 = 0;
+    //    }
+    //    else {
+    //        perSpareClaimOthers_value31 = perSpareClaimOthers_parameter2 * perSpareClaimOthers_value2;
+    //    }
+    //    perSpareClaimOthers_value3 = $.trim($('#perSpareClaimOthers_value3').val(perSpareClaimOthers_value31));
+
+
+    //     totalSpareClaim1 = $('#perSpareClaim_value3').val(totalSpareClaim);
+    //     perSpareClaimOthers_value32 = $('#perSpareClaimOthers_value3').val();
+
+    //     totalIncentiveAmount = (+totalSpareClaim + +perSpareClaimOthers_value32).toFixed(4);
+
+    //     totalIncentiveAmount1 = $('#totalIncentiveAmount').val(totalIncentiveAmount);
+
+      
+
+    //    $("#insTable tr.insTableTr").each(function () {
+    //        thisMonthAmount = $.trim($(this).find('#thisMonthAmount').val((+totalSpareClaim + +perSpareClaimOthers_value32).toFixed(2)));
+    //        incentive1 = $.trim($(this).find('#incentive').val((+totalSpareClaim + +perSpareClaimOthers_value32).toFixed(2)));
+
+    //    });
+    //});
+    function updateAddedAmount21() {
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#insTable tr.insTableTr").each(function () {
+
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("AddedAmount :" + addedAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (addedAmount != "") {
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            }
+            else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+        });
+    }
+    function updateAmountDeduction21() {
+        var deductAmount = 0;
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#insTable tr.insTableTr").each(function () {
+
+            deductAmount = $.trim($(this).find('#amountDeduction').val());
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("deductAmount :" + deductAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (deductAmount != "") {
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            } else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+
+        });
+    }
+    //////////////submit//////////////
+
+    $('#incentiveSubmit').on('click', function (e) {
+        e.preventDefault();
+
+        //var selectedMonthValue = $('#DDDMonth').val();
+        //var selectedYearValue = $('#DDDYear').val();
+
+        var selectedMonthText = document.getElementById('DDDMonth');
+        var selectedYearTest = document.getElementById('DDDYear');
+
+        var selecteddropTextMon = selectedMonthText.options[selectedMonthText.selectedIndex].text;
+        var selecteddropValMon = selectedMonthText.options[selectedMonthText.selectedIndex].value;
+
+        var selecteddropTextYear = selectedYearTest.options[selectedYearTest.selectedIndex].text;
+
+        if (selecteddropTextMon == "Select Month") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please generate incentive first",
+            }).show();
+            return false;
+        }
+        if (selecteddropTextYear == "Select Year") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please generate incentive first",
+            }).show();
+            return false;
+        }
+
+        var obj = {};
+        var objArr = [];
+
+        var totalIncentive;
+        var roleName;
+        var userIds;
+        var thisMonthAmount;
+        var incentive = 0;
+        var addedAmount = 0;
+        var deductAmount = 0;
+        var remarks;
+        var deductionRemarks;
+        
+        $("#insTable tr.insTableTr").each(function () {
+            obj = new Object();
+            incentive = $.trim($(this).find('#incentive').val());
+            thisMonthAmount = $.trim($(this).find('#thisMonthAmount').val());
+
+            roleName = "SPRHEAD";
+            userIds = $.trim($(this).find('#userIds').val());
+
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            remarks = $.trim($(this).find('#remarks').val());
+         
+            if (addedAmount != "" && remarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put added remarks",
+                }).show();
+                return false;
+            }
+            
+            deductAmount = $.trim($(this).find('#amountDeduction').val());
+            deductionRemarks = $.trim($(this).find('#deductionRemarks').val());
+            if (deductAmount != "" && deductionRemarks=="") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put Deduction Remarks",
+                }).show();
+                return false;
+            }
+
+            obj.ThisMonthAmount = thisMonthAmount;
+            obj.TotalIncentive = incentive;
+            obj.RoleName = roleName;
+            obj.UserId = userIds;
+            obj.AmountDeduction = $.trim($(this).find('#amountDeduction').val());
+            obj.DeductionRemarks = $.trim($(this).find('#deductionRemarks').val());
+            obj.AddedAmount = $.trim($(this).find('#addedAmount').val());
+            obj.Remarks = $.trim($(this).find('#remarks').val());
+            obj.Month = selecteddropTextMon;
+            obj.MonNum = selecteddropValMon;
+            obj.YearName = selecteddropTextYear;
+
+            objArr.push(obj);
+        });
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SaveMonthlyIncentiveForSpareClaim", "Commercial")',
+            data: "{ MonNum: '" + selecteddropValMon
+                   + "', YearName: '" + selecteddropTextYear
+                   + "',objArr:'" + JSON.stringify(objArr)
+                   + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                console.log("data :" + data);
+                var dataList = [];
+                for (var x in data) {
+                    dataList = data[x];
+                }
+                console.log(dataList);
+
+                if (dataList == "YES") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Already Saved.",
+                    }).show();
+                    return false;
+                }
+            }
+
+        });
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("SaveMonthlyIncentiveForSpareClaim", "Commercial")',
+            data: "{ MonNum: '" + selecteddropValMon
+                   + "', YearName: '" + selecteddropTextYear
+                   + "',objArr:'" + JSON.stringify(objArr)
+                   + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                refresh();
+                window.location = '@Url.Action("IncentiveForSpareClaim", "Commercial")' + '?monId=' + selecteddropValMon + '&yearId=' + selecteddropTextYear;
+            }
+        });
+
+        ////////////////////////////////////////////////////
+      //  window.location = '@Url.Action("IncentiveForSpareClaim", "Commercial")' + '?monId=' + selecteddropValMon + '&yearId=' + selecteddropTextYear;
+    });
+
+    ////////////////////////
+
+
+    /////////////////////////
+    $("#newTable").DataTable();
+    function refresh() {
+        $.blockUI({ message: '<h1><img src="~/img/loading-spinner-grey.gif" /> LOADING..</h1>' });
+        setTimeout(function () {
+            window.location.reload();
+
+        }, 1000);
+    }
+    $(".btnForApproved").on('click', function (e) {
+        e.preventDefault();
+
+        var table = document.getElementById('newTable');
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var projectId = table.rows[rowIndex].cells[0].innerHTML;
+        var spareClaimDate = table.rows[rowIndex].cells[4].innerHTML;
+        var warehouseDate = table.rows[rowIndex].cells[5].innerHTML;
+        var quantity = table.rows[rowIndex].cells[6].innerHTML;
+        var remarks = table.rows[rowIndex].cells[7].innerHTML;
+        var status = 'APPROVED';
+
+        alertify.confirm('Confirm message', 'Do you want to Approve this?', function () {
+            alertify.success('Ok');
+            refresh();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveApprovedData", "Commercial")',
+                data: "{ projectId: '" + projectId
+                    + "', spareClaimDate: '" + spareClaimDate
+                    + "', warehouseDate: '" + warehouseDate
+                    + "', quantity: '" + quantity
+                    + "', remarks: '" + remarks
+                    + "', status: '" + status
+                    + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (!data.success) {
+                        if (data.errors.name) {
+                            //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+
+                        }
+                    }
+                    else {
+                        //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+
+                        console.log(data);
+
+                    }
+                }
+            });
+
+        }
+            , function () {
+                alertify.error('Cancel');
+
+            });
+    });
+
+    $(".btnForDeclined").on('click', function (e) {
+        e.preventDefault();
+
+        var table = document.getElementById('newTable');
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var projectId = table.rows[rowIndex].cells[0].innerHTML;
+        var spareClaimDate = table.rows[rowIndex].cells[4].innerHTML;
+        var warehouseDate = table.rows[rowIndex].cells[5].innerHTML;
+        var quantity = table.rows[rowIndex].cells[6].innerHTML;
+        var remarks = table.rows[rowIndex].cells[7].innerHTML;
+        var status = 'DECLINED';
+
+        alertify.confirm('Confirm message', 'Do you want to Decline this?', function () {
+            alertify.success('Ok');
+            refresh();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDeclinedData", "Commercial")',
+                data: "{ projectId: '" + projectId
+                    + "', spareClaimDate: '" + spareClaimDate
+                    + "', warehouseDate: '" + warehouseDate
+                    + "', quantity: '" + quantity
+                    + "', remarks: '" + remarks
+                    + "', status: '" + status
+                    + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (!data.success) {
+                        if (data.errors.name) {
+                            //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+
+                        }
+                    }
+                    else {
+                        //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+
+                        console.log(data);
+
+                    }
+                }
+            });
+
+        }
+            , function () {
+                alertify.error('Cancel');
+
+            });
+    });
+
+  
+</script>

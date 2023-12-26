@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="WCMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblIMEIRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Model" Type="nvarchar" MaxLength="100" />
+          <Property Name="IMEI1" Type="nvarchar" MaxLength="100" />
+          <Property Name="IMEI2" Type="nvarchar" MaxLength="100" />
+          <Property Name="WO" Type="nvarchar" MaxLength="200" />
+          <Property Name="Project" Type="nvarchar" MaxLength="50" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" />
+          <Property Name="EanCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Sn" Type="nvarchar" MaxLength="50" />
+          <Property Name="Bt" Type="nvarchar" MaxLength="50" />
+          <Property Name="Wifi" Type="nvarchar" MaxLength="50" />
+          <Property Name="SubSn" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tblLogistics">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BoxCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="Imei1" Type="nvarchar" MaxLength="50" />
+          <Property Name="Imei2" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProjectId" Type="bigint" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" />
+          <Property Name="Model" Type="nvarchar" MaxLength="500" />
+          <Property Name="Grade" Type="nvarchar" MaxLength="50" />
+          <Property Name="GradeReason" Type="nvarchar" MaxLength="500" />
+          <Property Name="AddedBy" Type="bigint" />
+          <Property Name="AddedDate" Type="datetime" />
+          <Property Name="Uploaded" Type="nvarchar" MaxLength="50" />
+          <Property Name="UploadedDate" Type="datetime" />
+          <Property Name="OracleUploaded" Type="nvarchar" MaxLength="50" />
+          <Property Name="OracleTransactionCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="OracleUploadedDate" Type="datetime" />
+          <Property Name="OracleUploadedBy" Type="bigint" />
+        </EntityType>
+        <EntityContainer Name="WCMSModelStoreContainer">
+          <EntitySet Name="tblIMEIRecord" EntityType="Self.tblIMEIRecord" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblLogistics" EntityType="Self.tblLogistics" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WCMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblIMEIRecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Model" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IMEI1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IMEI2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WO" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Project" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EanCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bt" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Wifi" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SubSn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tblLogistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BoxCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Imei1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Imei2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectId" Type="Int64" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Grade" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GradeReason" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AddedBy" Type="Int64" />
+          <Property Name="AddedDate" Type="DateTime" Precision="3" />
+          <Property Name="Uploaded" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedDate" Type="DateTime" Precision="3" />
+          <Property Name="OracleUploaded" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OracleTransactionCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OracleUploadedDate" Type="DateTime" Precision="3" />
+          <Property Name="OracleUploadedBy" Type="Int64" />
+        </EntityType>
+        <EntityContainer Name="WCMSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblIMEIRecords" EntityType="Self.tblIMEIRecord" />
+          <EntitySet Name="tblLogistics" EntityType="Self.tblLogistic" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WCMSModelStoreContainer" CdmEntityContainer="WCMSEntities">
+          <EntitySetMapping Name="tblIMEIRecords">
+            <EntityTypeMapping TypeName="WCMSModel.tblIMEIRecord">
+              <MappingFragment StoreEntitySet="tblIMEIRecord">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="IMEI1" ColumnName="IMEI1" />
+                <ScalarProperty Name="IMEI2" ColumnName="IMEI2" />
+                <ScalarProperty Name="WO" ColumnName="WO" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="EanCode" ColumnName="EanCode" />
+                <ScalarProperty Name="Sn" ColumnName="Sn" />
+                <ScalarProperty Name="Bt" ColumnName="Bt" />
+                <ScalarProperty Name="Wifi" ColumnName="Wifi" />
+                <ScalarProperty Name="SubSn" ColumnName="SubSn" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLogistics">
+            <EntityTypeMapping TypeName="WCMSModel.tblLogistic">
+              <MappingFragment StoreEntitySet="tblLogistics">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BoxCode" ColumnName="BoxCode" />
+                <ScalarProperty Name="Imei1" ColumnName="Imei1" />
+                <ScalarProperty Name="Imei2" ColumnName="Imei2" />
+                <ScalarProperty Name="ProjectId" ColumnName="ProjectId" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+                <ScalarProperty Name="GradeReason" ColumnName="GradeReason" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+                <ScalarProperty Name="Uploaded" ColumnName="Uploaded" />
+                <ScalarProperty Name="UploadedDate" ColumnName="UploadedDate" />
+                <ScalarProperty Name="OracleUploaded" ColumnName="OracleUploaded" />
+                <ScalarProperty Name="OracleTransactionCode" ColumnName="OracleTransactionCode" />
+                <ScalarProperty Name="OracleUploadedDate" ColumnName="OracleUploadedDate" />
+                <ScalarProperty Name="OracleUploadedBy" ColumnName="OracleUploadedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

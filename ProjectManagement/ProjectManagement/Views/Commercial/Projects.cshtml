@@ -1,0 +1,175 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectMasterModel>
+    @{
+        ViewBag.Title = "Projects";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+
+
+            <div class="portlet-title">
+                <div class="col-lg-2">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Project List</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" class="btn sbold uppercase btn-outline blue" value="New Project" onclick="location.href='@Url.Action("Project", "Commercial")?projectId=0'" />
+                </div>
+
+            </div>
+            <div class="portlet-body">
+
+                <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                    <thead>
+                        <tr>
+                            <th>ProjectID</th>
+                            <th>Project Name</th>
+                            <th>Screening Name</th>
+                            <th>Supplier</th>
+                            <th>Supp. Model</th>
+                            <th>Chipset</th>
+                            <th>Is Active</th>
+                            <th>Added By</th>
+                            @*<th>Updated By</th>*@
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class ="tdProjectId">@Html.DisplayFor(modelItem => item.ProjectMasterId)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectNameForScreening)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.SupplierModelName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ChipsetName)</td>
+                                    <td class="tdActivteStatus">@Html.DisplayFor(modelItem => item.IsActive)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.AddedName)</td>
+                                    @*<td>@Html.DisplayFor(modelItem => item.UpdatedName)</td>*@
+                                    <td style="white-space: nowrap">
+                                        <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("Project", "Commercial", new {projectId = item.ProjectMasterId })'" />
+                                        @*<input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Reports" onclick="location.href='@Url.Action("PmHeadHwAndSwSummary", "ProjectManager", new { projectMasterId = item.ProjectMasterId, projectName = item.ProjectName })'" />*@
+                                        @if (item.IsActive)
+                                        {
+                                            <button type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle btnActivateDeactivate"><i class="fa fa-spinner fa-pulse hidden"></i> Deactivate</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle btnActivateDeactivate"><i class="fa fa-spinner fa-pulse hidden"></i> Activate</button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>
+
+    
+<!-- Modal -->
+<div class="modal fade" id="activateDeactivateModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Remarks</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @Html.TextArea("txtActDeactRemarks", new { @class = "form-control",rows="5" })
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnActivateDeactivate">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    var row;
+    var projectId = 0;
+    
+    $('#sample_1 tbody').on('click', '.btnActivateDeactivate', function () {
+        row = $(this).closest('tr');
+        projectId = row.find('.tdProjectId').html();
+        row.find('.fa-spinner').removeClass('hidden');
+        console.log(projectId);
+        $('#txtActDeactRemarks').val('');
+        $('#activateDeactivateModal').modal();
+    });
+
+    $('#btnActivateDeactivate').on('click', function () {
+        
+        var remarks = $('#txtActDeactRemarks').val();
+        console.log(remarks);
+        if (remarks.trim() != '') {
+            $('#activateDeactivateModal').modal('hide');
+            var url = '@Url.Action("ActivateDeactivateProject","Commercial")';
+            $.post(url, { projectId: projectId, remarks: remarks }, function (data) {
+
+                console.log(data);
+                if (data == "DEACTIVATED") {
+                    row.find('.tdActivteStatus').empty();
+                    row.find('.tdActivteStatus').append('<input class="check-box" disabled="disabled" type="checkbox">');
+                    row.find('.btnActivateDeactivate').removeClass("btn-danger");
+                    row.find('.btnActivateDeactivate').addClass("btn-warning");
+                    row.find('.btnActivateDeactivate').html('<i class="fa fa-spinner fa-pulse hidden"></i> Activate');
+                    alertify.error(data);
+                }
+                if (data == "ACTIVATED") {
+                    row.find('.tdActivteStatus').empty();
+                    row.find('.tdActivteStatus').append('<input checked="checked" class="check-box" disabled="disabled" type="checkbox">');
+                    row.find('.btnActivateDeactivate').removeClass("btn-warning");
+                    row.find('.btnActivateDeactivate').addClass("btn-danger");
+                    row.find('.btnActivateDeactivate').html('<i class="fa fa-spinner fa-pulse hidden"></i> Deactivate');
+                    alertify.success(data);
+                }
+                row.find('.fa-spinner').addClass('hidden');
+            });
+        } else {
+            alertify.error('Remarks required!!!');
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('#activateDeactivateModal').on('click', function (e) {
+            if ($(e.target).hasClass("btn-primary")) {
+
+            } else {
+                if ($(e.target).hasClass("close")) {
+                    row.find('.fa-spinner').addClass('hidden');
+                }
+                else if ($(e.target).hasClass("btn-default")) {
+                    row.find('.fa-spinner').addClass('hidden');
+                }
+            }
+        });
+
+        
+    });
+    
+</script>
+

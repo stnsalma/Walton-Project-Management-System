@@ -1,0 +1,214 @@
+﻿@model ProjectManagement.Models.OrderWiseMultiplePriceModel
+@{
+    ViewBag.Title = "OrderWiseMultiplePrice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("OrderWiseMultiplePrice", "Commercial", FormMethod.Post, new { id = "formMultiplePrice", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m=>m.Id)
+    @Html.HiddenFor(m=>m.AddedBy)
+    @Html.HiddenFor(m=>m.AddedDate)
+    @Html.HiddenFor(m=>m.UpdatedBy)
+    @Html.HiddenFor(m=>m.UpdatedDate)
+    <div class="row">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">Order Wise Multiple Price</div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-4">Project</div>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(m => m.ProjectId, new SelectList(ViewBag.projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-4">Total Order Quantity</div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m=>m.OrderQuantity,new{@class="form-control",@readonly=""})
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-4">Quantity</div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control", type = "number" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-md-4">Price</div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(m => m.Price, new { @class = "form-control",type="number" ,required=""})
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-4">Remarks</div>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-8">
+                            <input class="btn btn-success" type="submit" value="Save" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Order wise multiple prices list
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tblMultiPrice">
+                    <thead>
+                        <tr>
+                            <td>ID</td>
+                            <td>ProjectID</td>
+                            <td>Project Name</td>
+                            <td>Order No</td>
+                            <td>Total Order Quantity</td>
+                            <td>Quantity</td>
+                            <td>Price</td>
+                            <td>Remarks</td>
+                            <td>Added By</td>
+                            <td>Added Date</td>
+                            <td>Updated By</td>
+                            <td>Updated Date</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in ViewBag.Prices)
+                        {
+                            <tr>
+                                <td class="tdId">@v.Id</td>
+                                <td>@v.ProjectId</td>
+                                <td>@v.ProjectName</td>
+                                <td>@v.OrderNumber</td>
+                                <td>@v.OrderQuantity</td>
+                                <td><input type="number" value="@v.Quantity" class="form-control txtQuantity" readonly="" /></td>
+                                <td><input type="number" value="@v.Price" class="form-control txtPrice" readonly="" /></td>
+                                <td><textarea class="form-control txtRemarks" readonly="">@v.Remarks</textarea></td>
+                                <td>@v.AddedBy</td>
+                                <td>@v.AddedDate.ToString("dd-MM-yyyy")</td>
+                                <td class="tdUpdatedBy">@v.UpdatedBy</td>
+                                <td class="tdUpdatedDate">
+                                    @if (@v.UpdatedDate != null)
+                                    {
+                                        @v.UpdatedDate.ToString("dd-MM-yyyy")
+                                    }
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btnEdit">Edit</button>
+                                    <button class="btn btn-danger hidden btnUpdate">Update</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var tblMultiPrice = $('#tblMultiPrice').DataTable({
+        });
+        
+        $('#ProjectId').on('change', function () {
+            var projectId = $(this).val();
+            console.log(projectId);
+            if (projectId != '') {
+                var url = '@Url.Action("GetProjectInfoById","Commercial")';
+                $.post(url, { projectId: projectId }, function (data) {
+                    console.log(data);
+                    $('#OrderQuantity').val(data.OrderQuantity);
+                });
+            }
+        });
+
+        $('#formMultiplePrice').on('submit', function(e) {
+            var projectId = $('#ProjectId option:selected').val();
+            console.log(projectId);
+            if (projectId == '') {
+                alertify.error('Select a project');
+                e.preventDefault();
+            }
+        });
+        
+        $('#tblMultiPrice tbody').on('click', '.btnEdit', function() {
+            var row = $(this).closest('tr');
+            var $thiss = $(this);
+            row.find('input').prop('readonly', false);
+            row.find('textarea').prop('readonly', false);
+            var id = row.find('.tdId').text();
+            console.log(id);
+            row.find('.btnUpdate').removeClass('hidden');
+            row.find('.btnEdit').addClass('hidden');
+        });
+
+        $('#tblMultiPrice tbody').on('click', '.btnUpdate', function () {
+            var url = '@Url.Action("UpdateMultiPrice","Commercial")';
+            var row = $(this).closest('tr');
+            var $thiss = $(this);
+            var id = row.find('.tdId').text();
+            var quantity = row.find('.txtQuantity').val();
+            var price = row.find('.txtPrice').val();
+            var remarks = row.find('.txtRemarks').val();
+            console.log(id+'>>'+quantity+'>>'+price+'>>'+remarks);
+            row.find('.btnUpdate').addClass('hidden');
+            row.find('.btnEdit').removeClass('hidden');
+            $.post(url, { id: id ,remarks:remarks,quantity:quantity,price:price}, function(data) {
+                console.log(data);
+                if (data.UpdatedDate != null) {
+                    alertify.success('Updated');
+                    $thiss.closest('tr').find('.tdUpdatedBy').text(data.UpdatedBy);
+                    var dateString = data.UpdatedDate;
+                    var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    date = formatDate(date);
+                    $thiss.closest('tr').find('.tdUpdatedDate').text(date);
+                    $thiss.closest('tr').find('input').prop('readonly', true);
+                    $thiss.closest('tr').find('textarea').prop('readonly', true);
+                    $thiss.closest('tr').find('.btnUpdate').addClass('hidden');
+                    $thiss.closest('tr').find('.btnEdit').removeClass('hidden');
+                } else {
+                    alertify.error('Something went wrong!!!');
+                }
+            });
+        });
+        
+        function formatDate(date) {
+            var d = new Date(date),
+              month = '' + (d.getMonth() + 1),
+              day = '' + d.getDate(),
+              year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [day, month, year].join('-');
+        }
+    });
+</script>

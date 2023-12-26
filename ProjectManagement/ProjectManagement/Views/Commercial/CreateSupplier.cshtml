@@ -1,0 +1,156 @@
+﻿@model ProjectManagement.Models.SupplierModel
+
+@{
+    ViewBag.Title = "CreateSupplier";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-md-10">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-arrow-right font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">New Supplier</span>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-toolbar">
+                        <div class="row"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <!-- BEGIN PROFILE CONTENT -->
+                        <div class="profile-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="portlet light bordered">
+                                        @using (Html.BeginForm())
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.HiddenFor(i => i.SupplierId)
+                                            @Html.HiddenFor(i => i.Added)
+                                            @Html.HiddenFor(i => i.AddedDate)
+                                            @Html.HiddenFor(i => i.Updated)
+                                            @Html.HiddenFor(i => i.UpdatedDate)
+                                            <div class="form-horizontal">
+                                                @{
+                                            if (TempData["message"] != null)
+                                            {
+                                                var msgType = TempData["messageType"];
+                                                var msg = TempData["message"];
+                                                if ((int)msgType == 1)
+                                                {
+                                                    TempData["message"] = null;
+                                                    TempData["messageType"] = 0;
+                                                    <div class="alert alert-success alert-dismissable">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                                        <strong>Message:</strong> @msg
+                                                    </div>
+
+                                                }
+                                                else if ((int)msgType == 2)
+                                                {
+                                                    TempData["message"] = null;
+                                                    TempData["messageType"] = 0;
+                                                    <div class="alert alert-danger alert-dismissable">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                                        <strong>Message:</strong> @msg
+                                                    </div>
+
+                                                }
+                                                else if ((int)msgType == 3)
+                                                {
+                                                    TempData["message"] = null;
+                                                    TempData["messageType"] = 0;
+                                                    <div class="alert alert-info alert-dismissable">
+                                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                                        <strong>Message:</strong> @msg
+                                                    </div>
+                                                }
+                                            }
+
+                                                }
+                                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Name</div>
+                                                    <div class="col-md-10">
+                                                        @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                                        @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Address</div>
+                                                    <div class="col-md-10">
+                                                        @Html.EditorFor(model => model.SupplierAddress, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                                        @Html.ValidationMessageFor(model => model.SupplierAddress, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Email</div>
+                                                    <div class="col-md-10">
+                                                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Phone</div>
+                                                    <div class="col-md-10">
+                                                        @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                                        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Est. In</div>
+                                                    <div class="col-md-10">
+                                                        @Html.TextBoxFor(i => i.EstablishmentDate, new { @class = "form-control date_picker"})
+                                                        @Html.ValidationMessageFor(model => model.EstablishmentDate, "", new { @class = "text-danger", required = "required" })
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-1">Has IDH</div>
+                                                    <div class="col-md-10">
+                                                        @Html.DropDownListFor(model => model.HasCompanyIdh, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "true"},
+                                    new SelectListItem { Text = "No", Value = "false"}
+                                }, "Value", "Text"), new { @class = "form-control", required = "required" })
+                                                        @Html.ValidationMessageFor(model => model.HasCompanyIdh, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <div class="col-md-offset-2 col-md-10">
+                                                        @if (Model != null && Model.SupplierId > 0)
+                                                        {
+                                                            <input type="submit" value="Update" class="btn btn-info" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="submit" value="Create" class="btn btn-success" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div>
+                                            @Html.ActionLink("Back to List", "Suppliers")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END PROFILE CONTENT -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,113 @@
+﻿@model ProjectManagement.ViewModels.Commercial.AccessoriesPoVm
+@{
+    ViewBag.Title = "AccessoriesPoList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tabbable-line boxless">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#tab_0" data-toggle="tab">Charger PO</a>
+                </li>
+                <li class="">
+                    <a href="#tab_1" data-toggle="tab">Earphone PO</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_0">
+                    <div class="portlet box green">
+                        <div class="portlet-title">
+                            <div class="caption">Charger PO List</div>
+                            <div class="tools">
+                                <input type="button" value="Create" class="btn btn-sm btn-default" onclick="window.location.href='@Url.Action("ChargerPo","Commercial")'" />
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="tblChargerPo">
+                                    <thead>
+                                        <tr>
+                                            <th>PO no</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var v in Model.ChargerPoModels)
+                                        {
+                                            <tr>
+                                                <td>@v.ChargerPoNo</td>
+                                                <td>@v.Quantity</td>
+                                                <td>
+                                                    <a href="@Url.Action("ChargerPo","Commercial")/@v.Id">Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tab_1">
+                    <div class="portlet box red">
+                        <div class="portlet-title">
+                            <div class="caption">Earphone PO List</div>
+                            <div class="tools">
+                                <input type="button" value="Create" class="btn btn-sm btn-default" onclick="window.location.href='@Url.Action("EarphonePo","Commercial")'" />
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="tblEarphonePo">
+                                    <thead>
+                                        <tr>
+                                            <th>PO no</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var v in Model.EarphonePoModels)
+                                        {
+                                            <tr>
+                                                <td>@v.EarphonePoNo</td>
+                                                <td>@v.Quantity</td>
+                                                <td>
+                                                    <a href="@Url.Action("EarphonePo","Commercial")/@v.Id">Details</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#tblChargerPo').dataTable({
+        "columnDefs": [
+            {
+                className: "text-center",
+                "targets": [0, 1, 2]
+            }
+        ]
+    });
+
+    $('#tblEarphonePo').dataTable({
+        "columnDefs": [
+            {
+                className: "text-center",
+                "targets": [0, 1, 2]
+            }
+        ]
+    });
+</script>
+

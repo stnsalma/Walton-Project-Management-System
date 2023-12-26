@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "ProjectProgressGanttChart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://code.highcharts.com/gantt/highcharts-gantt.js"></script>
+<script src="https://code.highcharts.com/gantt/modules/exporting.js"></script>
+<script src="~/Scripts/management_scripts/management_dashboard.js"></script>
+
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">Project Progress</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-lg-6">
+                        @Html.DropDownList("ddlIsComplete", new SelectList(new[]
+                                {
+                                new SelectListItem { Text = "Ongoing Projects", Value = "1", Selected = true },
+                                new SelectListItem { Text = "All Projects", Value = "0"},
+                                new SelectListItem { Text = "Completed Projects", Value = "2"}
+                                }, "Value", "Text"), new { @class = "form-control", onchange = "get_chart(this.id)" })
+                    </div>
+                    <div class="col-lg-6">
+                        @Html.DropDownList("ProjectName", new SelectList(ViewBag.ProjectNames, "ProjectName", "ProjectName"), "Select Project", new { @class = "form-control ddChosen" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-2">
+                <input type="button" id="showallreports" class="btn btn-success" value="Show All Reports" />
+            </div>
+
+            <div class="col-lg-4">
+                <select id="ProjectMasterId" class="form-control">
+                    <option value="">Select Order</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="portlet box default">
+    <div id="container"></div>
+</div>
+
+<script>
+    $('#ProjectMasterId').on('change', function () {
+        var url = '@Url.Action("GetDataForGantt","Common")';
+        var id = $('#ProjectMasterId option:selected').val();
+        console.log(id);
+        $.post(url,{id:id},function(data) {
+            
+        });
+    });
+
+
+    var today = new Date(),
+    day = 1000 * 60 * 60 * 24,
+    // Utility functions
+    dateFormat = Highcharts.dateFormat,
+    defined = Highcharts.defined,
+    isObject = Highcharts.isObject,
+    reduce = Highcharts.reduce;
+
+    // Set to 00:00:00:000 today
+    today.setUTCHours(0);
+    today.setUTCMinutes(0);
+    today.setUTCSeconds(0);
+    today.setUTCMilliseconds(0);
+    today = today.getTime();
+
+    Highcharts.ganttChart('container', {
+
+        series: [{
+            name: 'Project',
+            data: [{
+                name: 'Primo X5',
+                id: 'primo_x5',
+                //start: today - (2 * day),
+                end: today + 15 * day,
+                completed: {
+                    amount: 0.2
+                },
+                owner: 'Walton'
+            },
+            //=======Commercial===========
+                {
+                    name: 'COMMERCIAL',
+                    id: '_commercial',
+                    parent: 'primo_x5',
+                    start: today - (2 * day),
+                    //end: today + (6 * day),
+                    owner: 'Fahim Rashid'
+                }, {
+                    name: 'Initialize',
+                    id: '_initialize',
+                    //dependency: '_commercial',
+                    parent: '_commercial',
+                    start: today - (2 * day),
+                    //end: today + 8 * day,
+                    owner: 'Fahmida',
+                    milestone: true
+                }, {
+                    name: 'Create PO',
+                    id: '_po',
+                    dependency: 'final_approval',
+                    parent: '_commercial',
+                    start: today,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                },
+                //======Management=======
+                {
+                    name: 'MANAGEMENT',
+                    id: '_management',
+                    //dependency: '_initialize',
+                    parent: 'primo_x5',
+                    start: today - (1 * day),
+                    //milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Final Approval',
+                    id: 'final_approval',
+                    dependency: '_initialize',
+                    parent: '_management',
+                    start: today - (1 * day),
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                },
+                //============Project Manager========
+                {
+                    name: 'PROJECT MANAGER',
+                    id: '_pm',
+                    //dependency: '_po',
+                    parent: 'primo_x5',
+                    //start: today,
+                    //end: today + 3 * day,
+                    //milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Assign PM',
+                    id: '_assignpm',
+                    dependency: '_po',
+                    parent: '_pm',
+                    start: today+(1*day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Assign HW Tests',
+                    id: '_assignhw',
+                    dependency: '_assignpm',
+                    parent: '_pm',
+                    //start: today,
+                    //end: today + 3 * day,
+                    //milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Battery Test',
+                    id: '_batterytest',
+                    //dependency: '_po',
+                    parent: '_assignhw',
+                    start: today + (2 * day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Charger Test',
+                    id: '_chargertest',
+                    //dependency: '_po',
+                    parent: '_assignhw',
+                    start: today+(3*day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Assign SW Tests',
+                    id: '_assignsw',
+                    dependency: '_assignpm',
+                    parent: '_pm',
+                    //start: today,
+                    //end: today + 3 * day,
+                    //milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'SW Test v1',
+                    id: '_swtestv1',
+                    //dependency: '_po',
+                    parent: '_assignsw',
+                    start: today+(2*day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'SW Test v2',
+                    id: '_swtestv2',
+                    //dependency: '_po',
+                    parent: '_assignsw',
+                    start: today + (4 * day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                },
+                //======Spare========
+                {
+                    name: 'SPARE TEAM',
+                    id: '_spare',
+                    //dependency: '_po',
+                    parent: 'primo_x5',
+                    start: today,
+                    //end: today + 3 * day,
+                    //milestone: true,
+                    owner: 'S. M. Ovee'
+                }, {
+                    name: 'Spare Order',
+                    id: '_spareorder',
+                    dependency: '_po',
+                    parent: '_spare',
+                    start: today + (4 * day),
+                    //end: today + 3 * day,
+                    milestone: true,
+                    owner: 'S. M. Ovee'
+                }]
+        }],
+        tooltip: {
+            pointFormatter: function () {
+                var point = this,
+                    format = '%e. %b',
+                    options = point.options,
+                    completed = options.completed,
+                    amount = isObject(completed) ? completed.amount : completed,
+                    status = ((amount || 0) * 100) + '%',
+                    lines;
+
+                lines = [{
+                    value: point.name,
+                    style: 'font-weight: bold;color:red;'
+                }, {
+                    title: 'Start',
+                    value: dateFormat(format, point.start)
+                }, {
+                    visible: !options.milestone,
+                    title: 'End',
+                    value: dateFormat(format, point.end)
+                }, {
+                    title: 'Completed',
+                    value: status
+                }, {
+                    title: 'Owner',
+                    value: options.owner || 'unassigned'
+                }];
+
+                return reduce(lines, function (str, line) {
+                    var s = '',
+                        style = (
+                            defined(line.style) ? line.style : 'font-size: 0.8em;'
+                        );
+                    if (line.visible !== false) {
+                        s = (
+                            '<span style="' + style + '">' +
+                            (defined(line.title) ? line.title + ': ' : '') +
+                            (defined(line.value) ? line.value : '') +
+                            '</span><br/>'
+                        );
+                    }
+                    return str + s;
+                }, '');
+            }
+        },
+        title: {
+            text: 'Gantt Project Management'
+        },
+        xAxis: {
+            currentDateIndicator: true,
+            min: today - 3 * day,
+            max: today + 18 * day
+        }
+    });
+
+</script>

@@ -1,0 +1,266 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmBtrcNoc
+@{
+    ViewBag.Title = "BTRC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Btrc", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-settings font-green-sharp"></i>
+                        <span class="caption-subject  bold uppercase">BTRC</span>
+                    </div>
+                  
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Projects</label>
+                                <div class="col-lg-9">
+                                    @Html.DropDownListFor(model => model.ProjectBtrcNocModel.ProjectBrtcNocId, new SelectList(ViewBag.Projects, "ProjectBrtcNocId", "ProjectName"), "Select One", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Quantity</label>
+                                <div class="col-lg-9">
+                                    @Html.TextBoxFor(model=>model.ProjectBtrcNocModel.QuantityFromBtrcCommercial, new{@class="form-control"})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Sample IMEI</label>
+                                <div class="col-lg-9">
+                                    @Html.TextBoxFor(model => model.ProjectBtrcNocModel.SampleImeiFromBtrcCommercial, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">F. Sam. IMEI</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectBtrcNocModel.FinalSampleImei, new { @class = "form-control", @type = "number" })
+                                    @Html.ValidationMessageFor(model => model.ProjectBtrcNocModel.FinalSampleImei, String.Empty, new { @style = "color:red;!important", })
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="col-lg-2">
+                            <button id="btnAdd" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered" id="productTable">
+                                <thead>
+                                    <tr>
+                                        <th>Product Name - (PO No.)</th>
+                                        <th>Sample IMEI</th>
+                                        <th>Quantity</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tBody" class="tBody">
+                                    @if (Model.ProjectBtrcNocModel.CustomBtrcProjectModels != null && Model.ProjectBtrcNocModel.CustomBtrcProjectModels.Any())
+                                    {
+                                        foreach (var btrcProjectModel in Model.ProjectBtrcNocModel.CustomBtrcProjectModels)
+                                        {
+                                            Html.RenderPartial("~/Views/Commercial/CmPartials/_BtrcProjectList.cshtml", btrcProjectModel);
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6"></div>
+    </div>
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                BTRC NOC Summery
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+                
+                
+                <br />
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Application ID</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.BtrcRawModel.ApplicationId, new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.BtrcRawModel.ApplicationId, String.Empty, new { @style = "color:red;!important", })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">NOC Application Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocApplyDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocApplyDate, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Appx. NOC Receive Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.AppxNocReceiveDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.AppxNocReceiveDate, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">NOC Receive Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocReceiveDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocReceiveDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">NOC No.</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocNo, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocNo, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Issue Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocIssueDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocIssueDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Validity Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocValidityDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocValidityDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                @*<br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">TAC</label>
+                            <div class="col-lg-9">
+                                @Html.DropDownListFor(model => model.BtrcRawModel.BabtRawId, new SelectList(ViewBag.Tacs, "BabtRawId", "TacNo"), "Select One", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">NOC Quantity.</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BtrcRawModel.NocImeiQuantity, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(model => model.BtrcRawModel.NocImeiQuantity, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>*@
+
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+    <script type="text/javascript">
+
+        $(function () {
+            $("#btnAdd").on('click', function (e) {
+                e.preventDefault();
+                var projectName = $('#ProjectBtrcNocModel_ProjectBrtcNocId   option:selected').text();
+                var qty = $('#ProjectBtrcNocModel_QuantityFromBtrcCommercial').val();
+                var imei = $('#ProjectBtrcNocModel_SampleImeiFromBtrcCommercial').val();
+                var duplicateProject = $('#tBody tr > td:contains(' + projectName + ')').length;
+                //var duplicateImei = $('#tBody tr > td:contains(' + imei + ')').length;
+                if (duplicateProject <= 0) {
+                    var projectId = parseInt($('#ProjectBtrcNocModel_ProjectBrtcNocId   option:selected').val());
+                    projectName = $('#ProjectBtrcNocModel_ProjectBrtcNocId option:selected').text();
+                    //var imei = $('#ProjectBtrcNocModel_FinalSampleImei').val();
+                    $.post('@Url.Action("AddProject", "Commercial")', { projectId: projectId, projectName: projectName, qty: qty, imei: imei }, function (data) {
+                        console.log(data);
+                        $('#tBody').append(data);
+                    });
+                } else {
+                    alertify.alert("Duplicate data can't be added");
+                    //else if (duplicateProject > 0 && duplicateImei <= 0) {
+                    //    alertify.alert("Duplicate Project can't be added.");
+                    //}
+                    //else if (duplicateProject <= 0 && duplicateImei > 0) {
+                    //    alertify.alert("Duplicate IMEI can't be added.");
+                    //}
+                }
+            });
+
+            $("#BtrcRawModel_BabtRawId").on('change', function () {
+                var tac = $('#BtrcRawModel_BabtRawId option:selected').text();
+                if (tac !== "Select One") {
+                    $.post('@Url.Action("GetAvailableImei", "Commercial")', { tac:tac }, function (data) {
+                        alertify.alert("You have remaining "+data +" IMEI for this TAC");
+                    });
+                    
+                }
+            });
+        });
+        function removeDetailRow(element) {
+            var detailRow = $(element).closest('tr');
+            $(detailRow).remove();
+            //if (parseInt($(detailRow).find('input[id="id"]').val()) == 0) {
+            //    $(detailRow).remove();
+            //} else {
+            //    $(detailRow).find('input[id="status"]').val(0);
+            //    $(detailRow).attr('status', 0);
+            //    $(detailRow).hide();
+            //}
+            //updateTotals();
+        }
+    </script>

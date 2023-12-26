@@ -1,0 +1,250 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProjectLc
+@{
+    ViewBag.Title = "Lc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>LC</h2>
+
+@using (Html.BeginForm("Lc", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption col-lg-10">
+                Project Basics
+            </div>
+            <div class="col-lg-2">
+                <input type="button" class="btn sbold uppercase btn-outline white" value="Back To LC List" onclick="location.href='@Url.Action("Lcs", "Commercial")'" />
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="col-lg-12">
+                    @{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+        }
+        else if ((int)msgType == 2)
+        {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+        }
+        else if ((int)msgType == 3)
+        {
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })</div>
+                                        <div class="col-md-1">
+                                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=' + $('option:selected', $('#ProjectMasterModel_ProjectMasterId')).val()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Supplier</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.ProjectMasterModel.SupplierName, new { @class = "form-control", @disabled = "true" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Supplier Model</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierModelName, new { @class = "form-control", @disabled = "true" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Walton Model</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.ProjectMasterModel.ProjectName, new { @disabled = "true", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (@Model != null && @Model.ProjectMasterModel.ProjectMasterId > 0)
+    {
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    LC Information
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="row"></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                @Html.HiddenFor(model => model.ProjectLcModel.ProjectMasterId)
+                                <div class="form-body">
+                                    <div class="row">
+                                        @Html.HiddenFor(model => model.ProjectLcModel.ProjectLcId)
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">PO</label>
+                                                <div class="col-md-9">
+                                                    @Html.DropDownListFor(model => model.ProjectLcModel.ProjectOrderId, new SelectList(ViewBag.ProjectOrders, "Value", "Text"), new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">LC No</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ProjectLcModel.LcNo, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">OpeningDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ProjectLcModel.OpeningDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">BankOpeningDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(model => model.ProjectLcModel.BankOpeningDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">SupplierDraftDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ProjectLcModel.SupplierDraftDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">LcPassDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(model => model.ProjectLcModel.LcPassDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">BtrcNocDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ProjectLcModel.BtrcNocDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">SampleSendDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(model => model.ProjectLcModel.SampleSendDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">NocReceiveDate</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ProjectLcModel.NocReceiveDate, new { @class = "form-control date_picker" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Update Po No</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.PoNumber, new { @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="mt-checkbox-inline">
+                                                <label class="mt-checkbox">
+                                                    @Html.CheckBoxFor(model => model.Lc1, new { @class = "form-control", @checked = "checked" })LC1
+                                                    <span></span>
+                                                </label>
+                                                <label class="mt-checkbox">
+                                                    @Html.CheckBoxFor(model => model.Lc2, new { @class = "form-control", @checked = "checked" })LC2
+                                                    <span></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <div class="col-md-offset-3 col-md-9">
+                                                    <input type="submit" class="btn sbold uppercase btn-outline blue" value="Save" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

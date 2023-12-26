@@ -1,0 +1,400 @@
+﻿@model ProjectManagement.ViewModels.BdIqcBomPassViewModel
+@{
+    ViewBag.Title = "BdIqc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.HiddenFor(x=>x.BdIqcModel.Id)
+@Html.HiddenFor(x=>x.BdIqcModel.ProjectId)
+@Html.HiddenFor(x=>x.BdIqcModel.AddedBy)
+@Html.HiddenFor(x=>x.BdIqcModel.AddedDate)
+<div class="row">
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption">BD IQC</div>
+            <div class="tools">
+                <input type="submit" value="Save" class="btn btn-warning btn-sm" id="btnSave" />
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    @Html.DropDownListFor(x => x.BdIqcModel.VariantId, new SelectList(@ViewBag.Projects, "Id", "ProjectModel"), "Select Project", new { @class = "form-control ddChosen", required = "" })
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Lot No</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.LotNo, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Lot Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.LotQuantity, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">100% Inspection Passed</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(x => x.BdIqcModel.AllMaterialPassed, new List<SelectListItem>
+                        {
+                            new SelectListItem{Value = "Yes",Text = "Yes"},
+                            new SelectListItem{Value = "No",Text = "No"}
+                        }, "Select", new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">No of Inspection</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.NoOfInspectionTime, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Management Approved</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(x => x.BdIqcModel.ManagementApproved, new List<SelectListItem>
+                        {
+                            new SelectListItem{Value = "Yes",Text = "Yes"},
+                            new SelectListItem{Value = "No",Text = "No"}
+                        }, "Select", new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Management Approve Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.ManagementApproveDate, new { @class = "form-control date_picker", @readonly = "", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Sourcing Approved</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(x => x.BdIqcModel.SourcingApproved, new List<SelectListItem>
+                        {
+                            new SelectListItem{Value = "Yes",Text = "Yes"},
+                            new SelectListItem{Value = "No",Text = "No"}
+                        }, "Select", new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Warehouse Recive Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.WarehouseReceiveDate, new { @class = "form-control date_picker", @readonly = "", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Iqc Start Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(x => x.BdIqcModel.IqcStartDate, new { @class = "form-control date_picker", @readonly = "", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Remarks</div>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(x => x.BdIqcModel.Remarks, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="portlet box light">
+        <div class="col-md-12">
+            <div class="tabbable-line boxless">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#tab_0" data-toggle="tab">SKD BOM</a>
+                    </li>
+                    <li class="">
+                        <a href="#tab_1" data-toggle="tab">CKD BOM</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_0">
+                        <div class="portlet box blue">
+                            <div class="portlet-title">
+                                <div class="caption">SKD BOM</div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tblSkdBom">
+                                        <thead>
+                                            <tr>
+                                                <th>Spare Name</th>
+                                                <th>Description</th>
+                                                <th>BOM Quantity</th>
+                                                <th>AQL Size</th>
+                                                <th>BOM Failed</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                    <div class="tab-pane" id="tab_1">
+                        <div class="portlet box red">
+                            <div class="portlet-title">
+                                <div class="caption">CKD BOM</div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tblCkdBom">
+                                        <thead>
+                                            <tr>
+                                                <th>Spare Name</th>
+                                                <th>Description</th>
+                                                <th>BOM Quantity</th>
+                                                <th>AQL Size</th>
+                                                <th>BOM Failed</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        //$('#iqcFormId').on('submit', function (e) {
+        //    var project = $('#BdIqcModel_VariantId option:selected').text();
+        //    if (project == 'Select Project') {
+        //        e.preventDefault();
+        //        alertify.error('Select a project');
+        //    }
+        //});
+
+        $('#BdIqcModel_VariantId').on('change', function () {
+            $('#tblCkdBom tbody').empty();
+            $('#tblSkdBom tbody').empty();
+            //empty filds
+            $('#BdIqcModel_LotNo').val('');
+            $('#BdIqcModel_LotQuantity').val('');
+            $('#BdIqcModel_NoOfInspectionTime').val('');
+            $('#BdIqcModel_Remarks').val('');
+            $('#BdIqcModel_WarehouseReceiveDate').val('');
+            $('#BdIqcModel_IqcStartDate').val('');
+            $('#BdIqcModel_ManagementApproveDate').val('');
+            $('#BdIqcModel_AllMaterialPassed').prop('selectedIndex',0);
+            $('#BdIqcModel_SourcingApproved').prop('selectedIndex', 0);
+            $('#BdIqcModel_ManagementApproved').prop('selectedIndex', 0);
+            //====0====
+            var project = $('#BdIqcModel_VariantId option:selected').text();
+            var variantid = $('#BdIqcModel_VariantId option:selected').val();
+            console.log(variantid);
+            if (project != 'Select Project') {
+                var url = '@Url.Action("GetBom","Iqc")';
+                $.post(url, { id: variantid }, function (data) {
+                    console.log(data);
+                    if (data.iqc != null) {
+                        console.log(data.iqc);
+                        $('#BdIqcModel_Id').val(data.iqc.Id);
+                        $('#BdIqcModel_ProjectId').val(data.iqc.ProjectId);
+                        $('#BdIqcModel_AddedBy').val(data.iqc.AddedBy);
+                        $('#BdIqcModel_AddedDate').val(formatDate(data.iqc.AddedDate));
+                        $('#BdIqcModel_LotNo').val(data.iqc.LotNo);
+                        $('#BdIqcModel_LotQuantity').val(data.iqc.LotQuantity);
+                        $('#BdIqcModel_NoOfInspectionTime').val(data.iqc.NoOfInspectionTime);
+                        $('#BdIqcModel_ManagementApproveDate').val(formatDate(data.iqc.ManagementApproveDate));
+                        $('#BdIqcModel_Remarks').val(data.iqc.Remarks);
+                        $('#BdIqcModel_WarehouseReceiveDate').val(formatDate(data.iqc.WarehouseReceiveDate));
+                        $('#BdIqcModel_IqcStartDate').val(formatDate(data.iqc.IqcStartDate));
+                        $('#BdIqcModel_AllMaterialPassed').val(data.iqc.AllMaterialPassed);
+                        $('#BdIqcModel_SourcingApproved').val(data.iqc.SourcingApproved);
+                        $('#BdIqcModel_ManagementApproved').val(data.iqc.ManagementApproved);
+                    }
+                    for (var i = 0; i < data.bomrecord.length; i++) {
+                        var row = '';
+                        if (data.bomrecord[i].BOMType == 'EBOM') {
+                            row = '<tr>' +
+                                        '<td hidden="">' + data.bomrecord[i].Id + '</td>' +
+                                        '<td hidden="">' + data.bomrecord[i].VariantId + '</td>' +
+                                        '<td hidden="">' + data.bomrecord[i].BomId + '</td>' +
+                                        '<td hidden="">' + data.bomrecord[i].ProjectId + '</td>' +
+                                        '<td style="width:100px">' + data.bomrecord[i].SpareDescription + '</td>' +
+                                        '<td style="width:100px">' + data.bomrecord[i].Description + '</td>' +
+                                        '<td>' + data.bomrecord[i].BomQuantity + '</td>' +
+                                        '<td><input type="number" class="form-control" value="' + data.bomrecord[i].BomPassedQuantity + '"/></td>' +
+                                        '<td><input type="number" class="form-control" value="' + data.bomrecord[i].BomFailQuantity + '"/></td>' +
+                                        '<td><input type="text" class="form-control" value="' + (data.bomrecord[i].Remarks == null ? '' : data.bomrecord[i].Remarks) + '"/></td>' +
+                                  '</tr>';
+                            $('#tblCkdBom tbody').append(row);
+                        }
+                        if (data.bomrecord[i].BOMType == 'SKDBOM') {
+                            row = '<tr>' +
+                                       '<td hidden="">' + data.bomrecord[i].Id + '</td>' +
+                                       '<td hidden="">' + data.bomrecord[i].VariantId + '</td>' +
+                                       '<td hidden="">' + data.bomrecord[i].BomId + '</td>' +
+                                       '<td hidden="">' + data.bomrecord[i].ProjectId + '</td>' +
+                                       '<td style="width:100px">' + data.bomrecord[i].SpareDescription + '</td>' +
+                                       '<td style="width:100px">' + data.bomrecord[i].Description + '</td>' +
+                                       '<td>' + data.bomrecord[i].BomQuantity + '</td>' +
+                                       '<td><input type="number" class="form-control" value="' + data.bomrecord[i].BomPassedQuantity + '"/></td>' +
+                                       '<td><input type="number" class="form-control" value="' + data.bomrecord[i].BomFailQuantity + '"/></td>' +
+                                       '<td><input type="text" class="form-control" value="' + (data.bomrecord[i].Remarks == null ? '' : data.bomrecord[i].Remarks) + '"/></td>' +
+                                  '</tr>';
+                            $('#tblSkdBom tbody').append(row);
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#btnSave').on('click', function () {
+            $('#btnSave').attr('disabled', true);
+            // all bdiqc values
+            var project = $('#BdIqcModel_VariantId option:selected').text();
+            var variantid = $('#BdIqcModel_VariantId option:selected').val();
+            var id = $('#BdIqcModel_Id').val();
+            var projectid = $('#BdIqcModel_ProjectId').val();
+            var addedby = $('#BdIqcModel_AddedBy').val();
+            var addeddate = $('#BdIqcModel_AddedDate').val();
+            var lotno = $('#BdIqcModel_LotNo').val();
+            var lotquantity = $('#BdIqcModel_LotQuantity').val();
+            var noofinspection = $('#BdIqcModel_NoOfInspectionTime').val();
+            var remarks = $('#BdIqcModel_Remarks').val();
+            var warehousereceive = $('#BdIqcModel_WarehouseReceiveDate').val();
+            var iqcstart = $('#BdIqcModel_IqcStartDate').val();
+            var manageapprovedate = $('#BdIqcModel_ManagementApproveDate').val();
+            var allpassed = $('#BdIqcModel_AllMaterialPassed option:selected').val();
+            var sourcingapproved = $('#BdIqcModel_SourcingApproved option:selected').val();
+            var managementapproved = $('#BdIqcModel_ManagementApproved option:selected').val();
+            
+            //get table row data 
+            var bomArray = new Array();
+            //SKD
+            $('#tblSkdBom tbody').find('tr').each(function(i, el) {
+                var bomid = $(this).find('td').eq(0).text();
+                var bomprojectid = $(this).find('td').eq(3).text();
+                projectid = bomprojectid;//for now
+                var mrpbomid = $(this).find('td').eq(2).text();
+                var sparename = $(this).find('td').eq(4).text();
+                var bomdescription = $(this).find('td').eq(5).text();
+                var bomquantity = $(this).find('td').eq(6).text();
+                var passed = $(this).find('td').eq(7).find('input').val();
+                var failed = $(this).find('td').eq(8).find('input').val();
+                var bomremarks = $(this).find('td').eq(9).find('input').val();
+                //console.log(bomid + sparename + passed);
+                var bomobj = {                    
+                    "Id": bomid,
+                    "VariantId": variantid,
+                    "ProjectId": bomprojectid,
+                    "BomId": mrpbomid,
+                    "SpareDescription": sparename,
+                    "Description": bomdescription,
+                    "BOMType": "SKDBOM",
+                    "BomQuantity": bomquantity,
+                    "BomPassedQuantity": passed,
+                    "BomFailQuantity": failed,
+                    "Remarks":bomremarks
+                };
+                bomArray.push(bomobj);
+            });
+            //CKD
+            $('#tblCkdBom tbody').find('tr').each(function (i, el) {
+                var bomid = $(this).find('td').eq(0).text();
+                var bomprojectid = $(this).find('td').eq(3).text();
+                projectid = bomprojectid;//for now
+                var mrpbomid = $(this).find('td').eq(2).text();
+                var sparename = $(this).find('td').eq(4).text();
+                var bomdescription = $(this).find('td').eq(5).text();
+                var bomquantity = $(this).find('td').eq(6).text();
+                var passed = $(this).find('td').eq(7).find('input').val();
+                var failed = $(this).find('td').eq(8).find('input').val();
+                var bomremarks = $(this).find('td').eq(9).find('input').val();
+                //console.log(bomid + sparename + passed);
+                var bomobj = {
+                    "Id": bomid,
+                    "VariantId": variantid,
+                    "ProjectId": bomprojectid,
+                    "BomId": mrpbomid,
+                    "SpareDescription": sparename,
+                    "Description":bomdescription,
+                    "BOMType": "EBOM",
+                    "BomQuantity": bomquantity,
+                    "BomPassedQuantity": passed,
+                    "BomFailQuantity": failed,
+                    "Remarks": bomremarks
+                };
+                bomArray.push(bomobj);
+            });
+            console.log(bomArray);
+            if (project != 'Select Project') {
+                var iqc = {
+                    "Id": id,
+                    "ProjectId":projectid,
+                    "VariantId": variantid,
+                    "LotNo":lotno,
+                    "LotQuantity":lotquantity,
+                    "AllMaterialPassed": allpassed,
+                    "NoOfInspectionTime": noofinspection,
+                    "ManagementApproved": managementapproved,
+                    "ManagementApproveDate": manageapprovedate,
+                    "SourcingApproved": sourcingapproved,
+                    "Remarks": remarks,
+                    "WarehouseReceiveDate": warehousereceive,
+                    "IqcStartDate":iqcstart,
+                    "AddedBy": addedby,
+                    "AddedDate":addeddate
+                };
+                $.post('@Url.Action("SaveBdIqc", "Iqc")', {iqc:iqc,bdIqcBomPassRecord:bomArray}, function(data) {
+                    if (data) {
+                        alertify.success('Saved');
+                        $('#btnSave').attr('disabled', false);
+                    }
+                });
+            } else {
+                alertify.error('Select a project');
+                $('#btnSave').attr('disabled', false);
+            }
+        });
+        
+        function formatDate(date) {
+            if (date != null) {
+                var dateString = date;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var d = new Date(seconds),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+                return [year, month, day].join('-');
+            }
+        }
+    });
+</script>

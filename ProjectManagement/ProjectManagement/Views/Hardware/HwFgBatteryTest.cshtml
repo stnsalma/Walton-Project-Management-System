@@ -1,0 +1,567 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+    div.scrollmenu a {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 14px;
+        text-decoration: none;
+    }
+
+    div.scrollmenu a:hover {
+        background-color: #777;
+    }
+</style>
+
+<input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+@Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <div class="action">
+        <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+'@ViewBag.HwQcAssignId'+'&hwQcInchargeAssignId='+'@ViewBag.HwQcInchargeAssignId'">
+            <i class="fa fa-arrow-circle-o-right"></i>
+            Go to Nav Page
+        </a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="scrollmenu">
+            @*<a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>*@
+            @*<a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>*@
+            @*<a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+            <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+            <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+            <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+            <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+            <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+            <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+            <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+            <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+            <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+            <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+            <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>*@
+
+            <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+            <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+            <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Battery Test
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <h4 class="bold">Project Info</h4>
+                    <hr />
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Sample Name", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.ProjectMasterModel.ProjectName, new { @Class = "form-control", @readonly = "true" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Sample Number", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.ProjectMasterModel.NumberOfSample, new { @Class = "form-control", @readonly = "true" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Sample Supplier", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierName, new { @Class = "form-control", @readonly = "true" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Receive Date", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwQcAssignCustomMasterModel.HwQcAssignDate, new { @Class = "form-control", @readonly = "true" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwFgBatteryTestMasterId, new { @Value = @ViewBag.hwFgBatteryTestMasterId })
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.AddedBy)
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.AddedDate)
+
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Initial battery info
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Sample Quantity(Battery)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.SampleQuantity_Battery, new { @Class = "form-control", placeHolder = "pcs" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Sample Quantity(Cell)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.SampleQuantity_Cell, new { @Class = "form-control", placeholder = "pcs" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Battery Capacity(mAh)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.BatteryCapacity, new { @Class = "form-control", placeholder = "mAh" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Battery Cell Voltage(V)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.BatteryCellVoltage, new { @Class = "form-control", placeholder = "V" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Environment Temperature", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.TestEnvironment_Temperature, new { @Class = "form-control", placeholder = "°C" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Environment Humidity", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.TestEnvironment_Humidity, new { @Class = "form-control", placeholder = "%" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Item", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.TestItem, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Date", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @*@Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.TestDate, new { @Class = "form-control" })*@
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.TestDate, new { @class = "form-control date_picker" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Max Charge Voltage", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestMasterModel.MaxChargeVoltage, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <br />
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            @if (@ViewBag.hwFgBatteryTestMasterId == null)
+                                            {
+                                                <input type="submit" value="Save" class="btn btn-default" id="btnsave" />
+                                            }
+                                            else
+                                            {
+                                                <input type="submit" value="Update" class="btn btn-default" id="btnupdate" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+}
+
+
+
+@if (@ViewBag.hwFgBatteryTestMasterId != null)
+{
+    @Html.Partial("_HwFgBatteryTestCondition", Model)
+}
+
+
+
+@using (Html.BeginForm("BatteryTestResultSummary", "Hardware"))
+{
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.BatteryTestResultSummaryModel.BatteryTestResultSummaryId)
+    @Html.HiddenFor(model => model.BatteryTestResultSummaryModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    @*@Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwFgBatteryTestMasterId, new { @Value = @ViewBag.hwFgBatteryTestMasterId })*@
+    @Html.HiddenFor(model => model.BatteryTestResultSummaryModel.AddedBy)
+    @Html.HiddenFor(model => model.BatteryTestResultSummaryModel.AddedDate)
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Battery Test Result Summary
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Battery Internal Resistance", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.BatteryInternalResistance, new { @Class = "form-control", placeHolder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Cell Internal Resistance", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.CellInternalResistance, new { @Class = "form-control", placeholder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Battery Test Value", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery1TestValue, new { @Class = "form-control", placeHolder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Battery Test Value", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery2TestValue, new { @Class = "form-control", placeholder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Cell Test Value", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell1TestValue, new { @Class = "form-control", placeHolder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Cell Test Value", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell2TestValue, new { @Class = "form-control", placeholder = "mΩ" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Battery Result", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery1Result, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Battery Result", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery2Result, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Cell Result", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell1Result, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Cell Result", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell2Result, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Battery NTC", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery1Ntc, new { @Class = "form-control", placeHolder = "kΩ" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Battery NTC", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Battery2Ntc, new { @Class = "form-control", placeholder = "kΩ" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("1# Cell NTC", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell1Ntc, new { @Class = "form-control", placeHolder = "kΩ" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("2# Cell NTC", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.BatteryTestResultSummaryModel.Cell2Ntc, new { @Class = "form-control", placeholder = "kΩ" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("NTC (remarks)", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.NtcRemarks, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Annoupnced Capacity", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.AnnouncedCapacity, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Physical Condition", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.PhysicalCondition, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Cadex 30Cycle Test(1C)", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.Cadex30CycleTest1C, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Remarks", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.Remarks, new { @Class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Cadex 30Cycle Test(1C)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.BatteryTestResultSummaryModel.Cadex30CycleTest1C, new { @Class = "form-control"})
+                                        </div>
+                                    </div>
+                                </div>*@
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-10 col-md-offset-2">
+
+                                        @if (@Model.BatteryTestResultSummaryModel == null)
+                                        {
+                                            <input type="submit" value="Save" class="btn btn-default" id="btnsave" />
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" value="Update" class="btn btn-default" id="btnupdate" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script src="~/Scripts/datetime/core.js"></script>
+<script src="~/Scripts/datetime/zebra_datepicker.js"></script>
+<script>
+    $(function () {
+        $('#ProjectMasterModel_ApproxProjectOrderDate').Zebra_DatePicker();
+        //var msg = $('#hdnSuccess').val();
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+    });
+</script>
+
+

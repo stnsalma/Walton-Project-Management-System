@@ -1,0 +1,281 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProjectLc
+@{
+    ViewBag.Title = "UpdateLcPermission";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("UpdateLcPermissionDetailsById", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model=>model.PermissionModel.Id)
+    @Html.HiddenFor(model=>model.PermissionModel.ProjectMasterId)
+    @Html.HiddenFor(model=>model.PermissionModel.IsActive)
+    @Html.HiddenFor(model => model.PermissionModel.AddedBy)
+    @Html.HiddenFor(model => model.PermissionModel.AddedDate)
+    @Html.HiddenFor(model => model.PermissionModel.CheckedBy)
+    @Html.HiddenFor(model => model.PermissionModel.CheckedDate)
+    @Html.HiddenFor(model => model.PermissionModel.VerifiedBy)
+    @Html.HiddenFor(model => model.PermissionModel.VerifyDate)
+    @Html.HiddenFor(model => model.PermissionModel.SourcingApprovalBy)
+    @Html.HiddenFor(model => model.PermissionModel.SourcingApprovalDate)
+    @Html.HiddenFor(model => model.PermissionModel.SourcingRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.CeoApprovalBy)
+    @Html.HiddenFor(model => model.PermissionModel.CeoApprovalDate)
+    @Html.HiddenFor(model => model.PermissionModel.CeoRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.ApprovedBy)
+    @Html.HiddenFor(model => model.PermissionModel.ApprovedDate)
+    @Html.HiddenFor(model => model.PermissionModel.ApprovedByRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.IsApproved)
+    @Html.HiddenFor(model => model.PermissionModel.CompanyName)
+    @*@Html.HiddenFor(model => model.PermissionModel.SupplierGrade)*@
+    @Html.HiddenFor(model => model.PermissionModel.FinanceApprovalBy)
+    @Html.HiddenFor(model => model.PermissionModel.FinanceApprovalDate)
+    @Html.HiddenFor(model => model.PermissionModel.FinanceRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.AccountsApprovalBy)
+    @Html.HiddenFor(model => model.PermissionModel.AccountsApprovalDate)
+    @Html.HiddenFor(model => model.PermissionModel.AccountsRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.AcknowledgedBy)
+    @Html.HiddenFor(model => model.PermissionModel.AcknowledgeDate)
+    @Html.HiddenFor(model => model.PermissionModel.AcknowledgeRemarks)
+    @Html.HiddenFor(model => model.PermissionModel.Rate)
+    @Html.HiddenFor(model => model.PermissionModel.BiApprovalBy)
+    @Html.HiddenFor(model => model.PermissionModel.BiApprovalDate)
+    @Html.HiddenFor(model => model.PermissionModel.BiRemarks)
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">LC Permission Details</div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Model</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.Model, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Order No</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.OrderNo, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Supplier Name</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.SupplierName, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Supplier Grade</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.PermissionModel.SupplierGrade, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="A" , Value = "A"},
+                                                            new SelectListItem () { Text ="A+" , Value = "A+"},
+                                                            new SelectListItem () { Text ="B" , Value = "B"},
+                                                            new SelectListItem () { Text ="B+" , Value = "B+"}
+                                                        }, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Product</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.Product, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Previous Order Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.PreviousOrderQunatity, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Stock Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.StockQuantity, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Pipeline Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.PipelineQuantity, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Opening Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.StrOpeningDate, new { @class = "form-control date_picker", @readonly = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Order Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.OrderQuantity, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">LC Amount</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.LcAmount, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Currency</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.PermissionModel.Currency, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="USD" , Value = "USD"},
+                                                            new SelectListItem () { Text ="EUR" , Value = "EUR"},
+                                                            new SelectListItem () { Text ="CNY" , Value = "CNY"}
+                                                        }, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">TTI Per line</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.TtiPerLine, new { @class = "form-control", type = "number" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="control-label col-md-3">Total Amount</label>
+                    <div class="col-md-9">
+                        @*@if (Model.PermissionModel.ApprovedBy != null)
+                        {
+                            @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new {@class = "form-control", type = "number", @readonly = "", required = ""})
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new { @class = "form-control", type = "number", required = "" })
+                        }*@
+                        @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new { @class = "form-control", type = "number", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Warehouse Receive Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.StrWarehouseReceiveDate, new { @class = "form-control date_picker", @readonly = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Shipment Confirm Date</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.StrShipmentConfirmDate, new { @class = "form-control date_picker", @readonly = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Oracle PO no</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.PermissionModel.OraclePoNo, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div class="col-md-3">Approx. Shipment Date</div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PermissionModel.StrApproxDateOfShipment, new { @class = "form-control date_picker", @readonly = "" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Remarks</label>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(model => model.PermissionModel.Remarks, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <h3>File Upload</h3>
+            <hr/>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <div class="table-responsive">
+                            @if (User.IsInRole("CM"))
+                            {
+                                <button type="button" class="btn btn-warning btn-sm" id="btnAddFiles">
+                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                <span style="font-weight: bold">Add Files</span>
+                            </button>
+                            }
+                            
+                            <br />
+                            <br />
+                            <table class="table table-bordered" id="tblFiles">
+                                <thead>
+                                    <tr>
+                                        <th>File Path</th>
+                                        <th>Remarks</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.LcOpeningPermissionFileModels.Count > 0)
+                                    {
+                                        foreach (var file in Model.LcOpeningPermissionFileModels)
+                                        {
+                                            Html.RenderPartial("~/Views/Shared/_AddFiles.cshtml", file);
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    @if (User.IsInRole("CM"))
+                    {
+                        <input type="submit" class="btn btn-success" value="Update" />
+                    }
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function() {
+        $("#btnAddFiles").on('click', function() {
+            $.post('@Url.Action("AddFilesPartial", "Common")', {}, function(data) {
+                $('#tblFiles').append(data);
+            });
+        });
+    });
+</script>
+

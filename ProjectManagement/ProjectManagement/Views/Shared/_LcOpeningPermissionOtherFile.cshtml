@@ -1,0 +1,33 @@
+﻿@model ProjectManagement.Models.LcOpeningPermissionOtherFileModel
+
+<tr>
+    @using (Html.BeginCollectionItem("LcOpeningPermissionOtherFileModels"))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.LcOtherPermissionId)
+        @Html.HiddenFor(m => m.AddedBy)
+        @Html.HiddenFor(m => m.AddedDate)
+        @Html.HiddenFor(m => m.FilePath)
+        <td>
+            @if (Model == null)
+            {
+                @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" })
+            }
+            else
+            {
+                <i class="fa fa-download"></i>
+                {
+                    if (Model != null)
+                    {
+                        string a = Path.GetFileNameWithoutExtension(Model.FilePath);
+                        @Html.ActionLink(a, "DownloadLcPermissionFile", "Common", new { id = Model.Id }, null)
+                    }
+                }
+            }
+        </td>
+        <td>
+            @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control" })
+        </td>
+        <td></td>
+    }
+</tr>

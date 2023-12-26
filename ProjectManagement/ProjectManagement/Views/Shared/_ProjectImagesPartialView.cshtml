@@ -1,0 +1,41 @@
+﻿@model ProjectManagement.Models.ProjectImageModel
+
+<tr>
+    @using (Html.BeginCollectionItem("ProjectImageModels"))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.ProjectId)
+        @Html.HiddenFor(m => m.ProjectModel)
+        @Html.HiddenFor(m => m.AddedBy)
+        @Html.HiddenFor(m => m.AddedDate)
+        @Html.HiddenFor(m => m.ImagePath)
+        <td>
+            @if (Model == null)
+            {
+                <img class="thumbnail" src="#" alt="no image">
+            }
+            else
+            {
+                <a target="_blank" href="@Model.ImagePath">
+                    <img class="thumbnail" src="@Model.ImagePath" alt="image">
+                </a>
+            }
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class = "form-control getImage" })
+        </td>
+        <td>
+            @Html.TextAreaFor(m => m.Remarks, new { @class = "form-control", rows = "4" })
+        </td>
+        <td>
+            @if (Model == null)
+            {
+                <button class="btn btn-danger btnRemoveFile" type="button"><i class="fa fa-trash"></i></button>
+            }
+            else
+            {
+                <button class="btn btn-danger disabled" type="button"><i class="fa fa-trash"></i></button>
+            }
+        </td>
+    }
+</tr>

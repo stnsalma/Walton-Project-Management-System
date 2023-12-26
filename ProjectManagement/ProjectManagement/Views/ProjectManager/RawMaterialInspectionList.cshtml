@@ -1,0 +1,347 @@
+﻿@*<h2>RawMaterialInspectionList</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectManager.AssignProjectsViewModel
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .DTFC_LeftBodyWrapper {
+        position: relative;
+        top: -11px !important;
+        left: 0px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .DTFC_LeftBodyLiner {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        height: 200px;
+        max-height: 200px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+
+</style>
+
+
+
+@using (@Html.BeginForm("RawMaterialInspectionList", "ProjectManager", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-title">
+                    <div class="col-lg-6">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">Open Raw Material Inspection List</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                    <div class="col-lg-6">
+                        @if (User.IsInRole("PM") || User.IsInRole("PMHEAD"))
+                        {
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Create Raw Material Inspection" onclick="location.href='@Url.Action("RawMaterialInspection", "ProjectManager")' " />
+                        }
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table class="table table-bordered table-striped table-condensed flip-content tbl1" id="tbl1">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th style="display: none">id</th>
+                                    <th>Project Name</th>
+                                    <th>Project Type</th>
+                                    <th>Orders</th>
+                                    <th>Po<br />Category</th>
+                                    <th>PoQuantity</th>
+                                    <th>Lot No.</th>
+                                    <th>Lot Quantity</th>
+                                    <th>PM <br />ClearanceDate</th>
+                                    <th>Inspection Starting Date</th>
+                                    <th>Major Delay Reason</th>
+                                    <th>100% Material <br />Pass On <br />China IQC?</th>
+                                    <th>No Of <br />Time <br />Inspection</th>
+                                    <th>Management  <br />Approved</th>
+                                    <th>Management  <br />ApproveDate</th>
+                                    <th>Hardware <br />Sample Receive</th>
+                                    <th>Inspection Major<br/> Fail Items</th>
+                                    <th>Order Color <br />Ratio With Qty</th>
+                                    <th>Supporting   <br />Document</th>
+                                    <th>FOC <br />Details</th>
+                                    <th>Update<br />Supporting<br />Document</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.RawMaterialInspectionListData != null)
+                                {
+                                    foreach (var item in ViewBag.RawMaterialInspectionListData)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td style="display: none" id="ss1" class="dd1">@item.RawMaterialId</td>
+                                            <td>@item.ProjectName</td>
+                                            <td>@item.ProjectType</td>
+                                            <td>@item.Orders</td>
+                                            <td>@item.PoCategory</td>
+                                            <td>@item.PoQuantity</td>
+                                            <td>@item.LotNumber</td>
+                                            <td>@item.LotQuantity</td>
+                                            <td>
+                                                @if (@item.ProjectManagerClearanceDate != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @item.ProjectManagerClearanceDate)
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@item.InspectionStartingDate != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @item.InspectionStartingDate)
+                                                }
+                                            </td>
+                                            @*<td></td>*@
+                                            <td>@item.MajorDelayReason</td>
+                                            <td>@item.ChinaIqcPassHundredPercent</td>
+                                            <td>@item.NoOfTimeInspection</td>
+                                            <td>@item.ManagementApproval</td>
+                                            <td>
+                                                @if (@item.ManagementApprovalDate != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @item.ManagementApprovalDate)
+                                                }
+                                            </td>
+                                            <td>@item.HardwareSampleReceive</td>
+                                            <td>@item.InspectionMajorFailItems</td>
+                                            <td>@item.OrderColorRatioWithQty</td>
+                                            <td>
+                                                <div class="file-preview-thumbnails">
+                                                    <div class="">
+                                                        <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                            <div class="col-lg-12">
+                                                                @if (@item.SupportingDocument != null)
+                                                                {
+
+                                                                    <input value="@item.SupportingDocument" style="display: none" />
+                                                                    for (int m = 0; m < @item.FilesDetails.Count; m++)
+                                                                    {
+
+                                                                        if (@item.FilesDetails[m].Extention == ".jpg" || @item.FilesDetails[m].Extention == ".png" || @item.FilesDetails[m].Extention == ".mp4" || @item.FilesDetails[m].Extention == ".jpeg" || @item.FilesDetails[m].Extention == ".txt" || @item.FilesDetails[m].Extention == ".xls" || @item.FilesDetails[m].Extention == ".wav")
+                                                                        {
+                                                                            <div class="col-lg-3">
+                                                                                <embed class="" src="@item.FilesDetails[m].FilePath" style="width: 100px; height: 100px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@item.FilesDetails[m].FilePath">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                        }
+                                                                        if (@item.FilesDetails[m].Extention == ".zip" || @item.FilesDetails[m].Extention == ".pdf" || @item.FilesDetails[m].Extention == ".docx" || @item.FilesDetails[m].Extention == ".xlsx" || @item.FilesDetails[m].Extention == ".rar" || @item.FilesDetails[m].Extention == ".pptx")
+                                                                        {
+
+                                                                            string[] urls = @item.FilesDetails[m].FilePath.Split('|');
+                                                                            var last = urls[0].Split('-').Last();
+                                                                            var lastNameForM = item.FilesDetails[m].FilePath;
+                                                                            lastNameForM = Path.GetFileName(last);
+
+                                                                            <div class="col-lg-3" style="width: 100px; height: 100px;">
+                                                                                @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+                                                                                <br />
+                                                                                <a href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                            </div>
+                                                                            <div class="col-lg-3" style="width: 50px;"></div>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                            <td>
+                                                <a target="_blank" onclick="FocDetailsFunc(@item.RawMaterialId,@item.ProjectMasterId)" class="lnks">Details</a>
+                                            </td>
+                                            <td>
+                                                @if (User.IsInRole("PM") || User.IsInRole("PMHEAD"))
+                                                {
+                                                    <button type="button" class="btn btn-danger btnOpenModal">
+                                                     <span class="glyphicon glyphicon-plus"></span> UpdateDoc
+                                                   </button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+    <input type="text" name="ProIds" id="ProIds" value="" style="display:none;" />
+
+    <div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="font-weight: bold; color: black;">Update Supporting Document</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group" style="display: none;">
+                            <label class="control-label">Ids :</label>
+                            <input name="ProIds" id="ProIds" type="text" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                Project Name:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="ProjectName" id="ProjectName" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                Order:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="Orders" id="Orders" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-lg-3">
+                                PO Category:
+                            </div>
+                            <div class="col-lg-9">
+                                <input name="PoCategory" id="PoCategory" disabled="disabled" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <br /><br /><br /><br />
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label" style="font-weight: bold">Supporting Document :</label><br /><br />
+                            <div class="col-lg-8">
+                                <input type="file" name="issueList1[0].FileId" id="FileId1" />
+                            </div>
+                            <div class="col-lg-2 ">
+                                <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr')); ">
+                                    <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                    <input type="submit" id="smitModalOfSave" class="btn green smitModalOfSave" value="Save changes" />
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function FocDetailsFunc(idss,projectId) {
+        var RawMaterialId = idss;
+        window.open('@Url.Action("FocClaimDetailsLotWise", "ProjectManager")' + '?RawMaterialId=' + RawMaterialId+'&projectId='+projectId);
+    }
+    function removeDetailRow(element) {
+        $('#FileId1').val("");
+    }
+    $(document).ready(function () {
+
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $('#tbl1').on('click', '.btnOpenModal', function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl1');
+            var proIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var order = $.trim(table.rows[rowIndex].cells[4].innerHTML);//$(this).parents('tr').find('input:hidden[id=SwQcInchargeAssignId]').val();
+            var poCategory = $.trim(table.rows[rowIndex].cells[5].innerHTML);//$(this).parents('tr').find('input:hidden[id=ProjectMasterId]').val();
+
+            $('#draggable').modal();
+
+            $('#ProIds').val(proIds);
+            $('#ProjectName').val(projectName);
+            $('#Orders').val(order);
+            $('#PoCategory').val(poCategory);
+
+        });
+        $('#smitModalOfSave').click(function (e) {
+            e.preventDefault();
+            
+            var ProIds = $("#ProIds").val();
+            console.log("ProIds :" + ProIds);
+            var obj = {};
+
+            obj.ProIds = ProIds;
+
+            $('#form1').trigger('submit');
+            $('#loading').hide();
+
+        });
+    });
+</script>
+

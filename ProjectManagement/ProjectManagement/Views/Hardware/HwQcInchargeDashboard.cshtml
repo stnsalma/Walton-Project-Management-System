@@ -1,0 +1,557 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+@*<script src="~/Content/angular/angular.min.js"></script>*@
+
+
+
+@*<div ng-app="appHwInchargeDashboard" ng-controller="ctrlHwIncharge">*@
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Hardware Incharge Dashboard</label>
+    <i class="icon-calendar pull-right"><label ng-model="date" class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" id="screening">
+        <a onclick="location.href='@Url.Action("HwScreeningTestQcAssign", "Hardware")'" class="dashboard-stat dashboard-stat-v2 blue">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@ViewBag.HwInchargeCounter.ScreeningCounter" data-counter="counterup"></span>
+                </div>
+                <div class="desc screening">
+                    Screening Test 
+                    <br />
+                    <span style="font-size: 12px">(Click to assign engineer)</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("HwRunningTestQcAssign", "Hardware")'" class="dashboard-stat dashboard-stat-v2 red">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@ViewBag.HwInchargeCounter.RunningTestCounter" data-counter="counterup"></span>
+                </div>
+                <div class="desc running">
+                    Running Test 
+                    <br />
+                    <span style="font-size: 12px">(Click to assign engineer)</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("HwFinishedGoodsTestQcAssign", "Hardware")'" class="dashboard-stat dashboard-stat-v2 green">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@ViewBag.HwInchargeCounter.FinishedGoodsCounter" data-counter="counterup"></span>
+                </div>
+                <div class="desc">
+                    Finished Goods 
+                    <br/>
+                    <span style="font-size: 12px">(Click to assign engineer)</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("HwReceivableProjects", "Hardware")'" class="dashboard-stat dashboard-stat-v2 purple">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+
+                    <span data-value="@ViewBag.HwInchargeCounter.HwReceivableCounter" data-counter="counterup"></span>
+                </div>
+                <div class="desc">
+                    Receivable Projects 
+                    <br />
+                    <span style="font-size: 12px">(Click to view receivable projects)</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+
+@*=========================================================*@
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Screening Test Assign Status
+        </div>
+        @*<div class="pull-right">
+                <input class="form-control" type="text" ng-model="search"/>
+            </div>*@
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblScreeningQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier<br/> Model Name </th>
+                            <th class="text-center"> Project Assigned To </th>
+                            <th class="text-center"> Sample<br/> Type </th>
+                            <th class="text-center"> Sample<br/> Set Sent </th>
+                            <th class="text-center"> Assign Comment </th>
+                            <th class="text-center"> Sample<br/> Sent Date<br />(commercial) </th>
+                            <th class="text-center"> Sample Set<br/> Received </th>
+                            <th class="text-center"> Receiver Comment </th>
+                            <th class="text-center"> Sample<br/> Receive<br/> Date </th>
+                            <th class="text-center"> Submit Date </th>
+                            <th class="text-center"> Verified By </th>
+                            <th class="text-center"> Verification<br/> Date </th>
+                            <th class="text-center"> Status </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetScreeningTestProjectStatus)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                @*<td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>*@
+                                @*<td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>*@
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.UserFullName </td>
+                                <td class="text-center"> @item.ProjectManagerSampleType </td>
+                                <td class="text-center"> @item.SentSampleQuantity </td>
+                                <td class="text-center"> @item.ProjectManagerAssignComment </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetSentDate != null)
+                                    {
+                                        @item.SampleSetSentDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center"> @item.ReceivedSampleQuantity </td>
+                                <td class="text-center"> @item.ReceiveSampleRemark </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetReceiveDate != null)
+                                    {
+                                        @item.SampleSetReceiveDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.QcSubmissionDate != null)
+                                    {
+                                        @item.QcSubmissionDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+
+                                <td class="text-center"> @item.VerifierName </td>
+                                <td class="text-center">
+                                    @if (item.VerificationDate != null)
+                                    {
+                                        @item.VerificationDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.Status == "NEW")
+                                    {
+                                        <span class="label label-sm label-success"> @item.Status </span>
+                                    }
+                                    else if (item.Status == "RUNNING")
+                                    {
+                                        <span class="label label-sm label-primary"> @item.Status </span>
+                                    }
+                                    else if (item.Status == null)
+                                    {
+                                        <span class="label label-sm label-default"> NOTASSIGNED </span>
+                                    }
+                                    else if (item.Status == "QCSUBMITTED")
+                                    {
+                                        <span class="label label-sm label-warning"> VERIFICATIONPENDING </span>
+                                        @*<button class="btn purple black btn-outline btn-xs btn-circle pull-right btnVerify" id="btnVerify">Verify</button>*@
+
+                                    }
+                                    else if (item.Status == "QCFAILED")
+                                    {
+                                        <span class="label label-sm label-default"> @item.Status </span>
+                                        @*<button class="btn btn-transparent black btn-outline btn-xs btn-circle pull-right" id="btnReAssign">ReAssign</button>*@
+                                    }
+                                    else if (item.Status == "QCPASSED")
+                                    {
+                                        <span class="label label-sm label-info"> VERIFIED </span>
+                                        @*<button class="btn btn-transparent black btn-outline btn-xs btn-circle pull-right" id="btnForward">Forward</button>*@
+                                    }
+                                    else if (item.Status == "FORWARDED")
+                                    {
+                                        <span class="label label-sm label-danger"> @item.Status </span>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Running Test Assign Status
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblRunningQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier<br/> Model Name </th>
+                            <th class="text-center"> Project Assigned To </th>
+                            <th class="text-center"> Sample Type </th>
+                            <th class="text-center"> Sample<br/> Set Sent </th>
+                            <th class="text-center"> Assign Comment </th>
+                            <th class="text-center"> Sample Sent Date<br />(Project Manager) </th>
+                            <th class="text-center"> Sample Set<br/> Received </th>
+                            <th class="text-center"> Receiver Comment </th>
+                            <th class="text-center"> Sample<br/> Receive Date </th>
+                            <th class="text-center"> Submit Date </th>
+                            <th class="text-center"> Verified By </th>
+                            <th class="text-center"> Verification Date </th>
+                            <th class="text-center"> Status </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetRunningTestProjectStatus)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                @*<td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>*@
+                                <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.UserFullName </td>
+                                <td class="text-center"> @item.ProjectManagerSampleType </td>
+                                <td class="text-center"> @item.SentSampleQuantity </td>
+                                <td class="text-center"> @item.ProjectManagerAssignComment </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetSentDate != null)
+                                    {
+                                        @item.SampleSetSentDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center"> @item.ReceivedSampleQuantity </td>
+                                <td class="text-center"> @item.ReceiveSampleRemark </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetReceiveDate != null)
+                                    {
+                                        @item.SampleSetReceiveDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.QcSubmissionDate != null)
+                                    {
+                                        @item.QcSubmissionDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+
+                                <td class="text-center"> @item.VerifierName </td>
+                                <td class="text-center">
+                                    @if (item.VerificationDate != null)
+                                    {
+                                        @item.VerificationDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.Status == "NEW")
+                                    {
+                                        <span class="label label-sm label-success"> @item.Status </span>
+                                    }
+                                    else if (item.Status == "RUNNING")
+                                    {
+                                        <span class="label label-sm label-primary"> @item.Status </span>
+                                    }
+                                    else if (item.Status == null)
+                                    {
+                                        <span class="label label-sm label-default"> NOTASSIGNED </span>
+                                    }
+                                    else if (item.Status == "QCSUBMITTED")
+                                    {
+                                        <span class="label label-sm label-warning"> VERIFICATIONPENDING </span>
+                                        @*<button class="btn purple black btn-outline btn-xs btn-circle pull-right btnVerify" id="btnVerify">Verify</button>*@
+                                    }
+                                    else if (item.Status == "QCFAILED")
+                                    {
+                                        <span class="label label-sm label-default"> @item.Status </span>
+                                        @*<button class="btn btn-transparent black btn-outline btn-xs btn-circle pull-right" id="btnReAssign">ReAssign</button>*@
+                                    }
+                                    else if (item.Status == "QCPASSED")
+                                    {
+                                        <span class="label label-sm label-info"> VERIFIED </span>
+                                        @*<button class="btn btn-transparent black btn-outline btn-xs btn-circle pull-right" id="btnForward">Forward</button>*@
+                                    }
+                                    else if (item.Status == "FORWARDED")
+                                    {
+                                        <span class="label label-sm label-danger"> @item.Status </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Finished Goods Test Assign Status
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            @*@Html.Partial("_HwQcDocUpload", Model)*@
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblFinishedGoodQcStatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center"> Supplier<br /> Model Name </th>
+                            <th class="text-center"> Project Assigned To </th>
+                            <th class="text-center"> Sample<br/> Type </th>
+                            <th class="text-center"> Sample<br/> Set Sent </th>
+                            <th class="text-center"> Assign Comment </th>
+                            <th class="text-center"> Sample Sent Date<br />(Project Manager) </th>
+                            <th class="text-center"> Sample Set <br/> Received </th>
+                            <th class="text-center"> Receiver Comment </th>
+                            <th class="text-center"> Sample <br/> Receive<br/> Date </th>
+                            <th class="text-center"> Submit Date </th>
+                            <th class="text-center"> Verified By </th>
+                            <th class="text-center"> Verification<br/> Date </th>
+                            <th class="text-center"> Status </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetFinishedGoodsTestProjectStatus)
+                        {
+                            <tr>
+                                <td class="text-center">  </td>
+                                @*<td class="hidden" id="hwQcAssignId">@item.HwQcAssignId</td>*@
+                                <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                <td class="text-center"> @item.ProjectName </td>
+                                <td class="text-center"> @item.SupplierModelName </td>
+                                <td class="text-center"> @item.UserFullName </td>
+                                <td class="text-center"> @item.ProjectManagerSampleType </td>
+                                <td class="text-center"> @item.SentSampleQuantity </td>
+                                <td class="text-center"> @item.ProjectManagerAssignComment </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetSentDate != null)
+                                    {
+                                        @item.SampleSetSentDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center"> @item.ReceivedSampleQuantity </td>
+                                <td class="text-center"> @item.ReceiveSampleRemark </td>
+                                <td class="text-center">
+                                    @if (item.SampleSetReceiveDate != null)
+                                    {
+                                        @item.SampleSetReceiveDate.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.QcSubmissionDate != null)
+                                    {
+                                        @item.QcSubmissionDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+
+
+                                <td class="text-center"> @item.VerifierName </td>
+                                <td class="text-center">
+                                    @if (item.VerificationDate != null)
+                                    {
+                                        @item.VerificationDate.ToString("dd/MM/yyyy")
+
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("-")
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.Status == "NEW")
+                                    {
+                                        <span class="label label-sm label-success"> @item.Status </span>
+                                    }
+                                    else if (item.Status == "RUNNING")
+                                    {
+                                        <span class="label label-sm label-primary"> @item.Status </span>
+                                    }
+                                    else if (item.Status == null)
+                                    {
+                                        <span class="label label-sm label-default"> NOTASSIGNED </span>
+                                    }
+                                    else if (item.Status == "QCSUBMITTED")
+                                    {
+                                        <span class="label label-sm label-warning"> VERIFICATIONPENDING </span>
+
+                                    }
+                                    else if (item.Status == "QCFAILED")
+                                    {
+                                        <span class="label label-sm label-default"> @item.Status </span>
+                                        @*<button class="btn btn-transparent black btn-outline btn-xs btn-circle pull-right" id="btnReAssign">ReAssign</button>*@
+                                    }
+                                    else if (item.Status == "QCPASSED")
+                                    {
+                                        <span class="label label-sm label-info"> VERIFIED </span>
+                                        @*<button class="btn purple black btn-outline btn-xs btn-circle btnFgReport" id="btnFgReport" style="margin: 5px 0 0 0">Report</button>*@
+                                    }
+                                    else if (item.Status == "FORWARDED")
+                                    {
+                                        <span class="label label-sm label-danger"> @item.Status </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*</div>*@
+
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/Shared/_UserOpinion.cshtml")
+    </div>
+
+</div>
+
+
+
+<script>
+    $(function () {
+        //$('#tblScreeningQcStatus').DataTable({
+        //    select: true
+        //});
+        //get Automatic Serial number column in the HTML Table
+        $('#tblScreeningQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+        //get Automatic Serial number column in the HTML Table
+        $('#tblRunningQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+        //get Automatic Serial number column in the HTML Table
+        $('#tblFinishedGoodQcStatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+
+
+
+        $('[class*="btnVerify"]').click(function () {
+            $('#tblScreeningQcStatus tr').click(function (event) {
+                //console.log($(this).find('#hwQcAssignId').html());
+                //alertify.alert($(this).find('#hwQcAssignId').html());
+
+                var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $(this).find('#hwQcAssignId').html();
+                window.location.href = url;
+            });
+
+            $('#tblRunningQcStatus tr').click(function (event) {
+                //console.log($(this).find('#hwQcAssignId').html());
+                //alertify.alert($(this).find('#hwQcAssignId').html());
+
+                var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $(this).find('#hwQcAssignId').html();
+                window.location.href = url;
+            });
+        });
+
+        $('[class*="btnFgReport"]').click(function () {
+            //alert();
+            $('#tblFinishedGoodQcStatus tr').click(function (event) {
+                //console.log($(this).find('#hwQcAssignId').html());
+                //alertify.alert($(this).find('#hwQcAssignId').html());
+
+                var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + $(this).find('#hwQcInchargeAssignId').html();
+                window.location.href = url;
+            });
+        });
+
+    });
+</script>
+
+@*<script>
+        var app = angular.module('appHwInchargeDashboard', []);
+
+        app.controller('ctrlHwIncharge', function($scope) {
+            //alert();
+        });
+    </script>*@
+
+
+
+
+
+

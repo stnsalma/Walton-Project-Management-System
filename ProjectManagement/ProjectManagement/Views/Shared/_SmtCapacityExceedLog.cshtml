@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ProjectManagement.Models.SmtCapacityExceedLogModel>
+
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">SMT capacity exceed log</div>@* closed projects with PO date in between 09 to 06 month before today *@
+        </div>
+        <div class="portlet-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">SMT capacity crossed for Model</th>
+                            <th class="text-center">Order No</th>
+                            <th class="text-center">Order Quantity</th>
+                            <th class="text-center">PO date</th>
+                            <th class="text-center">Estimated Warehouse Receive on</th>
+                            <th class="text-center">Running Warehouse Receive Quantity</th>
+                            @*<th class="text-center">Action</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            <tr>
+                                <td hidden="">@v.ProjectMasterId</td>
+                                <td class="text-center">@v.SmtCapacityCrossedForModel</td>
+                                <td class="text-center">@v.OrderNo</td>
+                                <td class="text-center">@v.OrderQuantity</td>
+                                <td class="text-center">
+                                    @if (v.PoDate != null)
+                                    {
+                                     @v.PoDate.Value.ToString("dd-MMM-yyyy")   
+                                    }
+                                </td>
+                                <td class="text-center">@v.Month, @v.Year</td>
+                                <td class="text-center">@v.RunningSmtQuantity</td>
+                                @*<td class="text-center">
+                                    <input type="button" class="btn btn-success btn-sm details" value="Details" />
+                                </td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>

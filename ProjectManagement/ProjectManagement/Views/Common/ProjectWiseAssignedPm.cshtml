@@ -1,0 +1,43 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPmAssignModel>
+@{
+    ViewBag.Title = "ProjectWiseAssignedPm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">PM Assigned</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered dtTable">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Order No</th>
+                                <th>Assign Date</th>
+                                <th>Project Manager</th>
+                                <th>Assigned By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model)
+                            {
+                                <tr>
+                                    <td>@v.ProjectName</td>
+                                    <td>@v.OrderNuber</td>
+                                    <td>@v.AssignDate.ToString("dd MMM yyyy")</td>
+                                    <td>@v.UserFullName</td>
+                                    <td>@v.AssignedByName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

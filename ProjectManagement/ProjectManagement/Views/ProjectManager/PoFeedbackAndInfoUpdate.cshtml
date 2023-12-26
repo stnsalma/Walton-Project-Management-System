@@ -1,0 +1,317 @@
+﻿@*<h2>PoFeedbackAndInfoUpdate</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectManager.VmPmIncentivePolicy
+
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .DTFC_LeftBodyWrapper {
+        position: relative;
+        top: -11px !important;
+        left: 0px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .DTFC_LeftBodyLiner {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        height: 200px;
+        max-height: 200px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="portlet box blue-soft">
+    <div class="portlet-title">
+        <div class="caption">
+            Po Feedback And Information Update
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @using (Html.BeginForm("PoFeedbackAndInfoUpdate", "ProjectManager", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Effective Month</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" name="issueList[0].EffectiveMonth" id="EffectiveMonth" value="@Model.EffectiveMonth" type="text" placeholder="yyyy-mm-dd" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Supporting Document**</label>
+                                            <div class="col-md-9">
+                                                <div class="col-md-11">
+                                                    <table class="File11" id="hh1">
+                                                        <tr id="trIdForFile">
+                                                            <td class="filesss" id="filesId">
+
+                                                                <div class="col-md-9" id="fileIdForCr">
+                                                                    <input type="file" name="issueList[0].UploderDocs" id="FileId1" />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr'));">
+                                                                        <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br /><br />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Remarks/Topic</label>
+                                            <div class="col-md-9">
+                                                <input class="form-control" name="issueList[0].Remarks" id="Remarks" value="@Model.Remarks" type="text" placeholder="Remarks/Topic">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+
+                                    </div>
+                                </div>
+
+                                <br /><br /><br /><br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <input type="submit" id="btnSubmit" class="btn sbold uppercase btn-outline blue" value="Save" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br />
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" name="focChk1" id="focChk1" value="" style="display:none;" />
+            <div id="loading" style="display: none;text-align: center;">
+                <img src="~/img/loading-spinner-grey.gif" />
+            </div>
+        }
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+
+            <div class="portlet-title">
+                <div class="caption">
+                    Po Feedback List
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable table-responsive">
+                    <table class="table table-bordered table-striped table-condensed flip-content tbl1" id="tbl1">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Effective<br /> Month</th>
+                                <th>Supporting   <br />Document</th>
+                                <th>Topic</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.PmPoFeedbackAndInfoUpdate != null)
+                            {
+                                foreach (var item in ViewBag.PmPoFeedbackAndInfoUpdate)
+                                {
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            @if (@item.EffectiveMonth != null)
+                                            {
+                                                @String.Format("{0:yyyy-MM-dd}", @item.EffectiveMonth)
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="file-preview-thumbnails">
+                                                <div class="">
+                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                        <div class="col-lg-12">
+                                                            @if (@item.SupportingDocument != null)
+                                                            {
+
+                                                                <input value="@item.SupportingDocument" style="display: none" />
+                                                                for (int m = 0; m < @item.FilesDetails.Count; m++)
+                                                                {
+
+                                                                    if (@item.FilesDetails[m].Extention == ".jpg" || @item.FilesDetails[m].Extention == ".png" || @item.FilesDetails[m].Extention == ".mp4" || @item.FilesDetails[m].Extention == ".jpeg" || @item.FilesDetails[m].Extention == ".txt" || @item.FilesDetails[m].Extention == ".xls" || @item.FilesDetails[m].Extention == ".wav")
+                                                                    {
+                                                                        <div class="col-lg-3">
+                                                                            <embed class="" src="@item.FilesDetails[m].FilePath" style="width: 100px; height: 100px" />
+                                                                            <br />
+                                                                            <a target="_blank" href="@item.FilesDetails[m].FilePath">Download</a>
+                                                                        </div>
+                                                                        <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                    }
+                                                                    if (@item.FilesDetails[m].Extention == ".zip" || @item.FilesDetails[m].Extention == ".pdf" || @item.FilesDetails[m].Extention == ".docx" || @item.FilesDetails[m].Extention == ".xlsx" || @item.FilesDetails[m].Extention == ".rar" || @item.FilesDetails[m].Extention == ".pptx")
+                                                                    {
+
+                                                                        string[] urls = @item.FilesDetails[m].FilePath.Split('|');
+                                                                        var last = urls[0].Split('-').Last();
+                                                                        var lastNameForM = item.FilesDetails[m].FilePath;
+                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                        <div class="col-lg-3" style="width: 100px; height: 100px;">
+                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+                                                                            <br />
+                                                                            <a href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                        </div>
+                                                                        <div class="col-lg-3" style="width: 50px;"></div>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                        <td>@item.Remarks</td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function removeDetailRow(element) {
+        $('#FileId1').val("");
+    }
+
+    $(document).ready(function () {
+
+        $('#EffectiveMonth').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var effectiveMonth = $('#EffectiveMonth').val();
+            if (effectiveMonth == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Effective Month.",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            $('#loading').show();
+            alertify.confirm('Confirm message', 'Do you want to Save this?', function () {
+                alertify.success('Ok');
+                // refresh();
+
+                $('#form1').trigger('submit');
+                $('#loading').hide();
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+
+        });
+
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+</script>
+

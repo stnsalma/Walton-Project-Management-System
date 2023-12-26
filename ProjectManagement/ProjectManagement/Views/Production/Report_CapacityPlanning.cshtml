@@ -1,0 +1,330 @@
+﻿@*<h2>Report_CapacityPlanning</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.DAL.DbModel
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<link href="~/Content/New_2019/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/New_2019/dataTables.fixedHeader.min.js"></script>
+
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #canvas {
+        align-content: center;
+        height: 1000px;
+    }
+
+    #tblSmart {
+        margin: 0 -2px -2px 0;
+        border: #FFF;
+        border: 1px solid rgb(72, 170, 230);
+        display: inline-block;
+    }
+
+    td {
+        width: 150px;
+        height: 50px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .tblData, td, th {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .tblData {
+        border-collapse: collapse;
+        width: auto;
+    }
+
+        .tblData td {
+            height: 40px;
+            width: 100px;
+            text-align: center;
+        }
+</style>
+<div class="note note-danger">
+    <p style="color: green;font-size: 20px;"> Report</p>
+</div>
+
+<div class="portlet box blue-chambray">
+    <div class="portlet-title">
+        <div class="caption">
+            Capacity Report
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-3" style="color: brown;">Unit</div>
+                    <div class="col-lg-9">
+                        @if (ViewBag.GetProductionType != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType", @onchange = "unitChange1()" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-3" style="color: brown;">Month</div>
+                    <div class="col-lg-9">
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.MonNum1, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-5" style="color: brown;">Year</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                        }
+                    </div>
+
+                </div>
+
+                <div class="col-lg-2">
+                    <div class="form-actions col-lg-8">
+                        <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("Report_CapacityPlanning", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val()" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+
+            <div class="portlet box">
+                <div class="portlet-title">
+                    @*<div class="caption col-lg-12" style="color:brown;">
+                        <div class="col-lg-2" style="background: red;color:white;font-weight: bold;text-align: center;margin-top: 2px;height: 30px"><p style="margin-top: 4px">Percentage</p></div>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-2" style="background: blue; color: white; font-weight: bold; text-align: center; margin-top: 2px;height: 30px"><p style="margin-top: 4px">Range</p></div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4"></div>
+                    </div>*@
+                    <div class="tools" style="background-color:dimgray">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable">
+                        <table id="tbl3" class="tbl3" style="width:2000px;border-right: 0px;">
+                            <tbody class="flip-content">
+                                @if (ViewBag.ProductNameForReport != null)
+                                {
+                                    foreach (var items1 in ViewBag.ProductNameForReport)
+                                    {
+                                        <tr style="border: 1px solid black;text-align: center">
+
+                                            <td style="width: 150px !important"></td>
+                                            <td style="width: 850px !important">
+                                                <table>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        @if (ViewBag.GetQuantityRange1 != null)
+                                                        {
+                                                            foreach (var items10 in ViewBag.GetQuantityRange1)
+                                                            {
+                                                                if (@items1.ProductName == @items10.ProductName)
+                                                                {
+                                                                    <td style="font-weight: bold;color:red">@items10.Percentage%</td>
+
+                                                                }
+
+                                                            }
+                                                        }
+                                                    </tr>
+
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                        <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                            <td style="width: 150px !important;color:black">Product</td>
+                                            <td style="width: auto !important">
+                                                <table>
+                                                    <tr>
+                                                        <td style="color:black">Team</td>
+                                                        <td style="color:black">Category</td>
+                                                        @if (ViewBag.GetQuantityRange1 != null)
+                                                        {
+                                                            foreach (var items11 in ViewBag.GetQuantityRange1)
+                                                            {
+                                                                if (@items1.ProductName == @items11.ProductName)
+                                                                {
+                                                                    <td style="width: 150px !important">@items11.QuantityRange<br/>(Range)</td>
+                                                                }
+
+                                                            }
+                                                        }
+
+                                                    </tr>
+
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; color: brown; width: 150px !important">
+                                                @items1.ProductName <br/>
+                                                <p style="color:green;font-size: 12px">(ChangeOverTime - @items1.ChangeOverTime)</p>
+                                            </td>
+                                            <td style="width: auto !important">
+                                                @if (ViewBag.TeamNameForReport != null)
+                                                {
+                                                    foreach (var items2 in ViewBag.TeamNameForReport)
+                                                    {
+                                                        if (@items1.ProductName == @items2.ProductName)
+                                                        {
+                                                            <table style="width: auto !important">
+                                                                <tr>
+                                                                    <th style="width: 150px">
+                                                                        @items2.Team
+                                                                    </th>
+                                                                    <td style="width: auto !important; ">
+                                                                        @if (ViewBag.CategoryNameForReport != null)
+                                                                        {
+                                                                            foreach (var items3 in ViewBag.CategoryNameForReport)
+                                                                            {
+                                                                                if (@items2.Team == @items3.Team && @items2.ProductName == @items3.ProductName)
+                                                                                {
+
+                                                                                    <table>
+                                                                                        <tr>
+                                                                                            <th style="width: 150px">
+                                                                                                @items3.CategoryName
+                                                                                            </th>
+                                                                                            @if (ViewBag.GetTotalCapacities1 != null)
+                                                                                            {
+                                                                                                foreach (var items4 in ViewBag.GetTotalCapacities1)
+                                                                                                {
+                                                                                                    if (@items2.Team == @items4.Team && @items2.ProductName == @items4.ProductName && @items3.CategoryName == @items4.CategoryName)
+                                                                                                    {
+                                                                                                        if (ViewBag.GetQuantityRange1 != null)
+                                                                                                        {
+                                                                                                            foreach (var items10 in ViewBag.GetQuantityRange1)
+                                                                                                            {
+
+                                                                                                                if (@items10.Percentage == @items4.Percentage && @items10.QuantityRange == @items4.QuantityRange)
+                                                                                                                {
+
+                                                                                                                    if (@items4.CategoryName == @items3.CategoryName && @items2.Team == @items4.Team && @items4.ProductName == @items10.ProductName)
+                                                                                                                    {
+                                                                                                                        <td style="width: 150px; border: 1px solid black;">@items4.TotalCapacity2</td>
+                                                                                                                    }
+                                                                                                                    else if (@items4.CategoryName != @items3.CategoryName && @items2.Team == @items4.Team && @items4.ProductName == @items10.ProductName)
+                                                                                                                    {
+                                                                                                                        <td style="width: 150px; border: 1px solid black;">-----</td>
+                                                                                                                    }
+
+                                                                                                                }
+                                                                                                                else if (@items10.Percentage == @items4.Percentage && @items10.QuantityRange != @items4.QuantityRange
+                                                                                                                && @items2.Team == @items4.Team && @items4.ProductName == @items10.ProductName
+                                                                                                                    && @items3.CategoryName == @items4.CategoryName)
+                                                                                                                {
+
+                                                                                                                    <td style="width: 150px; border: 1px solid black;">--</td>
+
+                                                                                                                }
+                                                                                                                else if (@items10.Percentage != @items4.Percentage && @items10.QuantityRange == @items4.QuantityRange
+                                                                                                                && @items2.Team == @items4.Team && @items4.ProductName == @items10.ProductName
+                                                                                                                    && @items3.CategoryName == @items4.CategoryName)
+                                                                                                                {
+
+                                                                                                                    <td style="width: 150px; border: 1px solid black;">--</td>
+
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }//end team
+
+                                                                                                }
+                                                                                            }
+
+                                                                                            @*ViewBag.GetTotalCapacities1*@
+
+                                                                                        </tr>
+
+                                                                                    </table>
+
+
+                                                                                }
+
+
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+
+                                                            </table>
+
+                                                        }
+                                                    }
+                                                }
+
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                }
+                                @*</tr>*@
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+
+<script>
+
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+
+</script>

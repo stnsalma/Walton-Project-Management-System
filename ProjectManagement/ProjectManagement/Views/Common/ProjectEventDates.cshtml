@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectEventDates>
+
+    @{
+        ViewBag.Title = "ProjectEventDates";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet light border-red">
+        <div class="portlet-title">
+            <div class="caption">
+                Project Event Dates
+            </div>
+        </div>
+        <div class="portlet-body">
+            <table class="table table-bordered table-striped table-condensed flip-content" id="tblProjectEvent">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Project Name</th>
+                        <th class="text-center">Order No</th>
+                        <th class="text-center">Shipment No</th>
+                        <th class="text-center">PO Date</th>
+                        <th class="text-center">Shipment Taken Date</th>
+                        <th class="text-center">Materials Arrival Date</th>
+                        <th class="text-center">Market Clearance Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@v.ProjectMasterId</td>
+                            <td class="text-center">@v.ProjectName</td>
+                            <td class="text-center">@v.PoOrdinal</td>
+                            <td class="text-center">@v.ShipmentNoOrdinal</td>
+                            <td class="text-center">@v.PoDate</td>
+                        <td class="text-center">@v.ShipmentTakenDate</td>
+                        <td class="text-center">@v.MaterialsArrivalDate</td>
+                        <td class="text-center">@v.MarketClearanceDate</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $('#tblProjectEvent').DataTable({
+            "columnDefs": [
+            {
+                "targets": [0],
+                "visible": false,
+                "searchable": false
+            }
+            ]
+        });
+    </script>
+

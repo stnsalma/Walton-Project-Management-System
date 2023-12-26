@@ -1,0 +1,116 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectOrderQuantityDetailModel>
+@{
+    ViewBag.Title = "AllVariants";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">All Variants</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tblAllVariant">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Project Name</th>
+                                <th>Order No</th>
+                                <th>Total Order Quantity</th>
+                                <th>Variant Name</th>
+                                <th>Variant Quantity</th>
+                                <th>RAM Vendor</th>
+                                <th>ROM Vendor</th>
+                                <th>Variant Closed By</th>
+                                <th>Variant Closing Date</th>
+                                <th>Closing Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model)
+                            {
+                                <tr>
+                                    <td class="tdVariantId">@v.Id</td>
+                                    <td>@v.ProjectName</td>
+                                    <td>@v.OrderNumber</td>
+                                    <td>@v.TotalOrderQuantity</td>
+                                    <td>@v.ProjectModel</td>
+                                    <td>@v.OrderQuantity</td>
+                                    <td>@v.RamVendor</td>
+                                    <td>@v.RomVendor</td>
+                                    <td class="tdVarClosedByName">@v.VariantClosingByName</td>
+                                    <td class="tdVarClosingDate">@String.Format("{0:dd-MM-yyyy}", @v.VariantClosingDate)</td>
+                                    <td>
+                                        @if (v.VariantClosingDate == null)
+                                        {
+                                            @Html.TextArea("ClosingRemarks", v.ClosingRemarks, new { @class = "form-control txtClosingRemarks" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextArea("ClosingRemarks", v.ClosingRemarks, new { @class = "form-control", @readonly = "" })
+                                        }
+                                    </td>
+                                    <td class="tdAction">
+                                        @if (v.VariantClosingDate == null)
+                                        {
+                                            <button class="btn btn-success btnVariantClosing">Close</button>
+                                        }
+                                        @*else
+                                {
+                                    <label class="">NO ACTION AVAILABLE</label>
+                                }*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script>
+    $(function() {
+        var tblAllVariant = $('#tblAllVariant').DataTable();
+
+        $('#tblAllVariant tbody').on('click', '.btnVariantClosing', function () {
+            var url = '@Url.Action("CloseVariant","Common")';
+            //var row = tblAllVariant.row($(this).closest('tr'));
+            var $thiss = $(this);
+            var variantId = $(this).closest('tr').find('.tdVariantId').text();
+            var remarks = $(this).closest('tr').find('.txtClosingRemarks').val();
+            console.log(variantId+'>>'+remarks);
+            $.post(url, { variantId: variantId,remarks:remarks }, function (data) {
+                console.log(data);
+                if (data.VariantClosingDate != null) {
+                    $thiss.closest('tr').find('.tdAction').empty();
+                    $thiss.closest('tr').find('.tdVarClosedByName').text(data.VariantClosingByName);
+                    var dateString = data.VariantClosingDate;
+                    var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    date = formatDate(date);
+                    $thiss.closest('tr').find('.tdVarClosingDate').text(date);
+                    $thiss.closest('tr').find('textarea').prop('readonly', true);
+                    alertify.success('Closed');
+                }
+            });
+        });
+        
+        function formatDate(date) {
+            var d = new Date(date),
+              month = '' + (d.getMonth() + 1),
+              day = '' + d.getDate(),
+              year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [day, month, year].join('-');
+        }
+    });
+</script>
+

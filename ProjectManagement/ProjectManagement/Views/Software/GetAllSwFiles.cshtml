@@ -1,0 +1,86 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using Newtonsoft.Json
+@using ProjectManagement.Models
+@using ProjectManagement.ViewModels.Software
+@model List<ProjectManagement.ViewModels.Software.SwQcAllFilesModel>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("GetAllSwFiles", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+  
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-file-archive-o"></i>Files available for Download, Project: <b>@ViewBag.ProjectName</b>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-group">
+                <label class="mt-checkbox">
+                    <i class="fa fa-file-o"></i>
+                    Select All
+                    <input value="1" id="selectall" name="all" type="checkbox">
+                    <span></span>
+                </label>
+                <hr />
+                <div class="">
+                    <div class="mt-checkbox-list">
+                        @if (Model.Any())
+                        {                         
+                                    foreach (var mds in Model)
+                                    {
+                                        if (mds.UploadedFile1 != null)
+                                        {
+                                        var urls = mds.UploadedFile1.Split('|').ToList();
+                                       
+                                            for (int m = 0; m < urls.Count; m++)
+                                            {
+                                                mds.UploadedFiles1.Add(urls[m]);
+
+                                                @Html.HiddenFor(model => model[m].ProjectMasterId, new { @class = "projectId", @id = "projectId" })
+                                                @Html.HiddenFor(model => model[m].ProjectName, new { @class = "projectName", @id = "projectName" })
+                                                <label class="mt-checkbox">
+                                                    <i class="fa fa-file"></i>
+                                                    @Path.GetFileNameWithoutExtension(urls[m])
+
+                                                    <input value="@urls[m]" class="selectfile" name="files" type="checkbox">
+                                                    <span></span>
+
+
+                                                </label>
+
+                                            }
+                                        }
+                                    }
+                                   
+                        }
+
+                    </div>
+                </div>
+               
+            </div>
+
+            <div>
+                <button class="btn btn-success" id="allDownLoad"><i class="fa fa-download"></i> Download</button>
+               
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function() {
+        $("#selectall").click(function () {
+            $(".selectfile").prop('checked', $(this).prop('checked'));
+        });      
+    });
+   
+</script>
+
+
+
+

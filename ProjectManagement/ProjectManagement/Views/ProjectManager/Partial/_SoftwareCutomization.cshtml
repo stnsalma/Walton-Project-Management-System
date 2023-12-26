@@ -1,0 +1,158 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.ProjectManager.VmSoftwareCustomization
+@{
+    string menue = "";
+    var length = 0;
+    var m = new CustomBtrcProjectModel();
+    var projectId = ViewBag.ProjectId;
+}
+
+
+@*@Html.HiddenFor(model => model.PmSwCustomizationInitialModels.ProjectMasterId, new { id = "projectIDD" })*@
+
+@using (Html.BeginForm("SoftwareCustomizationActionResult", "ProjectManager", FormMethod.Post))
+{
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-settings font-green-sharp"></i>
+                <span class="caption-subject  bold uppercase">Software Customization</span>
+            </div>
+
+        </div>
+        <div class="portlet-body">
+            <div class="panel-group accordion" id="accordion1">
+                
+                @{length = @Model.PmSwCustomizationFinalModels.Count;}
+         
+
+                @Html.HiddenFor(i=>i.IsUpdateable)
+                @for (int i = 0; i < length; i++)
+                {
+                    if (!menue.Equals(Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu))
+                    {
+                        @Html.HiddenFor(model=>Model.PmSwCustomizationFinalModels[i].ProjectMasterId)
+                        @Html.HiddenFor(model=>Model.PmSwCustomizationFinalModels[i].ProjectPmAssignId)
+
+                        menue = Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu;
+
+                        @Html.HiddenFor(model => Model.PmSwCustomizationFinalModels[i].AssignUserId)
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu">@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu</a>
+                                </h4>
+                            </div>
+                            <div id="@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu" >
+                                <div class="panel-body">
+                                    <div class="row">
+
+                                        <div class="col-lg-1"></div>
+                                        <div class="col-lg-10">
+                                            <table class="table table-bordered  table-header-fixed" id="sample_1">
+                                                <thead>
+                                                    <tr class="">
+                                                        <th style="text-align: center"> Path </th>
+                                                        <th style="text-align: center"> Default Settings </th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{ int j = 0;}
+                                                    @for (j = 0; j < length; j++)
+                                                    {
+                                                        if (Model.PmSwCustomizationFinalModels[j].PmSwCustomizationFinalMenu.Equals(menue))
+                                                        {
+                                                            <tr>
+                                                                @Html.HiddenFor(x => Model.PmSwCustomizationFinalModels[j].PmSwCustomizationFinalId)
+                                                                @Html.HiddenFor(x => Model.PmSwCustomizationFinalModels[j].PmSwCustomizationFinalMenu)
+                                                                @Html.HiddenFor(x=>Model.PmSwCustomizationFinalModels[j].ProjectMasterId)
+                                                                @Html.HiddenFor(x => Model.PmSwCustomizationFinalModels[j].ProjectPmAssignId)
+                                                                <td>@Html.TextBoxFor(x => Model.PmSwCustomizationFinalModels[j].PmSwCustomizationFinalPath, new { @class = "form-control" })</td>
+                                                                <td>@Html.TextBoxFor(x => Model.PmSwCustomizationFinalModels[j].PmSwCustomizationFinalSettings, new { @class = "form-control" })</td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-lg-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                }
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#Other">Add Other Setting</a>
+                        </h4>
+                    </div>
+                    <div id="Other" >
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <div class="col-lg-10">
+                                    <table class="table table-bordered  table-header-fixed" id="sample_1">
+                                        <thead>
+                                            <tr class="">
+                                                <th style="text-align: center"> Path </th>
+                                                <th style="text-align: center"> Default Settings </th>
+                                                <th style="text-align: center"> Action </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tBody" class="tBody">
+                                            @if (Model.Others != null && Model.Others.Any())
+                                            {
+                                                foreach (var model in Model.Others)
+                                                {
+                                                    Html.RenderPartial("~/Views/ProjectManager/Partial/_AddSoftwareCustomizationOther.cshtml", model);
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-1">
+                                    <input type="button" id="btnAdd" value="Add" onclick="add_row('@Model.ProjectId')" class="btn btn-circle default green-stripe" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                @*<div class="col-lg-2"></div>*@
+                <div class="col-lg-12">
+                    <input type="submit" value="Submit" class="btn btn-circle green-sharp btn-outline sbold uppercase" />
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+
+
+}
+<script type="text/javascript">
+
+    $(function () {
+        
+    });
+    function add_row(projectId) {
+        $.post('@Url.Action("AddOtherSoftwareCustomization", "ProjectManager")', {projectId:projectId}, function (data) {
+            $('#tBody').append(data);
+        });
+    }
+    function removeDetailRow(element) {
+        var detailRow = $(element).closest('tr');
+        $(detailRow).remove();
+    }
+</script>

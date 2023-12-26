@@ -1,0 +1,194 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+@using (Html.BeginForm("PostHwFgUsbCableDetail", "Hardware", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.HwFgUsbCableTestModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwFgUsbCableTestModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwFgUsbCableTestModel.HwFgUsbCableTestId)
+    @Html.HiddenFor(model=>model.HwFgUsbCableTestModel.AddedBy)
+    @Html.HiddenFor(model=>model.HwFgUsbCableTestModel.AddedDate)
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>USB Cable Test Record
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Topics", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgUsbTestDetailModel.TestTopic, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Value", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgUsbTestDetailModel.Value, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Unit", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgUsbTestDetailModel.Unit, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Standard Value", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgUsbTestDetailModel.StandardValue, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Result", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(model => model.HwFgUsbTestDetailModel.Result, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Pass",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Fail",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Remarks", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgUsbTestDetailModel.Remarks, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            <input type="submit" value="Save" class="btn btn-default" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="table-scrollable">
+                                        <table class="table table-striped table-hover table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                                            <thead style="background-color:#e9edef">
+                                                <tr role="row">
+                                                    <th class="text-center">
+                                                        Test Topics
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Value
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Unit
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Standard Value
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Result
+                                                    </th>
+                                                    <th class="text-center">
+                                                        Remarks
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            @if (ViewBag.GetHwFgUsbTestDetailModelList != null)
+                                            {
+                                                foreach (var item in ViewBag.GetHwFgUsbTestDetailModelList)
+                                            {
+                                                <tr>
+                                                    <td class="text-center">
+                                                        @item.TestTopic
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @item.Value
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @item.Unit
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @item.StandardValue
+                                                    </td>
+
+                                                    @if (item.Result == true)
+                                                    {
+                                                        <td class="text-center">
+                                                            Pass
+                                                        </td>
+                                                    }
+                                                    else if (item.Result == null)
+                                                    {
+                                                        <td class="text-center"></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-center">
+                                                            Fail
+                                                        </td>
+                                                    }
+
+                                                    <td class="text-center">
+                                                        @item.Remarks
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                            }
+                                            
+
+
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

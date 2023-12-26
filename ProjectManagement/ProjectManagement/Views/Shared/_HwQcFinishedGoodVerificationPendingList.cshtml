@@ -1,0 +1,48 @@
+﻿@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+<div class="col-md-12">
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="form-body">
+                <div class="row">
+                    <div class="table-scrollable">
+                        <table class="table table-bordered table-hover" id="tblFinishedGoodsVerificationPending">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"> # </th>
+                                    <th class="text-center"> Project Name </th>
+                                    <th class="text-center"> Supplier Model Name </th>
+                                    <th class="text-center"> Project Assigned To </th>
+                                    <th class="text-center"> Assign Date </th>
+                                    <th class="text-center"> Status </th>
+                                    <th class="text-center"> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.GetFinishedGoodsTestProjectStatus)
+                                {
+                                    <tr>
+                                        <td>  </td>
+                                        <td class="hidden" id="hwQcAssignId"> @item.HwQcAssignId </td>
+                                        <td class="hidden" id="hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                        <td class="text-center"> @item.ProjectName </td>
+                                        <td class="text-center"> @item.SupplierModelName </td>
+                                        <td class="text-center"> @item.UserFullName </td>
+                                        <td class="text-center"> @item.HwQcAssignDate </td>
+                                        <td class="text-center">
+                                            <span class="label label-sm label-warning"> VERIFICATIONPENDING </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn purple black btn-outline btn-xs btn-circle pull-right btnVerify" id="btnVerify">Verify</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,244 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<ProjectManagement.Models.DiscussionModel>
+
+    <style>
+                #divLoad {
+                    cursor: pointer;
+                }
+
+                .reply {
+                    cursor: pointer;
+                }
+                /*========loader========*/
+        .loader-fb {
+            /*top: calc(50% - 5px);*/
+            left: calc(50% - 5px);
+            position: absolute !important;
+        }
+
+                    /* Demo specific styles end */
+
+                    /* Loader with three blocks */
+                    .loader-fb, .loader-fb:before, .loader-fb:after {
+                        position: relative;
+                        display: inline-block;
+                        width: 20px;
+                        height: 10px;
+                        background-color: rgba(215,230,240,0.9);
+                        border: 1px solid rgb(215,230,240);
+                        z-index: 100000;
+                        content: ' ';
+                        margin-left: -5px;
+                        margin-right: -9px;
+                    }
+
+                        .loader-fb:before {
+                            top: -11px;
+                            left: -100%;
+                            animation: loading-fb .8s cubic-bezier(.4,.5,.6,1) infinite;
+                        }
+                .loader-fb {
+                    animation: loading-fb-main .8s cubic-bezier(.4,.5,.6,1) .2s infinite;
+                }
+                    .loader-fb:after {
+                        top: -11px;
+                        right: -100%;
+                        margin-top: 50%;
+                        animation: loading-fb .8s cubic-bezier(.4,.5,.6,1) .4s infinite;
+                    }
+                @@-webkit-keyframes loading-fb-main {
+                    from {
+                        padding-top: 10px;
+                        padding-bottom: 10px;
+                        margin-top: -10px;
+                        background-color: rgba(55,114,171,0.9);
+                        border: 1px solid rgb(55,114,171);
+                    }
+                }
+                @@-webkit-keyframes loading-fb {
+          from {
+            transform: scaleY(1.4);
+            background-color: rgba(55,114,171,0.9);
+            border: 1px solid rgb(55,114,171);
+          }
+        }
+    </style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="bosscontainer">
+            @if (Model != null)
+            {
+                foreach (var v in Model)
+                {
+                    <div id="@v.DiscussionId">
+                        <div class="well well-sm">
+                            <span style="color:dodgerblue;font-weight: bold">@v.AddedByName</span> <span style="font-size: 10px;color: grey">@v.AddedDate</span>
+                            <p>@Html.Raw(WebUtility.HtmlDecode(@v.Comment))</p>
+                            @foreach (var u in ViewBag.Files)
+                            {
+                                if (v.DiscussionId == u.DiscussionId)
+                                {
+                                    if (u.FileUploadPath != null && u.FileUploadPath != "failed")
+                                    {
+                                        <div class="form-group">
+                                            <div class="">
+                                                <i class="fa fa-download"></i>
+                                                @{string a = Path.GetFileName(u.FileUploadPath);}
+                                                @Html.ActionLink(a, "DownloadDiscussionFile", "Common", new { id = @u.Id }, null)
+                                                @*<a onclick="getdoc()">@Path.GetFileNameWithoutExtension(ViewBag.incident.FileUploadPath)</a>*@
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            <div id="divreply_@v.DiscussionId">
+                                <a class="reply">Reply</a>
+                            </div>
+                            <hr />
+                            <div id="divshowreply_@v.DiscussionId">
+                                @foreach (var r in ViewBag.Replies)
+                                {
+                                    if (v.DiscussionId == r.DiscussionId)
+                                    {
+                                        <div style="margin-left: 20px">
+                                            <span style="color:dodgerblue;font-weight: bold">@r.AddedByName</span> <span style="font-size: 10px;color: grey">@r.AddedDate</span>
+                                            <p>@Html.Raw(WebUtility.HtmlDecode(@r.Reply))</p>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h6 class="">Something went wrong, please reload the page.</h6>
+            }
+            <div class="text-center" id="divLoad">
+                <a id="load">Load More</a>
+            </div>
+            <div class="loader-fb"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.loader-fb').hide();
+    //============REPLY SECTION=============
+    var replyforparentid = '';
+    var replyparentid = '';
+    $(document).on('click', '.reply', function () {
+        replyforparentid = $(this).parent().parent().parent().attr('id');
+        console.log('%c DiscussionId for Reply:', 'color:red;');
+        console.log(replyforparentid);
+        replyparentid = 'divreply_' + replyforparentid;
+        console.log('%c Div id where reply textarea will append:', 'color:blue;');
+        console.log(replyparentid);
+        $('.replytextarea').remove();
+        $('.btnreply').remove();
+        $('.reply').show();
+        $('#' + replyparentid).append('<textarea class="form-control theSelector replytextarea" rows="3" id="txtReply" data-autosize-on="true"></textarea>' +
+            '<button type="button" class="btn btn-xs btn-default btnreply" id="btnReply">Reply</button>');
+        $(this).hide(1000);
+    });
+
+    $(document).on('click', '#btnReply', function () {
+        var appenddiv = 'divshowreply_' + replyforparentid;
+        console.log(appenddiv);
+        var url = '@Url.Action("PostDiscussionReply","Common")';
+        var reply = $('#txtReply').val();
+        if (replyforparentid != '' && reply != '') {
+            $.post(url, { id: replyforparentid, reply: reply }, function (data) {
+                console.log(data);
+                $('.replytextarea').remove();
+                $('.btnreply').remove();
+                $('.reply').show();
+                var dateString = data.AddedDate;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date = new Date(seconds);
+                date = formatDate(date);
+                var html = '<div style="margin-left: 20px"><span style="color:dodgerblue;font-weight: bold">' + data.AddedByName + '</span> <span style="font-size: 10px;color:grey">' + date + '</span><p>' + data.Reply + '</p></div>';
+                $('#' + appenddiv).append(html);
+            });
+        }
+    });
+    //==========LOAD MORE SECTION==========
+    $(document).on('click', '#load', function (e) {
+        e.preventDefault();
+        var x = $(this).parent().prev().attr('id');//the last DiscussionId
+        console.log('%c Last DiscussionId - '+x, 'color:orange;font-weight:bold;');
+        //console.log(x);
+        $(this).empty();//remove load more button
+        $('.loader-fb').show();
+        var url = '@Url.Action("LoadMoreDiscussion","Common")';
+        $.post(url, { id: x }, function (data) {
+            console.log('%c AJAX response:', 'color:orange;font-weight:bold;');
+            console.log(data);
+            var discussion = data[0];
+            var files = data[1];
+            var replies = data[2];
+            var html = "";
+            if (discussion.length > 0) {
+                for (var i = 0; i < discussion.length; i++) {
+                    var htmlfiles = "";
+                    if (files.length > 0) {
+                        for (var j = 0; j < files.length; j++) {
+                            if (discussion[i].DiscussionId == files[j].DiscussionId) {
+                                var filename = files[j].FileUploadPath.replace(/\\$/, '').split('\\').pop();;
+                                htmlfiles = htmlfiles + '<div class="form-group">' +
+                                    '<div class="">' +
+                                    '<i class="fa fa-download"></i>' +
+                                    '<a href="../Common/DownloadDiscussionFile?id=' + files[j].Id + '">' + filename + '</a>' +
+                                    '</div>' +
+                                    '</div>';
+                            }
+                        }
+                    }
+
+                    var htmlreplylist = '';
+                    for (var k = 0; k < replies.length; k++) {
+                        if (discussion[i].DiscussionId == replies[k].DiscussionId) {
+                            var replydateString = replies[k].AddedDate;
+                            var replyseconds = parseInt(replydateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                            var replydate = new Date(replyseconds);
+                            replydate = formatDate(replydate);
+                            htmlreplylist = htmlreplylist + '<div style="margin-left: 20px"><span style="color:dodgerblue;font-weight: bold">' + replies[k].AddedByName + '</span> <span style="font-size: 10px;color: grey">' + replydate + '</span><p>' + replies[k].Reply + '</p></div>';
+                        }
+                    }
+                    var htmlreply = '<div id="divreply_' + discussion[i].DiscussionId + '"><a class="reply">Reply</a></div><hr /><div id="divshowreply_' + discussion[i].DiscussionId + '">' + htmlreplylist + '</div>';
+
+                    var dateString = discussion[i].AddedDate;
+                    var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    date = formatDate(date);
+                    html = html + '<div id="' + discussion[i].DiscussionId + '"><div class="well well-sm">' +
+                        '<span style="color:dodgerblue;font-weight: bold">' + discussion[i].AddedByName + '</span> <span style="font-size: 10px;color: grey">' + date + '</span>' +
+                        '<p>' + discussion[i].Comment + '</p>' + htmlfiles + htmlreply +
+                        '</div></div>';
+
+                }
+                html = html + '<div class="text-center" id="divLoad"><a id="load">Load More</a></div><div class="loader-fb"></div>';
+                console.log(html);
+                $('#bosscontainer').append(html);
+                $('.loader-fb').hide();
+                //$('#' + x).attr("id", discussion[discussion.length - 1].DiscussionId);//load latest last DiscussionId into the id
+            } else {
+                $('.loader-fb').hide();
+                $('#bosscontainer').append('<div class="text-center"><p>All Data Loaded</p></div>');
+            }
+        });
+    });
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [day, month, year].join('-');
+    }
+</script>
+

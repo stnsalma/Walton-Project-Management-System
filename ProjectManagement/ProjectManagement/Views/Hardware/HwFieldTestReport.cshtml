@@ -1,0 +1,225 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+@{
+    ViewBag.Title = "HwFieldTestReport";
+}
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+            <small>@Html.DisplayFor(model => model.ProjectMasterModel.ProjectName) (Phase @Html.DisplayFor(model => model.ProjectMasterModel.OrderNuber))</small>
+        </h1>
+    </div>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton">Print</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="PageContent">
+            <div class="portlet light bordered">
+                <h2 class="text-center">Field Test Report<br/><small>Project: @Html.DisplayFor(model => model.ProjectMasterModel.ProjectName)</small></h2>
+                
+                
+                <div class="portlet-body form">
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>Date:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.TestDate)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Model:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.Model)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Benchmark Phone:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.BenchMarkPhone)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Route:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.Route)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Region:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.Region)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Frequency Band:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.FrequencyBand)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Operator:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.Operator)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>Field Test Result:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.FieldTestResult)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Remark:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.Remark)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Version/Shipment:</td>
+                                        <td>@Html.DisplayFor(model => model.ProjectMasterModel.OrderNuber)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="col-md-4">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>Test Name:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.TestName)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Test Category:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.TestCategory)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Test Duration:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.TestDuration)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Test Focus:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.TestFocus)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Number of Calls:</td>
+                                        <td>@Html.DisplayFor(model => model.HwFieldTestMasterModel.NumberOfCalls)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td class="text-center" rowspan="2">Operator Name</td>
+                                        <td class="text-center" colspan="2">Test Envionment</td>
+                                        <td class="text-center" colspan="4">Tested Mobile Performance</td>
+                                        <td class="text-center" colspan="4">Benchmark Performance</td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center bold">Location</td>
+                                        <td class="text-center bold">Speed Limit (40-60) Kmph</td>
+                                        <td class="text-center bold">RSSI bars</td>
+                                        <td class="text-center bold">Call Drop</td>
+                                        <td class="text-center bold">Short Mute</td>
+                                        <td class="text-center bold">Long Mute</td>
+                                        <td class="text-center bold">RSSI bars</td>
+                                        <td class="text-center bold">Call Drop</td>
+                                        <td class="text-center bold">Short Mute</td>
+                                        <td class="text-center bold">Long Mute</td>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @if (Model.HwFieldTestModels != null)
+                                    {
+                                        for (int i = 0; i < Model.HwFieldTestModels.Count; i++)
+                                        {
+                                            <tr>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].OperatorName, new { @class = "form-control" }) </td>
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(model => model.HwFieldTestModels[i].Location, new { @class = "form-control" })
+                                                </td>
+                                                <td class="text-center">
+                                                    @Html.DisplayFor(model => model.HwFieldTestModels[i].SpeedLimit, new { @class = "form-control" })
+                                                </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedRssiBars, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedCallDrop, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedShortMute, new { @class = "form-control" }) </td>
+
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedLongMute, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BechmarkRssiBars, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchmarkCallDrop, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchmarkShortMute, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchMarkLongMute, new { @class = "form-control" }) </td>
+
+                                            </tr>
+                                        }
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#PrintButton").click(function () {
+            printPageContent($("#PageContent").html());
+        });
+
+        function printPageContent(content) {
+            var mywindow = window.open('', '', '');
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'body {' +
+                'margin:5%;' +
+                '}' +
+                'h3{' +
+                'text-align: center;' +
+                'text-decoration: underline;' +
+                '}' +
+                'h1{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'h4{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'table {' +
+                'font-family: arial, sans-serif;' +
+                'border-collapse: collapse;' +
+                'width: 100%;' +
+                '}' +
+                'table th, table td {' +
+                'border: 1px solid #dddddd;' +
+                'text-align: center;' +
+                'font-size: 10px;' +
+                '}' +
+                'table tr{' +
+                'line-height:16px;' +
+                '}' +
+                '</style>';
+            mywindow.document.write(htmlToPrint);
+            mywindow.document.write('<html><title>Field Test Report</title><body>');
+            mywindow.document.write(content);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+            return true;
+        }
+    })
+</script>

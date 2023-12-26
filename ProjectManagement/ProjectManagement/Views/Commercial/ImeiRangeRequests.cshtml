@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectBabtModel>
+@{
+    ViewBag.Title = "ImeiRangeRequests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>TAC Requests</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                @*<div class="col-lg-2">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">TAC Requests</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>*@
+                @*<div class="col-lg-2">
+                        <input type="button" class="btn sbold uppercase btn-outline blue" value="New LC" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=0'" />
+                    </div>*@
+
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Order No.</th>
+                            <th>PO No</th>
+                            <th>PO Date</th>
+                            <th>PO Quantity</th>
+                            <th>Project Manager</th>
+                            <th>Imei Requiest Date</th>
+                            <th>Requiested Qty.</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.OrderNo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PurchaseOrderNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PoDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PurchaseOrderQuantity)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectManagerName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PmImeiRangeRequestDate)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.RequestedImeiQuantity)</td>
+                                    <td>
+                                        @if (item.BabtRawId <= 0 || item.BabtRawId == null)
+                                        {
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-6"><span class="label label-sm label-danger"> TAC isn't Available </span></div>
+                                                <div class="col-lg-6">
+                                                    <input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Get TAC" onclick="location.href='@Url.Action("Babt", "Commercial", new { projectName = item.ProjectName })'" />
+
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Set IMEI Range" onclick="location.href='@Url.Action("SetImeiRange", "Commercial", new { projectId = item.ProjectMasterId, orderId = item.ProjectPurchaseOrderFormId, qty = item.RequestedImeiQuantity })'" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>

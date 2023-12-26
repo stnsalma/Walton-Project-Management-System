@@ -1,0 +1,337 @@
+﻿@model ProjectManagement.Controllers.WastageFileUpload
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Material Wastage Basic Info</div>
+    </div>
+    <div class="portlet-body">
+        <div hidden class="row">
+            <div class="col-md-4">
+                <div class="col-md-4">Project Name</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.ProjectName, null, new { @class = "form-control", type = "text" })
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="col-md-4">Report Name</div>
+                <div class="col-md-8">
+                    @Html.HiddenFor(model=>model.MaterialWastageMaster.Id)
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.ReportName, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-md-4">Month</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.MonthName, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-md-4">Year</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.YearNumber, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Materal Wastage Details
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered table-hover" id="tblMaterialDetails">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Details</th>
+                            <th>BOM Unit</th>
+                            <th>Wastage %</th>
+                            <th>Rcv. Qty. WO Wastage</th>
+                            <th>Rcv. Qty. W. Wastage</th>
+                            <th>Total Lot</th>
+                            <th>Wastage WO BOM</th>
+                            <th>Wastage W. BOM</th>
+                            <th>Total Wastage</th>
+                            <th>Ass. Mat. Fault</th>
+                            <th>Ass. Proc. Fault</th>
+                            <th>Rep. Mat. Fault</th>
+                            <th>Rep. Proc. Fault</th>
+                            <th>Total Fault</th>
+                            <th>Till Now Mat. Fault Approved</th>
+                            <th>Till Now Proc. Fault Approved</th>
+                            <th>Till Now Total Fault Approved</th>
+                            <th>Till Now Actual Wastage Ass. Mat. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Ass. Proc. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Rep. Mat. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Rep. Proc. Fault (Total)</th>
+                            <th>Till Now Total Wastage Received</th>
+                            <th>Actual Wastage Of Total Ass. Wastage %</th>
+                            <th>Actual Wastage Of Total Rep. Wastage %</th>
+                            <th>Actual Wastage Of Total Lot %</th>
+                            <th>Net Adjustment (Actual wastage-FOC) / Total lot</th>
+                            <th>Imported QTY with wastage</th>
+                            <th>Wastage in BOM</th>
+                            <th>Need to Declare</th>
+                            <th>Already Signed</th>
+                            <th>Need Sign</th>
+                            <th>Price</th>
+                            <th>Value</th>
+                            <th>Cross Check</th>
+                            @*<th>FOC Date</th>*@
+                            <th>FOC Qty</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.MaterialWastageDetails)
+                            {
+                                <tr>
+
+                                    <td>@item.ItemCode</td>
+                                    <td>@item.ItemName</td>
+                                    <td>@item.BOMUnit</td>
+                                    <td>@item.WastagePercentage</td>
+                                    <td>@item.RecQtyWOWastage</td>
+                                    <td>@item.RecQtyWWastage</td>
+                                    <td>@item.TotalLot</td>
+                                    <td>@item.WastageWOBom</td>
+                                    <td>@item.WastageWBom</td>
+                                    <td>@item.TotalWastage</td>
+                                    <td>@item.AssemMaterialFault</td>
+                                    <td>@item.AssemProcessFault</td>
+                                    <td>@item.RepMaterialFault</td>
+                                    <td>@item.RepProcessFault</td>
+                                    <td>@item.TotalFault</td>
+                                    <td>@item.TotalMaterialFaultApproved</td>
+                                    <td>@item.TotalProcessFaultApproved</td>
+                                    <td>@item.TotalFaultApproved</td>
+                                    <td>@item.TillNowAssemMaterialFault</td>
+                                    <td>@item.TillNowAssemProcessFault</td>
+                                    <td>@item.TillNowRepMaterialFault</td>
+                                    <td>@item.TillNowRepProcessFault</td>
+                                    <td>@item.TillNowTotalFault</td>
+                                    <td>@item.ActualAssemblyWastage_TotalLot</td>
+                                    <td>@item.ActualRepairWastage_TotalLot</td>
+                                    <td>@item.ActualWastageOfTotalLot</td>
+                                    <td>@item.NetAdjustment</td>
+                                    <td>@item.ImportedQtyWithWastage</td>
+                                    <td>@item.WastageQtyInBOM</td>
+                                    <td>@item.NeedToDeclare</td>
+                                    <td>@item.AlreadySined</td>
+                                    <td>@item.NeedSign</td>
+                                    <td>@item.UnitPrice</td>
+                                    <td>@item.TotalPrice</td>
+                                    <td>@item.CrossCheck</td>
+                                    @*<td>
+                                @if (@item.FOCTakenDate != null)
+                                        {@String.Format("{0:yyyy-MM-dd}", @item.FOCTakenDate)}
+                            </td>*@
+                                    <td>@item.FOCQty</td>
+                                    <td>@item.Remarks</td>
+                                </tr>
+                            }
+                            
+
+                            
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total Avg.</td>
+                            <td>@Model.Average1</td>
+                            <td>@Model.Average2</td>
+                            <td>@Model.Average3</td>
+                            <td>@Model.Average4</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Recommendations
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="col-lg-12">
+            <form id="approvalForm">
+                <div class="form-group">
+                    <label for="recomRemarks">Recommendation Remarks or Decline Remarks</label>
+                    <textarea name="recom" class="form-control" id="recomRemarks" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="approvalRemarks">Approval Remarks</label>
+                    <textarea name="approve" class="form-control" id="approvalRemarks" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="mt-checkbox">
+                        @Html.CheckBox("isDeclined", false, new { @class = "form-control", id = "isDeclined" })Check if Declined
+                        <span></span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="mt-checkbox">
+                        @Html.CheckBox("isApproved", false, new { @class = "form-control", id = "isApproved" })Check if Approved
+                        <span></span>
+                    </label>
+                </div>
+                <div id="erroArea"></div>
+                <button type="button" class="btn btn-primary" id="btn_approval">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        document.getElementById('recomRemarks').style.display = "none";
+        document.getElementById('approvalRemarks').style.display = "none";
+        $('#isApproved').on('change', function () {
+            var isApproved = $('#isApproved').prop('checked');
+            $('#isDeclined').prop('checked', false);
+            
+            if (isApproved) {
+                document.getElementById('recomRemarks').style.display = "none";
+                document.getElementById('approvalRemarks').style.display = "block";
+            } else {
+                document.getElementById('recomRemarks').style.display = "none";
+                document.getElementById('approvalRemarks').style.display = "none";
+                
+
+                document.getElementById('recomRemarks').value = "";
+                document.getElementById('approvalRemarks').value = "";
+            }
+
+
+        });
+        
+
+        $('#isDeclined').on('change', function () {
+            var isRecom = $('#isDeclined').prop('checked');
+            $('#isApproved').prop('checked', false);
+            
+            if (isRecom) {
+                document.getElementById('recomRemarks').style.display = "block";
+                document.getElementById('approvalRemarks').style.display = "none";
+            } else {
+                document.getElementById('recomRemarks').style.display = "none";
+                document.getElementById('approvalRemarks').style.display = "none";
+                
+                document.getElementById('recomRemarks').value = "";
+                document.getElementById('approvalRemarks').value = "";
+            }
+
+
+        });
+        var table = $('#tblMaterialDetails').removeAttr('width').DataTable({
+            scrollY: "400px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            columnDefs: [
+                { width: 200, targets: 0 }
+            ],
+            fixedColumns: true,
+            
+        });
+        new $.fn.dataTable.Buttons(table, {
+            buttons: [
+                { extend: 'excel', className: 'excelBtn', title: 'Material List', text: 'Click For Excel Export', footer:true }
+            ]
+        });
+
+        table.buttons(0, null).container().prependTo(
+            table.table().container()
+        );
+
+
+        $('#btn_approval').on('click', function () {
+            var isRecom = $('#isDeclined').prop('checked');
+            var isApproved = $('#isApproved').prop('checked');
+            var recomMsg = $('#recomRemarks').val();
+            var approvedMsg = $('#approvalRemarks').val();
+            var id = $('#MaterialWastageMaster_Id').val();
+            if (isRecom === true && (recomMsg == undefined || recomMsg === "" || recomMsg.length <= 0)) {
+                alertify.alert("Recommendation message is needed.");
+                return false;
+            }
+            if (isRecom === false && isApproved === false) {
+                alertify.alert("Check box can not be empty.");
+               return false;
+           }
+            $.ajax({
+                url: '@Url.Action("SaveRecommendation", "MaterialWastage")',
+                type: "GET",
+                data: { isRecom:isRecom, isApproved:isApproved, recomMsg:recomMsg, approvedMsg:approvedMsg, id:id },
+                dataType: "json",
+                //contentType: "application/json",
+                success: function (result) {
+                    if (result.ResponseCode === 1) {
+                        alertify.success(result.ResponseMessage);
+                        setTimeout(function() {
+                            window.location.href = '@Url.Action("PendingApprovals", "MaterialWastage")';
+                        }, 3000);
+
+                    } else {
+                        alertify.error(result.ResponseMessage);
+                    }
+                },
+                error: function () { }
+            });
+
+        });
+    });
+</script>
+
+

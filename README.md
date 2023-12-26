@@ -1,2 +1,1 @@
-# Walton-Project-Management-System
-WPMS
+# wpms

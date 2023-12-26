@@ -1,0 +1,240 @@
+﻿@using System.Drawing
+@using System.Web.UI.WebControls
+@model IEnumerable<ProjectManagement.Models.GeneralIncidentModel>
+@{
+    ViewBag.Title = "GeneralIncidentDisclose";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    
+<style>
+    #solutionPending {
+        cursor: pointer;
+    }
+
+    #disclosed {
+        cursor: pointer;
+    }
+</style>
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Incident Dashboard</label>
+    <i class="icon-calendar pull-right"><label ng-model="date" class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-green-sharp">
+                        <span data-counter="counterup" data-value="@ViewBag.counter.TotalIncidents"></span>
+                        @*<small class="font-green-sharp">$</small>*@
+                    </h3>
+                    <small>TOTAL INCIDENTS</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-pie-chart"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 100%;" class="progress-bar progress-bar-success green-sharp">
+                        <span class="sr-only">76% progress</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> progress </div>
+                    <div class="status-number"> 100% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered" id="solutionPending">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-red-haze">
+                        <span data-counter="counterup" data-value="@ViewBag.counter.SolutionPending"></span>
+                    </h3>
+                    <small>SOLUTION PENDING</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-like"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                @{
+                    var total = @ViewBag.counter.TotalIncidents;
+                    var solPending = @ViewBag.counter.SolutionPending;
+                    //var solPendingProgress = solPending/total*100;
+                }
+                <div class="progress">
+                    <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
+                        <span class="sr-only">85% change</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> change </div>
+                    @*<div class="status-number"> @solPendingProgress </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-blue-sharp">
+                        <span data-counter="counterup" data-value="@ViewBag.counter.DisclosePending"></span>
+                    </h3>
+                    <small>DISCLOSE PENDING</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-basket"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
+                        <span class="sr-only">45% grow</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> grow </div>
+                    <div class="status-number"> 45% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 bordered" id="disclosed">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-purple-soft black">
+                        <span data-counter="counterup" data-value="@ViewBag.counter.Disclosed"></span>
+                    </h3>
+                    <small>DISCLOSED</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-user"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 57%;" class="progress-bar progress-bar-success black">
+                        <span class="sr-only">56% change</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> change </div>
+                    <div class="status-number"> 57% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            @if (User.IsInRole("MM") || User.IsInRole("PS"))
+            {
+                <i class="fa fa-cogs"></i>
+                <label>Incident not
+                Disclosed List </label>
+            }
+            @if (!User.IsInRole("MM") || !User.IsInRole("PS"))
+            {
+                <i class="fa fa-cogs"></i>
+                <label>Incidents </label>
+            }
+        </div>
+        <div class="tools"></div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblIncident" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Referred Role</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Added By</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr id="@i.GeneralIncidentId">
+                                <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                                <td class="text-center">@i.GeneralIncidentTitle</td>
+                                <td class="text-center">@i.RefferedRole</td>
+                                <td class="text-center">@i.GeneralIncidentCategories</td>
+                                <td class="text-center">@i.GeneralIncidentDetails</td>
+                                <td class="text-center">@i.AddedDate</td>
+                                <td class="text-center">@i.AddedByName</td>
+                                <td class="text-center">
+                                    @if (i.Status == "NEW")
+                                    {
+                                        <span class="bold" style="color: skyblue">NEW</span>
+                                    }
+                                    @if (i.Status == "FORWARDED")
+                                    {
+                                        <span class="bold" style="color: red">FORWARDED</span>
+                                    }
+                                    @if (i.Status == "PARTIALSUBMIT")
+                                    {
+                                        <span class="bold" style="color: green">PARTIALSUBMIT</span>
+                                    }
+                                    @if (i.Status == "SUBMITTED")
+                                    {
+                                        <span class="bold" style="color: orange">SUBMITTED</span>
+                                    }
+                                    @if (i.Status == "DISCLOSED")
+                                    {
+                                        <span class="bold" style="color: purple">DISCLOSED</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails ">Details</button>
+                                    @*<button class="btn btn-sm sbold uppercase btn-outline red-haze btnSolve">Solve</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDeny">Deny</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnforward">Forward</button>*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*}*@
+
+
+<script>
+    $('#solutionPending').on('click', function () {
+        var url = '@Url.Action("SolutionPendingIncident", "GeneralIncident")';
+        window.location.href = url;
+    });
+
+    $('#disclosed').on('click', function () {
+        var url = '@Url.Action("DisclosedGeneralIncidents", "GeneralIncident")';
+        window.location.href = url;
+    });
+    
+    $('.btnDetails').on('click', function () {
+        //var rowindex = $(this).closest('tr').index();
+        //console.log(rowindex);
+        var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+        //alert(incidentid);
+        var url = '@Url.Action("GeneralIncidentDetails", "GeneralIncident")?incidentId=' + incidentid;
+        window.location.href = url;
+    });
+</script>

@@ -1,0 +1,294 @@
+﻿@*<h2>AftersalesPm_IssuePercentage</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.AftersalesPm.VmAftersalesIncentive
+
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .thing {
+        word-break: break-all;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .fixedHeader-floating {
+        left: 131px !important;
+    }
+
+    .page-sidebar {
+        width: 235px;
+        float: left;
+        position: relative;
+        margin-right: -100%;
+    }
+    /*.ui-datepicker-calendar {
+        display: none;
+    }*/
+    body {
+        background: #EEE;
+        color: #444;
+        line-height: 1.4em;
+    }
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+</style>
+
+<div class="portlet box purple">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident Details
+        </div>
+        <div class="tools">
+            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-12" style="text-align: center;font-weight: bold;font-size: 20px;text-transform: uppercase;color: brown">Details</div>
+            <br />
+            <div class="col-lg-12">
+                <table class="table table-bordered table-striped table-condensed flip-content">
+                    <tbody>
+                        @if (ViewBag.GetAftersalesIssueDetails1 != null)
+                        {
+                            foreach (var items in ViewBag.GetAftersalesIssueDetails1)
+                            {
+                                <tr>
+                                    <td style="font-weight: bold; text-transform: uppercase">Model</td>
+                                    <td>@items.ProjectName</td>
+                                    <td style="font-weight: bold; text-transform: uppercase">Incident Title</td>
+                                    <td>@items.GeneralIncidentTitle</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; text-transform: uppercase">Categories</td>
+                                    <td>@items.GeneralIncidentCategories</td>
+                                    <td style="font-weight: bold; text-transform: uppercase">Incident Details</td>
+                                    <td>@items.GeneralIncidentDetails</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; text-transform: uppercase">Assigned Person</td>
+                                    <td>@items.AssignedPerson</td>
+                                    <td style="font-weight: bold; text-transform: uppercase">Remarks</td>
+                                    <td>@items.AssignedRemarks</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; text-transform: uppercase">Solution </td>
+                                    <td>@items.Solution</td>
+                                    <td style="font-weight: bold; text-transform: uppercase">Incentive</td>
+                                    <td style="font-weight: bold;color:red">
+                                        <input id="incentiveForCalculate" class="form-control" value="@items.Incentive" readonly="readonly" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-lg-12" style="text-align: center;font-weight: bold;font-size: 20px;text-transform: uppercase;color: brown">Percentage</div>
+        @*<div class="col-lg-12" style="text-align: center;font-weight: bold;font-size: 20px;text-transform: uppercase;color: brown">
+                Calculation: <input id="percentageCalculation" class="form-control" value="" readonly="readonly" />
+            </div>*@
+
+        <br />
+        <div class="table-scrollable table-responsive">
+            <table id="tbl22" class="table table-bordered table-striped table-condensed flip-content">
+                <thead class="flip-content portlet box purple" style="color:white">
+                    <tr>
+                        <th>#</th>
+                        <th style="display: none">GeneralIncidentId</th>
+                        <th>User</th>
+                        <th>ID</th>
+                        <th>Percentage</th>
+                        <th>Amount</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.GetAftersaleUsers != null)
+                    {
+                        foreach (var items in ViewBag.GetAftersaleUsers)
+                        {
+                            <tr class="tableTrCls">
+                                <td></td>
+                                <td id="GeneralIncidentId" style="display: none">@items.GeneralIncidentId</td>
+                                <td>@items.UserFullName</td>
+                                <td>@items.EmployeeCode</td>
+                                <td><input id="percentage1" class="form-control percentage1" value="@items.Percentage" min="0" type="number" onchange="percentageChange(this)" /></td>
+                                <td id="totalAmount1" class="totalAmount1">@items.PerPersonAmount</td>
+                                <td><input id="insRemarks" class="form-control" value="@items.IncentiveRemarks" /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br />
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    @*<input class="btn sbold uppercase btn-outline red-flamingo btnSave" type="submit" id="btnFinalSubmit" value="Final Submit" onchange="winLoads()" />*@
+                    <input class="btn sbold uppercase btn-outline red-flamingo btnSave" type="submit" id="btnSave" value="Final Submit" />
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none">
+    <input id="monName" value="@Request.QueryString["monName"]" />
+    <input id="years" value="@Request.QueryString["years"]" />
+    <input id="ids" value="@Request.QueryString["ids"]" />
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+<script type="text/javascript">
+    var incentives = $('#incentiveForCalculate').val();
+   
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+        var monName = $('#monName').val();
+       // alert(monName);
+        var years = $('#years').val();
+       // alert(years);
+        var ids = $('#ids').val();
+      //  alert(ids);
+
+        var t = $('#tbl22').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        //alert(incentives);
+        //$('#tbl22').on('click', '.btnDetails', function () {
+        //    var rowIndex = $(this).closest('tr').index() + 1;
+        //    var table = document.getElementById('tbl22');
+        //    var ids = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+        //    var proMon = $("#myDatepicker1").val();
+        //    var sP = proMon.split(',');
+        //    var monName = sP[0];
+        //    var years = sP[1];
+        //});
+        
+        $("#btnSave").on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var objIssue = {};
+            var objIssueArr = [];
+
+            var generalIncId=ids;
+            var userName;
+            var empCode;
+            var percentage;
+            var totalAmount;
+            var insRemarks;
+            
+            $("#tbl22 tr.tableTrCls").each(function () {
+                objIssue = new Object();
+
+               // generalIncId = $.trim($(this).find('td:eq(1)').text());
+                userName = $.trim($(this).find('td:eq(2)').text());
+                empCode = $.trim($(this).find('td:eq(3)').text());
+                percentage = $.trim($(this).find("#percentage1").val());
+                totalAmount = $.trim($(this).find('td:eq(5)').text());
+                insRemarks = $.trim($(this).find("#insRemarks").val());
+                //objIssue
+                objIssue.GeneralIncidentId = ids;
+                objIssue.UserFullName = userName;
+                objIssue.EmployeeCode = empCode;
+                objIssue.Percentage = percentage;
+                objIssue.PerPersonAmount = totalAmount;
+                objIssue.IncentiveRemarks = insRemarks;
+               
+                objIssue.Month = monName;
+                objIssue.Year = years;
+                
+                //objIssueArr
+                objIssueArr.push(objIssue);
+                console.log("objIssueArr---->" + objIssueArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveAftersalesPercentageData", "AftersalesPm")',
+                data: "{objIssueArr:'" + JSON.stringify(objIssueArr) + "',generalIncId:'" +generalIncId + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    if (data.data == "OK") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Successfully Saved",
+                        }).show();
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });//end Ajax Issue
+        });
+    });
+   
+    function percentageChange(ids) {
+        
+        $("body").on("change", "#tbl22 #percentage1", function () {
+          
+            var percentage2 = ids.value.trim();
+            var percentageDivide = percentage2/100;
+            
+            var finalValue = incentives * percentageDivide;
+
+            var amountValue = $.trim($(ids).closest('tr').find('td:eq(5)').text(finalValue));
+
+        });
+    }
+    //var total = 0;
+    //$('#percentageCalculation').val(0);
+    //$('.percentage1').change(function () { // check change on the inputs
+    //   $(this).parent().find('.percentage1').each(function () { // loop on all the items thats in this block
+    //        total += parseInt($(this).val()); // add to the total their value
+    //        $('#percentageCalculation').val(total);
+    //    });
+    //});
+</script>

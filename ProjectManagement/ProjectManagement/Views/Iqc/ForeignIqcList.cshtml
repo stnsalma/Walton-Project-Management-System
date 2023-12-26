@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ProjectManagement.Models.ForeignIqcModel>
+    @{
+        ViewBag.Title = "ForeignIqcList";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">FIQC List</div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-bordered dtTable">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Lot No</th>
+                            <th>Lot Quantity</th>
+                            <th>Inspection No</th>
+                            <th>IQC Start Date</th>
+                            <th>Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            <tr>
+                                <td>@v.ProjectModel</td>
+                                <td>@v.LotNo</td>
+                                <td>@v.LotQuantity</td>
+                                <td>@v.NoOfInspectionTime</td>
+                                <td>
+                                    @if (v.IqcStartDate != null)
+                                    {
+                                        @v.IqcStartDate.Value.ToShortDateString()
+                                    }
+                                </td>
+                                <td>@v.Remarks</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+

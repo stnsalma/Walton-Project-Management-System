@@ -1,0 +1,176 @@
+﻿@model ProjectManagement.ViewModels.Common.DailySalesInvoicesViewModel
+@{
+    ViewBag.Title = "Daily Sales Invoices";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @using (Html.BeginForm("DailySalesInvoices", "Common"))
+    {
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="row">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Daily Sales Invoices</span>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet-title">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label class="col-lg-3">Select Date</label>
+                        <div class="col-lg-4">
+                            @Html.TextBox("InvoiceDate", DateTime.Today.ToString("yyyy-MM-dd"), new { @class = "form-control date_picker"})
+                        </div>
+                        <div class="col-lg-3">
+                            <button type="submit" id="btnnext" class="btn btn-success btn-circle">Search</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="portlet-body" id="smart-table">
+                <h2>Smart Phone</h2>
+                <table class="table table-striped table-scrollable table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Model Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Service to Sales Ratio</th>
+                            <th>Remaining Market Stock</th>
+                            
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            if (Model.SmartPhoneDailySales.Count>0)
+                            {
+                                foreach (var smart in Model.SmartPhoneDailySales)
+                                {
+                                <tr>
+                                <td class="text-center">
+                                @Html.ActionLink(smart.Model, "ModelColorWiseDailySales", "Common", new { id = smart.Id, date = smart.InvoiceDate }, null)
+                                 
+                                </td>
+                                <td class="text-center">
+                                @Html.ActionLink(smart.Number.ToString(), "ModelWIseDailySalesByDealerType", "Common", new { id = smart.Id, date = smart.InvoiceDate }, null)
+                               </td>
+                                <td class="text-center"> 
+                                @Html.ActionLink(smart.InvoicePrice, "HighChartGraphforDailySales", "Common", new { id = smart.Id, date = smart.InvoiceDate }, null)
+                                 </td>
+                                <td class="text-center"> 
+                                    @Html.ActionLink(smart.ServiceToSalesRatio, "DailySalesInvoiceNewMajorMinorIssues", "Common", new { modelname = smart.Model, order = "ALL" }, null)
+                                </td>
+                                <td class="text-center">
+                                    @Html.ActionLink(smart.RemainingMarketStock, "RemainingMarketStockDealerWise", "Common", new { modelname = smart.Model, type = smart.CellPhoneType, date = smart.InvoiceDate }, null)
+                                </td>
+                           </tr>
+                                    }
+                            }
+                        }
+                    </tbody>
+                </table>
+  
+            </div>
+            <div class="portlet-body" id="feature-table">
+                <h2>Feature Phone</h2>
+                <table class="table table-striped table-scrollable table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Model Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Service to Sales Ratio</th>
+                            <th>Remaining Market Stock</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            foreach (var feature in Model.FeaturePhoneDailySales)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                    @Html.ActionLink(@feature.Model, "ModelColorWiseDailySales", "Common", new { id = feature.Id, date = feature.InvoiceDate }, null)
+                                      </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(@feature.Number.ToString(), "ModelWIseDailySalesByDealerType", "Common", new { id = feature.Id, date = feature.InvoiceDate }, null) 
+                                    </td>
+                                    <td class="text-center">
+                                    @Html.ActionLink(@feature.InvoicePrice, "HighChartGraphforDailySales", "Common", new { id = feature.Id, date = feature.InvoiceDate }, null) 
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(@feature.ServiceToSalesRatio, "DailySalesInvoiceNewMajorMinorIssues", "Common", new { modelname = feature.Model, order = "ALL" }, null) 
+                                    </td>
+                                    <td class="text-center">
+                                        
+                                        @Html.ActionLink(@feature.RemainingMarketStock, "RemainingMarketStockDealerWise", "Common", new { modelname = feature.Model, type = feature.CellPhoneType, date = feature.InvoiceDate }, null) 
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                </div>
+
+            <div class="portlet-body" id="feature-table">
+                <h2>Tablet</h2>
+                <table class="table table-striped table-scrollable table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Model Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Service to Sales Ratio</th>
+                            <th>Remaining Market Stock</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            foreach (var tab in Model.TabletDailySales)
+                            {
+                                <tr>
+                                    @*<td class="text-center" onclick="location.href = '@(Url.Action("ModelColorWiseDailySales", "Common", new { @id = tab.Id, date = Model.InvoiceDate }))'"> @tab.Model </td>*@
+                                    <td class="text-center"> 
+                                        @*@tab.Model*@
+                                        @Html.ActionLink(@tab.Model, "ModelColorWiseDailySales", "Common", new{@id=tab.Id, date = tab.InvoiceDate}, null)
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(@tab.Number.ToString(), "ModelWIseDailySalesByDealerType", "Common", new { id = tab.Id, date = tab.InvoiceDate }, null) 
+                                    </td>
+                                    <td class="text-center"> 
+                                    @Html.ActionLink(@tab.InvoicePrice, "HighChartGraphforDailySales", "Common", new { id = tab.Id, date = tab.InvoiceDate }, null)
+                                   </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(@tab.ServiceToSalesRatio, "DailySalesInvoiceNewMajorMinorIssues", "Common", new { modelname = tab.Model, order = "ALL" }, null)
+                                        
+                                    </td>
+                                    <td class="text-center">
+                                        @Html.ActionLink(@tab.RemainingMarketStock, "RemainingMarketStockDealerWise", "Common", new { modelname = tab.Model, type = tab.CellPhoneType, date = tab.InvoiceDate }, null) 
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            </div>
+    }
+</div>
+
+
+

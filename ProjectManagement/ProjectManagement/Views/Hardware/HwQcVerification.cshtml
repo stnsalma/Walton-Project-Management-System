@@ -1,0 +1,309 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+@{
+    ViewBag.Title = "HwQcVerification";
+}
+
+
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+
+<link href="/assets/global/plugins/jquery-notific8/jquery.notific8.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css" />
+
+<!-- END PAGE LEVEL PLUGINS -->
+@Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.HwQcAssignId, new { @class = "hwQcAssignId" })
+
+<div class="page-head">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="page-title">
+                <h1>
+                    Project :@Html.DisplayFor(model => model.HwQcAssignCustomMasterModel.ProjectName)
+                    <br/>
+                    <small>HW Test Submitted By:@Html.DisplayFor(model => model.HwQcAssignCustomMasterModel.UserFullName)</small>
+                </h1>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            @if (ViewBag.flag == "3")
+            {
+                <button id="btnDetails" class="btn sbold uppercase btn-outline red-haze pull-right" onclick="location.href='@Url.Action("HwDisplayFgReport", "Hardware")?hwQcAssignId='+$('.hwQcAssignId').val()+'&hwQcInchargeAssignId='+'@ViewBag.HwQcInchargeAssignId'">Details</button>
+            }
+            @if (ViewBag.flag == "2")
+            {
+                <button id="btnDetails" class="btn sbold uppercase btn-outline red-haze pull-right" onclick="location.href='@Url.Action("HwDisplayFgReport", "Hardware")?hwQcAssignId='+$('.hwQcAssignId').val()+'&hwQcInchargeAssignId='+'@ViewBag.HwQcInchargeAssignId'">Details</button>
+            }
+            else
+            {
+                <button id="btnDetails" class="btn sbold uppercase btn-outline red-haze pull-right" onclick="location.href='@Url.Action("HwDisplayScreeningTest", "Hardware")?hwQcAssignId='+$('.hwQcAssignId').val()+'&hwQcInchargeAssignId='+'@ViewBag.HwQcInchargeAssignId'">Details</button>
+            }
+
+        </div>
+    </div>
+    
+    
+</div>
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i>Download Document
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            @Html.Partial("_HwQcDocUpload", Model)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="portlet box red">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-warning"></i>Hardware Issues
+        </div>
+        <div class="tools">
+            <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    @using (Html.BeginForm("UpdateHwIssueComment", "Hardware", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.HwQcAssignModel.HwQcAssignId, new { @class = "hwQcAssignId" })
+                        @Html.HiddenFor(model => model.HwIssueCommentModel.HwIssueCommentId, new { id = "hdnIssueCommentId" })
+                        @Html.HiddenFor(model => model.HwIssueCommentModel.IssueStatus, new { id = "hdnIssueStatus" })
+                        @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.HwQcInchargeAssignId, new { @class = "hdnHwQcInchargeAssignId" })
+                        @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.IsScreeningTest)
+                        <div class="col-md-12">
+                            <div class="table-scrollable">
+                                <table class="table table-bordered table-hover" id="tblHwIssueComment">
+                                    <thead>
+                                        <tr>
+                                            <th> # </th>
+                                            <th class="text-center"> Issue Name </th>
+                                            <th class="text-center"> Issue Type </th>
+                                            <th class="text-center"> Issue Detail </th>
+                                            <th class="text-center"> Issue Comment </th>
+                                            <th class="text-center"> Comment Date </th>
+                                            <th class="text-center"> Verifier Comment </th>
+                                            <th class="text-center">Issue Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in ViewBag.HwAllIssueCommentsByQcAssignId)
+                                        {
+                                            <tr>
+                                                <td> 1 </td>
+                                                <td class="hidden hdnHwIssueCommentId"> @item.HwIssueCommentId </td>
+                                                <td class="text-center"> @item.IssueName </td>
+                                                <td class="text-center"> @item.IssueTypeName </td>
+                                                <td class="text-center"> @item.IssueTypeDetailName </td>
+                                                <td class="text-center"> @item.IssueComment </td>
+                                                <td class="text-center"> @item.IssueCommetDate.ToString("dd MMM yyyy") </td>
+                                                @if (@item.IssueStatus == null)
+                                                {
+                                                    <td>@Html.TextBoxFor(model => model.HwIssueCommentModel.VerifierComment, new { @class = "form-control input-sm verifiercomment" })</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center">@item.VerifierComment</td>
+                                                }
+                                                @if (@item.IssueStatus == null)
+                                                {
+                                                    <td class="text-center">
+                                                        <select class="form-control input-sm issuestatus">
+                                                            <option>select</option>
+                                                            <option>Passed</option>
+                                                            <option>Failed</option>
+                                                            <option>Minor Issue</option>
+
+                                                        </select>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-center issuestatus">
+                                                        @item.IssueStatus
+
+                                                    </td>
+                                                }
+                                                <td>
+                                                    @if (@item.IssueStatus == null)
+                                                    {
+                                                        <button class="btn btn-transparent green btn-outline btn-circle btn-sm btnIssueComment">Submit</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-transparent green btn-outline btn-circle btn-sm  btnIssueComment" disabled>Submit</button>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-3 col-md-offset-3">
+                            <button class="btn btn-transparent green-dark btn-outline btn-circle" id="btnQcPassed">Checked</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-transparent red btn-outline btn-circle" id="btnQcFailed">Failed</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-transparent red btn-outline btn-circle" id="btnRevert">Revert</button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        //hide upload row
+        $('[class*="upload"]').hide();
+        //get Automatic Serial number column in the HTML Table
+        $('#tblHwIssueComment tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+       
+
+        //QC Passed button
+        $('#btnQcPassed').click(function (e) {
+            var items = [];
+            var isDisabled = [];
+            //alert($("[class*=hwQcAssignId]").val());
+            $("#tblHwIssueComment tr").each(function (index) {
+                if (index != 0) {
+                    var tdText = $(this).find('td:eq(8)').text();
+                    tdText = tdText.replace(/[^a-z0-9-\s]/gi, '').trim();
+                    items.push(tdText);
+                    //alert('hit');
+                    isDisabled = $(this).find('[class*="btnIssueComment"]').prop('disabled');
+                    //alert(isDisabled);
+                    
+                }
+            });
+            
+            if (isDisabled === false) {
+
+                alertify.alert('finish all hardware issue submission first');
+                return false;
+            }else
+            if (items.indexOf("Failed", 0) > -1) {
+                alertify.alert('HW Test can not be passed as long as any Issue Status in "Failed" status');
+                return false;
+            } else {
+                alertify.alert('verified');
+                var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $("[class*=hwQcAssignId]").val() + '&status=QCPASSED' + '&hwQcInchargeAssignId=' + '@ViewBag.HwQcInchargeAssignId';
+                window.location.href = url;
+            }
+        });
+
+        //Qc Failed Button
+        $('#btnQcFailed').click(function () {
+            var items = [];
+            var isDisabled = [];
+            //alert($("[class*=hwQcAssignId]").val());
+            $("#tblHwIssueComment tr").each(function (index) {
+                if (index != 0) {
+                    var tdText = $(this).find('td:eq(8)').text();
+                    tdText = tdText.replace(/[^a-z0-9-\s]/gi, '').trim();
+                    items.push(tdText);
+                    isDisabled = $(this).find('[class*="btnIssueComment"]').prop('disabled');
+                }
+            });
+
+            if (isDisabled === false) {
+                alertify.alert('finish all hardware issue submission first');
+                return false;
+            } else
+            if (items.indexOf("Failed", 0) > -1) {
+                alertify.alert('qc Failed');
+                var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $("[class*=hwQcAssignId]").val() + '&status=QCFAILED' + '&hwQcInchargeAssignId=' + '@ViewBag.HwQcInchargeAssignId';
+                window.location.href = url;
+            } else {
+                alertify.alert('qc can not be failed because no Issue in Failed status');
+
+            }
+        });
+
+        $('#btnRevert').click(function () {
+            alertify.alert('REVERTED');
+            var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $("[class*=hwQcAssignId]").val() + '&status=RUNNING' + '&hwQcInchargeAssignId=' + '@ViewBag.HwQcInchargeAssignId';
+            window.location.href = url;
+        });
+
+        //Issue status submit button
+        $("[class*=btnIssueComment]").click(function (e) {
+            var tableId = $(this).closest('table').prop('id');
+            if (tableId === "tblHwIssueComment") {
+                var hwqcassignid = $("[class*=hwQcAssignId]").val();
+                var ddlIssueStatus = $(this).closest("tr").find($("option:selected", "[class*=issuestatus]")).text();
+                var hwIssueCommentId = $(this).closest("tr").find($("[class*=hdnHwIssueCommentId]")).html();
+                //alert(ddlIssueStatus);
+                if (ddlIssueStatus === "select") {
+                    alertify.alert('Select a status');
+                    e.preventDefault();
+                } else {
+                    $("[class*=hwQcAssignId]").val(hwqcassignid);
+                    $('#hdnIssueCommentId').val(hwIssueCommentId);
+                    $('#hdnIssueStatus').val(ddlIssueStatus);
+                }
+            }
+        });
+        
+
+        //==============================================================================================================
+        $('[class*="btnFilePreview"]').on('click', function () {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+
+
+                //  $('#btnModalDataChangeLabel').text(btnId);
+                //  console.log($('#btnModalDataChangeLabel').text());
+
+
+                modalData += '<embed src="@Model.HwQcAssignModel.QcDocUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            }
+
+            // $('#filePreviewModal').modal();
+
+
+        });
+       
+    });
+</script>

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<h2>Index</h2>
+<head>
+    <title></title>
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/commonAjax/commonJqueryAjax.js"></script>
+    <script type="text/javascript">
+        
+        $(function () {
+            var url = "/Commercial/Abc1";
+            var myData = { id: "1" };
+           
+            var data = commonJqueryAjax(url,myData);
+            $("#a").on('click', function (e) {
+                e.preventDefault();
+               // $.noConflict();
+                $.ajax({
+                    
+                    type: "POST",
+                    url: "Abc1",
+                    data: JSON.stringify(myData),
+                    contentType: "application/json",
+                    dataType: "html",
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    success: function (res) {
+                        // Replace the div's content with the page method's return.
+                        alert("success");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('error ..Check log for details');
+                        console.log(textStatus, errorThrown);
+                        var msg = '';
+                        if (jqXHR.status === 0) {
+                            msg = 'Not connect.\n Verify Network.';
+                        } else if (jqXHR.status == 404) {
+                            msg = 'Requested page not found. [404]';
+                        } else if (jqXHR.status == 500) {
+                            msg = 'Internal Server Error [500].';
+                        } else if (errorThrown === 'parsererror') {
+                            msg = 'Requested JSON parse failed.';
+                        } else if (errorThrown === 'timeout') {
+                            msg = 'Time out error.';
+                        } else if (errorThrown === 'abort') {
+                            msg = 'Ajax request aborted.';
+                        } else {
+                            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                        }
+                        console.log(msg);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <input type="button" id="a" value="abc" />
+</body>

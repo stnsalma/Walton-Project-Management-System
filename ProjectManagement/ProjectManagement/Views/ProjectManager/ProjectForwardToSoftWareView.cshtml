@@ -1,0 +1,68 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.ProjectManager.AssignedProjectListViewModel
+
+@{
+    ViewBag.Title = "ProjectForwardToSoftWareView";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome,@Model.UserName
+
+            <small> Project Manager</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="todo-ui">
+            <div class="todo-sidebar">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
+                            <span class="caption-subject font-green-sharp bold uppercase">PROJECTS </span>
+                            @*<span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>*@
+                        </div>
+                    </div>
+                    <div class="portlet-body todo-project-list-content">
+                        <div class="todo-project-list">
+                            <table class="table table-bordered table-hover">
+
+                                @if (Model != null)
+                                {
+                                    foreach (ProjectMasterModel i in Model.ProjectMasterModels)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <i class="icon-screen-smartphone"></i>
+                                                <a href='@Url.Action("ProjectForwardToSoftWareView", "ProjectManager", new { projectId = @i.ProjectMasterId })'>
+                                                    @i.ProjectName
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="todo-content">
+                <!-- PROJECT HEAD -->
+                <!-- end PROJECT HEAD -->
+               @if(Model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId > 0)
+                {
+                        @Html.Partial("_PmProjectForwardToSoftWare", Model)
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

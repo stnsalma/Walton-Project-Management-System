@@ -1,0 +1,85 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.ProjectManager.PMAcknowledgementViewModel
+
+@{
+    ViewBag.Title = "ProjectAcknowledgedList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Projects for PM Acknowledgement</span>
+                </div>
+
+            </div>
+            <div class="portlet-body">
+                <div class="table-toolbar">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                Project Lists
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <table id="bomTable" class="table table-striped table-bordered table-hover dt-responsive table-checkable order-column">
+                    <thead>
+                        <tr>
+                            <th> Project Name</th>
+                            <th> Category</th>
+                            <th> Plan Id</th>
+                            <th> Dates </th>
+                            <th> Status </th>
+                            <th> Actions </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                        foreach (PMAcknowledgementModel item in Model.PMAcknowledgements)
+                        {
+                        <tr>
+                            <td>
+                                @(String.Format("{0}(Order {1}) ", item.ProjectName, item.OrderNumber))
+                            </td>
+                            <td>
+                                @item.PoCategory
+                            </td>
+                            <td>
+                                @item.PlanId
+                            </td>
+                            <td>
+                                @(String.Format("{0:dd/MM/yyyy} - {1:dd/MM/yyyy}", item.S_Date, item.E_Date))
+
+                            </td>
+                            <td>
+                                Partial
+                            </td>
+
+                            <td>
+                                <a href='@Url.Action("ProjectAcknowledge", "ProjectManager", new { PlanId = @item.PlanId })'>
+                                    <i class="icon-settings"></i> Edit
+                                </a>
+                            </td>
+
+                        </tr>
+
+                        }
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+

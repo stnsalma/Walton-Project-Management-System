@@ -1,0 +1,93 @@
+﻿@using System.Web.Mvc.Html
+
+    
+<script src="https://github.highcharts.com/gantt/highcharts-gantt.src.js"></script>
+
+        
+        <div id="container1"></div>
+    
+
+
+
+
+
+<script>
+    var today = new Date(),
+  day = 1000 * 60 * 60 * 24;
+
+    // Set to 00:00:00:000 today
+    today.setUTCHours(0);
+    today.setUTCMinutes(0);
+    today.setUTCSeconds(0);
+    today.setUTCMilliseconds(0);
+    today = today.getTime();
+
+    // THE CHART
+    Highcharts.ganttChart('container1', {
+        title: {
+            text: 'Gantt Chart Test'
+        },
+        xAxis: {
+            currentDateIndicator: true,
+            min: today - 3 * day,
+            max: today + 18 * day
+        },
+
+        /*
+        plotOptions: {
+            gantt: {
+                pathfinder: {
+                    type: 'simpleConnect'
+                }
+            }
+        },
+        */
+
+        series: [{
+            name: 'Primo ZX3',
+            data: [{
+                taskName: 'Primo ZX3',
+                id: 'zx3',
+                start: today - 2 * day,
+                end: today + 14 * day,
+                completed: {
+                    amount: .2
+                }
+            }]
+        }, {
+            name: 'Primo HM4',
+            data: [{
+                taskName: 'Primo HM4',
+                id: 'hm4',
+                start: today - day,
+                end: today + 28 * day,
+                completed: {
+                    amount: 0.66
+                }
+            }]
+        }, {
+            name: 'Primo E8+',
+            data: [{
+                taskName: 'Primo E8+',
+                id: 'new_product',
+                start: today - day,
+                end: today + 18 * day,
+                completed: {
+                    amount: 0.3
+                }
+            }]
+        }, {
+            name: 'OLVIO MM12',
+            data: [{
+                taskName: 'OLVIO MM12',
+                id: 'new_product',
+                start: today - day,
+                end: today + 18 * day,
+                completed: {
+                    amount: 0.7
+                }
+            }]
+        }]
+    });
+
+</script>

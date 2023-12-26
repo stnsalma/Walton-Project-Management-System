@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ProjectManagement.Models.MarketPriceModel>
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+
+
+            <div class="portlet-title">
+                <div class="col-lg-2">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Project List</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+                <div class="col-lg-2">
+                    <input type="button" class="btn sbold uppercase btn-outline blue" value="New Project" onclick="location.href='@Url.Action("Project", "Commercial")?projectId=0'" />
+                </div>
+
+            </div>
+            <div class="portlet-body">
+
+                <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Price</th>
+                            <th>Multiplier</th>
+                            <th>Market Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    @Html.HiddenFor(modelItem=>item.MarketPriceId)
+                                    @Html.HiddenFor(modelItem=>item.ProjectMasterId)
+
+                                    <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                    @if (item.FinalPrice == item.ProjectMasterPrice)
+                                    {
+                                        <td>@Html.TextBoxFor(modelItem => item.FinalPrice)</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Html.TextBoxFor(modelItem => item.ProjectMasterPrice)</td>
+                                    }
+                                    <td>@Html.TextBoxFor(modelItem => item.Multiplier)</td>
+                                    <td>@Html.TextBoxFor(modelItem => item.MarketPrice)</td>
+                                    @*<td>
+                                        @if (item.ProjectStatus == "INITIAL")
+                                        {
+                                            <input type="submit" class="btn btn-info btn-sm mt-ladda-btn ladda-button btn-circle" value="Sreening" onclick="request_screening('@Url.Action("RequestScreening", "Commercial")', @item.ProjectMasterId, $(this))" />
+                                        }
+                                        @if (item.ProjectStatus == "PARTIAL2")
+                                        {
+                                            <input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Sreening Issues" onclick="goToController('@Url.Action("ScreeningIssues", "Commercial", new { id = @item.ProjectMasterId })')" />
+                                        }
+                                        <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("Project", "Commercial", new {projectId = item.ProjectMasterId })'" />
+
+                                    </td>*@
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>
+

@@ -1,0 +1,142 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPurchaseOrderFormModel>
+
+@{
+    ViewBag.Title = "PurchaseOrderComment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>PurchaseOrderComment</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                @*<div class="col-lg-2">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">TAC Requests</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>*@
+                @*<div class="col-lg-2">
+                        <input type="button" class="btn sbold uppercase btn-outline blue" value="New LC" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=0'" />
+                    </div>*@
+
+            </div>
+            <div class="portlet-body">
+                <div id="resultMsg">
+                    @*<div class="alert alert-danger alert-dismissable">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                            <strong>Message:</strong> Hello World
+                        </div>*@
+                </div>
+                @{
+                    
+                    var comment = "Comment";
+                    if (ViewContext.HttpContext.User.IsInRole("CM") || ViewContext.HttpContext.User.IsInRole("CMHEAD"))
+                    {
+                        comment = "FOC Comment";
+                    }
+                    else if (ViewContext.HttpContext.User.IsInRole("ASPM"))
+                    {
+                        comment = "After Sales Comment";
+                    }
+                    else if (ViewContext.HttpContext.User.IsInRole("HWHEAD"))
+                    {
+                        comment = "Hardware Comment";
+
+                    }
+                    else if (ViewContext.HttpContext.User.IsInRole("PROC"))
+                    {
+                        comment = "Process Comment";
+                    }
+
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Order Number</th>
+                                <th>P.O No</th>
+                                <th>P.O Type</th>
+                                <th>Company</th>
+                                <th>P.O Date</th>
+                                <th>@comment</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.OrderNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PurchaseOrderNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoCategory)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoDate)</td>
+                                        <td>
+                                            @if (ViewContext.HttpContext.User.IsInRole("CM") || ViewContext.HttpContext.User.IsInRole("CMHEAD"))
+                                            {
+                                                @Html.TextAreaFor(modelItem => item.InchargeComment, new { @class = "form-control", id = "commentID" })
+                                            }
+                                            else if (ViewContext.HttpContext.User.IsInRole("ASPM"))
+                                            {
+                                                @Html.TextAreaFor(modelItem => item.AfterSalesPmComment, new { @class = "form-control", id = "commentID" })
+                                            }
+                                            else if (ViewContext.HttpContext.User.IsInRole("HWHEAD"))
+                                            {
+                                                @Html.TextAreaFor(modelItem => item.QcComment, new { @class = "form-control", id = "commentID" })
+
+                                            }
+                                            else if (ViewContext.HttpContext.User.IsInRole("PROC"))
+                                            {
+                                                @Html.TextAreaFor(modelItem => item.ProcessTeamComment, new { @class = "form-control", id = "commentID" })
+                                            }
+                                        </td>
+                                        <td>
+                                            @*<input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Save Comment" onclick=" location.href = '@Url.Action("PurchaseOrder", "Commercial", new {id = item.ProjectPurchaseOrderFormId})' " />*@
+                                            <input type="button" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Save Comment" onclick="saveComment(@item.ProjectMasterId)" />
+
+                                            @*"location.href='@Url.Action("ClosePurchaseOrder", "Commercial", new { id = item.ProjectPurchaseOrderFormId })'"*@
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+    </div>
+</div>
+<script>
+    function saveComment(id) {
+        //debugger;
+        //alert(id);
+
+        if ($('#commentID').val() == "") {
+            alert("Please Enter Comment");
+        } else {
+            debugger;
+            var comment = $('#commentID').val();
+            $('#commentID').val('');
+            $.ajax({
+
+                "type": "POST",
+                //"contentType": "application/json; charset=utf-8",
+                "url": "@Url.Action("InsertPurchaseOrderComment", "Common")",
+                "data": { masterId: id, comment: comment },
+                "success": function () {
+                    //alert("ok!");
+                }
+            });
+        }
+    };
+</script>

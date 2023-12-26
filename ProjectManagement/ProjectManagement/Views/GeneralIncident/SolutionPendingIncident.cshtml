@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProjectManagement.Models.GeneralIncidentModel>
+@{
+    ViewBag.Title = "SolutionPendingIncident";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Solution Pending Incident List
+        </div>
+        <div class="tools"></div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblIncident" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Referred to</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Issues</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Added By</th>
+                            @*<th class="text-center">Action</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr id="@i.GeneralIncidentId">
+                                <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                                <td class="text-center">@i.GeneralIncidentTitle</td>
+                                <td class="text-center">@i.RoleDescription</td>
+                                <td class="text-center">@i.GeneralIncidentCategories</td>
+                                <td class="text-center">@i.ModelName</td>
+                                <td class="text-center">@i.GeneralIncidentDetails</td>
+                                <td class="text-center">@i.Issues</td>
+                                <td class="text-center">@i.AddedDate</td>
+                                <td class="text-center">@i.AddedByName</td>
+                                @*<td class="text-center">
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails ">Details</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnSolve">Solve</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDeny">Deny</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnforward">Forward</button>
+                                </td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

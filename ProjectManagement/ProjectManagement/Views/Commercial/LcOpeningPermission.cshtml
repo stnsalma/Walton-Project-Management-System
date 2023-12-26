@@ -1,0 +1,395 @@
+@model ProjectManagement.ViewModels.Commercial.VmProjectLc
+@{
+    ViewBag.Title = "LcOpening";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .input-validation-error {
+        border: 1px solid red;
+    }
+</style>
+
+@using (Html.BeginForm("LcOpeningPermission", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data", id = "formLcPermission" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption col-lg-10">
+                Project Basics
+            </div>
+            <div class="col-lg-2">
+                <input type="button" class="btn sbold uppercase btn-outline white" value="Back To LC List" onclick="location.href='@Url.Action("LcPermissionList", "Commercial")'" />
+            </div>
+        </div>
+        <div class="portlet-body form">
+            @*<div class="row">
+                    <div class="col-lg-12">
+                        @{
+                            if (TempData["message"] != null)
+                            {
+                                var msgType = TempData["messageType"];
+                                var msg = TempData["message"];
+                                if ((int)msgType == 1)
+                                {
+                                    <div class="alert alert-success alert-dismissable">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                        <strong>Message:</strong> @msg
+                                    </div>
+                                }
+                                else if ((int)msgType == 2)
+                                {
+                                    <div class="alert alert-danger alert-dismissable">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                        <strong>Message:</strong> @msg
+                                    </div>
+                                }
+                                else if ((int)msgType == 3)
+                                {
+                                    <div class="alert alert-info alert-dismissable">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                        <strong>Message:</strong> @msg
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>*@
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })</div>
+                                        <div class="col-md-1">
+                                            <input type="button" class="btn sbold uppercase btn-outline btn-sm blue" value="Load Project" onclick="location.href='@Url.Action("LcOpeningPermission", "Commercial")?projectId=' + $('option:selected', $('#ProjectMasterModel_ProjectMasterId')).val()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <br />
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (@Model != null && @Model.ProjectMasterModel.ProjectMasterId > 0)
+    {
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    Add LC Opening Permission Information
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="row" style="margin-bottom: 40px"></div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Company Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.CompanyName, new { @class = "form-control", @readonly = "", @Value = "Walton Digi-Tech Industries Limited" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Opening Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.OpeningDate, new { @class = "form-control date_picker", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier</label>
+                            <div class="col-md-9">
+                                @*@Html.TextBoxFor(i => i.ProjectMasterModel.SupplierName, new { @class = "form-control" })*@
+                                @Html.DropDownListFor(i => i.ProjectMasterModel.SupplierName, new SelectList(ViewBag.Suppliers, "SupplierName", "SupplierName"), "Select", new { @class = "form-control ddChosen", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier Grade</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.PermissionModel.SupplierGrade, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="A" , Value = "A"},
+                                                            new SelectListItem () { Text ="A+" , Value = "A+"},
+                                                            new SelectListItem () { Text ="B" , Value = "B"},
+                                                            new SelectListItem () { Text ="B+" , Value = "B+"}
+                                                        }, new { @class = "form-control" })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Model</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model => model.ProjectMasterModel.ProjectMasterId)
+                                @Html.TextBoxFor(i => i.ProjectMasterModel.ProjectModel, new { @class = "form-control", @readonly = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Order</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.ProjectMasterModel.OrderNuber, new { @class = "form-control", @readonly = "" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Product</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.Product, new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Previous Order Quantity</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.PreviousOrderQunatity, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Stock Quantity</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.StockQuantity, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">PipeLine Quantity</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.PipelineQuantity, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Lc Amount(LC)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.LcAmount, new { @class = "form-control lc-amount", id = "lcAmountId_1", type = "number", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Currency</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.PermissionModel.Currency, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="USD" , Value = "USD"},
+                                                            new SelectListItem () { Text ="EUR" , Value = "EUR"},
+                                                            new SelectListItem () { Text ="CNY" , Value = "CNY"}
+                                                        }, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Order Quantity</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.OrderQuantity, new { @class = "form-control", required = "", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">TTI</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.TtiPerLine, new { @class = "form-control", id = "totalAmountId", type = "number", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3"><span style="color: red">Total Amount</span></label>
+                            <div class="col-md-9">
+                                @*@if (Model.PermissionModel != null && Model.PermissionModel.TotalAmount > 0)
+                                    {
+                                        @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new { @class = "form-control", type = "number", required = "" ,@readonly=""})
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new { @class = "form-control", type = "number", required = "" })
+                                    }*@
+                                @Html.TextBoxFor(i => i.PermissionModel.TotalAmount, new { @class = "form-control", type = "number", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Warehouse Receive Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.WarehouseReceiveDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Shipment Confirm Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.ShipmentConfirmDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Oracle PO No</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.OraclePoNo, new { @class = "form-control",required="" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Approx ShipMent Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(i => i.PermissionModel.ApproxDateOfShipment, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Remarks</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(i => i.PermissionModel.Remarks, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <button type="button" class="btn btn-warning btn-sm" id="btnAddFiles">
+                                    <span class="spinner-border spinner-border-sm text-white" hidden=""></span>
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    <span style="font-weight: bold">Add Files</span>
+                                </button>
+                                <table class="table table-bordered" id="tblFiles">
+                                    <thead>
+                                        <tr>
+                                            <th>File Path</th>
+                                            <th>Remarks</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.LcOpeningPermissionFileModels.Count > 0)
+                                        {
+                                            foreach (var file in Model.LcOpeningPermissionFileModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Shared/_AddFiles.cshtml", file);
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+
+                            <input type="submit" id="btnSave" class="btn btn-success" value="Save" />
+                            <input type="button" id="btnPleaseWait" class="btn btn-danger disabled hidden" value="Please wait...." />
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+        </div>
+    }
+}
+
+<script>
+    $('#formLcPermission').on('submit', function (e) {
+        debugger;
+        var openingDate = $('#PermissionModel_OpeningDate').val();
+        var product = $('#PermissionModel_Product').val();
+        var orderQuantity = $('#PermissionModel_OrderQuantity').val();
+        var lcAmount = $('#lcAmountId_1').val();
+        var currency = $('#PermissionModel_Currency').val();
+        console.log(openingDate + product + orderQuantity + lcAmount);
+        if (openingDate == "") {
+            alertify.error('Select opening date');
+            e.preventDefault();
+        }
+        if (currency == "") {
+            alertify.error('Select Currency');
+            e.preventDefault();
+        }
+        if (openingDate != '' && product != '' && orderQuantity != '' && lcAmount != '') {
+            $('#btnSave').addClass('hidden');
+            $('#btnPleaseWait').removeClass('hidden');
+        }
+    });
+
+    //---Append Partial View----
+    $("#btnAddFiles").on('click', function () {
+        $('.fa-plus').attr('hidden', true);
+        $('.spinner-border').attr('hidden', false);
+        $.post('@Url.Action("AddFilesPartial", "Common")', {}, function (data) {
+            $('#tblFiles').append(data);
+            $('.fa-plus').attr('hidden', false);
+            $('.spinner-border').attr('hidden', true);
+        });
+    });
+
+</script>

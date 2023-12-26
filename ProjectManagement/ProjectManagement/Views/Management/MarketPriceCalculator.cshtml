@@ -1,0 +1,262 @@
+﻿@model IEnumerable<ProjectManagement.Models.MarketPriceModel>
+    @{
+        ViewBag.Title = "MarketPriceCalculator";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <style>
+        .popover {
+            max-width: 100%; /* Max Width of the popover (depending on the container!) */
+        }
+    </style>
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-body">
+                    <div id="flag">
+
+                    </div>
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Multiplier</th>
+                                <th>Market Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @Html.HiddenFor(modelItem => item.MarketPriceId)
+                                        @Html.HiddenFor(modelItem => item.ProjectMasterId, new { @class = "projectid" })
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProjectName)
+                                            
+                                            <a href="#"  class="h-price" id="@item.ProjectMasterId"
+                                               data-toggle="popover" data-trigger="hover">Prices</a>
+                                            
+                                           
+
+                                        </td>
+                                        @if (item.FinalPrice == item.ProjectMasterPrice)
+                                        {
+                                            <td>@Html.TextBoxFor(modelItem => item.FinalPrice, new { @class = "form-control p-price", type = "number", disabled = "disabled" })</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Html.TextBoxFor(modelItem => item.ProjectMasterPrice, new { @class = "form-control p-price", type = "number", disabled = "disabled" })</td>
+                                        }
+                                        <td>
+                                            @{ var total = item.TotalPrice.Value.ToString("##.####");}
+                                            @Html.TextBoxFor(modelItem => total, new { @class = "form-control t-price", type = "number", disabled = "disabled", step = "0.01" })
+                                            
+                                        </td>
+                                        <td>
+                                            @if (item.IsLocked == true || item.ProjectMasterPrice == null)
+                                            {
+                                                @Html.TextBoxFor(modelItem => item.Multiplier, new { @class = "form-control multiplier", disabled = "disabled", type = "number", onkeyup = "multiply_event(this.value, this);" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(modelItem => item.Multiplier, new { @class = "form-control multiplier", type = "number", onkeyup = "multiply_event(this.value, this);" })
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.IsLocked == true || item.ProjectMasterPrice == null)
+                                            {
+                                                @Html.TextBoxFor(modelItem => item.Mrp, new { @class = "form-control market-price", type = "number", disabled = "disabled", onkeyup = "division_event(this.value, this);" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(modelItem => item.Mrp, new { @class = "form-control market-price", type = "number", onkeyup = "division_event(this.value, this);" })
+                                            }
+                                        </td>
+                                        <td>
+
+                                            <div class="b-button">
+                                                @if (item.IsLocked == true || item.ProjectMasterPrice == null)
+                                                {
+                                                    if (item.ProjectMasterPrice == null)
+                                                    {
+                                                        <span class="label label-sm label-success"> Price not set </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="label label-sm label-danger"> Price Locked </span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input class="btn sbold btn-outline blue" id="btnSave" type="submit" value="Save" onclick="save_market_price(0,this)" />
+                                                    <input class="btn sbold btn-outline red" id="btnLock" type="submit" value="Lock" onclick="save_market_price(1,this)" />
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+                      
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover({
+            title: setData,
+            width:500,
+            html: true,
+            placement:'right'
+        });
+        function setData(id) {
+            debugger;
+            var set_data = '';
+            var element = $(this);
+            var id = element.attr("id");
+            
+            $.ajax({
+                url: '@Url.Action("GetAllPriceTogether", "Management")',          @*"../Management/GetAllPriceTogether?projectId=" + id,*@
+                method: "get",
+                async: false,
+                data: { projectId: id },
+                success: function (data) {
+                    set_data = data;
+                }
+
+            });
+            return set_data;
+        }
+    });
+
+    @*$(function () {
+        $('body').on('click', function (e) {
+            //did not click a popover toggle or popover
+            if ($(e.target).data('toggle') !== 'popover'
+                && $(e.target).parents('.popover.in').length === 0) {
+                $('[rel=popover]').popover('hide');
+            }
+        });
+
+
+
+        $('.popoverOption').popover({ html: true, });
+
+        $('*[data-poload]').click(function () {
+            var e = $(this);
+            $("[rel=popover]").not(e.target).popover("destroy");
+            $.get('@Url.Action("GetPrice", "Management")', { pName: e.data('poload') }, function (d) {
+                var dd = $.parseHTML(d);
+                console.log(dd);
+                e.popover({
+                    content: function () {
+                        return dd;
+                    }
+                }).popover('show');
+            });
+        });
+    });*@
+
+    function multiply_event(mul, ths) {
+        console.log(mul);
+        var price = $(ths).closest('tr').find('.t-price').val();
+        var ddd = $(ths).closest('tr').find('.market-price').val((mul * price).toFixed(2));
+        console.log(ddd);
+    }
+
+    function division_event(mktprc, ths) {
+        console.log(mktprc + '>>' + ths);
+        var price = $(ths).closest('tr').find('.t-price').val();
+        var mul = mktprc / price;
+        mul = mul.toFixed(3);
+        $(ths).closest('tr').find('.multiplier').val(mul);
+    }
+
+    function save_market_price(param, ths) {
+        var row = $(ths).closest('tr');
+        console.log(row);
+        var price = $(ths).closest('tr').find('.t-price').val();
+
+        var mul = $(ths).closest('tr').find('.multiplier').val();
+        var marketPrice = $(ths).closest('tr').find('.market-price').val();
+        var projectId = $(ths).closest('tr').find('.projectid').val();
+        console.log('projectid=' + projectId + ' price=' + price + 'multiplier=' + mul + 'Marketprice=' + marketPrice + '>>' + param);
+        var res;
+        $('#flag').empty();
+        if (isNaN(price) || (isNaN(mul) || mul <= 0) || (isNaN(marketPrice) || marketPrice <= 0)) {
+            console.log("invalid");
+
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+            $('#flag').append(res);
+            alertify.error("Value can't be 0 in any field");
+
+
+        } else {
+            if (param == 1) {
+                alertify.confirm('Are you sure to lock this data ???',
+                    function () {
+                        $.post('@Url.Action("SaveMarketPrice", "Management")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function (data) {
+                            if (data == "ok") {
+                                res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                                $('#flag').append(res);
+                                alertify.success("success");
+
+                                $('#marketprice').prop("readonly", true);
+                                $('#multiplier').prop("readonly", true);
+
+                                $('#btnSave').prop("disabled", true);
+                                $('#btnLock').prop("disabled", true);
+                                alertify.error("Price Locked");
+                                $(row).find('.multiplier').attr("disabled", "disabled");
+                                $(row).find('.market-price').attr("disabled", "disabled");
+                                $(ths).closest('td').find(".b-button").empty();
+                                $(ths).closest('td').find(".b-button").html('<span class="label label-sm label-danger"> Price Locked </span>');
+
+
+                            } else if (data == "err") {
+                                res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                                $('#flag').append(res);
+                                alertify.error("there is an error occured");
+                            }
+
+                        });
+                    },
+                    function () {
+                        alertify.error('Cancel');
+                    });
+            } else {
+                $.post('@Url.Action("SaveMarketPrice", "Management")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function (data) {
+                    if (data == "ok") {
+                        res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                        $('#flag').append(res);
+                        alertify.success("success");
+                    } else if (data == "err") {
+                        res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                        $('#flag').append(res);
+                    }
+
+                });
+            }
+
+        }
+        console.log(price + "  --  " + mul + "  --  " + marketPrice);
+    }
+
+</script>
+
+
+

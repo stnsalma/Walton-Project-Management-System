@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewBag.Title = "BarcodeExcelExport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="portlet box blue" id="fade">
+    <div class="portlet-title">
+        <div class="caption">IMEI Excel Import</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-2">Select Models</div>
+                <div class="col-md-10">
+                    <select name="multiple" id="multipleProjects" class="form-control" multiple>
+                        @if (ViewBag.ProductModels != null)
+                        {
+                            foreach (var i in ViewBag.ProductModels)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                
+                <div class="col-md-2">Start Date</div>
+                <div class="col-md-10">
+                    @Html.TextBox("startDate","",new{@class="form-control date_picker"})
+                </div>
+                <br/>
+                <br/>
+                <div class="col-md-2">End Date</div>
+                <div class="col-md-10">
+                    @Html.TextBox("endDate", "", new { @class = "form-control date_picker" })
+                </div>
+                <br/>
+                <br/>
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <button class="btn btn-success"><i class="fa fa-download"></i> Download</button>
+                    <button id="btnLoading" class="btn btn-danger hidden"><i class="fa fa-spinner fa-lg fa-pulse"></i> PLEASE WAIT</button> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    //$('.ddChosen').chosen();
+    $('#multipleProjects').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+    
+    $(function() {
+        $('button').on('click', function () {
+            var url = '@Url.Action("ExportExcel","Common")';
+            var cookieValue = Date.now().toString();
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            if (startDate != '' && endDate != '' && startDate <= endDate) {
+                console.log(startDate + '>>' + endDate + '>>' + cookieValue);
+                $('button').addClass("hidden");
+                $('#btnLoading').removeClass("hidden");
+                var projects=$('#multipleProjects').val();
+                location.href = url + '?startDate=' + startDate + '&endDate=' + endDate + '&cookieValue=' + cookieValue+'&projects='+projects;
+                window.setInterval(function () {
+                    var str = 'imei=' + cookieValue;
+                    //Check cookie value
+                    if (document.cookie.indexOf(str) !== -1) {
+                        // enable button
+                        $('button').removeClass("hidden");
+                        //location.reload();
+                        document.cookie = "imei=;path=/;";
+                        $('#btnLoading').addClass("hidden");
+                    }
+                }, 100);
+                
+                //$.ajax({
+                //    type: "GET",
+                //    url: url,
+                //    timeout: 2000000,
+                //    dataType: "json",
+                //    data: { startDate: startDate, endDate: endDate },
+                //    success: function (response) {
+                //        if (response == "success") {
+                //            $('#startDate').val('');
+                //            $('#endDate').val('');
+                //            alertify.success(response);
+                //        } else {
+                //            alertify.error('Something went wrong, please check console log!!!');
+                //            console.log(response);
+                //        }
+                //    },
+                //    error: function (request, status, err) {
+                //        if (status == "timeout") {
+                //            // timeout -> reload the page and try again
+                //            alertify.error('Request timed out');
+                //            window.location.reload(); //make it comment if you don't want to reload page
+                //        } else {
+                //            // another error occured  
+                //            alert("error: " + request + status + err);
+                //        }
+                //    }
+                //});
+            } else {
+                alertify.error('Please select valid start date and end date');
+            }
+        });
+    });
+</script>
+

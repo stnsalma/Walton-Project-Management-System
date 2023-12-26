@@ -1,0 +1,41 @@
+﻿@model ProjectManagement.Models.JigsAndFixtureModel
+
+<tr>
+    @using (Html.BeginCollectionItem("JigsAndFixtureModels"))
+    {
+        if (Model != null)
+        {
+            @Html.HiddenFor(m => m.JigsFixtureId)
+        }
+        
+        @Html.HiddenFor(m => m.ProjectMasterId)
+        @Html.HiddenFor(m => m.AddedBy)
+        @Html.HiddenFor(m => m.AddedDate)
+        @Html.HiddenFor(m => m.UpdatedBy)
+        @Html.HiddenFor(m => m.UpdatedDate)
+        <td>@Html.TextBoxFor(m => m.JigsAndFixtureName, new { @class = "form-control" })</td>
+        <td>
+            @Html.DropDownListFor(m => m.Type, new List<SelectListItem>
+            {
+                new SelectListItem{Text = "Jigs",Value = "Jigs"},
+                new SelectListItem{Text = "Fixtures",Value = "Fixtures"}
+            }, new { @class = "form-control" })
+        </td>
+        <td>@Html.TextBoxFor(m => m.Price, new { @class = "form-control" })</td>
+        <td>@Html.TextBoxFor(m => m.UnitPrice, new { @class = "form-control" })</td>
+        @*<td>@Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" })</td>*@
+        <td class="text-center" style="width: 50px">
+            <button type="button" class="btn btn-primary removeJigsAndFixtures">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </button>
+        </td>
+    }
+</tr>
+
+<script>
+    $(document).on('click', '.removeJigsAndFixtures', function() {
+        var row = $(this).closest('tr');
+        console.log(row);
+        row.remove();
+    });
+</script>

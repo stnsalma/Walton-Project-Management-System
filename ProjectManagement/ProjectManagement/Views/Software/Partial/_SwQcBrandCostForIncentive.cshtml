@@ -1,0 +1,22 @@
+﻿@*<h2>_SwQcBrandCostForIncentive</h2>*@
+
+@model ProjectManagement.Models.Custom_Sw_IncentiveModel
+
+<tr class="tableTrCls">
+    @using (Html.BeginCollectionItem("SwQcOthersIncentiveModelBrandCost.Custom_Sw_IncentiveModel"))
+    {
+        <td style="display:none;" id="monNum" class="monNum">@Model.MonNum</td>
+        <td id="BrandCost" class="BrandCost">@Model.BrandCost</td>
+        <td id="BrandCostPercentage" class="BrandCostPercentage">@Model.BrandCostPercentage</td>
+        <td id="BrandCostPerPersonIncentive" class="BrandCostPerPersonIncentive">@Model.BrandCostPerPersonIncentive</td>
+        <td id="BrandCostAddedAmount" class="BrandCostAddedAmount">@Model.BrandCostAddedAmount</td>
+        <td id="BrandCostAddedRemarks" class="BrandCostAddedRemarks">@Model.BrandCostAddedRemarks</td>
+        <td id="BrandCostDeduction" class="BrandCostDeduction">@Model.BrandCostDeduction</td>
+        <td id="BrandCostDeductionRemarks" class="BrandCostDeductionRemarks">@Model.BrandCostDeductionRemarks</td>
+        <td id="BrandCostFinalAmount" class="BrandCostFinalAmount">@Model.BrandCostFinalAmount</td>
+        <td id="employeeCode" class="employeeCode">@Model.EmployeeCode</td>
+        <td id="month" class="month">@Model.Month</td>
+        <td id="year" class="year">@Model.Year</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>

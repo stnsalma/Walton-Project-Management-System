@@ -1,0 +1,187 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+@{
+    ViewBag.Title = "HwUsbCableTestReport";
+}
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton">Print</a>
+</div>
+
+<div id="PageContent">
+    <div class="portlet light bordered">
+        <div class="note note-success text-center">
+            <h3 class="bold"> R&D USB Cable Test Report </h3>
+        </div>
+
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover" id="">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center bold">Model Name :</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.ProjectMasterModel.ProjectName)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Project Manager Name :</td>
+                                <td class="text-center">@ViewBag.FgReportInitialInfo.UserFullName</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Date :</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.ProjectMasterModel.AddedDate)</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-hover table-bordered table-striped dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                        <thead style="background-color:#e9edef">
+                            <tr role="row">
+                                <th class="text-center">
+                                    Test Topics
+                                </th>
+                                <th class="text-center">
+                                    Value
+                                </th>
+                                <th class="text-center">
+                                    Unit
+                                </th>
+                                <th class="text-center">
+                                    Standard Value
+                                </th>
+                                <th class="text-center">
+                                    Result
+                                </th>
+                                <th class="text-center">
+                                    Remarks
+                                </th>
+                            </tr>
+                        </thead>
+                        @if (ViewBag.GetHwFgUsbTestDetailModelList != null)
+                        {
+                            foreach (var item in ViewBag.GetHwFgUsbTestDetailModelList)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @item.TestTopic
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Value
+                                    </td>
+                                    <td class="text-center">
+                                        @item.Unit
+                                    </td>
+                                    <td class="text-center">
+                                        @item.StandardValue
+                                    </td>
+
+                                    @if (item.Result == true)
+                                    {
+                                        <td class="text-center">
+                                            Pass
+                                        </td>
+                                    }
+                                    else if (item.Result == null)
+                                    {
+                                        <td class="text-center"></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center">
+                                            Fail
+                                        </td>
+                                    }
+
+                                    <td class="text-center">
+                                        @item.Remarks
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                        <tr>
+                            <td class="text-center bold" colspan="3">Final Result</td>
+                            @if (Model.HwFgUsbCableTestModel != null && Model.HwFgUsbCableTestModel.FinalResult != null)
+                            {
+                                if (Model.HwFgUsbCableTestModel.FinalResult == true)
+                                {
+                                    <td class="text-center bold" colspan="3">Cable is OK</td>
+                                }
+                                else
+                                {
+                                    <td class="text-center bold" colspan="3">Cable is not OK</td>
+                                }
+                            }
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#PrintButton").click(function () {
+            printPageContent($("#PageContent").html());
+        });
+
+        function printPageContent(content) {
+            var mywindow = window.open('', '', '');
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'body {' +
+                'margin:5%;' +
+                '}' +
+                'h3{' +
+                'text-align: center;' +
+                'text-decoration: underline;' +
+                '}' +
+                'h1{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'h4{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'table {' +
+                'font-family: arial, sans-serif;' +
+                'border-collapse: collapse;' +
+                'width: 100%;' +
+                '}' +
+                'table th, table td {' +
+                'border: 1px solid #dddddd;' +
+                'text-align: center;' +
+                'font-size: 10px;'+
+                '}' +
+                '</style>';
+            mywindow.document.write(htmlToPrint);
+            mywindow.document.write('<html><title>USB Test Report</title><body>');
+            mywindow.document.write(content);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+            return true;
+        }
+    })
+</script>

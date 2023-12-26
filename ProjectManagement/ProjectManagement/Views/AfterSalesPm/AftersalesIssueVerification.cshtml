@@ -1,0 +1,1727 @@
+﻿@using System.Web.Mvc.Html
+@using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical
+@using ProjectManagement.Infrastructures.Helper
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.AftersalesPm.VmIssueVerification
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/loadingText.css" rel="stylesheet" />
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+
+    #clsRmv1 {
+        color: red;
+        font-weight: bold;
+    }
+
+    #clsRmv2 {
+        color: darkorange;
+        font-weight: bold;
+    }
+</style>
+
+
+@*<h2>AftersalesIssueVerification</h2>*@
+
+<div class="form-control" style="border:black; background: gray">
+    <p style="color: white;font-size: 20px;"> ****Aftersales Issue Raise for Verification </p>
+    <br />
+    <p></p>
+</div>
+
+<div class="portlet box yellow-gold">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i> Create an Issue
+        </div>
+    </div>
+    <div class="portlet-body form" style="display: block;">
+        @using (Html.BeginForm("AftersalesIssueVerification", "AftersalesPm", FormMethod.Post, new { id = "form1", enctype = "multipart/form-data" }))
+        {
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Model Name
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            @if (Model != null && Model.ProjectMasterModels.Any())
+                            {
+                                @*@Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.ModelName, "Value", "Text"), new { @class = "form-control ddChosen", @id = "ProjectName" })*@
+                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.ProjectName, "Value", "Text"), "Select Project", new { @class = "form-control ddChosen", @id = "ProjectName" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Software Version
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="text" name="issueList[0].SoftwareVersionName" id="swVersionName" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Software Version No.
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="number" name="issueList[0].SoftwareVersionNo" id="softVersionNo" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Module
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="text" name="issueList[0].Module" id="moduleName" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Issue Details
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <textarea name="issueList[0].IssueDetails" id="issueDetails" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Issue Frequency
+                        </div>
+                        <div class="col-lg-8 form-group" style="text-align: left">
+                            <select name="issueList[0].IssueFrequency" id="issueFrequency" class="form-control">
+                                <option value="0">SELECT</option>
+                                <option value="ALWAYS">ALWAYS</option>
+                                <option value="SOMETIMES">SOMETIMES</option>
+                                <option value="RARE">RARE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Issue Type
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <select name="issueList[0].IssueType" id="issueType" class="form-control ">
+                                <option value="0">SELECT</option>
+                                <option value="MINOR">MINOR</option>
+                                <option value="MAJOR">MAJOR</option>
+                                <option value="CRITICAL">CRITICAL</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            ASPM Testing Path/Procedure
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <textarea name="issueList[0].TestingPath" id="testingPath" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Result Found
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <textarea name="issueList[0].ResultFound" id="results" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Expected Result
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <textarea name="issueList[0].ExpectedResult" id="expectedResult" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Number of HSs ASPM checked for this issue
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="number" name="issueList[0].NumberOfHSsChecked" id="hssChecked" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Issue occurence ratio in HSs
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="text" name="issueList[0].HSsIssueRatio" id="issueRatio" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Percentage of customers affected by/complained for this issue
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="number" name="issueList[0].ComplainPercentage" id="complainPercentageNo" value="" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Number of HSs return against this issue
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="number" name="issueList[0].NumberOfHSsReturn" id="hssReturnedNo" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Any valuable information from ASPM that could help R&D to solve this Issue
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            @*<input type="number" name="issueList[0].IssueSolvingInfo" id="issueSolvingComment" value="" class="form-control" />*@
+                            <textarea name="issueList[0].IssueSolvingInfo" id="issueSolvingComment" rows="3" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right;">
+                            Number of Sample Provided to Qc
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <input type="number" name="issueList[0].NumberOfSample" id="noOfHandset" value="" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="text-align: right">
+                            Document (if available) <p style="color: red">Note: Please must upload .jpg, .png, .mp4, .jpeg, .txt, .xls, .wav, <br />.zip, .pdf, .docx, .xlsx, .rar, .pptx </p>
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <div class="col-md-11">
+                                            <table class="File11" id="hh1">
+                                                <tr id="trIdForFile">
+                                                    <td class="filesss" id="filesId">
+
+                                                        <div class="col-md-9" id="fileIdForCr">
+                                                            <input type="file" name="issueList[0].UploderDocs" id="File11" />
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick=" removeDetailRow($(this).closest('tr')); ">
+                                                                <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        <br /><br />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="col-md-2">
+                                                <button type="button" id="upPlusBt" class="btn btn-group-circle green center" onclick=" javascript: addField('issueList[0].UploderDocs', $(this).closest('tr')); ">
+                                                    <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                                </button><br /><br />
+                                            </div>
+                                            <div class="col-md-6"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-actions" style="text-align: center">
+                <button id="btnSubmit" type="submit" class="btn yellow" onclick="load()">Submit</button>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="portlet box yellow-gold">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i> Issue List
+        </div>
+    </div>
+    <div class="portlet-body form" style="display: block;">
+        <div class="table-responsive table-scrollable">
+            <table id="tbl33" class="table table-striped table-bordered table-hover tbl33">
+                <thead class="flip-content">
+                    <tr style="background:gray;color:white;">
+                        <th>#</th>
+                        <th style="text-align: center;"> Issue Ref. </th>
+                        <th style="text-align: center;display: none"> ProjectMasterId </th>
+                        <th style="text-align: center;display: none"> ProjectPmAssignId </th>
+                        <th style="text-align: center;display: none"> ProjectManagerUserId </th>
+                        <th style="text-align: center;"> ModelName </th>
+                        <th style="text-align: center;"> SoftwareVersion<br />Name</th>
+                        <th style="text-align: center;"> Software<br />VersionNo. </th>
+                        <th style="text-align: center;"> Module </th>
+                        <th style="text-align: center;"> Issue Details </th>
+                        <th style="text-align: center;">Issue Frequency</th>
+                        <th style="text-align: center;"> Issue Type </th>
+                        <th style="text-align: center;"> ASPM Testing<br /> Path/Procedure </th>
+                        <th style="text-align: center;">Result Found </th>
+                        <th style="text-align: center;">Expected Result </th>
+                        <th style="text-align: center;">Number of HSs<br /> ASPM checked <br />for this issue </th>
+                        <th style="text-align: center;">Issue occurence<br /> ratio in HSs </th>
+                        <th style="text-align: center;">Percentage of <br />customers affected<br /> by/complained for<br /> this issue </th>
+                        <th style="text-align: center;">Number of HSs<br /> return against<br /> this issue </th>
+                        <th style="text-align: center;">Any valuable <br />information from <br />ASPM that could <br />help R&D to solve<br /> this Issue </th>
+                        <th style="text-align: center;">Number of <br />Sample Provided<br /> to Qc</th>
+                        <th style="text-align: center;">Status </th>
+                        <th style="text-align: center;">Document<br />Provided by ASPM </th>
+                        <th style="text-align: center;">Document<br />Provided by Qc </th>
+                        <th style="text-align: center; width: 200px">Select Action </th>
+                        <th style="text-align: center;"> Action </th>
+                        <th style="text-align: center;">Details </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.AftersalesPmIssueVerificationModels.Any())
+                    {
+
+                        for (int i = 0; i < Model.AftersalesPmIssueVerificationModels.Count; i++)
+                        {
+                            if (Model.AftersalesPmIssueVerificationModels[i].Id > 0)
+                            {
+                                <tr style="text-align: center" class="trForRowRv" id="trForRowRv">
+                                    <td style="font-weight: bold;color:brown;font-size:20px"></td>
+                                    <td style="display:block" id="issueIds" class="issueIds">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Id)</td>
+                                    <td style="display:none" id="ProjectMasterId" class="ProjectMasterId">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ProjectMasterId)</td>
+                                    <td style="display:none" id="ProjectPmAssignId" class="ProjectPmAssignId">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ProjectPmAssignId)</td>
+                                    <td style="display:none" id="ProjectManagerUserId" class="ProjectManagerUserId">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ProjectManagerUserId)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ModelName)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].SoftwareVersionName)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].SoftwareVersionNo)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Module)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueDetails)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueFrequency)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueType)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].TestingPath)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ResultFound)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ExpectedResult)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfHSsChecked)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].HSsIssueRatio)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].ComplainPercentage)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfHSsReturn)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].IssueSolvingInfo)</td>
+                                    <td>@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].NumberOfSample)</td>
+                                    <td>
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status == "CLOSED")
+                                        {
+                                            <p style="color: red;font-weight: bold">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Status)</p>
+
+                                        }
+                                        else
+                                        {
+                                            <p style="color: darkorange; font-weight: bold">@Html.DisplayFor(x => x.AftersalesPmIssueVerificationModels[i].Status)</p>
+
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="file-preview-thumbnails">
+                                            <div class="">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.AftersalesPmIssueVerificationModels[i].SupportingDocument, new { @class = "clsRmv" })
+                                                        @if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails != null && Model.AftersalesPmIssueVerificationModels[i].FilesDetails.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    @for (int m = 0; m < Model.AftersalesPmIssueVerificationModels[i].FilesDetails.Count; m++)
+                                                                    {
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".jpg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".png" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".mp4" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".jpeg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".txt" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".xls" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".wav")
+                                                                        {
+                                                                            <td style="border:2px solid black;">
+                                                                                <div class="col-lg-2">
+                                                                                    <embed class="" src="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath" style="width: 40px;height: 60px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath">Download</a>
+                                                                                </div>
+                                                                                <div class="col-lg-2" style="width: 50px;"></div>
+                                                                            </td>
+
+                                                                        }
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".zip" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".pdf" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".docx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".xlsx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".rar" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].Extention == ".pptx")
+                                                                        {
+                                                                            var urls = Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+                                                                                <td>
+                                                                                    <div class="col-lg-2" style="width: 40px; height: 60px;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:40px;height:60px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="width: 50px;"></div>
+                                                                                </td>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tr>
+                                                            </table>
+
+                                                        }
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="file-preview-thumbnails">
+                                            <div class="">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.AftersalesPmIssueVerificationModels[i].DocumentUploadedByQc, new { @class = "clsRmv" })
+                                                        @if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1 != null && Model.AftersalesPmIssueVerificationModels[i].FilesDetails1.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    @for (int m = 0; m < Model.AftersalesPmIssueVerificationModels[i].FilesDetails1.Count; m++)
+                                                                    {
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".jpg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".png" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".mp4" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".jpeg" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".txt" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".xls" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".wav")
+                                                                        {
+                                                                            <td style="border:2px solid black;">
+                                                                                <div class="col-lg-2">
+                                                                                    <embed class="" src="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath" style="width: 40px;height: 60px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath">Download</a>
+                                                                                </div>
+                                                                                <div class="col-lg-2" style="width: 50px;"></div>
+                                                                            </td>
+
+                                                                        }
+                                                                        if (Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".zip" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".pdf" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".docx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".xlsx" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".rar" || Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].Extention == ".pptx")
+                                                                        {
+                                                                            var urls = Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last2 = urls[k].Split('-').Last();
+                                                                                var lastNameForM2 = Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath;
+
+                                                                                lastNameForM2 = Path.GetFileName(last2);
+                                                                                <td>
+                                                                                    <div class="col-lg-2" style="width: 40px; height: 60px;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM2, new { style = "width:40px;height:60px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.AftersalesPmIssueVerificationModels[i].FilesDetails1[m].FilePath" target="_blank">Download</a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-2" style="width: 50px;"></div>
+                                                                                </td>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </tr>
+                                                            </table>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    @*<td>
+
+                                            @if (Model.AftersalesPmIssueVerificationModels[i].Status == "NOTVALIDATED"
+                                                 || Model.AftersalesPmIssueVerificationModels[i].Status == "ACCEPTED" //|| Model.AftersalesPmIssueVerificationModels[i].Status == "CONFIRMED"
+                                                )
+                                            {
+                                                <p>----</p>
+                                            }
+                                            else if (Model.AftersalesPmIssueVerificationModels[i].Status == "VALIDATED")
+                                            {
+                                                <button type="submit" class="btn btn-danger btnConfirm blink" id="btnConfirm">
+                                                    <span class="glyphicon glyphicon-ok-sign"></span> CONFIRMED
+                                                </button>
+                                            }
+                                            else if (Model.AftersalesPmIssueVerificationModels[i].Status == "CONFIRMED")
+                                            {
+                                                <button class="btn btn-circle btn-sm btn-danger btn-outline btnForwardToSoftWareQc blink" id="btnProjectAssign">
+                                                    Full SW Check<i class="icon-control-forward"> </i>
+                                                </button>
+
+                                            }
+                                            else if (Model.AftersalesPmIssueVerificationModels[i].Status == "FullSoftwareChecked")
+                                            {
+                                                <button class="btn btn-circle btn-sm btn-danger btn-outline btnForwardToSoftWareQc blink" id="btnProjectAssign">
+                                                    FOTA Test<i class="icon-control-forward"> </i>
+                                                </button>
+
+                                            }
+
+                                        </td>*@
+                                    <td id="selectBtnn" class="selectBtnn">
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status != "SUBMITTED" && Model.AftersalesPmIssueVerificationModels[i].Status != "ACCEPTED"
+                                             && Model.AftersalesPmIssueVerificationModels[i].Status != "VALIDATED"
+                                             && Model.AftersalesPmIssueVerificationModels[i].Status != "CLOSED" && Model.AftersalesPmIssueVerificationModels[i].Status != "NOTVALIDATED" && Model.AftersalesPmIssueVerificationModels[i].Status != "ForwardToSupplier"
+                                             && Model.AftersalesPmIssueVerificationModels[i].Status != "QCAPPROVED" && Model.AftersalesPmIssueVerificationModels[i].Status != "QCDECLINED")
+                                        {
+                                            <select style="width: 200px" class="form-control actionType" id="actionType" onchange="changeActionType(this)">
+                                                <option value="">--Select--</option>
+                                                <option value="Full Sw Check">Full Sw Check</option>
+                                                <option value="FOTA Test">FOTA Test</option>
+                                                <option value="Closed">CLOSED</option>
+                                            </select>
+                                        }
+                                    </td>
+                                    <td id="btnn" class="btnn">
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status != "SUBMITTED" && Model.AftersalesPmIssueVerificationModels[i].Status != "ACCEPTED"
+                                         && Model.AftersalesPmIssueVerificationModels[i].Status != "VALIDATED"
+                                         && Model.AftersalesPmIssueVerificationModels[i].Status != "CLOSED" && Model.AftersalesPmIssueVerificationModels[i].Status != "NOTVALIDATED")
+                                        {
+                                            <div id="btnFullSw1" class="btnFullSw1" style="display: none">
+                                                <button type="submit" class="btn btn-danger btnFullSw " id="btnFullSw">
+                                                    <span class="glyphicon glyphicon-ok-sign"></span> Full Sw Check Done
+                                                </button>
+                                            </div>
+                                            <div id="btnFota1" class="btnFota1" style="display: none">
+                                                <button type="submit" class="btn btn-danger btnFota blink" id="btnFota">
+                                                    <span class="glyphicon glyphicon-ok-sign"></span> FOTA Test Done
+                                                </button>
+                                            </div>
+                                            <div id="btnClose1" class="btnClose1" style="display: none">
+                                                <button type="submit" class="btn btn-danger btnClose blink" id="btnClose">
+                                                    <span class="glyphicon glyphicon-ok-sign"></span> CLOSED
+                                                </button>
+                                            </div>
+                                        }
+                                        @if (@Model.AftersalesPmIssueVerificationModels[i].Status == "NOTVALIDATED")
+                                        {
+                                            <button type="submit" class="btn btn-danger btnForwardToSupplier blink" id="btnForwardToSupplier">
+                                                <span class="glyphicon glyphicon-ok-sign"></span> Forward to Supplier
+                                            </button>
+                                        }
+                                        @if (@Model.AftersalesPmIssueVerificationModels[i].Status == "ForwardToSupplier")
+                                        {
+                                            @*<button type="submit" class="btn btn-danger btnSupplierFeedback blink" id="btnSupplierFeedback">
+                                                    <span class="glyphicon glyphicon-ok-sign"></span> Supplier FeedBack
+                                                </button>*@
+                                            <p class="blink" style="color:red">Waiting For Qc Approval</p>
+                                        }
+                                        @if (@Model.AftersalesPmIssueVerificationModels[i].Status == "QCAPPROVED")
+                                        {
+                                            <button type="submit" class="btn btn-danger btnSupplierFeedback blink" id="btnSupplierFeedback">
+                                                <span class="glyphicon glyphicon-ok-sign"></span> Supplier FeedBack
+                                            </button>
+                                        }
+                                        @if (Model.AftersalesPmIssueVerificationModels[i].Status == "VALIDATED")
+                                        {
+                                            <button type="submit" class="btn btn-danger btnConfirm blink" id="btnConfirm">
+                                                <span class="glyphicon glyphicon-ok-sign"></span> CONFIRMED
+                                            </button>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a class="btn blue" target="_blank" href='@Url.Action("DetailsOfAftersalesPmIssue", "Software", new { issueIds = @Model.AftersalesPmIssueVerificationModels[i].Id})'>
+                                            <span class="glyphicon glyphicon-list-alt"></span> Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="forwardToSoftwareQcModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Forward To SoftWare QC</h4>
+                <h4 class="modal-title" id="lblIssueIds" style="display:none;"></h4>
+                <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+                <h4 class="modal-title" id="lblProjectPmAssignId" style="display:none;"></h4>
+                <h4 class="modal-title" id="lblProjectManagerUserId" style="display:none;"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project Name:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="lblprojectName" class="form-control" style="border: none" />
+                                        <input type="text" id="lblForActionType" class="form-control" style="border: none;display:none" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project Sample Type:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        @*<select name="multiple" id="multiple" class="form-control ddChosen" multiple>
+                                                @foreach (CmnUserModel item in Model.ddlAssignUsersList)
+                                                {
+                                                    <option value="@item.CmnUserId">
+                                                        @item.UserFullName _ @item.EmployeeCode
+                                                    </option>
+                                                }
+
+                                            </select>*@
+                                        <select class="form-control ddChosen ddlSampleType" id="ddlSampleType" multiple>
+                                            <option value="">--Select--</option>
+                                            <option value="T0">T0</option>
+                                            <option value="T1">T1</option>
+                                            <option value="Golden">Golden Sample</option>
+                                            <option value="FinishGood">Finish Good</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Test Phase :
+                                    </label>
+                                    <div class="col-md-6">
+                                        <select name="singleOne" id="singleOne" class="form-control" onchange="SoftNoChange()">
+                                            <option value="0" style="text-align: center">----- Select Test Phase Name -----</option>
+                                            @foreach (var item in ViewBag.ddlTestPhasesList)
+                                            {
+                                                <option value="@item.TestPhaseID">
+                                                    @if (@item.TestPhaseIsActive == true && (@item.TestPhaseName != ("Accessories Test").Trim() && @item.TestPhaseName != ("Field (Network Test)").Trim()))
+                                                    {
+                                                        @item.TestPhaseName
+                                                    }
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Software Version No:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="number" min="1" id="swVersionNo" class="form-control" onchange="SoftNoChange()" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Version Name:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="versionName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Number Of Sample:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="number" min="1" id="txtSampleNumber" class="form-control" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Source Version:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" rows="3" name="txtSourceVersion" id="txtSourceVersion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Target Version:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" rows="3" name="txtTargetVersion" id="txtTargetVersion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project Manager Comment:
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" rows="3" name="txtProjectHeadRemarks" id="txtProjectHeadRemarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToQc">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="forwardToSupplierModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title">Forward To Supplier</h4>
+                <h4 class="modal-title" id="lblIssueIds2" style="display:none;"></h4>
+
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblprojectName2" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Details:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="4" name="txtSupplierDetails2" id="txtSupplierDetails2"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label">Document (if available)</label>
+                                        <br /><br />
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <div class="col-md-11">
+                                                        <table class="File111" id="hh1">
+                                                            <tr id="trIdForFile">
+                                                                <td class="filesss" id="filesId">
+
+                                                                    <div class="col-md-9" id="fileIdForCr">
+                                                                        <input type="file" name="file" id="file" multiple onchange="javascript: updateList();" />
+                                                                        <p>Selected files:</p>
+                                                                        <div id="fileList"></div>
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <button type="button" id="removeProductRow2" class="btn btn-circle btn-danger" onclick=" removeDetailRow2($(this).closest('tr')); ">
+                                                                            <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <br /><br />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-8">
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnForwardToSupCon" id="btnForwardToSupCon">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+<script>
+    var input = document.getElementById('file');
+    var output = document.getElementById('fileList');
+
+    updateList = function () {
+        var children = "";
+        var children2 = "";
+
+
+        for (var i = 0; i < input.files.length; ++i) {
+            children += '<li>' + input.files.item(i).name + '</li>';
+            children2 = input.files.item(i).name;
+
+        }
+        output.innerHTML = '<ul>' + children + '</ul>';
+    };
+
+    function removeDetailRow2(element) {
+        //$(element).remove();
+        document.getElementById('file').value = null;
+        document.getElementById('fileList').innerHTML = "";
+    }
+    function SoftNoChange() {
+
+        var obj = {};
+        var testPhase = $('#singleOne').val().trim();
+
+        var projectId = $('#lblprojectMasterId').text();
+        var projectName = $('#lblprojectName').val();
+        var swVersionNo = $('#swVersionNo').val();
+        obj.swVersionNo = swVersionNo;
+        obj.projectId = projectId;
+        obj.testPhase = testPhase;
+
+        if (swVersionNo != 0 && swVersionNo != null && testPhase != "0") {
+            $.ajax({
+                url: '@Url.Action("SoftwareVersionNameLoadForAll", "AfterSalesPm")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    var items = $.parseJSON(data);
+
+                    if (items != null) {
+
+                        $('#versionName').val(items.SoftwareVersionName);
+                        document.getElementById("versionName").disabled = true;
+
+                    } else {
+                        $('#versionName').val("");
+                        document.getElementById("versionName").disabled = false;
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+    }
+    //$(function () {
+    //    var table1 = document.getElementById('tbl33');
+    //    var rowIndex1 = $(table1).closest('tr').index() + 1;
+    //    var row1 = $(table1).closest("tr");
+
+    //    for (var i = 0; i < table1.rows.length; i++) {
+    //      //  table1.rows[i].classList.remove('highlight');
+    //       // var selectedValAction = row.find('.actionType option:selected').text();
+    //        var selectedValAction1 = row1.find('.actionType option:selected').text("");
+    //        $('#actionType').val("");
+
+    //        //modal-backdrop fade in
+    //    }
+    //});
+
+    $("body").on("click", "#tbl33 #btnSupplierFeedback", function () {
+
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl33');
+        var row = $(this).closest("tr");
+
+        var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+        var projectName = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+        $('#lblIssueIds2').val(issueIds);
+        $('#lblprojectName2').val(projectName);
+        $('#forwardToSupplierModal').modal();
+    });
+
+    function changeActionType(ids) {
+        $('.modal-backdrop').hide();
+        $('body').removeClass('modal-backdrop fade in');
+        $('.modal').removeClass('modal-backdrop fade in');
+        var ss = ids.value.trim();
+        $('#txtSampleNumber').val("");
+        $('#txtSourceVersion').val("");
+        $('#txtTargetVersion').val("");
+        $('#txtProjectHeadRemarks').val("");
+        $('#versionName').val("");
+        $('#swVersionNo').val("");
+
+        $('#singleOne').val("0");
+        $('#singleOne_chosen').val("0");
+
+        var issueIds;
+        var projectMasterId;
+        var projectPmAssignId;
+        var projectManagerUserId;
+        var projectName;
+
+        $("body").on("change", "#tbl33 #actionType", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+            var row = $(this).closest("tr");
+
+            issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            projectMasterId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            projectPmAssignId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            projectManagerUserId = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            projectName = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+
+
+            if (ss === "Full Sw Check") {
+                $('.modal-backdrop').hide();
+                $('body').removeClass('modal-backdrop fade in');
+                $('.modal').removeClass('modal-backdrop fade in');
+
+                $(".btnFullSw1").show();
+                $(".btnFota1").hide();
+                $(".btnClose1").hide();
+
+                //start
+                $('#lblForActionType').val(ss);
+                $('#lblprojectName').val(projectName);
+                $('#lblprojectMasterId').text(projectMasterId);
+                $('#lblProjectPmAssignId').text(projectPmAssignId);
+                $('#lblProjectManagerUserId').text(projectManagerUserId);
+                $('#lblIssueIds').text(issueIds);
+
+                $('#versionName').val("");
+                document.getElementById("versionName").disabled = true;
+
+                $('#forwardToSoftwareQcModal').modal();
+            }
+            else if (ss === "FOTA Test") {
+                $('.modal-backdrop').hide();
+                $('body').removeClass('modal-backdrop fade in');
+                $('.modal').removeClass('modal-backdrop fade in');
+
+                $(".btnFullSw1").hide();
+                $(".btnFota1").show();
+                $(".btnClose1").hide();
+
+                //start
+                $('#lblForActionType').val(ss);
+                $('#lblprojectName').val(projectName);
+                $('#lblprojectMasterId').text(projectMasterId);
+                $('#lblProjectPmAssignId').text(projectPmAssignId);
+                $('#lblProjectManagerUserId').text(projectManagerUserId);
+                $('#lblIssueIds').text(issueIds);
+
+                $('#versionName').val("");
+                document.getElementById("versionName").disabled = true;
+
+                $('#swVersionNo').val("");
+                $('#ddlSampleType').val("");
+                $('#singleOne').val("0");
+                $('#singleOne_chosen').val("0");
+                $('#forwardToSoftwareQcModal').modal();
+            }
+            else if (ss === "Closed") {
+                $('.modal-backdrop').hide();
+                $('body').removeClass('modal-backdrop fade in');
+                $('.modal').removeClass('modal-backdrop fade in');
+
+                $('#forwardToSoftwareQcModal').modal('hide');
+                $(".btnFullSw1").hide();
+                $(".btnFota1").hide();
+                $(".btnClose1").show();
+                $('#lblForActionType').val(ss);
+
+            }
+            else {
+                $('.modal-backdrop').hide();
+                $('body').removeClass('modal-backdrop fade in');
+                $('.modal').removeClass('modal-backdrop fade in');
+
+                $('#forwardToSoftwareQcModal').modal('hide');
+                $(".btnFullSw1").hide();
+                $(".btnFota1").hide();
+                $(".btnClose1").hide();
+            }
+        });
+
+    }
+    $("body").on("click", "#tbl33 #btnFullSw1", function () {
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl33');
+        var row = $(this).closest("tr");
+
+
+        var selectedValAction = row.find('.actionType option:selected').text();
+        // alert(selectedValAction);
+
+        if (selectedValAction == "--Select--") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Action.'
+            }).show();
+            return false;
+        }
+        else if (selectedValAction != "Full Sw Check") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Proper Action for Full Sw Check.'
+            }).show();
+            return false;
+        }
+
+        var ids = table.rows[rowIndex].cells[1].innerHTML;
+        // alert(ids);
+        var obj = {};
+
+        obj.issueIds = ids;
+        obj.selectedValAction = selectedValAction;
+        //start
+        alertify.confirm('Issue Confirmation', 'Do you want to Complete/Done Full Sw Check?', function () {
+            alertify.success('Successfully Done.');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateActionStatus", "AfterSalesPm")',
+                // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                data: "{issueIds:'" + obj.issueIds + "',selectedValAction:'" + obj.selectedValAction + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+            event.preventDefault(); //Prevent the default submit
+        }, function () {
+            alertify.error('Cancel');
+            $('#loading').hide();
+        });
+        //end start
+    });
+    $("body").on("click", "#tbl33 #btnFota1", function () {
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl33');
+        var row = $(this).closest("tr");
+
+        var selectedValAction = row.find('.actionType option:selected').text();
+        // alert(selectedValAction);
+
+        if (selectedValAction == "--Select--") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Action.'
+            }).show();
+            return false;
+        }
+        else if (selectedValAction != "FOTA Test") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Proper Action for FOTA Test.'
+            }).show();
+            return false;
+        }
+
+        var ids = table.rows[rowIndex].cells[1].innerHTML;
+        // alert(ids);
+        var obj = {};
+
+        obj.issueIds = ids;
+        obj.selectedValAction = selectedValAction;
+        //start
+        alertify.confirm('Issue Confirmation', 'Do you want to Complete/Done FOTA Test?', function () {
+            alertify.success('Successfully Done.');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateActionStatus", "AfterSalesPm")',
+                // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                data: "{issueIds:'" + obj.issueIds + "',selectedValAction:'" + obj.selectedValAction + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+            event.preventDefault(); //Prevent the default submit
+        }, function () {
+            alertify.error('Cancel');
+            $('#loading').hide();
+        });
+        //end start
+    });
+    $("body").on("click", "#tbl33 #btnClose1", function () {
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl33');
+        var row = $(this).closest("tr");
+
+        var selectedValAction = row.find('.actionType option:selected').text();
+        // alert(selectedValAction);
+
+        if (selectedValAction == "--Select--") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Action.'
+            }).show();
+            return false;
+        }
+        else if (selectedValAction != "CLOSED") {
+            alertify.dialog('alert').set({
+                'title': '  ',
+                'transition': 'zoom',
+                'message': 'Please must select Proper Action for Close this Issue.'
+            }).show();
+            return false;
+        }
+
+        var ids = table.rows[rowIndex].cells[1].innerHTML;
+        //  alert(ids);
+        var obj = {};
+
+        obj.issueIds = ids;
+        obj.selectedValAction = selectedValAction;
+        //start
+        alertify.confirm('Issue Confirmation', 'Do you want to Close this Issue?', function () {
+            alertify.success('Successfully Done.');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateActionStatus", "AfterSalesPm")',
+                // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                data: "{issueIds:'" + obj.issueIds + "',selectedValAction:'" + obj.selectedValAction + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    } else if (data.data == "Please Complete/Done Full Sw Check") {
+                        $('#loading').hide();
+                        alertify.dialog('alert').set({
+                            'title': '  ',
+                            'transition': 'zoom',
+                            'message': 'Please Complete/Done Full Sw Check.'
+                        }).show();
+                        return false;
+
+                    }
+                    else if (data.data == "Please Complete/Done FOTA Test") {
+                        $('#loading').hide();
+                        alertify.dialog('alert').set({
+                            'title': '  ',
+                            'transition': 'zoom',
+                            'message': 'Please Complete/Done FOTA Test.'
+                        }).show();
+                        return false;
+                    }
+                }
+            });
+            event.preventDefault(); //Prevent the default submit
+        }, function () {
+            alertify.error('Cancel');
+            $('#loading').hide();
+        });
+        //end start
+    });
+
+    $("body").on("click", "#tbl33 #btnForwardToSupplier", function () {
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl33');
+        var row = $(this).closest("tr");
+
+        var ids = table.rows[rowIndex].cells[1].innerHTML;
+
+        var obj = {};
+
+        obj.issueIds = ids;
+        obj.selectedValAction = "ForwardToSupplier";
+        //start
+        alertify.confirm('Issue Confirmation', 'Do you want to Forward Supplier?', function () {
+            alertify.success('Successfully Done.');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateActionStatus", "AfterSalesPm")',
+                // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                data: "{issueIds:'" + obj.issueIds + "',selectedValAction:'" + obj.selectedValAction + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+            event.preventDefault(); //Prevent the default submit
+        }, function () {
+            alertify.error('Cancel');
+            $('#loading').hide();
+        });
+        //end start
+    });
+    /////sample_1 update with YES or No///
+    function blink_text() {
+        $('.blink').fadeOut(20);
+        $('.blink').fadeIn(500);
+    }
+    setInterval(blink_text, 2000);
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    function addField(id, td) {
+        debugger;
+        td.find('.File11').append($("<tr id='trIdForFile'><td class='filesss' id='filesId'><div class='col-md-9' id='fileIdForCr'><input type='file' name='" + id + "' id='File11' /></div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true'></i></span></button></div><br /><br /></td></tr>"));
+    }
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+
+    });
+    function load() {
+        document.getElementById("loading").style.display = "block";
+        setTimeout(stop(), 5000);
+    }
+    $(document).ready(function () {
+        //$('#singleOne').chosen({
+        //    disable_search_threshold: 10,
+        //    no_results_text: "Oops, nothing found!",
+        //    width: "95%"
+        //});
+        var t = $('#tbl33').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[5, 10, 20, 30, 50, -1], [5, 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        //
+
+        $('#ddlSampleType').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+        $('.btnConfirm').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var issueIds;
+            var obj = {};
+
+            var row = $(this).closest("tr");
+            issueIds = row.find(".issueIds").html();
+            //alert(issueIds);
+            obj.issueIds = issueIds;
+
+            alertify.confirm('Issue Confirmation', 'Do you want to confirm this issue?', function () {
+                alertify.success('Successfully confirmed.');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("UpdateIssueConfirmationStatus", "AfterSalesPm")',
+                    // data: "{obj:'" + JSON.stringify(obj.issueIds) + "'}",
+                    data: "{issueIds:'" + obj.issueIds + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }, function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+        }); //end of button confirm
+        $('#tbl33 tr > td > .btnForwardToSoftWareQc').click(function () {
+
+            //var rowIndex = $(this).closest('tr').index() + 1;
+            //var table = document.getElementById('tbl33');
+            //var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+
+            var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+
+            var obj1 = {};
+            obj1.issueIds = issueIds;
+            var projectMasterId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var projectPmAssignId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var projectManagerUserId = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var projectName = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+
+
+            $('#forwardToSoftwareQcModal').modal();
+            $("[name=txtTestValue]").change(function () {
+                $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+            });
+
+            $('#lblprojectName').val(projectName);
+            $('#lblprojectMasterId').text(projectMasterId);
+            $('#lblProjectPmAssignId').text(projectPmAssignId);
+            $('#lblProjectManagerUserId').text(projectManagerUserId);
+            $('#lblIssueIds').text(issueIds);
+
+            $('#versionName').val("");
+            document.getElementById("versionName").disabled = true;
+
+
+            $('#swVersionNo').val("");
+            $('#ddlSampleType').val("");
+            $('#singleOne').val("0");
+            $('#singleOne_chosen').val("0");
+            @*$.ajax({
+                url: '@Url.Action("FullSoftwareVersionCheckedOrNot", "AftersalesPm")',
+                type: 'POST',
+                data: JSON.stringify(obj1),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    if (data == false) {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Full Software check is not completed",
+                        }).show();
+                        return false;
+                        $('#loading').hide();
+                    } else if (data == true) {
+                        //alertify.alert(data);
+                        var projectMasterId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+                        var projectPmAssignId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+                        var projectManagerUserId = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+                        var projectName = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+
+
+                        $('#forwardToSoftwareQcModal').modal();
+                        $("[name=txtTestValue]").change(function () {
+                            $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+                        });
+
+                        $('#lblprojectName').val(projectName);
+                        $('#lblprojectMasterId').text(projectMasterId);
+                        $('#lblProjectPmAssignId').text(projectPmAssignId);
+                        $('#lblProjectManagerUserId').text(projectManagerUserId);
+                        $('#lblIssueIds').text(issueIds);
+
+                        $('#versionName').val("");
+                        document.getElementById("versionName").disabled = true;
+
+
+                        $('#swVersionNo').val("");
+                        $('#ddlSampleType').val("");
+                        $('#singleOne').val("0");
+                        $('#singleOne_chosen').val("0");
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });*@
+
+        });//end
+        @*$('#tbl33 tr > td > .btnForwardToSoftWareQc').click(function() {
+
+            //var rowIndex = $(this).closest('tr').index() + 1;
+            //var table = document.getElementById('tbl33');
+            //var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl33');
+
+            var issueIds = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+
+            var obj1 = {};
+            obj1.issueIds = issueIds;
+
+            $.ajax({
+                url: '@Url.Action("FullSoftwareVersionCheckedOrNot", "AftersalesPm")',
+                type: 'POST',
+                data: JSON.stringify(obj1),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log(data);
+                    if (data == false) {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Full Software check is not completed",
+                        }).show();
+                        return false;
+                        $('#loading').hide();
+                    } else if (data == true) {
+                        //alertify.alert(data);
+                        var projectMasterId = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+                        var projectPmAssignId = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+                        var projectManagerUserId = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+                        var projectName = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+
+
+                        $('#forwardToSoftwareQcModal').modal();
+                        $("[name=txtTestValue]").change(function () {
+                            $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+                        });
+
+                        $('#lblprojectName').val(projectName);
+                        $('#lblprojectMasterId').text(projectMasterId);
+                        $('#lblProjectPmAssignId').text(projectPmAssignId);
+                        $('#lblProjectManagerUserId').text(projectManagerUserId);
+                        $('#lblIssueIds').text(issueIds);
+
+                        $('#versionName').val("");
+                        document.getElementById("versionName").disabled = true;
+
+
+                        $('#swVersionNo').val("");
+                        $('#ddlSampleType').val("");
+                        $('#singleOne').val("0");
+                        $('#singleOne_chosen').val("0");
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+
+        });//end*@
+        $('#btnCancel2').on('click', function () {
+            $('.modal-backdrop').hide();
+            $('body').removeClass('modal-backdrop fade in');
+            $('.modal').removeClass('modal-backdrop fade in');
+        });
+        $('#btnForwardToQc').on('click', function () {
+
+            $('#loading').show();
+
+            var issueIds = $('#lblIssueIds').text();
+
+
+            var pmRemarks = $('#txtProjectHeadRemarks').val();
+            var projectName = $('#lblprojectName').val();
+            var projectMasterId = $('#lblprojectMasterId').text();
+            var projectPmAssignId = $('#lblProjectPmAssignId').text();
+            var sampleNumber = $('#txtSampleNumber').val();
+            var projectManagerUserId = $('#lblProjectManagerUserId').text();
+            var selectedSampleValue = $('#ddlSampleType').val();
+            var testPhase = $('#singleOne').val().trim();
+
+            var swVersionNo = $('#swVersionNo').val();
+            var versionName = $('#versionName').val();
+
+            var sourceVersion = $('#txtSourceVersion').val();
+            var targetVersion = $('#txtTargetVersion').val();
+            // $('#lblForActionType').val(ss);
+            var actionType = $('#lblForActionType').val();
+
+            if (selectedSampleValue == "") {
+                $('#forwardToSoftwareQcModal').modal('hide');
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Project Sample Type.",
+                }).show();
+                return false;
+
+            }
+
+            if (testPhase == "0") {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '  ',
+                    'transition': 'zoom',
+                    'message': 'Please must select Test Phase Name.'
+                }).show();
+                return false;
+            }
+            if (swVersionNo.length == 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Software Version Number.",
+                }).show();
+                return false;
+
+            }
+            if (versionName == "") {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Version Name.",
+                }).show();
+                return false;
+
+            } else if (versionName.length < 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Version Name.",
+                }).show();
+                return false;
+            }
+            if (sampleNumber.length == 0) {
+                $('#loading').hide();
+                $('#forwardToSoftwareQcModal').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must provide Number of Sample.",
+                }).show();
+                return false;
+
+            }
+
+
+            if (sampleNumber != "" && selectedSampleValue != "0") {
+                var obj = {};
+
+                obj.issueIds = issueIds;
+                obj.pmRemarks = pmRemarks;
+                obj.projectMasterId = projectMasterId;
+                obj.projectPmAssignId = projectPmAssignId;
+                obj.projectManagerUserId = projectManagerUserId;
+                obj.selectedSampleValue = selectedSampleValue;
+                obj.sampleNumber = sampleNumber;
+                obj.testPhase = testPhase;
+                obj.swVersionNo = swVersionNo;
+                obj.versionName = versionName;
+                obj.sourceVersion = sourceVersion;
+                obj.targetVersion = targetVersion;
+                obj.ActionType = actionType;
+                // var data = commonJqueryAjax('/ProjectManager/ProjectForwardToSoftwareQc', obj);
+
+
+                $.ajax({
+                    url: '@Url.Action("ProjectForwardToSoftwareQc", "AftersalesPm")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "ok") {
+                            $('#txtProjectHeadRemarks').val('');
+                            $('#txtSampleNumber').val('');
+                            $('#txtProjectHeadRemarks').val('');
+                            $('#swVersionNo').val('');
+                            $('#versionName').val('');
+
+                            alertify.alert('Project Forwarded To Software Qc', 'Project Forwarded To Software Qc. Project Name ' + projectName, function () {
+                                alertify.success('Forwarded : ' + projectName);
+                            });
+
+                            window.location = '@Url.Action("AftersalesIssueVerification", "AftersalesPm")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        } else {
+                            alertify.alert(data);
+                        }
+                    },
+                    error: function () {
+                        alert("error");
+                    }
+                });
+
+            } else {
+                $('#txtSampleNumber').css('border-color', 'red');
+                $('#ddlSampleType').css('border-color', 'red');
+            }
+
+        });
+
+        //
+
+
+        $('.btnForwardToSupCon').on('click', function () {
+
+            $('#forwardToSupplierModal').modal('hide');
+
+            var issueIds1;
+            var details;
+
+            issueIds1 = $('#lblIssueIds2').val();
+            details = $('#txtSupplierDetails2').val();
+
+
+            if (details == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input Details."
+                }).show();
+                return false;
+            }
+            console.log("all ids :" + issueIds1 + details);
+            $('#loading').show();
+
+            var files = $("#file").get(0).files;
+            var formData = new FormData();
+            formData.append('IssueVerificationId', issueIds1);
+            formData.append('Details', details);
+
+            for (var i = 0; i < files.length; i++) {
+                formData.append("file", files[i]);
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveSupplierDetails", "AfterSalesPm")',
+                type: 'POST',
+                data: formData,
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                success: function (data) {
+                    console.log("data :" + data);
+
+                    if (data == "OK") {
+                        window.location = '@Url.Action("AftersalesIssueVerification", "AfterSalesPm")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });//END
+    });
+</script>

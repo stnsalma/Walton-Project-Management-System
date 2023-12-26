@@ -1,0 +1,262 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+
+<script src="~/Scripts/jquery.blockui.min.js"></script>
+<script src="~/Scripts/jquery.slimscroll.min.js"></script>
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>QC Completed Projects
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+
+            <a href="javascript:;" class="reload"> </a>
+        </div>
+    </div>
+    <div class="portlet-body flip-scroll">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="tblQcCompletedStatus">
+                    <thead class="flip-content">
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center">PoCategory</th>
+                            <th class="text-center">Software<br/>Version<br/>Name</th>
+                            <th class="text-center">Software<br />VersionNo.</th>
+                            <th class="text-center">PM Assign<br/> Time</th>
+                            <th class="text-center">QC Incharge <br />Assign Time</th>
+                            <th class="text-center">QcEnd<br/> Time</th>
+                            <th class="text-center">Deadline</th>
+                            <th class="text-center">Assigned Persons</th>
+                            <th class="text-center">PM_Name</th>
+                            <th class="text-center">Supplier Name </th>
+                            <th class="text-center">Supplier<br/> Model Name </th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetQCCompletedProjectStatus)
+                        {
+                            <tr class="tableTrCls3">
+                                <td class="text-center"></td>
+                                <td class="text-center" style="display: none"><input type="hidden" value="@item.ProjectMasterId" id="ProMasID"></td>
+                                <td class="text-center" style="display: none"><input type="hidden" value="@item.SwQcHeadAssignId" id="ProInchargeID"></td>
+                                <td class="text-center" style="display: none"><input type="hidden" value="@item.ProjectPmAssignId" id="projectPmAssignId"></td>
+                                <td class="text-center">@item.ProjectName</td>
+                                <td class="text-center">@item.SourcingType</td>
+                                <td class="text-center">@item.SoftwareVersionName</td>
+                                <td class="text-center">@item.SoftwareVersionNo</td>
+                                <td class="text-center">
+                                    @if (@item.PmToQcHeadAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                                </td>
+                                <td class="text-center">
+                                    @if (@item.SwQcHeadToQcAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToQcAssignTime)}
+                                </td>
+                                <td class="text-center">
+                                    @if (@item.SwQcFinishedTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcFinishedTime)}
+                                </td>
+                                <td class="text-center">
+                                    @if (@item.ApproxInchargeToQcDeliveryDate != null)
+                                    {@String.Format("{0:yyyy-MM-dd}", @item.ApproxInchargeToQcDeliveryDate)}
+                                </td>
+                                <td class="text-center">@item.AssignedPerson</td>
+                                <td class="text-center">@item.ProjectManagerUserName</td>
+                                <td class="text-center">@item.SupplierName</td>
+                                <td class="text-center">@item.SupplierModelName</td>
+                               
+                                <td class="text-center">
+                                    @if (item.Status == "NEW")
+                                    {
+                                        <span class="label label-sm label-success"> @item.Status </span>
+
+                                    }
+                                    else if (item.Status == "ASSIGNED")
+                                    {
+                                        <span class="label label-sm label-primary"> @item.Status </span>
+
+                                    }
+
+                                    else if (item.Status == "QCCOMPLETED")
+                                    {
+                                        <span class="label label-sm label-info"> @item.Status </span>
+                                    }                                   
+
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" class="btn btn-danger btnPaused" id="btnPaused">
+                                        <span class="glyphicon glyphicon-pause">PAUSE</span>
+                                    </button>                               
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="rvmCls" style="margin-left: 20px;">
+                @Html.ActionLink("Back", "SwQcInchargeDashboard")
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<div id="qcCompletedModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+                <h4 class="modal-title" id="lblSwInchargeId" style="display:none;"></h4>
+                <h4 class="modal-title" id="lblPmAssignId" style="display:none;"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project Name
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input name="lblprojectName" id="lblprojectName" disabled="disabled" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3" id="SwInchargePausedOrAssignedComment" style="width: 33.666667%;">
+                                        Remarks
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" rows="3" name="txtQCHeadRemarks" id="txtQCHeadRemarks"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnQCCompletedProjectPaused">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javaScript">
+    $(function () {
+
+        var currentRow;
+        $('#tblQcCompletedStatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+        $('.btnPaused').on('click', function(e) {
+            e.preventDefault();
+            var projectMasterId = $(this).parents('tr').find('input:hidden[id=ProMasID]').val();
+            var swqcInchargeId = $(this).parents('tr').find('input:hidden[id=ProInchargeID]').val();
+            var pmAssignId = $(this).parents('tr').find('input:hidden[id=projectPmAssignId]').val();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblQcCompletedStatus');
+            var projectName = table.rows[rowIndex].cells[4].innerHTML;
+
+            $('#qcCompletedModal').modal();
+            $('#lblprojectName').val(projectName);
+            $('#lblprojectMasterId').val(projectMasterId);
+            $('#lblSwInchargeId').val(swqcInchargeId);
+            $('#lblPmAssignId').val(pmAssignId);
+            currentRow = $(this).closest('tr');
+
+            console.log("projectMasterId  :" + projectMasterId);
+            console.log("swqcInchargeId  :" + swqcInchargeId);
+            console.log("projectName  :" + projectName);
+            console.log("pmAssignId  :" + pmAssignId);
+        });
+
+        $('#btnQCCompletedProjectPaused').on('click', function () {
+            $('#qcCompletedModal').modal('hide');
+            
+            var projectHeadRemarks = $('#txtQCHeadRemarks').val();
+            if (projectHeadRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must put pause reason.",
+                }).show();
+                $('#assignQCModal').modal('hide');
+                return false;
+            }
+            var projectMsterId = $('#lblprojectMasterId').val();
+            var projectName = $('#lblprojectName').val();
+            var swqcInchargeId = $('#lblSwInchargeId').val();
+            var pmAssignId = $('#lblPmAssignId').val();
+
+            $('#lblprojectName').val($.trim($(this).closest('tr').find('td:eq(3)').text()));
+
+            var obj = {};
+            obj.projectHeadRemarks = projectHeadRemarks;
+            obj.projectMsterId = projectMsterId;
+            obj.projectName = projectName;
+            obj.swqcInchargeId = swqcInchargeId;
+            obj.pmAssignId = pmAssignId;
+
+            console.log(obj.projectMsterId + "p id :" + obj.projectHeadRemarks + "remarks  :" + obj.projectName + "name---" + obj.swqcInchargeId + "incharge id" + obj.pmAssignId);
+
+            
+            alertify.confirm('Project Paused Confirmation', 'Do you want to Pause this Running Project?', function () {
+                $('#loading').show();
+                alertify.success('Successfully Paused.');
+                $.ajax({
+                    url: '@Url.Action("SwPauseOrRestartQCCompletedProject", "Software")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                      
+                        if (data == "OK") {
+
+                            $('#txtQCHeadRemarks').val('');
+
+                            window.location = '@Url.Action("SwPauseOrRestartQCCompletedProject", "Software")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                event.preventDefault();
+            }
+              , function () {
+                  alertify.error('Cancel');
+
+              });
+
+        });
+    });
+</script>

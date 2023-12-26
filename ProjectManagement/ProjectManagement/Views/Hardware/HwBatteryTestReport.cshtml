@@ -1,0 +1,254 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName , Project Name : @Html.DisplayFor(model => model.HwBatteryTestCustomModel.ProjectName, new { @class = "control-label" })
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton">Print</a>
+</div>
+
+<div id="PageContent">
+
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-list"></i> Battery Test Report
+            </div>
+            @*<div class="pull-right">
+                    <input class="form-control" type="text" ng-model="search"/>
+                </div>*@
+        </div>
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover" id="tblBatteryTestInitial">
+
+                        <tbody>
+                            <tr>
+                                <td class="text-center bold">Model Name</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.HwBatteryTestCustomModel.ProjectName)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Battery Capacity(mAh)</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.HwBatteryTestCustomModel.BatteryCapacity)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Battery Cell Voltage (V)</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.HwBatteryTestCustomModel.BatteryCellVoltage)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Maximum Charge Voltage (V)</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.HwBatteryTestCustomModel.MaxChargeVoltage)</td>
+                            </tr>
+                            @*<tr>
+                                    <td class="text-center bold">Sample Number</td>
+                                    <td class="text-center bold">:</td>
+                                    <td class="text-center">@Html.DisplayFor(model=>model.HwBatteryTestCustomModel.NumberOfSample)</td>
+                                </tr>*@
+                            <tr>
+                                <td class="text-center bold">Sample Quantity(Battery & Cell)</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(model => model.HwBatteryTestCustomModel.SampleQuantity_Battery) Pcs Battery,
+                                    @Html.DisplayFor(model => model.HwBatteryTestCustomModel.SampleQuantity_Cell) pcs Cell
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Sample Supplier</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(model => model.HwBatteryTestCustomModel.BatterySupplierName)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Test Date</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(model => model.HwBatteryTestCustomModel.TestDate)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Test Environment</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">
+                                    Temperature : @Html.DisplayFor(model => model.HwBatteryTestCustomModel.TestEnvironment_Temperature) °C<br />
+                                    Humidity : @Html.DisplayFor(model => model.HwBatteryTestCustomModel.TestEnvironment_Humidity)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold">Test Item</td>
+                                <td class="text-center bold">:</td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(model => model.HwBatteryTestCustomModel.TestItem)
+                                </td>
+                            </tr>
+                            <tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_HwFgBatteryTestResultReport", Model)
+
+
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-list"></i> <h4> Battery Test Result</h4>
+            </div>
+            @*<div class="pull-right">
+                    <input class="form-control" type="text" ng-model="search"/>
+                </div>*@
+        </div>
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover" id="tblBatteryTestInitial">
+                        <thead>
+                            <tr>
+                                <td class="text-center bold">S/N</td>
+                                <td class="text-center bold">Test Value</td>
+                                <td class="text-center bold">Unit</td>
+                                <td class="text-center bold">Result</td>
+                                <td class="text-center bold">NTC</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1#Battery</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery1TestValue)</td>
+                                <td class="text-center">mΩ</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery1Result)</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery1Ntc)</td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-center">2#Battery</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery2TestValue)</td>
+                                <td class="text-center">mΩ</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery2Result)</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Battery2Ntc)</td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-center">1#Cell</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell1TestValue)</td>
+                                <td class="text-center">mΩ</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell1Result)</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell1Ntc)</td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-center">2#Cell</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell2TestValue)</td>
+                                <td class="text-center">mΩ</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell2Result)</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cell2Ntc)</td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-center bold" colspan="2">Announced Capacity (After Test)</td>
+                                <td class="text-center" colspan="3">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.AnnouncedCapacity)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold" colspan="2">Physical Condition (After Test)</td>
+                                <td class="text-center" colspan="3">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.PhysicalCondition)</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center bold" colspan="2">Cadex 30Cycle test(1C)</td>
+                                <td class="text-center" colspan="3">@Html.DisplayFor(model => model.BatteryTestResultSummaryModel.Cadex30CycleTest1C)</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet light bordered">
+        <div class="portlet-body form">
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover" id="tblBatteryTestInitial">
+                        <tbody>
+                            <tr>
+                                <td class="text-center">@Html.DisplayFor(model=>model.HwQcAssignCustomMasterModel.UserFullName)</td>
+                                <td class="text-center">@Html.DisplayFor(model => model.HwQcAssignCustomMasterModel.VerifierName)</td>
+                                <td class="text-center"></td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">Tested By</td>
+                                <td class="text-center">Checked By</td>
+                                <td class="text-center">Approved By</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#PrintButton").click(function () {
+            printPageContent($("#PageContent").html());
+        });
+
+        function printPageContent(content) {
+            var mywindow = window.open('', '', '');
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'body {' +
+                'margin:5%;' +
+                '}' +
+                'h3{' +
+                'text-align: center;' +
+                'text-decoration: underline;' +
+                '}' +
+                'h1{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'h4{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'table {' +
+                'font-family: arial, sans-serif;' +
+                'border-collapse: collapse;' +
+                'width: 100%;' +
+                '}' +
+                'table th, table td {' +
+                'border: 1px solid #dddddd;' +
+                'text-align: center;' +
+                'font-size: 10px;' +
+                '}' +
+                'table tr{' +
+                'line-height:16px;' +
+                '}' +
+                '</style>';
+            mywindow.document.write(htmlToPrint);
+            mywindow.document.write('<html><title>Battery Test Report</title><body>');
+            mywindow.document.write(content);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+            return true;
+        }
+    })
+</script>

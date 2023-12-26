@@ -1,0 +1,2363 @@
+﻿@using System.Diagnostics
+@using Microsoft.Ajax.Utilities
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Production.VmAssemblyPackingProduction
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script src="~/Content/icheck/icheck.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+
+<h2>ProductionPlan</h2>
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Production Plan </p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="color: brown;">
+                    <span class="caption-subject #569450 sbold uppercase"> PROJECT PLAN</span>
+                </div>
+            </div>
+            <div class="portlet box">
+                <div class="portlet-title">
+                    <div class="caption" style="color:brown;">
+                        <i class="fa fa-cogs"></i>ALL PROJECT PLAN
+                    </div>
+                    <div class="tools" style="background-color:#44B6AE;">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable" style="overflow: auto;">
+                        <table id="proPlanTable" class="table table-striped table-scrollable table-bordered table-hover tbl4">
+                            <thead class="flip-content" style="background-color:  #44B6AE;color: white">
+                                <tr>
+                                    <th style="text-align: center;">Prod Date </th>
+                                    <th style="text-align: center;">Inv and commercial receive</th>
+                                    <th style="text-align: center;">IQC conformation</th>
+                                    <th style="text-align: center;">Pilot Production Before</th>
+                                    <th style="text-align: center;">Soft conformation</th>
+                                    <th style="text-align: center;">R&D ClearenceDate</th>
+                                    <th style="text-align: center;">A.Line-1</th>
+                                    <th style="text-align: center;">A.Line-2</th>
+                                    <th style="text-align: center;">A.Line-3</th>
+                                    <th style="text-align: center;">A.Line-4</th>
+                                    <th style="text-align: center;">A.Line-5</th>
+                                    <th style="text-align: center;">A.Line-6</th>
+                                    <th style="text-align: center;">A.Line-7</th>
+                                    <th style="text-align: center;">P.Line-1</th>
+                                    <th style="text-align: center;">P.Line-2</th>
+                                    <th style="text-align: center;">P.Line-3</th>
+                                    <th style="text-align: center;">P.Line-4</th>
+                                    <th style="text-align: center;">P.Line-5</th>
+                                    <th style="text-align: center;">P.Line-6</th>
+                                    <th style="text-align: center;">P.Line-7</th>
+                                    <th style="text-align: center;">Balance closing</th>
+                                    <th style="text-align: center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyForGraph" class="tBodyForGraph"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+
+                    <span class="caption-subject #569450 sbold uppercase">SAVED PROJECT</span>
+                </div>
+            </div>
+            <div class="portlet box #E2E8E4">
+                <div class="portlet-title">
+                    <div class="caption" style="color:black">
+                        <i class="fa fa-cogs"></i>ALL SAVED PROJECT
+                    </div>
+                    <div class="tools" style="background-color:#44B6AE;">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable" style="overflow: auto;">
+                        <table id="sample_1" class="table table-bordered table-striped table-condensed flip-content tbl2">
+                            <thead class="flip-content" style="background-color:  #44B6AE;color: white">
+                                <tr>
+                                    <th style="text-align: center;display: none;">ProjectId </th>
+                                    <th style="text-align: center;">ProjectName </th>
+                                    <th style="text-align: center;">Order<br /> Number</th>
+                                    <th style="text-align: center">Po<br />Category</th>
+                                    <th style="text-align: center;">MaterialReceive<br />Date </th>
+                                    <th style="text-align: center;"> IqcCompleteDate </th>
+                                    <th style="text-align: center;"> TrialProduction<br />Date </th>
+                                    <th style="text-align: center;"> Software <br />Confirmation<br />Date </th>
+                                    <th style="text-align: center;">R&D <br />ClearanceDate </th>
+                                   
+                                    <th style="text-align: center;">AssemblyProduction<br />StartDate </th>
+                                    <th style="text-align: center;">AssemblyProduction<br />EndDate </th>
+                                    <th style="text-align: center;">Assembly<br /> Quantity</th>
+                                    <th style="text-align: center;">Assembly <br />PerDay<br /> Capacity</th>
+                                    <th style="text-align: center;">AssemblyLineInformation</th>
+                                  
+                                 
+                                    <th style="text-align: center;">PackingStartDate </th>
+                                    <th style="text-align: center;">PackingEndDate </th>
+                                    <th style="text-align: center;">Packing <br />Quantity</th>
+                                    <th style="text-align: center;">Packing <br />PerDay<br /> Capacity</th>
+                                    <th style="text-align: center;">PackingLineInformation</th>
+                                
+                                    <th><div class="col-lg-12"> Edit / Complete</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var asemblyModel in ViewBag.GetPackingProductions)
+                                {
+                                    <tr class="tableTrCls1">
+                                        <td class="ProjectId" style="display:none">
+                                            <span>@asemblyModel.ProjectId</span>
+
+                                        </td>
+                                        <td class="ProjectName">
+                                            <span>@asemblyModel.ProjectName</span>
+                                        </td>
+                                        <td class="OrderNumber">
+                                            <span>@asemblyModel.OrderNumber</span>
+                                        </td>
+                                        <td class="PoCategory">
+                                            <span>@asemblyModel.PoCategory</span>
+                                        </td>
+                                        <td class="MaterialReceiveDate">
+                                            <span>
+                                                @if (@asemblyModel.MaterialReceiveDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveDate)}
+                                            </span>
+                                            <input type="text" id="materialReceiveDate22" class="form-control datepicker materialDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveDate) onchange="chngMaterialDateForEdit()" style="display:none" />
+                                        </td>
+                                        <td class="IqcCompleteDate">
+                                            <span>
+                                                @if (@asemblyModel.IqcCompleteDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteDate)}
+                                            </span>
+                                            <input type="text" id="iqcCompleteDate22" class="form-control datepicker iqcDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteDate) style="display:none" />
+
+                                        </td>
+                                        <td class="TrialProductionDate">
+                                            <span>
+                                                @if (@asemblyModel.TrialProductionDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionDate)}
+                                            </span>
+                                            <input type="text" id="trialProductionDate22" class="form-control datepicker trialDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionDate) style="display:none" />
+
+                                        </td>
+                                        <td class="SoftwareConfirmationDate">
+                                            <span>
+                                                @if (@asemblyModel.SoftwareConfirmationDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SoftwareConfirmationDate)}
+                                            </span>
+
+                                            <input type="text" id="softwareConfirmationDate22" class="form-control datepicker softwareDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="softwareConfirmationDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SoftwareConfirmationDate) style="display:none" />
+
+                                        </td>
+                                        <td class="RnDClearanceDate">
+                                            <span>
+                                                @if (@asemblyModel.RnDClearanceDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.RnDClearanceDate)}
+                                            </span>
+
+                                            <input type="text" id="rnDClearanceDate22" class="form-control datepicker rnDDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="rnDClearanceDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.RnDClearanceDate) style="display:none" />
+
+                                        </td>
+                                      
+                                        <td class="AssemblyProductionStartDate">
+                                            <span>
+                                                @if (@asemblyModel.AssemblyProductionStartDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyProductionStartDate)}
+                                            </span>
+
+                                            <input type="text" id="assemblyProductionDate22" class="form-control datepicker assemblyProductionDates22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyProductionDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyProductionStartDate) style="display:none" />
+                                        </td>
+                                        <td class="AssemblyProductionEndDate">
+                                            <span>
+                                                @if (@asemblyModel.AssemblyProductionEndDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyProductionEndDate)}
+                                            </span>
+                                            <input type="text" id="assemblyProductionEndDate22" class="form-control datepicker assemblyProductionEndDate22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyProductionEndDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyProductionEndDate) style="display:none" />
+                                        </td>
+                                        <td class="AssemblyQuantity">
+                                            <span>@asemblyModel.AssemblyQuantity</span>
+
+                                            <input type="number" id="assemblyQuantity22" class="form-control assemblyQty22" min="1" value="@asemblyModel.AssemblyQuantity" style="display:none" />
+
+                                        </td>
+                                        <td class="AssemblyPerDayCapacity">
+                                            <span>@asemblyModel.AssemblyPerDayCapacity</span>
+                                            <input type="number" id="assemblyPerDayCapacity22" class="form-control assemblyPerDayCapacitys22" min="1" value="@asemblyModel.AssemblyPerDayCapacity" style="display:none" />
+                                        </td>
+                                        <td class="AssemblyLineInformation">
+                                            <span>@asemblyModel.AssemblyLineInformation</span>
+                                            <input type="text" id="assemblyLine3" class="form-control assemblyLines3" value="@asemblyModel.AssemblyLineInformation" style="display:none" />
+                                        </td>
+                                       
+                                       
+                                        <td class="PackingProductionStartDate">
+                                            <span>
+                                                @if (@asemblyModel.PackingProductionStartDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingProductionStartDate)}
+                                            </span>
+                                            <input type="text" id="packingStartDate22" class="form-control datepicker packingStartDates22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingStartDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingProductionStartDate) style="display:none" />
+                                        </td>
+                                        <td class="PackingProductionEndDate">
+                                            <span>
+                                                @if (@asemblyModel.PackingProductionEndDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingProductionEndDate)}
+                                            </span>
+                                            <input type="text" id="packingProductionEndDate22" class="form-control datepicker packingProductionEndDates22" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingProductionEndDate22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingProductionEndDate) style="display:none" />
+                                        </td>
+                                        <td class="PackingQuantity">
+                                            <span>
+                                                @asemblyModel.PackingQuantity
+                                            </span>
+                                            <input type="number" id="packingQty22" class="form-control packingQtys22" min="1" value="@asemblyModel.PackingQuantity" style="display:none" />
+
+                                        </td>
+                                        <td class="PackingPerDayCapacity">
+                                            <span>
+                                                @asemblyModel.PackingPerDayCapacity
+                                            </span>
+                                            <input type="number" id="packingPerDayCapacity22" class="form-control packingPerDayCapacitys22" min="1" value="@asemblyModel.PackingPerDayCapacity" style="display:none" />
+                                        </td>
+                                        <td class="PackingLineInformation">
+                                            <span>
+                                                @asemblyModel.PackingLineInformation
+                                            </span>
+                                            <input type="text" id="packingLine3" class="form-control packingLines3" value="@asemblyModel.PackingLineInformation" style="display:none" />
+                                        </td>
+                                        <td>
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-6">
+
+                                                    <button type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle edit" id="editBtn"> Edit</button>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <button type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle complete" id="btnFinal">Complete</button>
+
+                                                </div>
+
+                                                <div class="col-lg-6">
+                                                    <button type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle update" id="updateBtn" style="display:none">Update</button>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <button type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle cancel" id="btnCancel" style="display:none">Cancel</button>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="portlet light bordered">
+
+    <div class="portlet-title">
+        <div class="caption">
+            <span class="caption-subject #569450 sbold uppercase"> ADD MORE PRODUCTION PLAN</span>
+
+        </div>
+
+    </div>
+
+    <div class="portlet box #E2E8E4">
+        <div class="portlet-title">
+            <div class="caption" style="color:black">
+                <i class="fa fa-cogs"></i>Added Project
+            </div>
+            <div class="tools" style="background-color:#778899;">
+                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-responsive table-scrollable">
+                <table id="tbl3" class="table table-bordered table-striped table-condensed table-scrollable flip-content tbl3">
+                    <thead class="flip-content" style="background-color:lightslategray;color: white">
+                        <tr>
+                            <th style="text-align: center;">ProjectName </th>
+                            <th style="text-align: center;">Order Number</th>
+                            <th style="text-align: center">PoCategory</th>
+                            <th style="text-align: center;">MaterialReceiveDate </th>
+                            <th style="text-align: center;"> IqcCompleteDate </th>
+                            <th style="text-align: center;"> TrialProduction<br />Date </th>
+                            <th style="text-align: center;"> Software<br /> ConfirmationDate </th>
+                            <th style="text-align: center;">R&D Clearance<br /> Date </th>
+
+                            <th style="text-align: center;">AssemblyProduction<br />StartDate </th>
+                            <th style="text-align: center;">AssemblyProduction<br />EndDate </th>
+                            <th style="text-align: center;">Assembly <br />Quantity</th>
+                            <th style="text-align: center;">Assembly<br /> PerDay<br /> Capacity</th>
+                            <th style="text-align: center;">AssemblyLineInformation</th>
+
+
+                            <th style="text-align: center;">PackingStartDate </th>
+                            <th style="text-align: center;">PackingEndDate </th>
+                            <th style="text-align: center;">Packing<br /> Quantity</th>
+                            <th style="text-align: center;">Packing <br />PerDay<br /> Capacity</th>
+                            <th style="text-align: center;">PackingLineInformation</th>
+
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tBody3" class="tBody3" style="overflow-y: auto;overflow-x: auto">
+
+                        @foreach (var asemblyModel in Model.AssemblyProductionEventModel.CustomPrdAssemblyAndPackingDetailses)
+                        {
+                            Html.RenderPartial("~/View/ProjectManager/Partial/_PrdAssemblyAndPackingDetails", asemblyModel);
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <br />
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-12" style="text-align: center;">
+                    <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSave" value="Save" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="caption">
+            <i class="fa fa-cogs"></i> <span></span>Add More
+        </div><br />
+        <div class="ttbl" style="overflow-y:auto;height:300px;">
+            <table id="tbl1" class="table table-bordered table-striped table-condensed flip-content tbl1">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;width: 250px;"> ProjectName </th>
+                        <th class="numeric;" style="text-align: center;width: 150px;"> OrderNumber</th>
+                        <th style="text-align: center;"> PoCategory </th>
+                        <th style="text-align: center;"> MaterialReceiveDate </th>
+                        <th style="text-align: center;"> IqcCompleteDate </th>
+                        <th style="text-align: center;"> TrialProductionDate </th>
+                        <th style="text-align: center;"> Software ConfirmationDate </th>
+                        <th style="text-align: center;">R&D ClearanceDate </th>
+                        <th style="text-align: center;">Assembly ProductionStartDate </th>
+                        <th style="text-align: center;">Assembly ProductionEndDate </th>
+                        <th style="text-align: center;">AssemblyQuantity</th>
+                        <th style="text-align: center;">Assembly PerDayCapacity</th>
+                        <th style="text-align: center;">AssemblyLineInformation</th>
+
+                        <th style="text-align: center;">PackingStartDate </th>
+                        <th style="text-align: center;">PackingEndDate </th>
+                        <th style="text-align: center;">PackingQuantity</th>
+                        <th style="text-align: center;">Packing PerDayCapacity</th>
+                        <th style="text-align: center;">PackingLineInformation</th>
+
+                        <th class="numeric"><button class="btn btn-circle btn-success" id="addmore"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="tableTrCls1" id="tableTrCls1">
+
+                        <td class="text-center">
+                            @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "form-control dropForProject1 ", id = "dropForProject", onchange = "proNameChange()", style = "text-align: center;" })
+
+                        </td>
+                        <td class="text-center">
+                            @Html.DropDownListFor(model => model.OrderNuber, new SelectList(ViewBag.ProjectOrders, "Value", "Text"), "SELECT ORDER", new { @class = "form-control orderNumber", id = "orderNumber", style = "text-align: center;" })
+                        </td>
+                        <td class="text-center">
+
+                            <input type="text" class="form-control input-medium poCategory" value='' id="poCategory" disabled="disabled" style="text-align: center;" />
+
+                        </td>
+                        <td class="text-center">
+
+                            @Html.TextBoxFor(model => model.MaterialReceiveDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialDate", id = "materialReceiveDate", Type = "text", placeholder = "YYYY-MM-DD", onchange = "chngMaterialDate()", style = "text-align: center;" })
+
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.IqcCompleteDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcDate", style = "text-align: center;", @disabled = "disabled", id = "iqcCompleteDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.TrialProductionDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialDate", style = "text-align: center;", @disabled = "disabled", id = "trialProductionDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.SoftwareConfirmationDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker softwareDate", @disabled = "disabled", style = "text-align: center;", id = "softwareConfirmationDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.RnDClearanceDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker rnDDate", id = "rnDClearanceDate", style = "text-align: center;", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.AssemblyProductionStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker assemblyProductionDates", id = "assemblyProductionDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.AssemblyProductionEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker assemblyProductionEndDate", id = "assemblyProductionEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD", onchange = "assemblyLineInfo()" })
+                        </td>
+                        <td class="text-center">
+
+                            @Html.TextBoxFor(model => model.AssemblyQuantity, new { @class = "form-control assemblyQty", id = "assemblyQuantity", @type = "number", min = 0 })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.AssemblyPerDayCapacity, new { @class = "form-control assemblyPerDayCapacitys", id = "assemblyPerDayCapacity", onchange = "assemblyPerDayCapacityFunction()", @type = "number", min = 0 })
+                        </td>
+                        <td class="text-center">
+                          
+                            @*@Html.DropDownListFor(model => model.AssemblyLineInformation, new SelectList(new[]
+                            {
+                            new SelectListItem { Text = "Line-1", Value = "Line-1"},
+                            new SelectListItem { Text = "Line-2", Value = "Line-2"},
+                            new SelectListItem { Text = "Line-3", Value = "Line-3"},
+                            new SelectListItem { Text = "Line-4", Value = "Line-4"},
+                            new SelectListItem { Text = "Line-5", Value = "Line-5"},
+                            new SelectListItem { Text = "Line-6", Value = "Line-6"},
+                            new SelectListItem { Text = "Line-7", Value = "Line-7"},
+                            new SelectListItem { Text = "Line-8", Value = "Line-8"}
+                            }, "Value", "Text"), new { @class = "assemblyLines chosen", id = "assemblyLine", multiple = "multiple" })*@
+
+                            <select id="assemblyLine" class="assemblyLines chosen" multiple="multiple">
+                                <option value="0">SELECT LINE</option>
+
+                            </select>
+
+                             </td>
+
+
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.PackingProductionStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker packingStartDates", id = "packingStartDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.PackingProductionEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker packingProductionEndDates", id = "packingProductionEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD", onchange = "packingLineInfo()" })
+                        </td>
+
+                        <td class="text-center">
+
+                            @Html.TextBoxFor(model => model.PackingQuantity, new { @class = "form-control packingQtys", id = "packingQty", @type = "number", min = 0 })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(model => model.PackingPerDayCapacity, new { @class = "form-control packingPerDayCapacitys", id = "packingPerDayCapacity", @type = "number", min = 0 })
+                        </td>
+                        <td class="text-center">
+                         
+                            @*@Html.DropDownListFor(model => model.PackingLineInformation, new SelectList(new[]
+                                {
+                                new SelectListItem { Text = "Line-1", Value = "Line-1"},
+                                new SelectListItem { Text = "Line-2", Value = "Line-2"},
+                                new SelectListItem { Text = "Line-3", Value = "Line-3"},
+                                new SelectListItem { Text = "Line-4", Value = "Line-4"},
+                                new SelectListItem { Text = "Line-5", Value = "Line-5"},
+                                new SelectListItem { Text = "Line-6", Value = "Line-6"},
+                                new SelectListItem { Text = "Line-7", Value = "Line-7"},
+                                new SelectListItem { Text = "Line-8", Value = "Line-8"}
+                                }, "Value", "Text"), new { @class = "packingLines chosen", id = "packingLine", multiple = "multiple" })*@
+                           
+                            <select id="packingLine" class="packingLines chosen" multiple="multiple">
+                                <option value="0">SELECT LINE</option>
+
+                            </select>
+
+                        </td>
+
+                        <td class="numeric text-center">
+                            <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+</div>
+
+<script type="text/javascript">
+
+    var arrList = [];
+    var arrList1 = [];
+    var arrList2 = [];
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '@Url.Action("GetHolidayDataList", "Production")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+
+                var dataList = [];
+                for (var x in data) {
+                    dataList = data[x];
+                }
+
+                var items = $.parseJSON(dataList);
+                arrList = items;
+                return items;
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("SelectLineInfo", "Production")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (data) {
+                console.log(data);
+
+                var dataList = [];
+                for (var x in data) {
+                    dataList = data[x];
+                }
+
+                var items = $.parseJSON(dataList);
+                arrList1 = items;
+                return items;
+            }
+        });
+    });
+    function isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
+    }
+    function assemblyPerDayCapacityFunction() {
+        var assemblyStartDate;
+        var assemblyEndDate;
+        var assemblyPerDayCapacity;
+        var assemblyQuantity;
+        //var assemblyEndDate = $.trim($(this).find('#assemblyProductionEndDate').val());
+        //  iqcCompleteDate = $.trim($(this).find('#iqcCompleteDate').val(moment(iqcCompleteDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+        $("#tbl1 tr.tableTrCls1").each(function () {
+            assemblyStartDate = $.trim($(this).find('#assemblyProductionDate').val());
+            assemblyQuantity = $.trim($(this).find('#assemblyQuantity').val());
+            assemblyPerDayCapacity = $.trim($(this).find('#assemblyPerDayCapacity').val());
+            
+            if (assemblyPerDayCapacity != null && assemblyQuantity !=null) {
+
+                var assemblyDivision = (assemblyQuantity / assemblyPerDayCapacity);
+                
+                if (isFloat((assemblyQuantity / assemblyPerDayCapacity))) {
+                    var aa = (((assemblyQuantity / assemblyPerDayCapacity)) + 1).toFixed(0);
+
+
+                    assemblyEndDate = $.trim($(this).find('#assemblyEndDate').val(moment(assemblyStartDate).add(aa, 'days').format("YYYY-MM-DD")));
+                    //assemblyEndDate = $.trim($(this).find('#assemblyProductionEndDate').val());
+                } else {
+                    assemblyEndDate = $.trim($(this).find('#assemblyEndDate').val(moment(assemblyStartDate).add((assemblyQuantity / assemblyPerDayCapacity), 'days').format("YYYY-MM-DD")));
+                }
+            }
+        });
+    }
+
+    function packingLineInfo() {
+
+        var packingStartDate;
+        var packingEndDate;
+        $("#tbl1 tr.tableTrCls1").each(function () {
+            packingStartDate = $.trim($(this).find('#packingStartDate').val());
+            packingEndDate = $.trim($(this).find('#packingProductionEndDate').val());
+            console.log(packingStartDate + "------------" + packingEndDate);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetPackingLineData", "Production")',
+                data: "{ packingStartDate: '" + packingStartDate
+                       + "', packingEndDate: '" + packingEndDate
+                       + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+
+                    var dataList = [];
+                    var arrList3 = [];
+                    var arrList4 = [];
+                    for (var x in data) {
+                        dataList = data[x];
+                    }
+                    var items = $.parseJSON(dataList);
+
+
+                    for (var ii = 0; ii < items.length; ii++) {
+                        var lineData = items[ii].PackingLineInformation;
+                        var lineSplit = lineData.split(",").map(function (item) {
+                            return item.trim();
+                        });
+
+                        console.log("lineSplit : " + lineSplit);
+                        for (var xi = 0; xi < lineSplit.length; xi++) {
+                            arrList3.push(lineSplit[xi]);
+                        }
+
+                    }
+
+                    for (var i1 = 0; i1 < arrList1.length; i1++) {
+                        var originalLine = arrList1[i1].LineNumber;
+                        var orhginalLineSplit = originalLine.split(",").map(function (item) {
+                            return item.trim();
+                        });
+
+
+                        console.log("orhginalLineSplit :" + orhginalLineSplit);
+                        for (var x2 = 0; x2 < orhginalLineSplit.length; x2++) {
+                            arrList4.push(orhginalLineSplit[x2]);
+                        }
+                    }
+
+
+                    var exclude = arrList3;
+                    var original = arrList4;
+                    var result = $(original).not(exclude);
+                    
+                    $('#packingLine').empty();
+                    console.log("result--->" + result);
+                  
+                    $.each(result, function (i, item) {
+                        console.log("item  :" + item);
+                        
+                        $('#packingLine').append($('<option></option>').val(item).html(item));
+                        $("#packingLine").trigger("chosen:updated");
+                    });
+
+
+                }
+            });
+        });
+    }
+
+    function assemblyLineInfo() {
+
+        var assemblyStartDate;
+        var assemblyEndDate;
+        $("#tbl1 tr.tableTrCls1").each(function () {
+            assemblyStartDate = $.trim($(this).find('#assemblyProductionDate').val());
+            assemblyEndDate = $.trim($(this).find('#assemblyProductionEndDate').val());
+            console.log(assemblyStartDate + "------------" + assemblyEndDate);
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetAssemblyLineData", "Production")',
+                data: "{ assemblyStartDate: '" + assemblyStartDate
+                       + "', assemblyEndDate: '" + assemblyEndDate
+                       + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+
+                    var dataList = [];
+                    var arrList3 = [];
+                    var arrList4 = [];
+                    for (var x in data) {
+                        dataList = data[x];
+                    }
+                    var items = $.parseJSON(dataList);
+                  
+                   
+                    for (var ii=0;ii<items.length;ii++) {
+                        var lineData = items[ii].AssemblyLineInformation;
+                        var lineSplit = lineData.split(",").map(function (item) {
+                            return item.trim();
+                        });
+
+                        console.log("lineSplit : " + lineSplit);
+                        for (var xi = 0; xi < lineSplit.length; xi++) {
+                            arrList3.push(lineSplit[xi]);
+                        }
+                     
+                    }
+                    
+                    for (var i1 = 0; i1 < arrList1.length; i1++) {
+                        var originalLine = arrList1[i1].LineNumber;
+                        var orhginalLineSplit = originalLine.split(",").map(function (item) {
+                            return item.trim();
+                        });
+
+                        
+                        console.log("orhginalLineSplit :" + orhginalLineSplit);
+                        for (var x2 = 0; x2 < orhginalLineSplit.length; x2++) {
+                            arrList4.push(orhginalLineSplit[x2]);
+                        }
+                    }
+                    var exclude = arrList3;
+                    var original = arrList4;
+                    var result = $(original).not(exclude);
+
+                    console.log("result--->" + result);
+                  
+                    $('#assemblyLine').empty();
+                    $.each(result, function (i, item) {
+                        console.log("item  :" + item);
+                     
+                        $('#assemblyLine').append($('<option></option>').val(item).html(item));
+                        $("#assemblyLine").trigger("chosen:updated");
+                    });
+
+
+                }
+            });
+        });
+    }
+
+    function isHoliday(materialReceiveDate) {
+        var holidayDate = null;
+        var arrLists = arrList;
+        var l = arrLists.length;
+        var res = false;
+        for (var ii = 0; ii < l; ii++) {
+            holidayDate = moment(arrLists[ii].HolidayDate).format('YYYY-MM-DD');
+
+            if (materialReceiveDate == holidayDate) {
+                res = true;
+                break;
+            } else
+                continue;
+        }
+        return res;
+
+    }
+    
+    function isHoliday2(materialReceiveDate) {
+        var holidayDate = null;
+        var arrLists = arrList;
+        var l = arrLists.length;
+        var res = false;
+        for (var ii = 0; ii < l; ii++) {
+            holidayDate = moment(arrLists[ii].HolidayDate).format('YYYY-MM-DD');
+
+            if (materialReceiveDate == holidayDate) {
+                res = true;
+                break;
+            } else
+                continue;
+        }
+        return res;
+
+    }
+
+   
+    function chngMaterialDate() {
+        var materialReceiveDate;
+        var iqcCompleteDate;
+        var trialProductionDate;
+        var softwareConfirmationDate;
+        var rnDClearanceDate;
+        var assemblyProductionStartDate;
+        var packingStartDate;
+
+        $("#tbl1 tr.tableTrCls1").each(function () {
+            materialReceiveDate = $.trim($(this).find('#materialReceiveDate').val());
+            console.log("materialReceiveDate :" + materialReceiveDate);
+
+            if (materialReceiveDate != null) {
+                var md = isHoliday(materialReceiveDate);
+
+                if (md == true && md != "undefined") {
+
+                    alertify.confirm("WOW!!! It's Holiday.", "Do you want to proceed it?", function () {
+                        alertify.success('Ok');
+
+                        /////////////////////
+                        if (materialReceiveDate != "") {
+                            iqcCompleteDate = $.trim($(this).find('#iqcCompleteDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                            console.log("iqcCompleteDate :" + iqcCompleteDate);
+                            var iqcCompleteDate2 = $(this).find('#iqcCompleteDate').val();
+
+                            var iqc12 = isHoliday(iqcCompleteDate2);
+
+                            if (iqc12 == true && iqc12 != "undefined") {
+                                iqcCompleteDate = $.trim($(this).find('#iqcCompleteDate').val(moment(iqcCompleteDate2).add(2, 'days').format("YYYY-MM-DD")));
+
+                                trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(iqcCompleteDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("trialProductionDate :" + trialProductionDate);
+
+                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(iqcCompleteDate2).add(3, 'days').format("YYYY-MM-DD")));
+                                console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+                                var softwareConfirmationDate221 = $(this).find('#softwareConfirmationDate').val();
+                                var soft221 = isHoliday(softwareConfirmationDate221);
+                                if (soft221 == true && soft221 != "undefined") {
+
+                                    softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate221).add(1, 'days').format("YYYY-MM-DD")));
+                                    rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate221).add(3, 'days').format("YYYY-MM-DD")));
+                                }
+                                else 
+                                {
+                                    rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(iqcCompleteDate2).add(5, 'days').format("YYYY-MM-DD")));
+
+                                }
+
+
+                            }
+                            else {
+
+                                trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("trialProductionDate :" + trialProductionDate);
+
+                                var trialProductionDate2 = $(this).find('#trialProductionDate').val();
+
+                                var tri2 = isHoliday(trialProductionDate2);
+
+                                if (tri2 == true && tri2 != "undefined") {
+
+                                    trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                    softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(2, 'days').format("YYYY-MM-DD")));
+                                    console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                                    rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(trialProductionDate2).add(4, 'days').format("YYYY-MM-DD")));
+                                    console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                }
+                                else {
+
+                                    softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                    console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                                    var softwareConfirmationDate21 = $(this).find('#softwareConfirmationDate').val();
+
+                                    var sft = isHoliday(softwareConfirmationDate21);
+
+                                    if (sft == true && sft != "undefined") {
+
+                                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate21).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate21).add(3, 'days').format("YYYY-MM-DD")));
+                                        console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                    }
+                                    else {
+
+                                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        var softwareConfirmationDate41 = $(this).find('#softwareConfirmationDate').val();
+
+                                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate41).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        var softwareConfirmationDate51 = $(this).find('#softwareConfirmationDate').val();
+
+                                        var sft51 = isHoliday(softwareConfirmationDate51);
+
+                                        if (sft51 == true && sft51 != "undefined") {
+
+                                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                            rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate51).add(2, 'days').format("YYYY-MM-DD")));
+                                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                        } else {
+
+                                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                            var softwareConfirmationDate121 = $(this).find('#softwareConfirmationDate').val();
+
+                                            var soft121 = isHoliday(softwareConfirmationDate121);
+
+                                            if (soft121 == true && soft121 != "undefined") {
+                                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate121).add(1, 'days').format("YYYY-MM-DD")));
+                                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate121).add(3, 'days').format("YYYY-MM-DD")));
+                                            } else {
+                                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(trialProductionDate2).add(3, 'days').format("YYYY-MM-DD")));
+                                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                                                var rnDClearanceDate21 = $(this).find('#rnDClearanceDate').val();
+                                                var rnd = isHoliday(rnDClearanceDate21);
+
+
+                                                if (rnd == true && rnd != "undefined") {
+                                                    rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(rnDClearanceDate21).add(2, 'days').format("YYYY-MM-DD")));
+                                                }
+                                            }
+
+
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            assemblyProductionStartDate = $.trim($(this).find('#assemblyProductionDate').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                            console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                            var assemblyProductionStartDate12 = $(this).find('#assemblyProductionDate').val();
+                            var assm = isHoliday(assemblyProductionStartDate12);
+
+                            if (assm == true && assm != "undefined") {
+                                assemblyProductionStartDate = $.trim($(this).find('#assemblyProductionDate').val(moment(assemblyProductionStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                                packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(assemblyProductionStartDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                var packingStartDate12 = $(this).find('#packingStartDate').val();
+                                var pack = isHoliday(packingStartDate12);
+
+                                if (pack == true && pack != "pack") {
+                                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(packingStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                                } else {
+                                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(assemblyProductionStartDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                }
+                            } else {
+                                packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+
+                                var packingStartDate121 = $(this).find('#packingStartDate').val();
+                                var pack1 = isHoliday(packingStartDate121);
+
+                                if (pack1 == true && pack1 != "pack") {
+                                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(packingStartDate121).add(1, 'days').format("YYYY-MM-DD")));
+                                } else {
+                                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                                }
+                            }
+
+
+                        }
+                        ////////////////////
+                    }, function () {
+
+                        alertify.error('Cancelled');
+                        document.getElementById("iqcCompleteDate").value = '';
+                        document.getElementById("trialProductionDate").value = '';
+                        document.getElementById("softwareConfirmationDate").value = '';
+                        document.getElementById("rnDClearanceDate").value = '';
+                        document.getElementById("assemblyProductionDate").value = '';
+
+                    });
+
+
+
+                }
+            }
+
+
+            ///////////////holiday Date/////////////
+
+
+            // materialReceiveDate = $('#materialReceiveDate').val();
+
+            if (materialReceiveDate != "") {
+                iqcCompleteDate = $.trim($(this).find('#iqcCompleteDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                console.log("iqcCompleteDate :" + iqcCompleteDate);
+                var iqcCompleteDate1 = $(this).find('#iqcCompleteDate').val();
+
+                var iqc = isHoliday(iqcCompleteDate1);
+
+                if (iqc == true && iqc != "undefined") {
+                    iqcCompleteDate = $.trim($(this).find('#iqcCompleteDate').val(moment(iqcCompleteDate1).add(2, 'days').format("YYYY-MM-DD")));
+
+                    trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(iqcCompleteDate1).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("trialProductionDate :" + trialProductionDate);
+
+                    var trialProductionDate12 = $(this).find('#trialProductionDate').val();
+                    var tri12 = isHoliday(trialProductionDate12);
+                    if (tri12 == true && tri12 != "undefined") {
+                        trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(trialProductionDate12).add(1, 'days').format("YYYY-MM-DD")));
+
+
+                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate12 = $(this).find('#softwareConfirmationDate').val();
+                        var soft12 = isHoliday(softwareConfirmationDate12);
+                        if (soft12 == true && soft12 != "undefined") {
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate12).add(1, 'days').format("YYYY-MM-DD")));
+
+                            rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate12).add(3, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                            var rnDClearanceDate12 = $(this).find('#rnDClearanceDate').val();
+
+                            var rnd12 = isHoliday(rnDClearanceDate12);
+
+                            if (rnd12 == true && rnd12 != "undefined") {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(rnDClearanceDate12).add(2, 'days').format("YYYY-MM-DD")));
+
+
+                            } else {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate12).add(3, 'days').format("YYYY-MM-DD")));
+                            }
+
+                        } else {
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate44 = $(this).find('#softwareConfirmationDate').val();
+
+                            var softwareConfirmationDate441 = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate44).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate4411 = $(this).find('#softwareConfirmationDate').val();
+
+                            var soft4411 = isHoliday(softwareConfirmationDate4411);
+
+
+                            if (soft4411 == true && soft4411 != "undefined") {
+                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate4411).add(2, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(trialProductionDate12).add(4, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            }
+
+
+                        }
+
+
+                    } else {
+
+                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(iqcCompleteDate1).add(3, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate22 = $(this).find('#softwareConfirmationDate').val();
+                        var soft22 = isHoliday(softwareConfirmationDate22);
+
+                        if (soft22 == true && soft22 != "undefined") {
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate22).add(1, 'days').format("YYYY-MM-DD")));
+                            rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            var rnDClearanceDate22 = $(this).find('#rnDClearanceDate').val();
+                            var rnd22 = isHoliday(rnDClearanceDate22);
+
+                            if (rnd22 == true && rnd22 != "undefined") {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(rnDClearanceDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            }
+
+                        } else {
+                            rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(iqcCompleteDate1).add(5, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            var rnDClearanceDate221 = $(this).find('#rnDClearanceDate').val();
+                            var rnd221 = isHoliday(rnDClearanceDate221);
+
+                            if (rnd221 == true && rnd221 != "undefined") {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(rnDClearanceDate221).add(3, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(iqcCompleteDate1).add(5, 'days').format("YYYY-MM-DD")));
+
+                            }
+                        }
+
+
+                    }
+
+
+                }
+                else {
+
+                    trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("trialProductionDate :" + trialProductionDate);
+
+                    var trialProductionDate1 = $(this).find('#trialProductionDate').val();
+
+                    var tri = isHoliday(trialProductionDate1);
+                    if (tri == true && tri != "undefined") {
+
+                        trialProductionDate = $.trim($(this).find('#trialProductionDate').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate1).add(2, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(trialProductionDate1).add(4, 'days').format("YYYY-MM-DD")));
+                        console.log("rnDClearanceDate :" + rnDClearanceDate);
+                    }
+                    else {
+
+                        softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate2 = $(this).find('#softwareConfirmationDate').val();
+
+                        var soft = isHoliday(softwareConfirmationDate2);
+
+                        if (soft == true && soft != "undefined") {
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                            rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate2).add(3, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                        }
+                        else {
+
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate4 = $(this).find('#softwareConfirmationDate').val();
+
+                            softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(softwareConfirmationDate4).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate5 = $(this).find('#softwareConfirmationDate').val();
+
+                            var soft5 = isHoliday(softwareConfirmationDate5);
+
+                            if (soft5 == true && soft5 != "undefined") {
+
+                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(softwareConfirmationDate5).add(2, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            } else {
+
+                                softwareConfirmationDate = $.trim($(this).find('#softwareConfirmationDate').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                                rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(trialProductionDate1).add(3, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                                var rnDClearanceDate2 = $(this).find('#rnDClearanceDate').val();
+
+                                var rnd2 = isHoliday(rnDClearanceDate2);
+
+                                if (rnd2 == true && rnd2 != "undefined") {
+
+                                    rnDClearanceDate = $.trim($(this).find('#rnDClearanceDate').val(moment(rnDClearanceDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                assemblyProductionStartDate = $.trim($(this).find('#assemblyProductionDate').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                var assemblyProductionStartDate1 = $(this).find('#assemblyProductionDate').val();
+
+                var assmb = isHoliday(assemblyProductionStartDate1);
+
+                //if (assmb == true && assmb != "undefined") {
+                //    assemblyProductionStartDate = $.trim($(this).find('#assemblyProductionDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                //    console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                //}
+
+
+                if (assmb == true && assmb != "undefined") {
+                    assemblyProductionStartDate = $.trim($(this).find('#assemblyProductionDate').val(moment(assemblyProductionStartDate1).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(assemblyProductionStartDate1).add(2, 'days').format("YYYY-MM-DD")));
+                    var packingStartDate12 = $(this).find('#packingStartDate').val();
+
+
+                    var pack = isHoliday(packingStartDate12);
+
+                    if (pack == true && pack != "pack") {
+                        packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(packingStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                    } else {
+                        packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(assemblyProductionStartDate1).add(2, 'days').format("YYYY-MM-DD")));
+                    }
+                } else {
+                    packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+
+                    var packingStartDate121 = $(this).find('#packingStartDate').val();
+                    var pack1 = isHoliday(packingStartDate121);
+
+                    if (pack1 == true && pack1 != "pack") {
+                        packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(packingStartDate121).add(1, 'days').format("YYYY-MM-DD")));
+                    } else {
+                        packingStartDate = $.trim($(this).find('#packingStartDate').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                    }
+                }
+            }
+
+            ///////////////holiday Date/////////////
+
+        });
+    }
+
+    function chngMaterialDateForEdit() {
+        var materialReceiveDate;
+        var iqcCompleteDate;
+        var trialProductionDate;
+        var softwareConfirmationDate;
+        var rnDClearanceDate;
+        var assemblyProductionStartDate;
+        var packingStartDate;
+
+        var table = document.getElementById('sample_1');
+       // $("#sample_1 tr.tableTrCls1").each(function () {
+        materialReceiveDate = $.trim($(table).find('#materialReceiveDate22').val());
+            console.log("materialReceiveDate :" + materialReceiveDate);
+
+            if (materialReceiveDate != null) {
+                var md = isHoliday2(materialReceiveDate);
+
+                if (md == true && md != "undefined") {
+
+                    alertify.confirm("WOW!!! It's Holiday.", "Do you want to proceed it?", function () {
+                        alertify.success('Ok');
+
+                        /////////////////////
+                        if (materialReceiveDate != "") {
+                            iqcCompleteDate = $.trim($(table).find('#iqcCompleteDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                            console.log("iqcCompleteDate :" + iqcCompleteDate);
+                            var iqcCompleteDate2 = $(table).find('#iqcCompleteDate22').val();
+
+                            var iqc12 = isHoliday2(iqcCompleteDate2);
+
+                            if (iqc12 == true && iqc12 != "undefined") {
+                                iqcCompleteDate = $.trim($(table).find('#iqcCompleteDate22').val(moment(iqcCompleteDate2).add(2, 'days').format("YYYY-MM-DD")));
+
+                                trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(iqcCompleteDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("trialProductionDate :" + trialProductionDate);
+
+                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(iqcCompleteDate2).add(3, 'days').format("YYYY-MM-DD")));
+                                console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+                                var softwareConfirmationDate221 = $(table).find('#softwareConfirmationDate22').val();
+                                var soft221 = isHoliday2(softwareConfirmationDate221);
+                                if (soft221 == true && soft221 != "undefined") {
+
+                                    softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate221).add(1, 'days').format("YYYY-MM-DD")));
+                                    rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate221).add(3, 'days').format("YYYY-MM-DD")));
+                                } else {
+                                    rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(iqcCompleteDate2).add(5, 'days').format("YYYY-MM-DD")));
+
+                                }
+
+
+                            }
+                            else {
+
+                                trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("trialProductionDate :" + trialProductionDate);
+
+                                var trialProductionDate2 = $(table).find('#trialProductionDate22').val();
+
+                                var tri2 = isHoliday2(trialProductionDate2);
+
+                                if (tri2 == true && tri2 != "undefined") {
+
+                                    trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                    softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(2, 'days').format("YYYY-MM-DD")));
+                                    console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                                    rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(trialProductionDate2).add(4, 'days').format("YYYY-MM-DD")));
+                                    console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                }
+                                else {
+
+                                    softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                    console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                                    var softwareConfirmationDate21 = $(table).find('#softwareConfirmationDate22').val();
+
+                                    var sft = isHoliday2(softwareConfirmationDate21);
+
+                                    if (sft == true && sft != "undefined") {
+
+                                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate21).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate21).add(3, 'days').format("YYYY-MM-DD")));
+                                        console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                    }
+                                    else {
+
+                                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        var softwareConfirmationDate41 = $(table).find('#softwareConfirmationDate22').val();
+
+                                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate41).add(1, 'days').format("YYYY-MM-DD")));
+
+                                        var softwareConfirmationDate51 = $(table).find('#softwareConfirmationDate22').val();
+
+                                        var sft51 = isHoliday2(softwareConfirmationDate51);
+
+                                        if (sft51 == true && sft51 != "undefined") {
+
+                                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                            rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate51).add(2, 'days').format("YYYY-MM-DD")));
+                                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                                        } else {
+
+                                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                                            var softwareConfirmationDate121 = $(table).find('#softwareConfirmationDate22').val();
+
+                                            var soft121 = isHoliday2(softwareConfirmationDate121);
+
+                                            if (soft121 == true && soft121 != "undefined") {
+                                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate121).add(1, 'days').format("YYYY-MM-DD")));
+                                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate121).add(3, 'days').format("YYYY-MM-DD")));
+                                            } else {
+                                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(trialProductionDate2).add(3, 'days').format("YYYY-MM-DD")));
+                                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                                                var rnDClearanceDate21 = $(table).find('#rnDClearanceDate22').val();
+                                                var rnd = isHoliday2(rnDClearanceDate21);
+
+
+                                                if (rnd == true && rnd != "undefined") {
+                                                    rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(rnDClearanceDate21).add(2, 'days').format("YYYY-MM-DD")));
+                                                }
+                                            }
+
+
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                            console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                            var assemblyProductionStartDate12 = $(table).find('#assemblyProductionDate22').val();
+                            var assm = isHoliday2(assemblyProductionStartDate12);
+
+                            //if (assm == true && assm != "undefined") {
+                            //    assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                            //    console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                            //}
+                            
+                            if (assm == true && assm != "undefined") {
+                                assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(assemblyProductionStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                                console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                                packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(assemblyProductionStartDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                var packingStartDate12 = $(table).find('#packingStartDate22').val();
+                                var pack = isHoliday(packingStartDate12);
+
+                                if (pack == true && pack != "pack") {
+                                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(packingStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                                } else {
+                                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(assemblyProductionStartDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                }
+                            } else {
+                                packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+
+                                var packingStartDate121 = $(table).find('#packingStartDate22').val();
+                                var pack1 = isHoliday(packingStartDate121);
+
+                                if (pack1 == true && pack1 != "pack") {
+                                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(packingStartDate121).add(1, 'days').format("YYYY-MM-DD")));
+                                } else {
+                                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                                }
+                            }
+
+                        }
+                        ////////////////////
+                    }, function () {
+
+                        alertify.error('Cancelled');
+                        document.getElementById("iqcCompleteDate22").value = '';
+                        document.getElementById("trialProductionDate22").value = '';
+                        document.getElementById("softwareConfirmationDate22").value = '';
+                        document.getElementById("rnDClearanceDate22").value = '';
+                        document.getElementById("assemblyProductionDate22").value = '';
+
+                    });
+
+
+
+                }
+            }
+
+
+            ///////////////holiday Date/////////////
+
+
+            if (materialReceiveDate != "") {
+                iqcCompleteDate = $.trim($(table).find('#iqcCompleteDate22').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                console.log("iqcCompleteDate :" + iqcCompleteDate);
+                var iqcCompleteDate1 = $(table).find('#iqcCompleteDate22').val();
+
+                var iqc = isHoliday2(iqcCompleteDate1);
+
+                if (iqc == true && iqc != "undefined") {
+                    iqcCompleteDate = $.trim($(table).find('#iqcCompleteDate22').val(moment(iqcCompleteDate1).add(2, 'days').format("YYYY-MM-DD")));
+
+                    trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(iqcCompleteDate1).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("trialProductionDate :" + trialProductionDate);
+
+                    var trialProductionDate12 = $(table).find('#trialProductionDate22').val();
+                    var tri12 = isHoliday2(trialProductionDate12);
+                    if (tri12 == true && tri12 != "undefined") {
+                        trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(trialProductionDate12).add(1, 'days').format("YYYY-MM-DD")));
+
+
+                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate12 = $(table).find('#softwareConfirmationDate22').val();
+                        var soft12 = isHoliday2(softwareConfirmationDate12);
+                        if (soft12 == true && soft12 != "undefined") {
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate12).add(1, 'days').format("YYYY-MM-DD")));
+
+                            rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate12).add(3, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                            var rnDClearanceDate12 = $(table).find('#rnDClearanceDate22').val();
+
+                            var rnd12 = isHoliday2(rnDClearanceDate12);
+
+                            if (rnd12 == true && rnd12 != "undefined") {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(rnDClearanceDate12).add(2, 'days').format("YYYY-MM-DD")));
+
+
+                            } else {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate12).add(3, 'days').format("YYYY-MM-DD")));
+                            }
+
+                        } else {
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate44 = $(table).find('#softwareConfirmationDate22').val();
+
+                            var softwareConfirmationDate441 = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate44).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate4411 = $(table).find('#softwareConfirmationDate22').val();
+
+                            var soft4411 = isHoliday2(softwareConfirmationDate4411);
+
+
+                            if (soft4411 == true && soft4411 != "undefined") {
+                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate4411).add(2, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate12).add(2, 'days').format("YYYY-MM-DD")));
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(trialProductionDate12).add(4, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            }
+
+
+                        }
+
+
+                    } else {
+
+                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(iqcCompleteDate1).add(3, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate22 = $(table).find('#softwareConfirmationDate22').val();
+                        var soft22 = isHoliday2(softwareConfirmationDate22);
+
+                        if (soft22 == true && soft22 != "undefined") {
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate22).add(1, 'days').format("YYYY-MM-DD")));
+                            rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            var rnDClearanceDate22 = $(table).find('#rnDClearanceDate22').val();
+                            var rnd22 = isHoliday2(rnDClearanceDate22);
+
+                            if (rnd22 == true && rnd22 != "undefined") {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(rnDClearanceDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate22).add(3, 'days').format("YYYY-MM-DD")));
+
+                            }
+
+                        } else {
+                            rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(iqcCompleteDate1).add(5, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            var rnDClearanceDate221 = $(table).find('#rnDClearanceDate22').val();
+                            var rnd221 = isHoliday2(rnDClearanceDate221);
+
+                            if (rnd221 == true && rnd221 != "undefined") {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(rnDClearanceDate221).add(3, 'days').format("YYYY-MM-DD")));
+
+                            } else {
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(iqcCompleteDate1).add(5, 'days').format("YYYY-MM-DD")));
+
+                            }
+                        }
+
+
+                    }
+
+
+                }
+                else {
+
+                    trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("trialProductionDate :" + trialProductionDate);
+
+                    var trialProductionDate1 = $(table).find('#trialProductionDate22').val();
+
+                    var tri = isHoliday2(trialProductionDate1);
+                    if (tri == true && tri != "undefined") {
+
+                        trialProductionDate = $.trim($(table).find('#trialProductionDate22').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate1).add(2, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(trialProductionDate1).add(4, 'days').format("YYYY-MM-DD")));
+                        console.log("rnDClearanceDate :" + rnDClearanceDate);
+                    }
+                    else {
+
+                        softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+                        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+                        var softwareConfirmationDate2 = $(table).find('#softwareConfirmationDate22').val();
+
+                        var soft = isHoliday2(softwareConfirmationDate2);
+
+                        if (soft == true && soft != "undefined") {
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate2).add(1, 'days').format("YYYY-MM-DD")));
+
+                            rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate2).add(3, 'days').format("YYYY-MM-DD")));
+                            console.log("rnDClearanceDate :" + rnDClearanceDate);
+                        }
+                        else {
+
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate4 = $(table).find('#softwareConfirmationDate22').val();
+
+                            softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(softwareConfirmationDate4).add(1, 'days').format("YYYY-MM-DD")));
+
+                            var softwareConfirmationDate5 = $(table).find('#softwareConfirmationDate22').val();
+
+                            var soft5 = isHoliday2(softwareConfirmationDate5);
+
+                            if (soft5 == true && soft5 != "undefined") {
+
+                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(softwareConfirmationDate5).add(2, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+                            } else {
+
+                                softwareConfirmationDate = $.trim($(table).find('#softwareConfirmationDate22').val(moment(trialProductionDate1).add(1, 'days').format("YYYY-MM-DD")));
+
+                                rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(trialProductionDate1).add(3, 'days').format("YYYY-MM-DD")));
+                                console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+                                var rnDClearanceDate2 = $(table).find('#rnDClearanceDate22').val();
+
+                                var rnd2 = isHoliday2(rnDClearanceDate2);
+
+                                if (rnd2 == true && rnd2 != "undefined") {
+
+                                    rnDClearanceDate = $.trim($(table).find('#rnDClearanceDate22').val(moment(rnDClearanceDate2).add(1, 'days').format("YYYY-MM-DD")));
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+                assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD")));
+                console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                var assemblyProductionStartDate1 = $(table).find('#assemblyProductionDate22').val();
+
+                var assmb = isHoliday2(assemblyProductionStartDate1);
+
+                //if (assmb == true && assmb != "undefined") {
+                //    assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                //    console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                //}
+                if (assmb == true && assmb != "undefined") {
+                    assemblyProductionStartDate = $.trim($(table).find('#assemblyProductionDate22').val(moment(assemblyProductionStartDate1).add(1, 'days').format("YYYY-MM-DD")));
+                    console.log("AssemblyProductionStartDate :" + assemblyProductionStartDate);
+
+                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(assemblyProductionStartDate1).add(2, 'days').format("YYYY-MM-DD")));
+                    var packingStartDate12 = $(table).find('#packingStartDate22').val();
+
+
+                    var pack = isHoliday(packingStartDate12);
+
+                    if (pack == true && pack != "pack") {
+                        packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(packingStartDate12).add(1, 'days').format("YYYY-MM-DD")));
+                    } else {
+                        packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(assemblyProductionStartDate1).add(2, 'days').format("YYYY-MM-DD")));
+                    }
+                } else {
+                    packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+
+                    var packingStartDate121 = $(table).find('#packingStartDate22').val();
+                    var pack1 = isHoliday(packingStartDate121);
+
+                    if (pack1 == true && pack1 != "pack") {
+                        packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(packingStartDate121).add(1, 'days').format("YYYY-MM-DD")));
+                    } else {
+                        packingStartDate = $.trim($(table).find('#packingStartDate22').val(moment(materialReceiveDate).add(2, 'days').format("YYYY-MM-DD")));
+                    }
+                }
+            }
+
+            ///////////////holiday Date/////////////
+
+  //      });
+      
+    }
+
+    //////////date///////////
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+    var startDate = moment(date).add(-30, 'days'); //YYYY-MM-DD
+    var endDate = moment(date).add(60, 'days'); //YYYY-MM-DD
+    var getDateArray = function (start, end) {
+        var arr = new Array();
+        var dt = new Date(start);
+        while (dt <= end) {
+            arr.push(new Date(dt));
+            dt.setDate(dt.getDate() + 1);
+
+        }
+        return arr;
+
+    };
+
+    var dateArr = getDateArray(startDate, endDate);
+    var dateArr1 = [];
+    for (var i = 1; i < dateArr.length; i++) {
+
+        dateArr1.push(moment(dateArr[i]).format('YYYY-MM-DD'));
+
+    }
+    var dateArr2 = JSON.stringify(dateArr1);
+
+    $.ajax({
+        url: '@Url.Action("GetGrandChartData", "Production")',//'/ProjectManager/GetProject',
+        type: "GET",
+        dataType: "JSON",
+        data: { dateArr2: dateArr2 },
+        success: function (data) {
+
+            console.log(data);
+            var ll = data.length;
+            console.log(ll);
+            var dataList = [];
+            for (var x in data) {
+                dataList = data[x];
+            }
+            var l = dataList.length;
+            for (var ii = 0; ii < l; ii++) {
+                //var productionDate = moment(dataList[ii].ProductionDate).format('DD-MMM-YYYY');
+                var productionDate = moment(dataList[ii].ProductionDate).format('YYYY-MM-DD');
+
+                //$('#sample_2 tbody').append('<tr class="graphChart"><td class="dateVal">' + productionDate + '</td>' +
+                //            //'<td>' + '<b style="color:red;">Project Name:</b>' + innerDataList[inn].ProjectName + ',<br/><b style="color:red;">PoCategory:</b>' + innerDataList[inn].PoCategory + ',<br/><b style="color:red;">OrderNumber:</b>' + innerDataList[inn].OrderNumber + ',<br/><b style="color:red;">AssemblyQuantity:</b>' + innerDataList[inn].AssemblyQuantity + ',<br/><b style="color:red;">AssemblyPerDayCapacity:</b>' + innerDataList[inn].AssemblyPerDayCapacity + '</td>' +
+
+                //            '<td>'+dataList[ii].MetarialReceive+'</td>' +
+                //            '<td>' + dataList[ii].IqcComplete + '</td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td></td>' +
+                //            '<td><input type="text" class="remarks form-control" id="remarks" /></td>' +
+                //            '<td><input type="button" class="saveBtn" id="saveBtn" value="SAVE" /></td>' +
+                //            '</tr>');
+
+                if (dataList[ii].MetarialReceive == null) {
+                    dataList[ii].MetarialReceive = "";
+                }
+                if (dataList[ii].IqcComplete == null) {
+                    dataList[ii].IqcComplete = "";
+                }
+                if (dataList[ii].TrialProduction == null) {
+                    dataList[ii].TrialProduction = "";
+                }
+                if (dataList[ii].SoftwareConfirmation == null) {
+                    dataList[ii].SoftwareConfirmation = "";
+                }
+                if (dataList[ii].RnDClearance == null) {
+                    dataList[ii].RnDClearance = "";
+                }
+                if (dataList[ii].AssemblyLine1 == null) {
+                    dataList[ii].AssemblyLine1 = "";
+                }
+                if (dataList[ii].AssemblyLine2 == null) {
+                    dataList[ii].AssemblyLine2 = "";
+                }
+                if (dataList[ii].AssemblyLine3 == null) {
+                    dataList[ii].AssemblyLine3 = "";
+                }
+                if (dataList[ii].AssemblyLine4 == null) {
+                    dataList[ii].AssemblyLine4 = "";
+                }
+                if (dataList[ii].AssemblyLine5 == null) {
+                    dataList[ii].AssemblyLine5 = "";
+                }
+                if (dataList[ii].AssemblyLine6 == null) {
+                    dataList[ii].AssemblyLine6 = "";
+                } if (dataList[ii].AssemblyLine7 == null) {
+                    dataList[ii].AssemblyLine7 = "";
+                }
+                if (dataList[ii].PackingLine1 == null) {
+                    dataList[ii].PackingLine1 = "";
+                }
+                if (dataList[ii].PackingLine2 == null) {
+                    dataList[ii].PackingLine2 = "";
+                }
+                if (dataList[ii].PackingLine3 == null) {
+                    dataList[ii].PackingLine3 = "";
+                }
+                if (dataList[ii].PackingLine4 == null) {
+                    dataList[ii].PackingLine4 = "";
+                }
+                if (dataList[ii].PackingLine5 == null) {
+                    dataList[ii].PackingLine5 = "";
+                }
+                if (dataList[ii].PackingLine6 == null) {
+                    dataList[ii].PackingLine6 = "";
+                }
+                if (dataList[ii].PackingLine7 == null) {
+                    dataList[ii].PackingLine7 = "";
+                }
+                if (dataList[ii].ProductionRemarks == null) {
+                    dataList[ii].ProductionRemarks = "";
+                }
+                var body = '<tr>';
+                body += '<td class="proDates"><span>' + productionDate + '</span></td>';
+                body += '<td>' + '<p style="background-color:#F4B084;color:black;font-weight:bold;">' + dataList[ii].MetarialReceive + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#FFD966;color:black;font-weight:bold;">' + dataList[ii].IqcComplete + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#BFBFBF;color:black;font-weight:bold;">' + dataList[ii].TrialProduction + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#9BC2E6;color:black;font-weight:bold;">' + dataList[ii].SoftwareConfirmation + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B050;color:black;font-weight:bold;">' + dataList[ii].RnDClearance + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine1 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine2 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine3 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine4 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine5 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine6 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#00B0F0;color:black;font-weight:bold;">' + dataList[ii].AssemblyLine7 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine1 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine2 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine3 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine4 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine5 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine6 + '</p>' + '</td>';
+                body += '<td>' + '<p style="background-color:#70AD47;color:black;font-weight:bold;">' + dataList[ii].PackingLine7 + '</p>' + '</td>';
+                body += '<td class="proRemarks" style="color:#FF6600;"><span>' + dataList[ii].ProductionRemarks + '</span><input type="text" class="form-control remarks form-control" id="remarks" value="' + dataList[ii].ProductionRemarks + '" style="display:none;" /></td>';
+                body += '<td> <input type="button" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle saveBtnForPro" id="saveBtnForPro" value="SAVE" /><br/><br/><input type="button" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle editBtnForPro" id="editBtnForPro" value="EDIT" /></td>';
+                body += '</tr>';
+
+                $("#proPlanTable tbody").append(body);
+
+            }
+            $("#proPlanTable").DataTable();
+        }
+
+    });
+
+    ////////////////edit & save for production plan //////
+    $("body").on("click", "#proPlanTable .editBtnForPro", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+            }
+        });
+
+    });
+    $("body").on("click", "#proPlanTable .saveBtnForPro", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+                span.show();
+                input.hide();
+            }
+        });
+        row.find(".saveBtnForPro").show();
+        row.find(".editBtnForPro").show();
+
+        var productionRemarksData = {};
+        productionRemarksData.ProductionRemarksDate = row.find(".proDates").find("span").html();
+        productionRemarksData.Remarks = row.find(".proRemarks").find("span").html();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("InsertProductionRemark", "Production")',
+            data: '{productionRemarksData:' + JSON.stringify(productionRemarksData) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+    ////////////////edit & save for production plan //////
+
+
+    //////////////////////////edit //////////////////////////
+
+    //Edit event handler.
+    $("body").on("click", "#sample_1 .edit", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+            }
+        });
+        row.find(".update").show();
+        row.find(".cancel").show();
+        row.find(".complete").hide();
+        $(this).hide();
+    });
+
+    //Update event handler.
+    $("body").on("click", "#sample_1 .update", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+                span.show();
+                input.hide();
+
+                // input.val(span.html());
+            }
+        });
+        row.find(".edit").show();
+        row.find(".complete").show();
+        row.find(".cancel").hide();
+        $(this).hide();
+
+        var assembAndPack = {};
+        assembAndPack.ProjectId = row.find(".ProjectId").find("span").html();
+        assembAndPack.ProjectName = row.find(".ProjectName").find("span").html();
+        assembAndPack.OrderNumber = row.find(".OrderNumber").find("span").html();
+        assembAndPack.PoCategory = row.find(".PoCategory").find("span").html();
+
+        assembAndPack.MaterialReceiveDate = row.find(".MaterialReceiveDate").find("span").html();
+        assembAndPack.IqcCompleteDate = row.find(".IqcCompleteDate").find("span").html();
+        assembAndPack.TrialProductionDate = row.find(".TrialProductionDate").find("span").html();
+        assembAndPack.SoftwareConfirmationDate = row.find(".SoftwareConfirmationDate").find("span").html();
+        assembAndPack.RnDClearanceDate = row.find(".RnDClearanceDate").find("span").html();
+
+        assembAndPack.AssemblyLineInformation = row.find(".AssemblyLineInformation").find("span").html();
+        assembAndPack.AssemblyProductionStartDate = row.find(".AssemblyProductionStartDate").find("span").html();
+        assembAndPack.AssemblyQuantity = row.find(".AssemblyQuantity").find("span").html();
+        assembAndPack.AssemblyPerDayCapacity = row.find(".AssemblyPerDayCapacity").find("span").html();
+        assembAndPack.AssemblyProductionEndDate = row.find(".AssemblyProductionEndDate").find("span").html();
+
+        assembAndPack.PackingLineInformation = row.find(".PackingLineInformation").find("span").html();
+        assembAndPack.PackingProductionStartDate = row.find(".PackingProductionStartDate").find("span").html();
+        assembAndPack.PackingQuantity = row.find(".PackingQuantity").find("span").html();
+        assembAndPack.PackingPerDayCapacity = row.find(".PackingPerDayCapacity").find("span").html();
+        assembAndPack.PackingProductionEndDate = row.find(".PackingProductionEndDate").find("span").html();
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateAssemblyAndPackingTable", "Production")',
+            data: '{assembAndPack:' + JSON.stringify(assembAndPack) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+    });
+    //Update event handler.
+    $("body").on("click", "#sample_1 .complete", function () {
+        var row = $(this).closest("tr");
+
+        var assembAndPack = {};
+        assembAndPack.ProjectId = row.find(".ProjectId").find("span").html();
+        assembAndPack.Status = "COMPLETED";
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateAssemblyAndPackingTableStatus", "Production")',
+            data: '{assembAndPack:' + JSON.stringify(assembAndPack) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+        row.remove();
+    });
+    //Cancel event handler.
+    $("body").on("click", "#sample_1 .cancel", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                input.val(span.html());
+                span.show();
+                input.hide();
+
+            }
+        });
+        row.find(".edit").show();
+        row.find(".complete").show();
+        row.find(".update").hide();
+        $(this).hide();
+    });
+    ///////////////////edit////
+    $('#packingLine').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "95%"
+        //placeholder: "SELECT LINE",
+        //width: "10%"
+    });
+    $('#assemblyLine').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        // placeholder: "SELECT LINE",
+        width: "95%",
+    });
+    $('.chosen').trigger('chosen:updated');
+
+
+    $("#btnSave").on('click', function (e) {
+        e.preventDefault();
+
+        var assembVal = "";
+
+        var obj = {};
+        var objArr = [];
+
+        var projectId;
+        var projectName;
+        var orderNum;
+        var poCategory;
+        var materialReceiveDate;
+        var iqcCompleteDate;
+        var trialProductionDate;
+        var softwareConfirmationDate;
+        var rnDClearanceDate;
+        var assemblyLine;
+        var assemblyProductionDate;
+        var assemblyQuantity;
+        var assemblyPerDayCapacity;
+        var assemblyProductionEndDate;
+        var packingLine;
+        var packingStartDate;
+        var packingQty;
+        var packingPerDayCapacity;
+        var packingProductionEndDate;
+
+
+        $("#tbl3 tr.tableTrCls5").each(function () {
+            obj = new Object();
+
+            projectId = $.trim($(this).find('td:eq(0)').text());
+            projectName = $.trim($(this).find('td:eq(1)').text());
+            orderNum = $.trim($(this).find('td:eq(2)').text());
+            poCategory = $.trim($(this).find('td:eq(3)').text());
+            materialReceiveDate = $.trim($(this).find('td:eq(4)').text());
+            iqcCompleteDate = $.trim($(this).find('td:eq(5)').text());
+            trialProductionDate = $.trim($(this).find('td:eq(6)').text());
+            softwareConfirmationDate = $.trim($(this).find('td:eq(7)').text());
+            rnDClearanceDate = $.trim($(this).find('td:eq(8)').text());
+           
+            assemblyProductionDate = $.trim($(this).find('td:eq(9)').text());
+            assemblyProductionEndDate = $.trim($(this).find('td:eq(10)').text());
+            assemblyQuantity = $.trim($(this).find('td:eq(11)').text());
+            assemblyPerDayCapacity = $.trim($(this).find('td:eq(12)').text());
+            assemblyLine = $.trim($(this).find('td:eq(13)').text());
+           
+          
+            packingStartDate = $.trim($(this).find('td:eq(14)').text());
+            packingProductionEndDate = $.trim($(this).find('td:eq(15)').text());
+            packingQty = $.trim($(this).find('td:eq(16)').text());
+            packingPerDayCapacity = $.trim($(this).find('td:eq(17)').text());
+            packingLine = $.trim($(this).find('td:eq(18)').text());
+           
+
+            obj.ProjectId = projectId;
+            obj.ProjectName = projectName;
+            obj.OrderNumber = orderNum;
+            obj.PoCategory = poCategory;
+            obj.MaterialReceiveDate = materialReceiveDate;
+            obj.IqcCompleteDate = iqcCompleteDate;
+            obj.TrialProductionDate = trialProductionDate;
+            obj.SoftwareConfirmationDate = softwareConfirmationDate;
+            obj.RnDClearanceDate = rnDClearanceDate;
+            obj.AssemblyLineInformation = assemblyLine;
+            obj.AssemblyProductionStartDate = assemblyProductionDate;
+            obj.AssemblyQuantity = assemblyQuantity;
+            obj.AssemblyPerDayCapacity = assemblyPerDayCapacity;
+            obj.AssemblyProductionEndDate = assemblyProductionEndDate;
+            obj.PackingLineInformation = packingLine;
+            obj.PackingProductionStartDate = packingStartDate;
+            obj.PackingQuantity = packingQty;
+            obj.PackingPerDayCapacity = packingPerDayCapacity;
+            obj.PackingProductionEndDate = packingProductionEndDate;
+
+            objArr.push(obj);
+
+            console.log("objArr---->" + objArr);
+
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddedProjectPartialSave", "Production")',
+            data: "{objArr:'" + JSON.stringify(objArr) + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+
+                if (!data.success) {
+                    if (data.errors.name) {
+                        //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                    }
+                }
+                else {
+                    //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                }
+            }
+        });
+        window.location = '@Url.Action("ProductionPlan", "Production")';
+    });
+
+    $("#addmore").on('click', function (e) {
+        e.preventDefault();
+        var proSelectId = document.getElementById('dropForProject');
+        console.log(proSelectId);
+        var selectedProjectName = proSelectId.options[proSelectId.selectedIndex].text;
+        var selectedProjectId = proSelectId.options[proSelectId.selectedIndex].value;
+        console.log("selectedProjectName :" + selectedProjectName);
+        console.log("selectedProjectId :" + selectedProjectId);
+
+        if (selectedProjectName == "SELECT PROJECT") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Project",
+            }).show();
+            return false;
+        }
+
+        var orderNumber = document.getElementById('orderNumber');
+        var orderNum = orderNumber.options[orderNumber.selectedIndex].text;
+
+        if (orderNum == "SELECT ORDER") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Order",
+            }).show();
+            return false;
+        }
+
+        var poCategory = $('#poCategory').val();
+        console.log(poCategory);
+
+        var materialReceiveDate = $.trim($('#materialReceiveDate').val());
+        console.log("materialReceiveDate :" + materialReceiveDate);
+
+        if (materialReceiveDate == "") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Material ReceiveDate",
+            }).show();
+            return false;
+        }
+
+        var iqcCompleteDate = $.trim($('#iqcCompleteDate').val());
+        console.log("iqcCompleteDate :" + iqcCompleteDate);
+
+        var trialProductionDate = $.trim($('#trialProductionDate').val());
+        console.log("trialProductionDate :" + trialProductionDate);
+
+        var softwareConfirmationDate = $.trim($('#softwareConfirmationDate').val());
+        console.log("softwareConfirmationDate :" + softwareConfirmationDate);
+
+        var rnDClearanceDate = $.trim($('#rnDClearanceDate').val());
+        console.log("rnDClearanceDate :" + rnDClearanceDate);
+
+        var assemblyLine = $('#assemblyLine').val();
+        //var assemblyLine1 = $('#assemblyLine option:selected').text();
+        var assemblyLine2 = assemblyLine.join(', ');
+
+        // alert("assemblyLine2 :" + assemblyLine2);
+
+        if (assemblyLine == null) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select AssemblyLine",
+            }).show();
+            return false;
+        }
+
+        var assemblyProductionDate = $('#assemblyProductionDate').val();
+        if (assemblyProductionDate == "") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Assembly Production Date",
+            }).show();
+            return false;
+        }
+
+
+        var assemblyQuantity = $('#assemblyQuantity').val();
+
+        if (assemblyQuantity == "" || assemblyQuantity == 0) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Assembly Quantity",
+            }).show();
+            return false;
+        }
+
+        var assemblyPerDayCapacity = $('#assemblyPerDayCapacity').val();
+
+        if (assemblyPerDayCapacity == "" || assemblyPerDayCapacity == 0) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select Assembly Per Day Capacity",
+            }).show();
+            return false;
+        }
+
+
+
+        var assemblyProductionEndDate = $('#assemblyProductionEndDate').val();
+
+        var packingLine = $('#packingLine').val();
+        var packingLine2 = packingLine.join(', ');
+
+        if (packingLine == null) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please Select PackingLine",
+            }).show();
+            return false;
+        }
+
+
+        var packingStartDate = $('#packingStartDate').val();
+        var packingQty = $('#packingQty').val();
+        var packingPerDayCapacity = $('#packingPerDayCapacity').val();
+        var packingProductionEndDate = $('#packingProductionEndDate').val();
+
+        $.post('@Url.Action("AddProject", "Production")', {
+
+            projectName: selectedProjectName,
+            projectMasterId: selectedProjectId,
+            orderNum: orderNum,
+            poCategory: poCategory,
+            materialReceiveDate: materialReceiveDate,
+            iqcCompleteDate: iqcCompleteDate,
+            trialProductionDate: trialProductionDate,
+            softwareConfirmationDate: softwareConfirmationDate,
+            rnDClearanceDate: rnDClearanceDate,
+            assemblyLine: assemblyLine2,
+            assemblyProductionDate: assemblyProductionDate,
+            assemblyQuantity: assemblyQuantity,
+            assemblyPerDayCapacity: assemblyPerDayCapacity,
+            assemblyProductionEndDate: assemblyProductionEndDate,
+            packingLine: packingLine2,
+            packingStartDate: packingStartDate,
+            packingQty: packingQty,
+            packingPerDayCapacity: packingPerDayCapacity,
+            packingProductionEndDate: packingProductionEndDate
+
+        }, function (data) {
+            console.log(data);
+            $('#tBody3').append(data);
+        });
+
+
+
+        $('.assemblyLines option').prop('selected', false).trigger('chosen:updated');
+        $('.packingLines option').prop('selected', false).trigger('chosen:updated');
+
+        $('#dropForProject option:eq(0)').attr('selected', 'selected');
+        $('#orderNumber option:eq(0)').attr('selected', 'selected');
+
+
+        $('#poCategory').val("");
+        $('#materialReceiveDate').val("");
+        $('#iqcCompleteDate').val("");
+        $('#trialProductionDate').val("");
+        $('#softwareConfirmationDate').val("");
+        $('#rnDClearanceDate').val("");
+        $('#assemblyProductionDate').val("");
+        $('#assemblyQuantity').val("");
+        $('#assemblyPerDayCapacity').val("");
+        $('#assemblyProductionEndDate').val("");
+        $('#packingStartDate').val("");
+
+        $('#packingQty').val("");
+        $('#packingPerDayCapacity').val("");
+        $('#packingProductionEndDate').val("");
+
+
+    });
+    function removeDetailRow(element) {
+        var detailRow = $(element).closest('tr');
+        $(detailRow).remove();
+    }
+    $(document).on('click', '.removeBtn', function (e) {
+        e.preventDefault();
+        $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+        $(this).parent().parent().addClass('hiddenColumn');
+        $(this).parent().parent().remove();
+    });
+
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: 1,
+        todayHighlight: true,
+    });
+
+    function proNameChange() {
+
+        var proSelectId = document.getElementById('dropForProject');
+        console.log(proSelectId);
+        var selectedProjectName = proSelectId.options[proSelectId.selectedIndex].text;
+        var selectedProjectId = proSelectId.options[proSelectId.selectedIndex].value;
+        console.log(selectedProjectName);
+        console.log(selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetProjectOrder", "Production")',//'/ProjectManager/GetProject',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId },
+            success: function (data) {
+                console.log(data);
+                $('#orderNumber').empty();
+                $('#orderNumber').append($('<option>', {
+                    value: '',
+                    text: 'SELECT ORDER'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    var text = item.Text;
+                    var val = item.Value;
+
+                    $("#orderNumber").append('<option value=' + val + '>' + text + '</option>');
+
+                });
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetProjectPoCategorys", "Production")',//'/ProjectManager/GetProject',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId },
+            success: function (data) {
+
+                console.log(data);
+
+                var items = $.parseJSON(data);
+                console.log(items);
+                $('#poCategory').val(items.PoCategory);
+                $('#poCategory').text(items.PoCategory);
+
+            }
+        });
+
+        @*$.ajax({
+            url: '@Url.Action("GetProjectAssemblyType", "Production")',//'/ProjectManager/GetProject',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId },
+            success: function (data) {
+
+                console.log(data);
+
+                var items = $.parseJSON(data);
+                console.log(items);
+                $('#assemblyPerDayCapacity').val(items.Quantity);
+                $('#assemblyPerDayCapacity').text(items.Quantity);
+
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetProjectPackingType", "Production")',//'/ProjectManager/GetProject',
+            type: "GET",
+            dataType: "JSON",
+            data: { proId: selectedProjectId },
+            success: function (data) {
+
+                console.log(data);
+
+                var items = $.parseJSON(data);
+                console.log(items);
+                $('#packingPerDayCapacity').val(items.Quantity);
+                $('#packingPerDayCapacity').text(items.Quantity);
+
+            }
+        });*@
+    }
+
+
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>
+@*datatable*@
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>
+@*datatable*@

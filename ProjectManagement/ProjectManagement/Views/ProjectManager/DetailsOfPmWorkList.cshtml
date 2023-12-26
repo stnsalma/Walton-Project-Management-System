@@ -1,0 +1,2032 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.ProjectManager.PmReportDashBoardViewModel
+
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+<script src="~/Content/icheck/icheck.min.js"></script>
+<link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script src="~/Scripts/FileSaver/FileSaver.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+        </h1>
+
+        <br />
+        <div class="rvmCls">
+            @*@Html.ActionLink("Back", "ReportDashboard")*@
+            <button onclick="goBack()" class="btn blue-ebonyclay"> <span class="fa fa-backward">  Go Back</span></button>
+        </div>
+    </div>
+    <div class="action">
+        <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="export2Word(window.table2excel)">
+            <i class="fa fa-wordpress"></i>
+            Export as .doc
+        </button>
+
+        <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-excell-export">
+            <i class="fa fa-save"></i>
+            Export as Excell
+        </button>
+    </div>
+</div>
+
+<div class="portlet box blue-dark table2excel" id="table2excel">
+    <div class="portlet-title">
+
+        <div class="caption">
+            <i class="icon-arrow-right font-white"></i>
+
+            Details of
+            @Request.QueryString["ProjectName"]
+
+            Project
+        </div>
+    </div>
+    
+    
+    
+    <div class="portlet-body">
+        @using (Html.BeginForm("DetailsOfPmWorkList", "ProjectManager", FormMethod.Post, new {enctype = "multipart/form-data", id = "form7"}))
+        {
+            <div class="table-toolbar">
+                <div class="row"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="caption col-md-6" style="align-content: center;">
+                    <div class="col-md-6" style="text-align: center"><button class="btn btn-circle btn-sm blue btn-outline btnHwDetails" id="btnHwDetails">Hw Details<i class="icon-doc"> </i></button></div>
+                    <div class="col-md-6" style="text-align: center"><button class="btn btn-circle btn-sm blue btn-outline btnSwDetails" id="btnSwDetails">Sw Details<i class="icon-doc"> </i></button></div>
+                   
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <br/>    <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Boot Image & Animation
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="bootTables">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  Boot Image </th>
+                                        <th style="text-align: center;"> Boot Animation </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmBootImageAnimationModels.Any())
+                                    {
+                                        int i;
+                                        int c = Model.PmBootImageAnimationModels.Count;
+                                        for (i = 0; i < c; i++)
+                                        {
+                                            if (Model.PmBootImageAnimationModels[i].ProjectMasterId > 0)
+                                            {
+                                                <tr>
+                                                 
+                                                    <td id="lblProjectAssignId" style="display: none;">@Model.PmBootImageAnimationModels[i].ProjectAssignId </td>
+                                                    <td id="lblProjectMasterId" style="display: none;">@Model.PmBootImageAnimationModels[i].ProjectMasterId </td>
+                                                    @*<td id="lblProjectName" style="display: none;">@Model.PmBootImageAnimationModels[i].ProjectName </td>*@
+                                                    @*<td id="lblAssignUserId" style="display:none;">@Model.PmBootImageAnimationModels[i].AssignUserId </td>*@
+                                                    <td>@Model.PmBootImageAnimationModels[i].UserFullName (@Model.PmBootImageAnimationModels[i].EmployeeCode)</td>
+                                                    <td>@Model.PmBootImageAnimationModels[i].Remarks</td>
+                                                    <td>@Html.DisplayFor(x => x.PmBootImageAnimationModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+
+                                                                        @if (Model.PmBootImageAnimationModels[i].ImageUpload1 != null)
+                                                                        {
+
+
+
+                                                                            if (Model.PmBootImageAnimationModels[i].ImageExtension == ".jpg" || Model.PmBootImageAnimationModels[i].ImageExtension == ".bmp" || Model.PmBootImageAnimationModels[i].ImageExtension == ".png" || Model.PmBootImageAnimationModels[i].ImageExtension == ".pdf" || Model.PmBootImageAnimationModels[i].ImageExtension == ".mp4" || Model.PmBootImageAnimationModels[i].ImageExtension == ".jpeg" || Model.PmBootImageAnimationModels[i].ImageExtension == ".txt" || Model.PmBootImageAnimationModels[i].ImageExtension == ".xls" || Model.PmBootImageAnimationModels[i].ImageExtension == ".wav")
+                                                                            {
+
+                                                                                <div class="col-lg-4">
+
+                                                                                    <embed class="" src="@Model.PmBootImageAnimationModels[i].ImageUpload1" width="160px" height="140px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.PmBootImageAnimationModels[i].ImageUpload1">Download</a>
+
+                                                                                </div>
+                                                                            }
+                                                                            if (Model.PmBootImageAnimationModels[i].ImageExtension == ".zip" || Model.PmBootImageAnimationModels[i].ImageExtension == ".docx" || Model.PmBootImageAnimationModels[i].ImageExtension == ".xlsx" || Model.PmBootImageAnimationModels[i].ImageExtension == ".rar" || Model.PmBootImageAnimationModels[i].ImageExtension == ".pptx")
+                                                                            {
+
+                                                                                var urls = Model.PmBootImageAnimationModels[i].ImageUpload1.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last = urls[k].Split('-').Last();
+                                                                                    var lastNameForM = Model.PmBootImageAnimationModels[i].ImageUpload1;
+
+                                                                                    lastNameForM = Path.GetFileName(last);
+
+                                                                                    <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                        <br />
+
+                                                                                        <a href="@Model.PmBootImageAnimationModels[i].ImageUpload1" target="_blank">Download</a>
+
+
+                                                                                    </div>
+                                                                                }
+
+
+
+                                                                            }
+
+
+
+
+
+                                                                        }
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+
+                                                                        @if (Model.PmBootImageAnimationModels[i].VideoUpload1 != null)
+                                                                        {
+
+
+
+                                                                            if (Model.PmBootImageAnimationModels[i].VideoExtension == ".jpg" || Model.PmBootImageAnimationModels[i].VideoExtension == ".bmp" || Model.PmBootImageAnimationModels[i].VideoExtension == ".png" || Model.PmBootImageAnimationModels[i].VideoExtension == ".pdf" || Model.PmBootImageAnimationModels[i].VideoExtension == ".mp4" || Model.PmBootImageAnimationModels[i].VideoExtension == ".jpeg" || Model.PmBootImageAnimationModels[i].VideoExtension == ".txt" || Model.PmBootImageAnimationModels[i].VideoExtension == ".xls" || Model.PmBootImageAnimationModels[i].VideoExtension == ".wav")
+                                                                            {
+
+                                                                                <div class="col-lg-4">
+
+                                                                                    <embed class="" src="@Model.PmBootImageAnimationModels[i].VideoUpload1" width="160px" height="140px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.PmBootImageAnimationModels[i].VideoUpload1">Download</a>
+
+                                                                                </div>
+                                                                            }
+                                                                            if (Model.PmBootImageAnimationModels[i].VideoExtension == ".zip" || Model.PmBootImageAnimationModels[i].VideoExtension == ".docx" || Model.PmBootImageAnimationModels[i].VideoExtension == ".xlsx" || Model.PmBootImageAnimationModels[i].VideoExtension == ".rar" || Model.PmBootImageAnimationModels[i].VideoExtension == ".pptx")
+                                                                            {
+
+                                                                                var urls = Model.PmBootImageAnimationModels[i].VideoUpload1.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last = urls[k].Split('-').Last();
+                                                                                    var lastNameForM = Model.PmBootImageAnimationModels[i].VideoUpload1;
+
+                                                                                    lastNameForM = Path.GetFileName(last);
+
+                                                                                    <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                        <br />
+
+                                                                                        <a href="@Model.PmBootImageAnimationModels[i].VideoUpload1" target="_blank">Download</a>
+
+
+                                                                                    </div>
+                                                                                }
+
+
+
+                                                                            }
+
+
+
+
+
+                                                                        }
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>GB Design
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  GB Design </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmGiftBoxModels.Any())
+                                {
+                                    int i;
+                                    int c = Model.PmGiftBoxModels.Count;
+                                    for (i = 0; i < c; i++)
+                                    {
+                                        if (Model.PmGiftBoxModels[i].ProjectMasterId > 0)
+                                        {
+                                            <tr>
+                                                <td id="lblProjectAssignId" style="display:none;">@Model.PmGiftBoxModels[i].ProjectAssignId </td>
+                                                <td id="lblProjectMasterId" style="display:none;">@Model.PmGiftBoxModels[i].ProjectMasterId </td>
+                                                <td>@Model.PmGiftBoxModels[i].UserFullName (@Model.PmGiftBoxModels[i].EmployeeCode)</td>
+                                                <td>@Model.PmGiftBoxModels[i].Remarks</td>
+                                                <td>@Html.DisplayFor(x => x.PmGiftBoxModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmGiftBoxModels[i].PmGbImageUploadPath != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmGiftBoxModels[i].GBExtension == ".jpg" || Model.PmGiftBoxModels[i].GBExtension == ".bmp" || Model.PmGiftBoxModels[i].GBExtension == ".png" || Model.PmGiftBoxModels[i].GBExtension == ".pdf" || Model.PmGiftBoxModels[i].GBExtension == ".mp4" || Model.PmGiftBoxModels[i].GBExtension == ".jpeg" || Model.PmGiftBoxModels[i].GBExtension == ".txt" || Model.PmGiftBoxModels[i].GBExtension == ".xls" || Model.PmGiftBoxModels[i].GBExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmGiftBoxModels[i].PmGbImageUploadPath" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmGiftBoxModels[i].PmGbImageUploadPath">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmGiftBoxModels[i].GBExtension == ".zip" || Model.PmGiftBoxModels[i].GBExtension == ".docx" || Model.PmGiftBoxModels[i].GBExtension == ".xlsx" || Model.PmGiftBoxModels[i].GBExtension == ".rar" || Model.PmGiftBoxModels[i].GBExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmGiftBoxModels[i].PmGbImageUploadPath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmGiftBoxModels[i].PmGbImageUploadPath;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmGiftBoxModels[i].PmGbImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Label Design Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  Label Design </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmLabelsModels.Any())
+                                        {
+                                            int i;
+                                            int c = Model.PmLabelsModels.Count;
+                                            for (i = 0; i < c; i++)
+                                            {
+                                                if (Model.PmLabelsModels[i].ProjectMasterId > 0)
+                                                {
+                                                    <tr>
+                                                        <td id="lblProjectAssignId" style="display:none;">@Model.PmLabelsModels[i].ProjectAssignId </td>
+                                                        <td id="lblProjectMasterId" style="display:none;">@Model.PmLabelsModels[i].ProjectMasterId </td>
+                                                        <td>@Model.PmLabelsModels[i].UserFullName (@Model.PmLabelsModels[i].EmployeeCode)</td>
+                                                        <td>@Model.PmLabelsModels[i].Remarks</td>
+                                                        <td>@Html.DisplayFor(x => x.PmLabelsModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmLabelsModels[i].PmLabelImageUploadPath != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmLabelsModels[i].LabelImageExtension == ".jpg" || Model.PmLabelsModels[i].LabelImageExtension == ".bmp" || Model.PmLabelsModels[i].LabelImageExtension == ".png" || Model.PmLabelsModels[i].LabelImageExtension == ".pdf" || Model.PmLabelsModels[i].LabelImageExtension == ".mp4" || Model.PmLabelsModels[i].LabelImageExtension == ".jpeg" || Model.PmLabelsModels[i].LabelImageExtension == ".txt" || Model.PmLabelsModels[i].LabelImageExtension == ".xls" || Model.PmLabelsModels[i].LabelImageExtension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmLabelsModels[i].PmLabelImageUploadPath" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmLabelsModels[i].PmLabelImageUploadPath">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmLabelsModels[i].LabelImageExtension == ".zip" || Model.PmLabelsModels[i].LabelImageExtension == ".docx" || Model.PmLabelsModels[i].LabelImageExtension == ".xlsx" || Model.PmLabelsModels[i].LabelImageExtension == ".rar" || Model.PmLabelsModels[i].LabelImageExtension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmLabelsModels[i].PmLabelImageUploadPath.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmLabelsModels[i].PmLabelImageUploadPath;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmLabelsModels[i].PmLabelImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>ID Design Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  Finishing </th>
+                                        <th style="text-align: center;"> Logo Design </th>
+                                        <th style="text-align: center;"> Model Print Type Design </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmIdModels.Any())
+                                    {
+                                        int i;
+                                        int c = Model.PmIdModels.Count;
+                                        for (i = 0; i < c; i++)
+                                        {
+                                            if (Model.PmIdModels[i].ProjectMasterId > 0)
+                                            {
+                                                <tr>
+                                                    <td id="lblProjectAssignId" style="display: none;">@Model.PmIdModels[i].ProjectAssignId </td>
+                                                    <td id="lblProjectMasterId" style="display: none;">@Model.PmIdModels[i].ProjectMasterId </td>
+                                                    <td>@Model.PmIdModels[i].UserFullName (@Model.PmIdModels[i].EmployeeCode)</td>
+                                                    <td>@Model.PmIdModels[i].Remarks</td>
+                                                    <td>@Html.DisplayFor(x => x.PmIdModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+
+                                                                        @if (Model.PmIdModels[i].PmFinishingImageUploadPath != null)
+                                                                        {
+
+
+
+                                                                            if (Model.PmIdModels[i].FinishingDesignExtension == ".jpg" || Model.PmIdModels[i].FinishingDesignExtension == ".bmp" || Model.PmIdModels[i].FinishingDesignExtension == ".png" || Model.PmIdModels[i].FinishingDesignExtension == ".pdf" || Model.PmIdModels[i].FinishingDesignExtension == ".mp4" || Model.PmIdModels[i].FinishingDesignExtension == ".jpeg" || Model.PmIdModels[i].FinishingDesignExtension == ".txt" || Model.PmIdModels[i].FinishingDesignExtension == ".xls" || Model.PmIdModels[i].FinishingDesignExtension == ".wav")
+                                                                            {
+
+                                                                                <div class="col-lg-4">
+
+                                                                                    <embed class="" src="@Model.PmIdModels[i].PmFinishingImageUploadPath" width="160px" height="140px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.PmIdModels[i].PmFinishingImageUploadPath">Download</a>
+
+                                                                                </div>
+                                                                            }
+                                                                            if (Model.PmIdModels[i].FinishingDesignExtension == ".zip" || Model.PmIdModels[i].FinishingDesignExtension == ".docx" || Model.PmIdModels[i].FinishingDesignExtension == ".xlsx" || Model.PmIdModels[i].FinishingDesignExtension == ".rar" || Model.PmIdModels[i].FinishingDesignExtension == ".pptx")
+                                                                            {
+
+                                                                                var urls = Model.PmIdModels[i].PmFinishingImageUploadPath.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last = urls[k].Split('-').Last();
+                                                                                    var lastNameForM = Model.PmIdModels[i].PmFinishingImageUploadPath;
+
+                                                                                    lastNameForM = Path.GetFileName(last);
+
+                                                                                    <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                        <br />
+
+                                                                                        <a href="@Model.PmIdModels[i].PmFinishingImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                    </div>
+                                                                                }
+
+
+
+                                                                            }
+
+
+
+
+
+                                                                        }
+
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+
+                                                                        @if (Model.PmIdModels[i].PmLogoTypeImageUploadPath != null)
+                                                                        {
+
+
+
+                                                                            if (Model.PmIdModels[i].LogoDesignExtension == ".jpg" || Model.PmIdModels[i].LogoDesignExtension == ".bmp" || Model.PmIdModels[i].LogoDesignExtension == ".png" || Model.PmIdModels[i].LogoDesignExtension == ".pdf" || Model.PmIdModels[i].LogoDesignExtension == ".mp4" || Model.PmIdModels[i].LogoDesignExtension == ".jpeg" || Model.PmIdModels[i].LogoDesignExtension == ".txt" || Model.PmIdModels[i].LogoDesignExtension == ".xls" || Model.PmIdModels[i].LogoDesignExtension == ".wav")
+                                                                            {
+
+                                                                                <div class="col-lg-4">
+
+                                                                                    <embed class="" src="@Model.PmIdModels[i].PmLogoTypeImageUploadPath" width="160px" height="140px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.PmIdModels[i].PmLogoTypeImageUploadPath">Download</a>
+
+                                                                                </div>
+                                                                            }
+                                                                            if (Model.PmIdModels[i].LogoDesignExtension == ".zip" || Model.PmIdModels[i].LogoDesignExtension == ".docx" || Model.PmIdModels[i].LogoDesignExtension == ".xlsx" || Model.PmIdModels[i].LogoDesignExtension == ".rar" || Model.PmIdModels[i].LogoDesignExtension == ".pptx")
+                                                                            {
+
+                                                                                var urls = Model.PmIdModels[i].PmLogoTypeImageUploadPath.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last = urls[k].Split('-').Last();
+                                                                                    var lastNameForM = Model.PmIdModels[i].PmLogoTypeImageUploadPath;
+
+                                                                                    lastNameForM = Path.GetFileName(last);
+
+                                                                                    <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                        <br />
+
+                                                                                        <a href="@Model.PmIdModels[i].PmLogoTypeImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                    </div>
+                                                                                }
+
+
+
+                                                                            }
+
+
+
+
+
+                                                                        }
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+
+                                                                        @if (Model.PmIdModels[i].PmModelPrintImageUploadPath != null)
+                                                                        {
+
+
+
+                                                                            if (Model.PmIdModels[i].ModelPrintDesignExtension == ".jpg" || Model.PmIdModels[i].ModelPrintDesignExtension == ".bmp" || Model.PmIdModels[i].ModelPrintDesignExtension == ".png" || Model.PmIdModels[i].ModelPrintDesignExtension == ".pdf" || Model.PmIdModels[i].ModelPrintDesignExtension == ".mp4" || Model.PmIdModels[i].ModelPrintDesignExtension == ".jpeg" || Model.PmIdModels[i].ModelPrintDesignExtension == ".txt" || Model.PmIdModels[i].ModelPrintDesignExtension == ".xls" || Model.PmIdModels[i].ModelPrintDesignExtension == ".wav")
+                                                                            {
+
+                                                                                <div class="col-lg-4">
+
+                                                                                    <embed class="" src="@Model.PmIdModels[i].PmModelPrintImageUploadPath" width="160px" height="140px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" href="@Model.PmIdModels[i].PmModelPrintImageUploadPath">Download</a>
+
+                                                                                </div>
+                                                                            }
+                                                                            if (Model.PmIdModels[i].ModelPrintDesignExtension == ".zip" || Model.PmIdModels[i].ModelPrintDesignExtension == ".docx" || Model.PmIdModels[i].ModelPrintDesignExtension == ".xlsx" || Model.PmIdModels[i].ModelPrintDesignExtension == ".rar" || Model.PmIdModels[i].ModelPrintDesignExtension == ".pptx")
+                                                                            {
+
+                                                                                var urls = Model.PmIdModels[i].PmModelPrintImageUploadPath.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last = urls[k].Split('-').Last();
+                                                                                    var lastNameForM = Model.PmIdModels[i].PmModelPrintImageUploadPath;
+
+                                                                                    lastNameForM = Path.GetFileName(last);
+
+                                                                                    <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                        @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                        <br />
+
+                                                                                        <a href="@Model.PmIdModels[i].PmModelPrintImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                    </div>
+                                                                                }
+
+
+
+                                                                            }
+
+
+
+
+
+                                                                        }
+                                                                    </div>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Screen Protector Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  Screen Protector </th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmScreenProtectorModels.Any())
+                                {
+                                    int i;
+                                    int c = Model.PmScreenProtectorModels.Count;
+                                    for (i = 0; i < c; i++)
+                                    {
+                                        if (Model.PmScreenProtectorModels[i].ProjectMasterId > 0)
+                                        {
+                                            <tr>
+                                                <td id="lblProjectAssignId" style="display: none;">@Model.PmScreenProtectorModels[i].ProjectAssignId </td>
+                                                <td id="lblProjectMasterId" style="display: none;">@Model.PmScreenProtectorModels[i].ProjectMasterId </td>
+                                                <td>@Model.PmScreenProtectorModels[i].UserFullName (@Model.PmScreenProtectorModels[i].EmployeeCode)</td>
+                                                <td>@Model.PmScreenProtectorModels[i].Remarks</td>
+                                                <td>@Html.DisplayFor(x => x.PmScreenProtectorModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmScreenProtectorModels[i].SpExtension == ".jpg" || Model.PmScreenProtectorModels[i].SpExtension == ".bmp" || Model.PmScreenProtectorModels[i].SpExtension == ".png" || Model.PmScreenProtectorModels[i].SpExtension == ".pdf" || Model.PmScreenProtectorModels[i].SpExtension == ".mp4" || Model.PmScreenProtectorModels[i].SpExtension == ".jpeg" || Model.PmScreenProtectorModels[i].SpExtension == ".txt" || Model.PmScreenProtectorModels[i].SpExtension == ".xls" || Model.PmScreenProtectorModels[i].SpExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmScreenProtectorModels[i].SpExtension == ".zip" || Model.PmScreenProtectorModels[i].SpExtension == ".docx" || Model.PmScreenProtectorModels[i].SpExtension == ".xlsx" || Model.PmScreenProtectorModels[i].SpExtension == ".rar" || Model.PmScreenProtectorModels[i].SpExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmScreenProtectorModels[i].PmScreenProtectorImageUploadPath" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Walpaper Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">Walpaper 1</th>
+                                        <th style="text-align: center;">  Walpaper 2</th>
+                                        <th style="text-align: center;">  Walpaper 3</th>
+                                        <th style="text-align: center;">  Walpaper 4</th>
+                                        <th style="text-align: center;">  Walpaper 5</th>
+                                        <th style="text-align: center;">  Walpaper 6</th>
+                                        <th style="text-align: center;">  Walpaper 7</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmWalpaperModels.Any())
+                                        {
+                                            int i;
+                                            int c = Model.PmWalpaperModels.Count;
+                                            for (i = 0; i < c; i++)
+                                            {
+                                                if (Model.PmWalpaperModels[i].ProjectMasterId > 0)
+                                                {
+                                                    <tr>
+                                                        <td id="lblProjectAssignId" style="display:none;">@Model.PmWalpaperModels[i].ProjectAssignId </td>
+                                                        <td id="lblProjectMasterId" style="display:none;">@Model.PmWalpaperModels[i].ProjectMasterId </td>
+                                                        <td>@Model.PmWalpaperModels[i].UserFullName (@Model.PmWalpaperModels[i].EmployeeCode)</td>
+                                                        <td>@Model.PmWalpaperModels[i].Remarks</td>
+                                                        <td>@Html.DisplayFor(x => x.PmWalpaperModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload1 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W1Extension == ".jpg" || Model.PmWalpaperModels[i].W1Extension == ".bmp" || Model.PmWalpaperModels[i].W1Extension == ".png" || Model.PmWalpaperModels[i].W1Extension == ".pdf" || Model.PmWalpaperModels[i].W1Extension == ".mp4" || Model.PmWalpaperModels[i].W1Extension == ".jpeg" || Model.PmWalpaperModels[i].W1Extension == ".txt" || Model.PmWalpaperModels[i].W1Extension == ".xls" || Model.PmWalpaperModels[i].W1Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload1" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload1">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W1Extension == ".zip" || Model.PmWalpaperModels[i].W1Extension == ".docx" || Model.PmWalpaperModels[i].W1Extension == ".xlsx" || Model.PmWalpaperModels[i].W1Extension == ".rar" || Model.PmWalpaperModels[i].W1Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload1.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload1;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload1" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload2 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W2Extension == ".jpg" || Model.PmWalpaperModels[i].W2Extension == ".bmp" || Model.PmWalpaperModels[i].W2Extension == ".png" || Model.PmWalpaperModels[i].W2Extension == ".pdf" || Model.PmWalpaperModels[i].W2Extension == ".mp4" || Model.PmWalpaperModels[i].W2Extension == ".jpeg" || Model.PmWalpaperModels[i].W2Extension == ".txt" || Model.PmWalpaperModels[i].W2Extension == ".xls" || Model.PmWalpaperModels[i].W2Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload2" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload2">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W2Extension == ".zip" || Model.PmWalpaperModels[i].W2Extension == ".docx" || Model.PmWalpaperModels[i].W2Extension == ".xlsx" || Model.PmWalpaperModels[i].W2Extension == ".rar" || Model.PmWalpaperModels[i].W2Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload2.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload2;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload2" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload3 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W3Extension == ".jpg" || Model.PmWalpaperModels[i].W3Extension == ".bmp" || Model.PmWalpaperModels[i].W3Extension == ".png" || Model.PmWalpaperModels[i].W3Extension == ".pdf" || Model.PmWalpaperModels[i].W3Extension == ".mp4" || Model.PmWalpaperModels[i].W3Extension == ".jpeg" || Model.PmWalpaperModels[i].W3Extension == ".txt" || Model.PmWalpaperModels[i].W3Extension == ".xls" || Model.PmWalpaperModels[i].W3Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload3" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload3">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W3Extension == ".zip" || Model.PmWalpaperModels[i].W3Extension == ".docx" || Model.PmWalpaperModels[i].W3Extension == ".xlsx" || Model.PmWalpaperModels[i].W3Extension == ".rar" || Model.PmWalpaperModels[i].W3Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload3.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload3;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload3" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload4 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W4Extension == ".jpg" || Model.PmWalpaperModels[i].W4Extension == ".bmp" || Model.PmWalpaperModels[i].W4Extension == ".png" || Model.PmWalpaperModels[i].W4Extension == ".pdf" || Model.PmWalpaperModels[i].W4Extension == ".mp4" || Model.PmWalpaperModels[i].W4Extension == ".jpeg" || Model.PmWalpaperModels[i].W4Extension == ".txt" || Model.PmWalpaperModels[i].W4Extension == ".xls" || Model.PmWalpaperModels[i].W4Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload4" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload4">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W4Extension == ".zip" || Model.PmWalpaperModels[i].W4Extension == ".docx" || Model.PmWalpaperModels[i].W4Extension == ".xlsx" || Model.PmWalpaperModels[i].W4Extension == ".rar" || Model.PmWalpaperModels[i].W4Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload4.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload4;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload4" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload5 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W5Extension == ".jpg" || Model.PmWalpaperModels[i].W5Extension == ".bmp" || Model.PmWalpaperModels[i].W5Extension == ".png" || Model.PmWalpaperModels[i].W5Extension == ".pdf" || Model.PmWalpaperModels[i].W5Extension == ".mp4" || Model.PmWalpaperModels[i].W5Extension == ".jpeg" || Model.PmWalpaperModels[i].W5Extension == ".txt" || Model.PmWalpaperModels[i].W5Extension == ".xls" || Model.PmWalpaperModels[i].W5Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload5" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload5">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W5Extension == ".zip" || Model.PmWalpaperModels[i].W5Extension == ".docx" || Model.PmWalpaperModels[i].W5Extension == ".xlsx" || Model.PmWalpaperModels[i].W5Extension == ".rar" || Model.PmWalpaperModels[i].W5Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload5.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload5;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload5" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload6 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W6Extension == ".jpg" || Model.PmWalpaperModels[i].W6Extension == ".bmp" || Model.PmWalpaperModels[i].W6Extension == ".png" || Model.PmWalpaperModels[i].W6Extension == ".pdf" || Model.PmWalpaperModels[i].W6Extension == ".mp4" || Model.PmWalpaperModels[i].W6Extension == ".jpeg" || Model.PmWalpaperModels[i].W6Extension == ".txt" || Model.PmWalpaperModels[i].W6Extension == ".xls" || Model.PmWalpaperModels[i].W6Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload6" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload6">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W6Extension == ".zip" || Model.PmWalpaperModels[i].W6Extension == ".docx" || Model.PmWalpaperModels[i].W6Extension == ".xlsx" || Model.PmWalpaperModels[i].W6Extension == ".rar" || Model.PmWalpaperModels[i].W6Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload6.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload6;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload6" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="col-lg-12">
+
+                                                                            @if (Model.PmWalpaperModels[i].WalpaperUpload7 != null)
+                                                                            {
+
+
+
+                                                                                if (Model.PmWalpaperModels[i].W7Extension == ".jpg" || Model.PmWalpaperModels[i].W7Extension == ".bmp" || Model.PmWalpaperModels[i].W7Extension == ".png" || Model.PmWalpaperModels[i].W7Extension == ".pdf" || Model.PmWalpaperModels[i].W7Extension == ".mp4" || Model.PmWalpaperModels[i].W7Extension == ".jpeg" || Model.PmWalpaperModels[i].W7Extension == ".txt" || Model.PmWalpaperModels[i].W7Extension == ".xls" || Model.PmWalpaperModels[i].W7Extension == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-4">
+
+                                                                                        <embed class="" src="@Model.PmWalpaperModels[i].WalpaperUpload7" width="160px" height="140px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.PmWalpaperModels[i].WalpaperUpload7">Download</a>
+
+                                                                                    </div>
+                                                                                }
+                                                                                if (Model.PmWalpaperModels[i].W7Extension == ".zip" || Model.PmWalpaperModels[i].W7Extension == ".docx" || Model.PmWalpaperModels[i].W7Extension == ".xlsx" || Model.PmWalpaperModels[i].W7Extension == ".rar" || Model.PmWalpaperModels[i].W7Extension == ".pptx")
+                                                                                {
+
+                                                                                    var urls = Model.PmWalpaperModels[i].WalpaperUpload7.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.PmWalpaperModels[i].WalpaperUpload7;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.PmWalpaperModels[i].WalpaperUpload7" target="_blank">Download</a>
+
+
+                                                                                        </div>
+                                                                                    }
+
+
+
+                                                                                }
+
+
+
+
+
+                                                                            }
+
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Software Customization Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;">  Menu</th>
+                                        <th style="text-align: center;"> Final Path</th>
+                                        <th style="text-align: center;"> Final Settings</th>
+                                        <th style="text-align: center;"> Added Date </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmSwCustomizationFinalModels.Any())
+                                {
+                                    int i;
+                                    int c = Model.PmSwCustomizationFinalModels.Count;
+                                    for (i = 0; i < c; i++)
+                                    {
+                                        if (Model.PmSwCustomizationFinalModels[i].ProjectMasterId > 0)
+                                        {
+                                            <tr>
+                                                <td id="lblProjectAssignId" style="display:none;">@Model.PmSwCustomizationFinalModels[i].ProjectPmAssignId </td>
+                                                <td id="lblProjectMasterId" style="display:none;">@Model.PmSwCustomizationFinalModels[i].ProjectMasterId </td>
+                                                <td>@Model.PmSwCustomizationFinalModels[i].UserFullName (@Model.PmSwCustomizationFinalModels[i].EmployeeCode)</td>
+                                                <td>@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalMenu</td>
+                                                <td>@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalPath</td>
+                                                <td>@Model.PmSwCustomizationFinalModels[i].PmSwCustomizationFinalSettings</td>
+                                                <td>@Html.DisplayFor(x => x.PmSwCustomizationFinalModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Accessories
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                        <th style="text-align: center;">  Ear Phone </th>
+                                        <th style="text-align: center;">  USB Cable </th>
+                                        <th style="text-align: center;">  Charger </th>
+                                        <th style="text-align: center;">  OTG Cable </th>
+                                        <th style="text-align: center;">  Back Cover </th>
+                                        <th style="text-align: center;">  Flip Cover </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmPhnAccessoriesModels.Any())
+                                {
+                                    int i;
+                                    int c = Model.PmPhnAccessoriesModels.Count;
+                                    for (i = 0; i < c; i++)
+                                    {
+                                        if (Model.PmPhnAccessoriesModels[i].ProjectMasterId > 0)
+                                        {
+                                            <tr>
+                                                <td id="lblProjectAssignId" style="display:none;">@Model.PmPhnAccessoriesModels[i].ProjectAssignId </td>
+                                                <td id="lblProjectMasterId" style="display:none;">@Model.PmPhnAccessoriesModels[i].ProjectMasterId </td>
+                                                <td>@Model.PmPhnAccessoriesModels[i].UserFullName (@Model.PmPhnAccessoriesModels[i].EmployeeCode)</td>
+                                                <td>@Model.PmPhnAccessoriesModels[i].Remarks</td>
+                                                <td>@Html.DisplayFor(x => x.PmPhnAccessoriesModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphoneExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesEarphone" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCableExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesUSBCable" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesChargerExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesCharger" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCableExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesOTGCable" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCoverExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesBackCover" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="file-preview-thumbnails">
+                                                        <div class="">
+                                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                <div class="col-lg-12">
+
+                                                                    @if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover != null)
+                                                                    {
+
+
+
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".jpg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".bmp" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".png" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".pdf" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".mp4" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".jpeg" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".txt" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".xls" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".wav")
+                                                                        {
+
+                                                                            <div class="col-lg-4">
+
+                                                                                <embed class="" src="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover" width="160px" height="140px" />
+                                                                                <br />
+                                                                                <a target="_blank" href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover">Download</a>
+
+                                                                            </div>
+                                                                        }
+                                                                        if (Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".zip" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".docx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".xlsx" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".rar" || Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCoverExtension == ".pptx")
+                                                                        {
+
+                                                                            var urls = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover.Split('|').ToList();
+
+                                                                            for (int k = 0; k < urls.Count; k++)
+                                                                            {
+                                                                                var last = urls[k].Split('-').Last();
+                                                                                var lastNameForM = Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover;
+
+                                                                                lastNameForM = Path.GetFileName(last);
+
+                                                                                <div class="col-lg-4" style="width: 160px; height: 160px;">
+
+                                                                                    @Html.TextAreaFor(model => lastNameForM, new { style = "width:160px;height:140px;", disabled = "disabled" })
+
+                                                                                    <br />
+
+                                                                                    <a href="@Model.PmPhnAccessoriesModels[i].PmPhnAccessoriesFlipCover" target="_blank">Download</a>
+
+
+                                                                                </div>
+                                                                            }
+
+
+
+                                                                        }
+
+
+
+
+
+                                                                    }
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="portlet box default">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-cogs"></i>Camera Details
+                        </div>
+                        <div class="tools">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-scrollable table-responsive">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="text-align: center; display: none; visibility: hidden" class="noExl"> </th>
+                                        <th style="text-align: center;"> Done By </th>
+                                        <th style="text-align: center;"> Camera HardWare(Actual) </th>
+                                        <th style="text-align: center;"> Camera SoftWare </th>
+                                        <th style="text-align: center;"> Remarks </th>
+                                        <th style="text-align: center;"> Added Date </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center">
+
+                                    @if (Model != null && Model.PmPhnCameraModels.Any())
+                                {
+                                    int i;
+                                    int c = Model.PmPhnCameraModels.Count;
+                                    for (i = 0; i < c; i++)
+                                    {
+                                        if (Model.PmPhnCameraModels[i].ProjectMasterId > 0)
+                                        {
+                                            <tr>
+                                                <td id="lblProjectAssignId" style="display:none;">@Model.PmPhnCameraModels[i].ProjectAssignId </td>
+                                                <td id="lblProjectMasterId" style="display:none;">@Model.PmPhnCameraModels[i].ProjectMasterId </td>
+                                                <td>@Model.PmPhnCameraModels[i].UserFullName (@Model.PmPhnCameraModels[i].EmployeeCode)</td>
+                                                <td>@Model.PmPhnCameraModels[i].PmCameraHardwareActual</td>
+                                                <td>@Model.PmPhnCameraModels[i].PmCameraSoftware</td>
+                                                <td>@Model.PmPhnCameraModels[i].Remarks</td>
+                                                <td>@Html.DisplayFor(x => x.PmPhnCameraModels[i].AddedDate, "{0:yyyy-MM-dd HH:mm:ss tt}")</td>
+
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br />
+        }
+        <br /><br /><br /><br /><br /><br />
+        <div class="rvmCls">
+            <button onclick="goBack()" class="btn blue-ebonyclay"> <span class="fa fa-backward">  Go Back</span></button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javaScript">
+    function goBack() {
+        window.history.back();
+    }
+    function export2Word(element) {
+
+        var html, link, blob, url, css;
+
+        css = (
+          '<style>' +
+          '@Page table2excel{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+              'div.table2excel {page: table2excel;}' +
+              '</style>'
+        );
+
+        html = element.innerHTML;
+        blob = new Blob(['\ufeff', css + html], {
+            type: 'application/msword'
+        });
+        url = URL.createObjectURL(blob);
+        link = document.createElement('A');
+        link.href = url;
+        link.download = 'PmWorksReport'; // default name without extension
+        document.body.appendChild(link);
+        if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'PmWorksReport.doc'); // IE10-11
+        else link.click(); // other browsers
+        document.body.removeChild(link);
+
+    }
+
+    ;
+    $('.jquery-excell-export').click(function () {
+
+        var table = document.getElementById('table2excel');
+        var html = table.outerHTML;
+        window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+
+    });
+
+    $(function () {
+        $('[class*="btnHwDetails"]').click(function (e) {
+            e.preventDefault();
+
+            var projectId = '@Request.QueryString["projectId"]';
+            var projectName = '@Request.QueryString["projectName"]';
+
+            var url = '@Url.Action("PmHeadHwAndSwSummary", "ProjectManager")?projectMasterId=' + projectId + '&projectName=' + encodeURIComponent(projectName);
+            // window.location.href = url;
+            window.open(url);
+        });
+
+        $('[class*="btnSwDetails"]').click(function (e) {
+            e.preventDefault();
+            var swqcInchargeAsngId = 0;
+            var projectId = '@Request.QueryString["projectId"]';
+            swqcInchargeAsngId = '@Request.QueryString["swqcInchargeAsngId"]';
+            var projectName = '@Request.QueryString["projectName"]';
+            //alert(projectId + "----->" + projectName);
+
+            if (swqcInchargeAsngId>0) {
+                  var url = '@Url.Action("DetailsOfSwQcTestCase", "Software")?projectId=' + projectId + '&swqcInchargeAsngId=' + swqcInchargeAsngId;
+                 window.open(url);
+            } else
+            {
+                 var url = '@Url.Action("DetailsOfSwQcTestCase", "Software")?projectId=' + projectId + '&swqcInchargeAsngId=' + 0;
+                 window.open(url);
+            }
+
+
+          });
+    });
+</script>

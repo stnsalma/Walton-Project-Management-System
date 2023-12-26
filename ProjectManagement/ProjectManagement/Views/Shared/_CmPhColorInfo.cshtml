@@ -1,0 +1,52 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@using (Html.BeginForm("Specification", "Commercial"))
+{
+    <div class="col-lg-12">
+        <div class="form-body">
+            <h3 class="form-section">Color</h3>
+            @Html.HiddenFor(model => model.PhColorInfoModel.PhColorInfoId)
+            @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+            @Html.HiddenFor(model => model.TabIdentity, new { @Value = 12 })
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Order Quantity*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhColorInfoModel.Quantity, new { @class = "form-control", @type = "number" })
+                            @Html.ValidationMessageFor(model => model.PhColorInfoModel.Quantity, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Color Distribution*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhColorInfoModel.Color, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhColorInfoModel.Color, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            @if (Model.PhColorInfoModel.PhColorInfoId > 0)
+                            {
+                                <button class="btn sbold uppercase btn-outline blue">Update</button>
+                            }
+                            else
+                            {
+                                <button class="btn sbold uppercase btn-outline green">Save</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

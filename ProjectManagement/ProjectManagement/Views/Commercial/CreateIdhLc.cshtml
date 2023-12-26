@@ -1,0 +1,245 @@
+﻿@{
+    ViewBag.Title = "CreateIdhLc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">IDH LC Permission Form</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <select name="" id="ddlLcForModel" class="form-control">
+                    <option value="Select">Select</option>
+                    @if (ViewBag.Variants != null)
+                    {
+                        foreach (var i in ViewBag.Variants)
+                        {
+                            <option value="@i.Id">@i.ProjectModel</option>
+                        }
+                    }
+                </select>
+
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-success" id="btnSaveAll">Save</button>
+                <br />
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tblIdhLcDetails">
+                        <thead>
+                            <tr>
+                                <th hidden>Id</th>
+                                <th>Material Code</th>
+                                <th>Material Name</th>
+                                <th>Vendor</th>
+                                <th>Total Quantity</th>
+                                <th>Total Quantity With Wastage </th>
+                                <th>Remaining Order Quantity </th>
+                                <th>Order Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total Value</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <div id="divPrevIdh"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('select').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+
+    $('#ddlLcForModel').on('change', function () {
+        $('#tblIdhLcDetails tbody').empty();
+        $('#divPrevIdh').empty();
+        var variantId = $('#ddlLcForModel').val();
+        if (isNaN(variantId)) {
+            $('#tblIdhLcDetails tbody').empty();
+            alertify.error('Select a project first');
+        } else {
+            console.log(variantId);
+            var url = '@Url.Action("GetLcIdhFinalBomsByVariantId","Commercial")';
+            $.post(url, { id: variantId }, function (data) {
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var row = '<tr>'
+                + '<td class="tdBomId" hidden>' + data[i].Id + '</td>'
+                + '<td>' + data[i].MaterialCoding + '</td>'
+                + '<td>'+data[i].MaterialName+'</td>'
+                + '<td>'+data[i].Vendor+'</td>'
+                + '<td><input type="number" class="form-control txtTotalQuantity" readonly="" value="'+data[i].TotalQuantity+'"/></td>'
+                + '<td><input type="number" class="form-control txtTotalQuantityWithWastage" readonly="" value="' + data[i].TotalQuantityConsideringWastage + '"/></td>'
+                + '<td><input type="number" class="form-control txtRemainingOrderQuantity" readonly value="' + data[i].RemainingQuantity + '"/></td>'
+                + '<td><input type="number" class="form-control txtOrderQuantity"/></td>'
+                + '<td><input type="number" class="form-control txtUnitPrice"/></td>'
+                + '<td><input type="number" class="form-control txtTotalValue" readonly/></td>'
+                + '<td><button class="btn btn-danger btnReomve"><i class="fa fa-trash"></i></button></td>'
+                + '</tr>';
+                    $('#tblIdhLcDetails tbody').append(row);
+                }
+            });
+
+            var prevIdhUrl = '@Url.Action("GetPrevIdhDetailsByVariantId","Commercial")';
+            $.post(prevIdhUrl, { variantId: variantId }, function(data) {
+                console.log(data);
+                var row = '';
+                for (var i = 0; i < data.length; i++) {
+                    row = row + '<tr>'
+                        + '<td>'+data[i].MaterialCoding+'</td>'
+                        + '<td>' + data[i].MaterialName + '</td>'
+                        + '<td>' + data[i].Specification + '</td>'
+                        + '<td>' + data[i].InventoryCode + '</td>'
+                        + '<td>' + data[i].Vendor + '</td>'
+                        + '<td>' + data[i].TotalQuantity + '</td>'
+                        + '<td>' + data[i].TotalQuantityConsideringWastage + '</td>'
+                        + '<td>' + data[i].OrderQuantity + '</td>'
+                        + '<td>' + data[i].UnitPrice + '</td>'
+                        + '<td>' + data[i].TotalValue + '</td>'
+                        + '<td>' + data[i].OrderSerial + '</td>'
+                        + '</tr>';
+                }
+                var table = '<span class="bold">Previous LCs:</span><table class="table table-bordered">'
+                    + '<thead>'
+                    + '<tr>'
+                    + '<th>Material Code</th>'
+                    + '<th>Material Name</th>'
+                    + '<th>Specification</th>'
+                    + '<th>Inventory Code</th>'
+                    + '<th>Vendor</th>'
+                    + '<th>Total Quantity</th>'
+                    + '<th>Total Quantity with Wastage</th>'
+                    + '<th>Order Quantity</th>'
+                    + '<th>Unit Price</th>'
+                    + '<th>Total Value</th>'
+                    + '<th>Order Serial</th>'
+                    + '</tr>'
+                    + '</thead>'
+                    + '<tbody>'
+                    + row
+                    + '</tbody>'
+                    + '</table>';
+                $('#divPrevIdh').append(table);
+            });
+        }
+    });
+
+    $(document).on('input', '.txtOrderQuantity', function() {
+        var row = $(this).closest('tr');
+        var orderQuantity = $(this).val();
+        var unitPrice = row.find('.txtUnitPrice').val();
+        if (unitPrice != '') {
+            row.find('.txtTotalValue').val((parseFloat(orderQuantity) * parseFloat(unitPrice)).toFixed(2));
+        }
+        console.log(orderQuantity);
+    });
+
+    $(document).on('input', '.txtUnitPrice', function () {
+        var row = $(this).closest('tr');
+        var unitPrice = $(this).val();
+        var orderQuantity = row.find('.txtOrderQuantity').val();
+        if (unitPrice != '') {
+            row.find('.txtTotalValue').val((parseFloat(orderQuantity) * parseFloat(unitPrice)).toFixed(2));
+        }
+        console.log(orderQuantity);
+    });
+
+    @*$(document).on('change', '.ddlSpareName', function () {
+        var row = $(this).closest('tr');
+        var $thiss = $(this);
+        var spareId = row.find('.ddlSpareName').val();
+        console.log(spareId);
+        if (spareId > 0) {
+            console.log('Selected spare id-' + spareId);
+            var url = '@Url.Action("GetIDHFinalBomInfoBySpareId","Commercial")';
+            $.post(url, { spareId: spareId }, function (data) {
+                console.log(data);
+                $thiss.closest('tr').find('.txtPerUnitQuantity').val(data.PerUnitQuantity);
+                $thiss.closest('tr').find('.txtTotalQuantity').val(data.TotalQuantity);
+            });
+        }
+    });*@
+
+    $('#btnSaveAll').on('click', function () {
+        var execute = true;
+        var variantId = $('#ddlLcForModel').val();
+        if (isNaN(variantId)) {
+            $('#tblIdhLcDetails tbody').empty();
+            alertify.error('Select a project first');
+            return false;
+        }
+
+        var url = '@Url.Action("SaveBulkIdhLc","Commercial")';
+        var arrIdh = [];
+        $('#tblIdhLcDetails tbody tr').each(function () {
+            if (execute == true) {
+                var row = $(this).closest('tr');
+                var finalBomId = row.find('.tdBomId').html();
+                console.log(finalBomId);
+                var orderQuantity = row.find('.txtOrderQuantity').val();
+                if (orderQuantity == '') {
+                    alertify.error('order quantity required');
+                    execute = false;
+                }
+                var unitPrice = row.find('.txtUnitPrice').val();
+                if (unitPrice == '') {
+                    alertify.error('Unit Price required');
+                    execute = false;
+                }
+                var totalValue = row.find('.txtTotalValue').val();
+                var idhObj = {};
+                idhObj.LcIdhFinalBomId = finalBomId;
+                idhObj.OrderQuantity = orderQuantity;
+                idhObj.UnitPrice = unitPrice;
+                idhObj.TotalValue = totalValue;
+                arrIdh.push(idhObj);
+            }
+        });
+        if (execute == false) {
+            return execute;
+        }
+        console.log(arrIdh);
+        if (arrIdh.length > 0) {
+            $.post(url, { variantId: variantId, arr: arrIdh }, function (data) {
+                if (data == 'success') {
+                    alertify.success('LC Created Successfully');
+                    $('#tblIdhLcDetails tbody').empty();
+                    $('#divPrevIdh').empty();
+                    $('select').val('Select').trigger('chosen:updated');
+                }
+            });
+        } else {
+            alertify.error('Add spare first');
+        }
+
+    });
+
+    $(document).on('click', '.btnReomve', function () {
+        var row = $(this).closest('tr');
+        console.log(row);
+        row.remove();
+    });
+</script>
+

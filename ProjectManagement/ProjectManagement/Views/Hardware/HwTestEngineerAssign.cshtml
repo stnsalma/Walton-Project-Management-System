@@ -1,0 +1,468 @@
+﻿@model IEnumerable<ProjectManagement.ViewModels.Hardware.VmHwTestDetail>
+
+    @{
+        ViewBag.Title = "HwTestEngineerAssign";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Assign HW Engineers
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                            <div class="portlet-body flip-scroll">
+                                                <div class="table-scrollable">
+                                                    <table class="table table-bordered table-striped table-condensed flip-content" id="tblAssignedProjects">
+                                                        <thead class="flip-content">
+                                                            <tr>
+                                                                <th class="text-center"> Hw Incharge Id </th>
+                                                                <th class="text-center"> Project ID </th>
+                                                                <th class="text-center"> Project Name </th>
+                                                                <th class="text-center"> Hw Test Name </th>
+                                                                <th class="text-center">  PM Remarks </th>
+                                                                <th class="text-center"> Added By </th>
+                                                                <th class="text-center"> Added Date </th>
+                                                                <th class="text-center"> Status </th>
+                                                                <th class="text-center"> Action </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var v in ViewBag.AssignedTests)
+                                                            {
+                                                                if (v.Status == "NEW")
+                                                                {
+                                                                    <tr>
+                                                                        <td>@v.HwTestInchargeAssignId</td>
+                                                                        <td>@v.ProjectMasterId</td>
+                                                                        <td class="text-center">@v.ProjectName</td>
+                                                                        <td class="text-center">@v.HwTestName</td>
+                                                                        <td class="text-center">@v.Remarks</td>
+                                                                        <td class="text-center">@v.AddedByName</td>
+                                                                        <td class="text-center">@v.AddedDate</td>
+                                                                        <td class="text-center">
+                                                                            @if (v.Status == "NEW")
+                                                                            {
+                                                                                <span class="label label-sm label-default"> @v.Status </span>
+                                                                            }
+                                                                        </td>
+                                                                        <td class="text-center">
+                                                                            <input type="button" class="btnAssign" value="Assign" />
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                       
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Forward Projects to PM
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="portlet-body flip-scroll table-scrollable">
+                                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblForwardProjects">
+                                                <thead class="flip-content">
+                                                    <tr>
+                                                        <th class="text-center"> Hw Incharge Id </th>
+                                                        <th class="text-center"> Project ID </th>
+                                                        <th class="text-center"> Project Name </th>
+                                                        <th class="text-center"> Hw Test Name </th>
+                                                        <th class="text-center"> PM Remarks </th>
+                                                        <th class="text-center"> Added By </th>
+                                                        <th class="text-center"> Added Date </th>
+                                                        <th class="text-center"> Assigned To </th>
+                                                        <th class="text-center"> Assign Remarks </th>
+                                                        <th class="text-center"> Assign Date </th>
+                                                        <th class="text-center"> Submit Date </th>
+                                                        <th class="text-center"> Submit Remarks </th>
+                                                        <th class="text-center"> Result </th>
+                                                        <th class="text-center"> Status </th>
+                                                        <th class="text-center"> Action </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var v in Model)
+                                                    {
+                                                        if (v.HwTestInchargeAssignModel.Status == "FORWARDPENDING")
+                                                        {
+                                                            <tr>
+                                                                <td>@v.HwTestInchargeAssignModel.HwTestInchargeAssignId</td>
+                                                                <td>@v.HwTestInchargeAssignModel.ProjectMasterId</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.ProjectName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.HwTestName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.Remarks</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.AddedByName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.AddedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.HwEngineerNames</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.HwInchargeRemark</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.AddedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.SubmittedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.Remark</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.Result</td>
+                                                                <td class="text-center">
+                                                                    @if (v.HwTestInchargeAssignModel.Status == "FORWARDPENDING")
+                                                                    {
+                                                                        <span class="label label-sm label-warning"> @v.HwTestInchargeAssignModel.Status </span>
+                                                                    }
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <input type="button" class="btnForward" value="Forward" />
+                                                                    <input type="button" class="btnViewFiles" value="View Uploaded files" />
+                                                                    <input type="button" class="btnViewAdditionalInfo" value="View Additional Infos" />
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ Assign HW Engineer =======================================================================*@
+        <div id="assignEngineerModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Assign HW Engineer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        Select Engineer:
+                                        <select name="multiple" id="multiple" class="form-control" multiple>
+                                            @if (ViewBag.CmnUser != null)
+                                            {
+                                                foreach (var i in ViewBag.CmnUser)
+                                                {
+                                                    <option value="@i.CmnUserId">@i.UserFullName</option>
+                                                }
+                                            }
+
+                                        </select>
+                                    </p>
+                                    <p>
+                                        Remarks:
+                                        <input type="text" class="form-control" id="modalInchargeRemark" />
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="btnAssignSave" onclick="assignEngineer();">Save</button>
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ Forward =======================================================================*@
+        <div id="forwardModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Forward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        Forward Remarks:
+                                        <input type="text" class="form-control" id="modalForwadRemark" />
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick="forward();">Forward</button>
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ Document =======================================================================*@
+        <div id="documentModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Forward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        <table class="table table-bordered" id="tblFiles">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">File Name</th>
+                                                    <th class="text-center">Added By</th>
+                                                    <th class="text-center">Added Date</th>
+                                                    <th class="text-center">Remarks</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @*<button type="button" class="btn btn-success" onclick="downloadall();">Download All</button>*@
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ Additional Info =======================================================================*@
+        <div id="additionalinfoModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Additional Info</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        <table class="table table-bordered" id="tblAdditionalInfos">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Field Name</th>
+                                                    <th class="text-center">Value</th>
+                                                    <th class="text-center">Added By</th>
+                                                    <th class="text-center">Added Date</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @*<button type="button" class="btn btn-success" onclick="downloadall();">Download All</button>*@
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var hwinchargeassignId = 0;
+        var projectId = 0;
+        var table = $('#tblAssignedProjects').DataTable({
+            columnDefs: [
+                {
+                    targets: [0, 1],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        var table2 = $('#tblForwardProjects').DataTable({
+            columnDefs: [
+                {
+                    targets: [0, 1],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        $('#tblAssignedProjects').on('click', '.btnAssign', function () {
+            var data = table.row($(this).parents('tr')).data();
+            hwinchargeassignId = data[0];
+            projectId = data[1];
+            console.log(hwinchargeassignId + '>>>' + projectId);
+            $('#assignEngineerModal').modal('show');
+        });
+
+        function assignEngineer() {
+            $('#btnAssignSave').prop('disabled', true);
+            var engineerIds = $('#multiple').val();
+            var remarks = $('#modalInchargeRemark').val();
+            console.log(engineerIds);
+            var url = '@Url.Action("HwEngineerAssignSubmit", "Hardware")';//'../Hardware/HwEngineerAssignSubmit';
+            $.post(url, { engineerIds: engineerIds, remarks: remarks, hwinchargeassignId: hwinchargeassignId, projectId: projectId }, function (json) {
+                alertify.success(json.HwEngineerNames + ' assigned');
+                $('#assignEngineerModal').modal('hide');
+                url = '@Url.Action("HwTestEngineerAssign", "Hardware")';
+                window.location.href = url.replace();
+            });
+        }
+
+
+        $(function () {
+            $('#multiple').chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, nothing found!",
+                width: "95%"
+            });
+        });
+
+        $('.btnForward').on('click', function () {
+            var data = table2.row($(this).parents('tr')).data();
+            hwinchargeassignId = data[0];
+            projectId = data[1];
+            console.log(hwinchargeassignId + '>>>' + projectId);
+            $('#forwardModal').modal('show');
+        });
+
+        function forward() {
+            var url = '../Hardware/ForwardHwTest';
+            var remarks = $('#modalForwadRemark').val();
+            $.post(url, { remarks: remarks, hwinchargeassignId: hwinchargeassignId }, function (json) {
+                $('#assignEngineerModal').modal('hide');
+                url = '@Url.Action("HwTestEngineerAssign", "Hardware")';
+                window.location.href = url.replace();
+            });
+        }
+
+        $('.btnViewFiles').on('click', function () {
+            $('#tblFiles tbody').empty();
+            var url = '../Hardware/GetUploadedFiles';
+            var data = table2.row($(this).parents('tr')).data();
+            hwinchargeassignId = data[0];
+            projectId = data[1];
+            console.log(hwinchargeassignId + '>>>' + projectId);
+            $.post(url, { hwinchargeassignId: hwinchargeassignId }, function (json) {
+                console.log(json);
+                for (var i = 0; i < json.length; i++) {
+                    var html = "<a href='/Hardware/DownloadHwTestFile?fileuploadId=" + json[i].HwTestFileUploadId + "'>" + json[i].FileUploadPath + "</a>";
+                    var date = new Date(parseInt(json[i].AddedDate.substr(6)));
+                    var row = "<tr>" +
+                                      "<td class='text-center hidden'>" + json[i].HwTestFileUploadId + "</td>" +
+                                      "<td class='text-center'>" + html + "</td>" +
+                                      "<td class='text-center'>" + json[i].AddedByName + "</td>" +
+                                      "<td class='text-center'>" + date + "</td>" +
+                                      "<td class='text-center'>" + (json[i].Remarks = (json[i].Remarks == null) ? "-" : json[i].Remarks) + "</td>" +
+                                  "</tr>";
+                    $('#tblFiles tbody').append(row);
+                }
+
+            });
+            $('#documentModal').modal('show');
+        });
+
+        $('.btnViewAdditionalInfo').on('click', function() {
+            $('#tblAdditionalInfos tbody').empty();
+            var url = '../Hardware/GetAdditionalInfos';
+            var data = table2.row($(this).parents('tr')).data();
+            hwinchargeassignId = data[0];
+            projectId = data[1];
+            console.log(hwinchargeassignId + '>>>' + projectId);
+            $.post(url, { hwinchargeassignId: hwinchargeassignId }, function (json) {
+                console.log(json);
+                for (var i = 0; i < json.length; i++) {
+                    var date = new Date(parseInt(json[i].AddedDate.substr(6)));
+                    var row = "<tr>" +
+                                      "<td class='text-center hidden'>" + json[i].HwTestAdditionalInfoId + "</td>" +
+                                      "<td class='text-center'>" + json[i].FieldName + "</td>" +
+                                      "<td class='text-center'>" + json[i].FieldValue + "</td>" +
+                                      "<td class='text-center'>" + json[i].AddedByName + "</td>" +
+                                      "<td class='text-center'>" + date + "</td>" +
+                                  "</tr>";
+                    $('#tblAdditionalInfos tbody').append(row);
+                }
+
+            });
+            $('#additionalinfoModal').modal('show');
+        });
+
+    </script>
+

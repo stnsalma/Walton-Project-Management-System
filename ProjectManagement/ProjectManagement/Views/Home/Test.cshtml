@@ -1,0 +1,29 @@
+﻿@model List<ProjectManagement.ViewModels.Home.TestViewModel>
+@{
+    ViewBag.Title = "Test";
+}
+
+<h2>Test</h2>
+
+<form action="/Home/Test" method="POST">
+    
+    @for (int i = 0; i < Model.Count; i++)
+    { 
+        
+    @*<br/>
+    <input type="text" name="FirstName[@i]" value="@Model[i].FirstName">
+    <br/>
+    <input type="text" name="LastName[@i]" value="@Model[i].LastName">*@
+        @Html.DisplayFor(x=>Model[i].FirstName)
+        @Html.TextBoxFor(x=>Model[i].FirstName)
+        <br/>
+    @Html.DisplayFor(x => Model[i].LastName)
+        @Html.TextAreaFor(x => Model[i].LastName)
+
+
+        <br><br>
+    }
+    
+    <input type="submit" value="Submit">
+</form>
+

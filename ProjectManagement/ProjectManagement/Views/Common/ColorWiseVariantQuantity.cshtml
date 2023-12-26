@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "ColorWiseVariantQuantity";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Color Wise Variant Quantity</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-4">
+                @Html.DropDownList("Id", new SelectList(ViewBag.Variants, "Id", "ProjectModel"), "Select", new { @class = "form-control ddChosen" })
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <span style="font-size: 12px; font-weight: bold">Order Quantity: <label id="lblOrderQuantity">0</label></span>
+                <br />
+                <span style="font-size: 12px; font-weight: bold">Unassigned    : <label id="unAssigned">0</label></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-danger" id="btnAddRow">Add Row</button>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tblColorQuantity">
+                        <thead>
+                            <tr>
+                                <th hidden="">Id</th>
+                                <th>Project Name</th>
+                                <th>Variant Name</th>
+                                <th>Color</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+;
+    $('#Id').on('change', function () {
+        $('#tblColorQuantity tbody').empty();
+        var url = '@Url.Action("GetVariantQuantityAndAssignedQuantiy", "Common")';
+        var id = $('#Id').val();
+        console.log(id);
+        if ($('#Id option:selected').text() != 'Select') {
+            $.post(url, { id: id }, function (data) {
+                console.log(data);
+                $('#lblOrderQuantity').text(data.Quantity.OrderQuantity);
+                if (data.Colors.count > 0) {
+
+                } else {
+                    var row = '<tr>' +
+                '<td></td>' +
+                '<td>' + data.Quantity.ProjectName + '</td>' +
+                '<td>' + data.Quantity.ProjectModel + '</td>' +
+                '<td><input type="text" class="form-control color"/></td>' +
+                '<td><input type="number" class="form-control quantity" value="' + data.Quantity.OrderQuantity + '"/></td>' +
+                '<td><input type="button" class="btn btn-success btnSave" value="Save"/></td>' +
+                '</tr>';
+                    $('#tblColorQuantity tbody').append(row);
+                }
+            });
+        } else {
+            $('#lblOrderQuantity').text(0);
+            $('#tblColorQuantity tbody').empty();
+        }
+    });
+
+    $('#btnAddRow').on('click', function () {
+        var url = '@Url.Action("GetVariantQuantityAndAssignedQuantiy", "Common")';
+        if ($('#Id option:selected').text() != 'Select') {
+            if ($('#unAssigned').val() != 0) {
+                var id = $('#Id').val();
+                $.post(url, { id: id }, function (data) {
+                    console.log(data);
+                    var row = '<tr>' +
+                    '<td></td>' +
+                    '<td>' + data.Quantity.ProjectName + '</td>' +
+                    '<td>' + data.Quantity.ProjectModel + '</td>' +
+                    '<td><input type="text" class="form-control color"/></td>' +
+                    '<td><input type="number" class="form-control quantity"/></td>' +
+                    '<td><input type="button" class="btn btn-success btnSave" value="Save"/></td>' +
+                    '</tr>';
+                    $('#tblColorQuantity tbody').append(row);
+                });
+            } else {
+                alertify.error('No assignable quantity');
+            }
+
+        } else {
+            alertify.error('Please select a variant');
+        }
+    });
+
+    $('#tblColorQuantity tbody').on('click', '.btnSave', function () {
+        var url = '@Url.Action("SaveColorWiseVariantQuantity", "Common")';
+        var id = $('#Id').val();
+        var row = $(this).closest('tr');
+        var color = row.find('.color').val();
+        var quantity = row.find('.quantity').val();
+        $.post(url,{id:id})
+    });
+</script>
+

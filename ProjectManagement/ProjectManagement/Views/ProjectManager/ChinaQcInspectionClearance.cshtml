@@ -1,0 +1,633 @@
+﻿@*<h2>ChinaQcInspectionClearance</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectManager.VmChinaQcInspectionsClearance
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet box green-seagreen">
+            <div class="portlet-title">
+                <div class="caption">
+                    Welcome to China Qc Inspection Clearance
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-2" style="color: brown;"></div>
+                        <div class="col-lg-8" style="color: brown;">
+                            <div class="col-lg-3" style="color: brown; font-weight: bold">Select Project</div>
+                            <div class="col-lg-9">
+                                @if (ViewBag.Projects != null)
+                                {
+                                    @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "dropForProject form-control ddChosen", @id = "dropForProject", @onchange = "LoadOrders()", Value = @Model.ProjectName })
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-2" style="color: brown;"></div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-2" style="color: brown;"></div>
+                        <div class="col-lg-8" style="color: brown;">
+                            <div class="col-lg-3" style="color: brown; font-weight: bold">Orders</div>
+                            <div class="col-lg-9">
+                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.ProjectOrderLists, "Value", "Text"), "SELECT ORDERS", new { @class = "ProjectMasterId2 form-control", @id = "ProjectMasterId2", @onchange = "LoadQuantity()" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="color: brown;"></div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-2" style="color: brown;"></div>
+                        <div class="col-lg-8" style="color: brown;">
+                            <div class="col-lg-3" style="color: brown; font-weight: bold">Order Quantity</div>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control orderQty" id="orderQty" value="@Model.OrderQuantity" readonly="" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4" style="color: brown;"></div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-4" style="color: brown;"></div>
+                        <div class="col-lg-4" style="color: brown;">
+                            <input type="button" id="btnLoad" class="btn sbold uppercase btn-outline blue" value="LOAD" onclick="location.href = '@Url.Action("ChinaQcInspectionClearance", "ProjectManager")?ProjectName=' + $('option:selected', $('#dropForProject')).text() + '&ProjectMasterId=' + $('option:selected', $('#ProjectMasterId2')).val() + '&Orders=' + $('option:selected', $('#ProjectMasterId2')).text() + '&OrderQuantity=' + $('#orderQty').val() " />
+                        </div>
+                        <div class="col-lg-4" style="color: brown;"></div>
+                    </div>
+                </div>
+                <br />
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (@Html.BeginForm("ChinaQcInspectionClearance", "ProjectManager", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box green-seagreen">
+                <div class="portlet-title">
+                    <div class="caption">
+                        Inspection Status
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <br />
+                    <div class="table-responsive  table-scrollable">
+                        <table class="table table-striped table-bordered table-hover table-responsive  table-scrollable tbl1" id="tbl1">
+                            <thead class="flip-content">
+                                <tr class="trClsforSize" style="font-weight: bold">
+                                    <th style="text-align: center; font-size: 12px; display: none"> ProjectMasterId </th>
+                                    <th style="text-align: center; font-size: 12px;"> ProjectName </th>
+                                    <th style="text-align: center; font-size: 12px"> Order<br />Number </th>
+                                    <th style="text-align: center; font-size: 12px"> Inspection<br />Start<br />Date </th>
+                                    <th style="text-align: center; font-size: 12px"> Materials <br />Type </th>
+                                    <th style="text-align: center; font-size: 12px"> LOT No. </th>
+                                    <th style="text-align: center; font-size: 12px"> LOT Quantity </th>
+                                    <th style="text-align: center; font-size: 12px"> No of <br />Time of <br />Inspection </th>
+                                    <th style="text-align: center; font-size: 12px">Inspection Report</th>
+                                    <th style="text-align: center; font-size: 12px"> Inspection Status </th>
+                                    <th style="text-align: center; font-size: 12px"> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (ViewBag.GetChinaInspectionDetails != null)
+                                {
+                                    foreach (var item in ViewBag.GetChinaInspectionDetails)
+                                    {
+                                        <tr class="trClsforSize" style="text-align: center">
+                                            <td style="display: none">
+                                                <input class="form-control" name="issueList[0].ProjectMasterId" id="ProjectMasterId" value="@item.ProjectMasterId" type="text">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].ProjectName" id="ProjectName" value="@item.ProjectName" style="width: 200px !important" type="text" readonly="readonly">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].Orders" id="Orders" value="@item.Orders" style="width: 100px !important" type="text" readonly="readonly">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].InspectionStartDate" id="InspectionStartDate" value="" style="width: 120px !important" type="text" placeholder="yyyy-mm-dd">
+                                            </td>
+                                            <td>
+                                                <select name="issueList[0].MaterialType" class="form-control input-small MaterialType" id="MaterialType" style="width: 210px !important">
+                                                    <option value="0">SELECT</option>
+                                                    <option>SMT Materials/CKD</option>
+                                                    <option>Assembly materials/SKD</option>
+                                                    <option>Battery</option>
+                                                    <option>JIG</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].LotNo" id="LotNo" value="" style="width: 110px !important" type="number" min="1">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].LotQuantity" id="LotQuantity" value="@item.LotQuantity" style="width: 110px !important" type="text" readonly="">
+
+                                            </td>
+                                            <td>
+                                                <input class="form-control" name="issueList[0].NoOfTimeOfInspection" id="NoOfTimeOfInspection" value="" style="width: 110px !important" type="number" min="1">
+                                            </td>
+                                            <td class="numeric">
+                                                <div class="col-md-11">
+                                                    <table class="File11" id="hh1">
+                                                        <tr id="trIdForFile">
+                                                            <td class="filesss" id="filesId">
+
+                                                                <div class="col-md-9" id="fileIdForCr">
+                                                                    <input type="file" name="issueList[0].File" id="File11" />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick=" removeDetailRow($(this).closest('tr')); ">
+                                                                        <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br />
+                                                                <br />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-2">
+                                                        <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success center" onclick=" javascript: addField('issueList[0].File', $(this).closest('tr')); ">
+                                                            <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                                        </button><br /><br />
+                                                    </div>
+                                                    <div class="col-md-6"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select name="issueList[0].InspectionStatus" class="form-control input-small InspectionStatus" id="InspectionStatus" style="width: 180px !important">
+                                                    <option value="0">SELECT</option>
+                                                    <option>PASS</option>
+                                                    <option>FAIL</option>
+                                                    <option>NOT APPLICABLE</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button type="submit" class="btn btn-danger btnReport" id="btnReport">
+                                                    Request Inspection<br /> Report Clearance
+
+                                                    <input class="form-control" name="issueList[0].BtnDetails1" id="BtnDetails1" value="" type="text" style="display: none">
+
+                                                </button>
+                                                <br />
+                                                <br />
+                                                <button type="submit" class="btn btn-success btnClearance" id="btnClearance">
+                                                    Shipment Clearance
+                                                    <input class="form-control" name="issueList[0].BtnDetails2" id="BtnDetails2" value="" type="text" style="display: none">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box green-seagreen">
+                <div class="portlet-title">
+                    <div class="caption">
+                        Saved Inspection Data
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <br />
+                    <div class="col-lg-12 table-responsive  table-scrollable">
+                        <table class="table table-striped table-bordered table-hover tbl2" id="tbl2">
+                            <thead>
+                                <tr class="trClsforSize" style="font-weight: bold">
+                                    <th style="text-align: center; font-size: 12px; "> #</th>
+                                    <th style="text-align: center; font-size: 12px; display: none"> Id </th>
+                                    <th style="text-align: center; font-size: 12px; display: none"> ProjectMasterId </th>
+                                    <th style="text-align: center; font-size: 12px;"> ProjectName </th>
+                                    <th style="text-align: center; font-size: 12px"> Order<br />Number </th>
+                                    <th style="text-align: center; font-size: 12px;width:130px !important"> Inspection<br />StartDate </th>
+                                    <th style="text-align: center; font-size: 12px"> Materials <br />Type </th>
+                                    <th style="text-align: center; font-size: 12px"> LOT No. </th>
+                                    <th style="text-align: center; font-size: 12px"> LOT Quantity </th>
+                                    <th style="text-align: center; font-size: 12px"> No of <br />Time of <br />Inspection </th>
+                                    <th style="text-align: center; font-size: 12px;"> Inspection Status </th>
+                                    <th style="text-align: center; font-size: 12px"> Clearance Status </th>
+                                    <th style="text-align: center; font-size: 12px; width: 130px !important"> AddedDate </th>
+                                    <th style="text-align: center; font-size: 12px">Inspection Report</th>
+                                    <th style="text-align: center; font-size: 12px">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @if (Model != null && Model.ChinaQcInspectionsClearanceModels4.Any())
+                                {
+                                    for (int i = 0; i < Model.ChinaQcInspectionsClearanceModels4.Count; i++)
+                                    {
+                                        <tr class="trClsforSize" style="text-align: center">
+                                            <td style=""></td>
+                                            <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].Id)</td>
+                                            <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ProjectMasterId)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ProjectName)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].Orders)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].InspectionStartDate, "{0:yyyy-MM-dd}")</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].MaterialType)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].LotNo)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].LotQuantity)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].NoOfTimeOfInspection)</td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].InspectionStatus)</td>
+                                            <td>
+                                                @*@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus)*@
+                                                @if (Model.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus == "PENDING")
+                                                {
+                                                    <p style="color:blue;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus)</p>
+                                                }
+                                                @if (Model.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus == "NOTAPPROVED")
+                                                {
+                                                    <p style="color:red;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus)</p>
+                                                }
+                                                @if (Model.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus == "APPROVED")
+                                                {
+                                                    <p style="color:green;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus)</p>
+                                                }
+                                            </td>
+                                            <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].AddedDate, "{0:yyyy-MM-dd}")</td>
+                                            <td>
+                                                <div class="file-preview-thumbnails" style="width: 400px !important">
+                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                        <div class="col-lg-12">
+
+                                                            @Html.HiddenFor(model => model.ChinaQcInspectionsClearanceModels4[i].InspectionAttachment, new { @class = "clsRmv" })
+                                                            @if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails != null && Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails.Any())
+                                                            {
+                                                                <table>
+                                                                    <tr>
+                                                                        <td>
+                                                                            @for (int m = 0; m < Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails.Count; m++)
+                                                                            {
+                                                                                if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".jpg" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".png" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".mp4" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".jpeg" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".txt" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".xls" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".wav")
+                                                                                {
+                                                                                    @*<td style="border:2px solid black;">*@
+                                                                                    <div class="col-lg-4" style="width:150px;border:1px solid black;float:left;height:auto;">
+                                                                                        <embed class="" src="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath" style="width: 80px;height: 80px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" style="width: 80px;text-align: center" href="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath"><p style="width: 60px;text-align:center">Download</p></a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-4"></div>
+                                                                                    @*</td>*@
+
+                                                                                }
+                                                                                if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".zip" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".pdf" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".docx" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".xlsx" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".rar" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".pptx")
+                                                                                {
+                                                                                    var urls = Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last2 = urls[k].Split('-').Last();
+                                                                                        var lastNameForM2 = Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath;
+
+                                                                                        lastNameForM2 = Path.GetFileName(last2);
+                                                                                        @*<td style="border:2px solid black;">*@
+                                                                                        <div class="col-lg-4" style="width: 150px; border: 1px solid black; float: left; height: auto;">
+                                                                                            @Html.TextAreaFor(model => lastNameForM2, new { style = "width:80px;height:80px;", disabled = "disabled" })
+                                                                                            <br />
+                                                                                            <a href="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath" style="width: 80px;text-align:center;" target="_blank"><p style="width: 60px">Download</p></a>
+                                                                                        </div>
+                                                                                        <div class="col-lg-4"></div>
+                                                                                        @*</td>*@
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+
+                                                            }
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if (Model.ChinaQcInspectionsClearanceModels4[i].Details == "NO")
+                                                {
+                                                    <a class="btn blue" target="_blank" href='@Url.Action("ChinaQcInspectionClearanceApprovalDetails", "ProjectManager", new { ids = @Model.ChinaQcInspectionsClearanceModels4[i].Id })'>
+                                                        <span class="glyphicon glyphicon-list-alt"></span>  Approve Details
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    $('#InspectionStartDate').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        //startDate: today,
+        //endDate: 0
+    });
+
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(function () {
+        //  $("#btnClearance").on('click', function (e) {
+        $("body").on("click", "#tbl1 .btnClearance", function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            var projectMasterId = $("#ProjectMasterId").val();
+            var projectName = $("#ProjectName").val();
+            var orders = $("#Orders").val();
+            var orderQty = $("#orderQty").val();
+            var inspectionStartDate = $("#InspectionStartDate").val();
+            var materialType = $("#MaterialType option:selected").html();
+            var BtnDetails1 = $("#BtnDetails1").val("");
+            var BtnDetails11 = $("#BtnDetails1").text("");
+            var BtnDetails2 = $("#BtnDetails2").val("clearance");
+            var BtnDetails22 = $("#BtnDetails2").text("clearance");
+
+            if (inspectionStartDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input Inspection Start Date."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            if (materialType == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Material Type."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var lotNo = $("#LotNo").val();
+            if (lotNo == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert LOT No."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var lotQuantity = $("#LotQuantity").val();
+            if (lotQuantity == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert LOT Quantity."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var noOfTimeOfInspection = $("#NoOfTimeOfInspection").val();
+            if (noOfTimeOfInspection == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert No Of Time Of Inspection."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            //var inspectionStatus = $("#InspectionStatus").val();
+            var inspectionStatus = $("#InspectionStatus option:selected").html();
+            if (inspectionStatus == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Inspection Status."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+       
+            $('#form1').trigger('submit');
+            $('#loading').hide();
+           
+           // window.location = '@Url.Action("ChinaQcInspectionClearance", "ProjectManager")?ProjectName=' + projectName + '&ProjectMasterId=' + projectMasterId + '&Orders=' + orders + '&OrderQuantity=' + orderQty;
+           //  window.location.reload(true);
+        });//end btn0
+        $("body").on("click", "#tbl1 .btnReport", function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            var projectMasterId = $("#ProjectMasterId").val();
+            var projectName = $("#ProjectName").val();
+            var orders = $("#Orders").val();
+            var orderQty = $("#orderQty").val();
+            var inspectionStartDate = $("#InspectionStartDate").val();
+            var materialType = $("#MaterialType option:selected").html();
+            var BtnDetails1 = $("#BtnDetails1").val("report");
+            var BtnDetails11 = $("#BtnDetails1").text("report");
+            var BtnDetails2 = $("#BtnDetails2").val("");
+            var BtnDetails22 = $("#BtnDetails2").text("");
+
+            if (inspectionStartDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input Inspection Start Date."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            if (materialType == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Material Type."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var lotNo = $("#LotNo").val();
+            if (lotNo == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert LOT No."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var lotQuantity = $("#LotQuantity").val();
+            if (lotQuantity == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert LOT Quantity."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            var noOfTimeOfInspection = $("#NoOfTimeOfInspection").val();
+            if (noOfTimeOfInspection == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must insert No Of Time Of Inspection."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+            
+            var inspectionStatus = $("#InspectionStatus option:selected").html();
+            if (inspectionStatus == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Inspection Status."
+                }).show();
+                return false;
+                $('#loading').hide();
+            }
+           
+            $('#form1').trigger('submit');
+            $('#loading').hide();
+           // window.location = '@Url.Action("ChinaQcInspectionClearance", "ProjectManager")?ProjectName=' + projectName + '&ProjectMasterId=' + projectMasterId + '&Orders=' + orders + '&OrderQuantity=' + orderQty;
+           //window.location.reload(true);
+        });//end btn
+    });
+    function addField(id, td) {
+        td.find('.File11').append($("<tr id='trIdForFile'><td class='filesss' id='filesId'><div class='col-md-9' id='fileIdForCr'><input type='file' name='" + id + "' id='File11' /></div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true'></i></span></button></div><br /><br /></td></tr>"));
+    }
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    function LoadOrders() {
+        var selectedProject = document.getElementById('dropForProject');
+        var selectedProjectName = selectedProject.options[selectedProject.selectedIndex].text;
+        var selectedProjectId = selectedProject.options[selectedProject.selectedIndex].value;
+
+        console.log("selectedProjectName  :" + selectedProjectName);
+        console.log("selectedProjectId  :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetProjectOrders", "ProjectManager")',
+            type: "GET",
+            dataType: "JSON",
+            data: { ProjectName: selectedProjectName },
+            success: function (data) {
+                console.log(data);
+                $('#ProjectMasterId2').empty();
+                $('#ProjectMasterId2').append($('<option>', {
+                    value: '',
+                    text: 'SELECT ORDER'
+                }));
+                var items = $.parseJSON(data);
+
+                $.each(items, function (i, item) {
+                    $('#ProjectMasterId2').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+    }
+    function LoadQuantity() {
+        var selectedProject = document.getElementById('ProjectMasterId2');
+        var selectedProjectOrder = selectedProject.options[selectedProject.selectedIndex].text;
+        var selectedProjectId = selectedProject.options[selectedProject.selectedIndex].value;
+
+        console.log("selectedProjectOrder  :" + selectedProjectOrder);
+        console.log("selectedProjectId  :" + selectedProjectId);
+
+        $.ajax({
+            url: '@Url.Action("GetProjectOrderQuantity", "ProjectManager")',
+            type: "GET",
+            dataType: "JSON",
+            data: { projectMasterId: selectedProjectId },
+            success: function (data) {
+                console.log(data);
+                $('#orderQty').empty();
+
+                var items = $.parseJSON(data);
+                $("#orderQty").val(items.OrderQuantity);
+            }
+        });
+    }
+    $(document).ready(function () {
+        var t = $('#tbl2').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            "order": [[1, 'desc']]
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>

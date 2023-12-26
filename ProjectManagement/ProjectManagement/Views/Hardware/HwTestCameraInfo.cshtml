@@ -1,0 +1,630 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+
+
+<input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+
+@using (Html.BeginForm("HwTestCameraInfo", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.HwQcInchargeAssignId, new { @Value = @ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.Added)
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.AddedDate)
+    @Html.HiddenFor(model => model.HwTestCustomModel.HwTestCameraInfoId, new { @Value = @ViewBag.HwTestCustomModel.HwTestCameraInfoId })
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.QcDocUploadPath)
+
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.FrontCamera_IcNoSize)
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.FrontCamera_Vendor)
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.FrontCamera_PinType)
+    @Html.HiddenFor(model => model.HwTestCameraInfoModel.FrontCamera_PinNumber)
+    
+    @Html.HiddenFor(model=>model.HwTestCameraInfoModel.BackCamera_IcNoSize)
+    @Html.HiddenFor(model=>model.HwTestCameraInfoModel.BackCamera_Vendor)
+    @Html.HiddenFor(model=>model.HwTestCameraInfoModel.BackCamera_PinType)
+    @Html.HiddenFor(model=>model.HwTestCameraInfoModel.BackCamera_PinNumber)
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome! @ViewBag.UserInfo.UserFullName
+                @*<small>only projects which passed QC</small>*@
+            </h1>
+        </div>
+        <div class="action">
+            @if (ViewBag.FgFlag == 1)
+            {
+                @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+            else
+            {
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+                <a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>
+                <a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>
+                <a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+                <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+                <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+                <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+                <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+                <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+                <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+                <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+                <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+                <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+                <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+                <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>
+                @if (ViewBag.FgFlag == 1)
+                {
+                    <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-camera"></i>Hardware Test : @Html.DisplayFor(model => model.ProjectMasterModel.ProjectName, new { @class = "control-label" })
+            </div>
+            <div class="tools">
+                <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <h4>Camera Info</h4>
+                        <hr />
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="portlet box green">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-plug"></i>Front Camera
+                                            </div>
+                                            <div class="tools">
+                                                <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                                                <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                                                <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-body">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Front Camera IC", new { @class = "control-label col-md-6" })
+                                                                    <div class="col-md-5">
+                                                                        @if (Model.HwTestCameraInfoModel != null)
+                                                                        {
+                                                                            if (Model.HwTestCameraInfoModel.FrontCamera_IcNoSize != null)
+                                                                            {
+                                                                                foreach (var item in ViewBag.HwFrontCameraIcModel)
+                                                                                {
+                                                                                    if (@item.IcNoSize == Model.HwTestCameraInfoModel.FrontCamera_IcNoSize)
+                                                                                    {
+                                                                                        <input type="hidden" class="hdnFrontCameraSelectedValue" value="@item.FrontCameraIcId" />
+                                                                                        @Html.DropDownListFor(model => model.HwFrontCameraIcModel.FrontCameraIcId, new SelectList(ViewBag.HwFrontCameraIcModel, "FrontCameraIcId", "IcNoSize"), "Select Front Camera Ic", new { @class = "form-control"})
+                                                                                        @*@Html.ValidationMessageFor(model => model.HwFrontCameraIcModel.FrontCameraIcId)*@
+
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                @Html.DropDownListFor(model => model.HwFrontCameraIcModel.FrontCameraIcId, new SelectList(ViewBag.HwFrontCameraIcModel, "FrontCameraIcId", "IcNoSize"), "Select Front Camera Ic", new { @class = "form-control"})
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="hidden" class="hdnFrontCameraSelectedValue" value="0" />
+                                                                            @Html.DropDownListFor(model => model.HwFrontCameraIcModel.FrontCameraIcId, new SelectList(ViewBag.HwFrontCameraIcModel, "FrontCameraIcId", "IcNoSize"), "Select Front Camera Ic", new { @class = "form-control"})
+                                                                        }
+
+                                                                        @*@Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.FrontCamera_Model)*@
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                        <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#frontCameraIcModal">  </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Front Camera Model", new { @class = "control-label col-md-6" })
+                                                                    <div class="col-md-6">
+                                                                        @Html.TextBoxFor(model => model.HwTestCameraInfoModel.FrontCamera_Model, new { @class = "form-control" })
+                                                                        @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.FrontCamera_Model)
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Front Camera MPS_SW", new { @class = "control-label col-md-6" })
+                                                                    <div class="col-md-6">
+                                                                        @Html.TextBoxFor(model => model.HwTestCameraInfoModel.FrontCamera_MPSW, new { @class = "form-control" })
+                                                                        <span class="text-danger">@Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.FrontCamera_MPSW)</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Front Camera Sensor Info", new { @class = "control-label col-md-6" })
+                                                                    <div class="col-md-6">
+                                                                        @Html.TextBoxFor(model => model.HwTestCameraInfoModel.FrontCamera_SensorInfo, new { @class = "form-control" })
+                                                                        @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.FrontCamera_SensorInfo)
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    @Html.Label("Front Camera BSI", new { @class = "control-label col-md-6" })
+                                                                    <div class="col-md-6">
+                                                                        @Html.TextBoxFor(model => model.HwTestCameraInfoModel.FrontCamera_BSI, new { @class = "form-control" })
+                                                                        @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.FrontCamera_BSI)
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="portlet box green">
+                                        <div class="portlet-title">
+                                            <div class="caption">
+                                                <i class="fa fa-plug"></i>Back Camera
+                                            </div>
+                                            <div class="tools">
+                                                <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                                                <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                                                <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                                            </div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        @Html.Label("Back Camera IC", new { @class = "control-label col-md-6" })
+                                                        <div class="col-md-5">
+                                                            @if (Model.HwTestCameraInfoModel != null)
+                                                            {
+                                                                if (Model.HwTestCameraInfoModel.BackCamera_IcNoSize != null)
+                                                                {
+                                                                    foreach (var item in ViewBag.HwBackCameraIcModel)
+                                                                    {
+                                                                        if (@item.IcNoSize == Model.HwTestCameraInfoModel.BackCamera_IcNoSize)
+                                                                        {
+                                                                            <input type="hidden" class="hdnBackCameraSelectedValue" value="@item.BackCameraIcId" />
+                                                                            @Html.DropDownListFor(model => model.HwBackCameraIcModel.BackCameraIcId, new SelectList(ViewBag.HwBackCameraIcModel, "BackCameraIcId", "IcNoSize"), "Select Back Camera Ic", new { @class = "form-control" })
+                                                                            @*@Html.ValidationMessageFor(model => model.HwBackCameraIcModel.BackCameraIcId)*@
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.DropDownListFor(model => model.HwBackCameraIcModel.BackCameraIcId, new SelectList(ViewBag.HwBackCameraIcModel, "BackCameraIcId", "IcNoSize"), "Select Back Camera Ic", new { @class = "form-control" })
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="hidden" class="hdnBackCameraSelectedValue" value="0" />
+                                                                @Html.DropDownListFor(model => model.HwBackCameraIcModel.BackCameraIcId, new SelectList(ViewBag.HwBackCameraIcModel, "BackCameraIcId", "IcNoSize"), "Select Back Camera Ic", new { @class = "form-control" })
+                                                            }
+
+                                                            
+                                                            @*<span class="text-danger">@Html.ValidationMessageFor(model => model.HwBackCameraIcModel.BackCameraIcId, "")</span>*@
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#backCameraIcModal">  </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        @Html.Label("Back Camera Model", new { @class = "control-label col-md-6" })
+                                                        <div class="col-md-6">
+                                                            @Html.TextBoxFor(model => model.HwTestCameraInfoModel.BackCamera_Model, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.BackCamera_Model)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        @Html.Label("Back Camera MP_SW", new { @class = "control-label col-md-6" })
+                                                        <div class="col-md-6">
+                                                            @Html.TextBoxFor(model => model.HwTestCameraInfoModel.BackCamera_MPSW, new { @class = "form-control" })
+                                                            <span class="text-danger">@Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.BackCamera_MPSW)</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        @Html.Label("Back Camera Sensor Info", new { @class = "control-label col-md-6" })
+                                                        <div class="col-md-6">
+                                                            @Html.TextBoxFor(model => model.HwTestCameraInfoModel.BackCamera_SensorInfo, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.BackCamera_SensorInfo)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        @Html.Label("Back Camera BSI", new { @class = "control-label col-md-6" })
+                                                        <div class="col-md-6">
+                                                            @Html.TextBoxFor(model => model.HwTestCameraInfoModel.BackCamera_BSI, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.BackCamera_BSI)
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.Label("Recommendation", new { @class = "control-label col-md-4" })
+                                                <div class="col-md-8">
+                                                    @Html.TextAreaFor(model => model.HwTestCameraInfoModel.Recommendation, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.Recommendation)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.Label("Comment", new { @class = "control-label col-md-4" })
+                                                <div class="col-md-8">
+                                                    @Html.TextAreaFor(model => model.HwTestCameraInfoModel.Comment, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.HwTestCameraInfoModel.Comment)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4">File Upload</label>
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(model => model.HwTestCameraInfoModel.HwQcDocUpload, new { type = "file", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="file-preview-thumbnails col-md-offset-4">
+                                            <div class="container-fluid">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="">
+
+
+
+                                                        @if (@Model.HwTestCameraInfoModel == null || @Model.HwTestCameraInfoModel.QcDocUploadPath == null || @Model.HwTestCameraInfoModel.QcDocUploadPath == "../Content/UploadImage/")
+                                                        {
+
+                                                            <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                                        }
+
+                                                        else if (@Model.HwTestCameraInfoModel.ImageExtension == ".jpg" || @Model.HwTestCameraInfoModel.ImageExtension == ".png" || @Model.HwTestCameraInfoModel.ImageExtension == ".jpeg")
+                                                        {
+
+                                                            <img src="@Model.HwTestCameraInfoModel.QcDocUploadPath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+
+                                                        }
+                                                        else if (@Model.HwTestCameraInfoModel.ImageExtension == ".pdf")
+                                                        {
+
+                                                            <embed class="file-preview-image img-responsive" id="filePath" src="@Model.HwTestCameraInfoModel.QcDocUploadPath" width="auto" height="400px" type="application/pdf" />
+
+                                                        }
+
+
+
+                                                    </div>
+                                                    <div class="file-thumbnail-footer">
+
+                                                        <div class="file-actions">
+                                                            <div class="file-footer-buttons">
+
+                                                                <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                            </div>
+
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            @if (@ViewBag.HwTestCustomModel.HwTestCameraInfoId == null)
+                                            {
+                                                <input type="submit" value="Save" class="btn btn-default col-md-offset-2" id="btnsave" />
+                                            }
+                                            else
+                                            {
+                                                <input type="submit" value="Update" class="btn btn-success col-md-offset-2" id="btnupdate" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+
+}
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    <div id="frontCameraIcModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Front Camera IC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("IC No/Size", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwFrontCameraIcModel.IcNoSize, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Pin Type", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwFrontCameraIcModel.PinType, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Remark", new { @class = "control-label" })
+                                    @Html.TextAreaFor(model => model.HwFrontCameraIcModel.Remarks, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Front camera Ic vendor", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwFrontCameraIcModel.FrontCameraVendor, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Pin Number", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwFrontCameraIcModel.PinNumber, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveFrontCameraIc" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.modal -->
+    <div id="backCameraIcModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Back Camera IC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("IC No/Size", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwBackCameraIcModel.IcNoSize, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Pin Type", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwBackCameraIcModel.PinType, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Remark", new { @class = "control-label" })
+                                    @Html.TextAreaFor(model => model.HwBackCameraIcModel.Remarks, new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.Label("Back camera Ic vendor", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwBackCameraIcModel.BackCameraVendor, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    @Html.Label("Pin Number", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.HwBackCameraIcModel.PinNumber, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveBackCameraIc" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal Start-->
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                @*<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Modal End-->
+@{
+    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+    var frontCameraIcModelJson = jss.Serialize(ViewBag.HwFrontCameraIcModel);
+    var backCameraIcModelJson = jss.Serialize(ViewBag.HwBackCameraIcModel);
+}
+
+
+<script src="~/Scripts/Hardware/HwFrontCameraIcScript.js"></script>
+<script src="~/Scripts/Hardware/HwBackCameraIcScript.js"></script>
+
+<script>
+    $(function () {
+        //var msg = $('#hdnSuccess').val();
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+
+
+        //==============================================================================================================
+        $('[class*="btnFilePreview"]').on('click', function () {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+                modalData += '<embed src="@ViewBag.src" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+            }
+        });
+
+
+        //==========================================Front Camera IcNoSize==================================================
+        var frontCameraModel = '@Html.Raw(frontCameraIcModelJson)';
+        var jsonObjFrontCameraIc = $.parseJSON(frontCameraModel);
+        console.log(jsonObjFrontCameraIc);
+        hwFrontCameraIc(jsonObjFrontCameraIc);
+
+        //==========================================Back Camera IcNoSize==================================================
+        var backCameraModel = '@Html.Raw(backCameraIcModelJson)';
+        var jsonObjBackCameraIc = $.parseJSON(backCameraModel);
+        console.log(jsonObjBackCameraIc);
+        hwBackCameraIc(jsonObjBackCameraIc);
+
+    });
+
+
+
+</script>

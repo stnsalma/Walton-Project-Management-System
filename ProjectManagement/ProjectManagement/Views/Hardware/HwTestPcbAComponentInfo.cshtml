@@ -1,0 +1,1477 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using Newtonsoft.Json
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+
+<input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+
+@using (Html.BeginForm("HwTestPcbAComponentInfo", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.HwTestPcbAModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.HwQcInchargeAssignId, new { @Value = @ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Added)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.AddedDate)
+    @Html.HiddenFor(model => model.HwTestCustomModel.HwTestPcbAId, new { @id = "hwTestPcbAId", @Value = @ViewBag.HwTestCustomModel.HwTestPcbAId })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.QcDocUploadPath)
+
+    //=============ChipsetIc================
+    @Html.HiddenFor(model => model.HwTestPcbAModel.IcNoSize, new { id = "hdnIcNoSize" })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Chipset_Vendor, new { id = "hdnChipsetVendor" })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Chipset_PinType)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Chipset_PinNumber)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Chipset_Remark)
+
+    //============Flash IC==================
+    @Html.HiddenFor(model => model.HwTestPcbAModel.Flash_IcNoSize)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.FlashIC_Vendor, new { id = "hdnFlashIc_Vendor" })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.FlashIC_PinNumber)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.FlashIC_PinType)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.FlashIC_Remark)
+
+    //============RF IC=====================
+    @Html.HiddenFor(model => model.HwTestPcbAModel.RFIC, new { id = "hdnRfIcNoSize" })
+    @Html.HiddenFor(model => model.HwTestPcbAModel.RFIC_PinNumber)
+
+    //===========PMU1 IC===================
+    @Html.HiddenFor(model => model.HwTestPcbAModel.PMU1IC)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.PMU1IC_Vendor)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.PMU1IC_PinNumber)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.PMU1IC_PinType)
+    @Html.HiddenFor(model => model.HwTestPcbAModel.PMU1IC_Remark)
+
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome! @ViewBag.UserInfo.UserFullName , Project Name : @Html.DisplayFor(model => model.ProjectMasterModel.ProjectName, new { @class = "control-label" })
+                @*<small>only projects which passed QC</small>*@
+            </h1>
+        </div>
+        <div class="action">
+            @if (ViewBag.FgFlag == 1)
+            {
+                @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+            else
+            {
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+                <a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>
+                <a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>
+                <a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+                <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+                <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+                <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+                <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+                <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+                <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+                <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+                <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+                <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+                <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+                <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>
+                @if (ViewBag.FgFlag == 1)
+                {
+                    <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <div id="sortable_portlets" class="row ui-sortable">
+        <div class="col-md-6 column sortable">
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Chipset :
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Chipset", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-7">
+                                        @if (Model.HwTestPcbAModel != null)
+                                        {
+                                            if (Model.HwTestPcbAModel.IcNoSize != null)
+                                            {
+                                                foreach (var item in ViewBag.HwChipsetModel)
+                                                {
+                                                    if (@item.IcNoSize == Model.HwTestPcbAModel.IcNoSize)
+                                                    {
+                                                        <input type="hidden" value="@item.ChipsetId" class="hdnChipsetSelectedValue" />
+                                                        @Html.DropDownListFor(model => model.HwChipsetModel.ChipsetId, new SelectList(ViewBag.HwChipsetModel, "ChipsetId", "IcNoSize"), "Select Chipset", new { @class = "form-control", id = "ddlChipset" })
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.HwChipsetModel.ChipsetId, new SelectList(ViewBag.HwChipsetModel, "ChipsetId", "IcNoSize"), "Select Chipset", new { @class = "form-control", id = "ddlChipset" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" value="0" class="hdnChipsetSelectedValue" />
+                                            @Html.DropDownListFor(model => model.HwChipsetModel.ChipsetId, new SelectList(ViewBag.HwChipsetModel, "ChipsetId", "IcNoSize"), "Select Chipset", new { @class = "form-control", id = "ddlChipset" })
+                                        }
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.IcNoSize)
+
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#chipsetModal">  </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Chipset Core", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Chipset_Core, new { @class = "form-control", id = "txtChipset_Core", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Chipset_Core)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Chipset Speed", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Chipset_Speed, new { @class = "form-control", id = "txtChipset_Speed", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Chipset_Speed)
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>RF Network PA info
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @*<div class="row">
+                                    <div class="form-group">
+                                        @Html.Label("RFNetwork", new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork)
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 2GPA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_2GPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_2GPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 2GPA Remark", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_2GPA_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_2GPA_Remark)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 3GPA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_3GPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_3GPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 3GPA remark", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_3GPA_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_3GPA_Remark)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 4GPA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_4GPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_4GPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 4GPA remark", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_4GPA_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_4GPA_Remark)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork TDD", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_TDD, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_TDD)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork CDMAPA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_CDMAPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_CDMAPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 3G", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_3G, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_3G)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork TDDPA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_TDDPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_TDDPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFNetwork 4G", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.RFNetwork_4G, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFNetwork_4G)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Backlight IC, Audio PA
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Backlight IC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.BacklightIC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.BacklightIC)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Audio PA", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.AudioPA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.AudioPA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            @*<div class="row">
+                                    <div class="form-group">
+
+                                        @Html.Label("AudioPA Yes", new { @class = "control-label col-md-4 " })
+
+                                        <div class="col-md-8">
+
+                                            @Html.DropDownListFor(model => model.HwTestPcbAModel.AudioPA_Yes, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "yes",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "no",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            <span class="text-danger">@Html.ValidationMessageFor(model => model.HwTestPcbAModel.AudioPA_Yes)</span>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                            @*<div class="row">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HwTestPcbAModel.AudioPA_No, new { @class = "control-label col-md-4 " })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestPcbAModel.AudioPA_No, new{@class="form-control"})
+                                            @Html.ValidationMessageFor(model => model.HwTestPcbAModel.AudioPA_No)
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("AudioPA Class", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.AudioPA_Class, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.AudioPA_Class)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>USB Connector type
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.USBConnector_Name, new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.USBConnector_Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.USBConnector_Name)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.USBConnector_Type, new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.USBConnector_Type, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.USBConnector_Type)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Recommendation & Comments
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HwTestPcbAModel.Recommendation, new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestPcbAModel.Recommendation, new { @class = "form-control", @rows = 4 })
+                                            @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Recommendation)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HwTestPcbAModel.Comment, new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestPcbAModel.Comment, new { @class = "form-control", @rows = 4 })
+                                            @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Comment)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Upload Document
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2">File Upload</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(model => model.HwTestPcbAModel.HwQcDocUpload, new { type = "file", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-10">
+                                    <div class="file-preview-thumbnails">
+                                        <div class="container-fluid">
+                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                <div class="">
+
+
+
+                                                    @if (@Model.HwTestPcbAModel == null || @Model.HwTestPcbAModel.QcDocUploadPath == null || @Model.HwTestPcbAModel.QcDocUploadPath == "../Content/UploadImage/")
+                                                    {
+
+                                                        <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                                    }
+
+                                                    else if (@Model.HwTestPcbAModel.ImageExtension == ".jpg" || @Model.HwTestPcbAModel.ImageExtension == ".png" || @Model.HwTestPcbAModel.ImageExtension == ".jpeg")
+                                                    {
+
+                                                        <img src="@Model.HwTestPcbAModel.QcDocUploadPath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+
+                                                    }
+                                                    else if (@Model.HwTestPcbAModel.ImageExtension == ".pdf")
+                                                    {
+
+                                                        <embed class="file-preview-image img-responsive" id="filePath" src="@Model.HwTestPcbAModel.QcDocUploadPath" width="auto" height="400px" type="application/pdf" />
+
+                                                    }
+
+
+
+                                                </div>
+                                                <div class="file-thumbnail-footer">
+
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+
+                                                            <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                        </div>
+
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 column sortable">
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Flash IC
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Flash IC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-7">
+                                        @if (Model.HwTestPcbAModel != null)
+                                        {
+                                            if (Model.HwTestPcbAModel.Flash_IcNoSize != null)
+                                            {
+                                                foreach (var item in ViewBag.HwFlashIcModel)
+                                                {
+                                                    if (@item.IcNoSize == Model.HwTestPcbAModel.Flash_IcNoSize)
+                                                    {
+                                                        <input type="hidden" value="@item.FlashIcId" class="hdnFlashIcSelectedValue" />
+                                                        @Html.DropDownListFor(model => model.HwFlashIcModel.FlashIcId, new SelectList(ViewBag.HwFlashIcModel, "FlashIcId", "IcNoSize"), "Select FlashIc", new { @class = "form-control", id = "ddlFlashIc" })
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.HwFlashIcModel.FlashIcId, new SelectList(ViewBag.HwFlashIcModel, "FlashIcId", "IcNoSize"), "Select FlashIc", new { @class = "form-control", id = "ddlFlashIc" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" value="0" class="hdnFlashIcSelectedValue" />
+                                            @Html.DropDownListFor(model => model.HwFlashIcModel.FlashIcId, new SelectList(ViewBag.HwFlashIcModel, "FlashIcId", "IcNoSize"), "Select FlashIc", new { @class = "form-control", id = "ddlFlashIc" })
+                                        }
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Flash_IcNoSize)
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#flashIcModal">  </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashIC Technology", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashIC_Technology, new { @class = "form-control", id = "txtFlashIc_Technology", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashIC_Technology)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashIC RAM", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashIC_RAM, new { @class = "form-control", id = "txtFlashIc_Ram", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashIC_RAM)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashIC ROM", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashIC_ROM, new { @class = "form-control", id = "txtFlashIc_Rom", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashIC_ROM)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashIC Ball", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashIC_Ball, new { @class = "form-control", id = "txtFlashIc_Ball", @readonly = "true" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashIC_Ball)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>RFIC, PMUIC, BT+WIFI IC
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("RFIC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-7">
+
+                                        @if (Model.HwTestPcbAModel != null)
+                                        {
+                                            if (Model.HwTestPcbAModel.RFIC != null)
+                                            {
+                                                foreach (var item in ViewBag.HwRfModel)
+                                                {
+                                                    if (@item.IcNoSize == Model.HwTestPcbAModel.RFIC)
+                                                    {
+                                                        <input type="hidden" value="@item.RfId" class="hdnRfSelectedValue" />
+                                                        @Html.DropDownListFor(model => model.HwRfModel.RfId, new SelectList(ViewBag.HwRfModel, "RfId", "IcNoSize"), "Select RFIC", new { @class = "form-control", id = "ddlRfic" })
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.HwRfModel.RfId, new SelectList(ViewBag.HwRfModel, "RfId", "IcNoSize"), "Select RFIC", new { @class = "form-control", id = "ddlRfic" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" value="0" class="hdnRfSelectedValue" />
+                                            @Html.DropDownListFor(model => model.HwRfModel.RfId, new SelectList(ViewBag.HwRfModel, "RfId", "IcNoSize"), "Select RFIC", new { @class = "form-control", id = "ddlRfic" })
+                                        }
+                                        @*@Html.TextBoxFor(model => model.HwTestPcbAModel.RFIC, new { @class = "form-control" })*@
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.RFIC)
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#rfModal">  </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("PMU1 IC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-7">
+                                        @if (Model.HwTestPcbAModel != null)
+                                        {
+                                            if (Model.HwTestPcbAModel.PMU1IC != null)
+                                            {
+                                                foreach (var item in ViewBag.HwPmu1IcModel)
+                                                {
+                                                    if (@item.IcNoSize == Model.HwTestPcbAModel.PMU1IC)
+                                                    {
+                                                        <input type="hidden" value="@item.Pmu_1_Id" class="hdnPmu1SelectedValue" />
+                                                        @Html.DropDownListFor(model => model.HwPmu1IcModel.Pmu_1_Id, new SelectList(ViewBag.HwPmu1IcModel, "Pmu_1_Id", "IcNoSize"), "Select PMU 1 IC", new { @class = "form-control" })
+                                                        @Html.ValidationMessageFor(model => model.HwPmu1IcModel.Pmu_1_Id)
+
+                                                    }
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(model => model.HwPmu1IcModel.Pmu_1_Id, new SelectList(ViewBag.HwPmu1IcModel, "Pmu_1_Id", "IcNoSize"), "Select PMU 1 IC", new { @class = "form-control" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <input type="hidden" value="0" class="hdnPmu1SelectedValue" />
+                                            @Html.DropDownListFor(model => model.HwPmu1IcModel.Pmu_1_Id, new SelectList(ViewBag.HwPmu1IcModel, "Pmu_1_Id", "IcNoSize"), "Select PMU 1 IC", new { @class = "form-control" })
+                                        }
+
+
+                                    </div>
+                                    <div class="col-md-1">
+                                        <a class="glyphicon glyphicon-plus" data-toggle="modal" href="#pmu1Modal">  </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("BTWIFIIC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.BTWIFIIC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.BTWIFIIC)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Charging
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Charging IC", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Charging_IC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Charging_IC)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Charging IC remarks", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Charging_IC_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Charging_IC_Remark)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Charging Switch", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Charging_Switch, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Charging_Switch)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Charging Rating", new { @class = "control-label col-md-4 " })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Charging_Rating, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Charging_Rating)
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Sensors Info
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.Sensors_PSensorIC, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_PSensorIC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_PSensorIC)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("PSensorIC Remark", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_PSensorIC_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_PSensorIC_Remark)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.Sensors_GSensorIC, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_GSensorIC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_GSensorIC)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("G-sensorIC Remark", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_GSensorIC_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_GSensorIC_Remark)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.Sensors_MSensorIC, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_MSensorIC, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_MSensorIC)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("M-sensor Remark", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_MSensorIC_Remark, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_MSensorIC_Remark)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HwTestPcbAModel.Sensors_OTG, new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.Sensors_OTG, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.Sensors_OTG)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Flashlight Driver
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashLight Driver Name", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashLightDriver_Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashLightDriver_Name)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("FlashLight Driver Original", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashLightDriver_Original, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashLightDriver_Original)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Flash Light Driver Fake", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.FlashLightDriver_Fake, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.FlashLightDriver_Fake)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Sub-PCBA, Hand soldering point
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Sub PCBA", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.SubPCBA, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.SubPCBA)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("SubPCBA Name", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.SubPCBA_Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.SubPCBA_Name)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Hand Soldering Point Name", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.HandSolderingPoint_Name, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.HandSolderingPoint_Name)
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="form-group">
+                                    @Html.Label("Hand Soldering Point Qty", new { @class = "control-label col-md-4" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.HwTestPcbAModel.HandSolderingPoint_Qty, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HwTestPcbAModel.HandSolderingPoint_Qty)
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                @if (@ViewBag.HwTestCustomModel.HwTestPcbAId == null)
+                {
+                    <input type="submit" value="Save" class="btn btn-lg btn-primary btn-block" id="btnsave" />
+                }
+                else
+                {
+                    <input type="submit" value="Update" class="btn btn-lg btn-success btn-block" id="btnupdate" />
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+
+                //============================================================================ CHIPSET IC PART START =======================================================================
+
+                <div class="portlet-body">
+                    <!-- /.modal -->
+                    <div id="chipsetModal" class="modal fade" tabindex="-1" aria-hidden="true">
+                        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <h4 class="modal-title bold">Add New SoC</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <p>
+                                                    Chipset IcNo/Size
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.IcNoSize, new { @class = "form-control", id = "txtIcNoSize" })
+                                                    @Html.ValidationMessageFor(model => model.HwChipsetModel.IcNoSize, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    ChipsetVendor
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.ChipsetVendor, new { @class = "form-control", id = "txtChipsetVendor" })
+                                                </p>
+                                                <p>
+                                                    PinType
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.PinType, new { @class = "form-control", id = "txtPinType" })
+                                                </p>
+                                                <p>
+                                                    New Item No
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.NewItemNo, new { @class = "form-control" })
+                                                </p>
+                                                <p>
+                                                    Remarks
+                                                    @Html.TextAreaFor(model => model.HwChipsetModel.PinType, new { @class = "form-control", id = "txtRemarks" })
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <p>
+                                                    Chipset Core
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.ChipsetCore, new { @class = "form-control", id = "txtChipsetCore" })
+                                                    @Html.ValidationMessageFor(model => model.HwChipsetModel.ChipsetCore, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    Chipset Speed
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.ChipsetSpeed, new { @class = "form-control", id = "txtChipsetSpeed" })
+                                                    @Html.ValidationMessageFor(model => model.HwChipsetModel.ChipsetSpeed, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    PinNumber
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.PinNumber, new { @class = "form-control", @type = "number", id = "txtPinNumber" })
+                                                </p>
+                                                <p>
+                                                    Item Code
+                                                    @Html.TextBoxFor(model => model.HwChipsetModel.ItemCode, new { @class = "form-control" })
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="btnSaveChipset" class="btn btn-success">Save</button>
+                                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                                    @*<button type="button" class="btn green">Save changes</button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    @*============================================================================ FLASH IC PART START =======================================================================*@
+
+                    <!-- /.modal -->
+                    <div id="flashIcModal" class="modal fade" tabindex="-1" aria-hidden="true">
+                        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <h4 class="modal-title bold">Add New Flash IC</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <p>
+                                                    FlashIc IcNo/Size
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.IcNoSize, new { @class = "form-control", id = "txtFlashIcNoSize" })
+                                                    @Html.ValidationMessageFor(model => model.HwFlashIcModel.IcNoSize, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    Flash IC Vendor
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.FlashIdVendor, new { @class = "form-control", id = "txtFlashIcVendor" })
+                                                </p>
+                                                <p>
+                                                    PinType
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.PinType, new { @class = "form-control", id = "txtFlashIcPinType" })
+                                                </p>
+                                                <p>
+                                                    FlashIC Ball
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.FlashIcBall, new { @class = "form-control", id = "txtFlashIcBallType" })
+                                                </p>
+                                                <p>
+                                                    Remarks
+                                                    @Html.TextAreaFor(model => model.HwFlashIcModel.PinType, new { @class = "form-control", id = "txtFlashIcRemarks" })
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <p>
+                                                    RAM
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.FlashIcRam, new { @class = "form-control", id = "txtFlashIcRam" })
+                                                    @Html.ValidationMessageFor(model => model.HwFlashIcModel.FlashIcRam, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    ROM
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.FlashIcRom, new { @class = "form-control", id = "txtFlashIcRom" })
+                                                    @Html.ValidationMessageFor(model => model.HwFlashIcModel.FlashIcRom, "", new { @class = "text-danger" })
+                                                </p>
+                                                <p>
+                                                    PinNumber
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.PinNumber, new { @class = "form-control", @type = "number", id = "txtFlashIcPinNumber" })
+                                                </p>
+                                                <p>
+                                                    FlashIC Technology
+                                                    @Html.TextBoxFor(model => model.HwFlashIcModel.FlashIcTechnology, new { @class = "form-control", id = "txtFlashIcTechnology" })
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" id="btnSaveFlashIc" class="btn btn-success">Save</button>
+                                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                                    @*<button type="button" class="btn green">Save changes</button>*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+
+<!--Modal Start-->
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                @*<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ RF IC PART START =======================================================================*@
+    <div id="rfModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Flash IC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <p>
+                                    RF IC No/Size
+                                    @Html.TextBoxFor(model => model.HwRfModel.IcNoSize, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.HwRfModel.IcNoSize, "", new { @class = "text-danger" })
+                                </p>
+                                <p>
+                                    RF IC Vendor
+                                    @Html.TextBoxFor(model => model.HwRfModel.RfVendor, new { @class = "form-control" })
+                                </p>
+                                <p>
+                                    PinType
+                                    @Html.TextBoxFor(model => model.HwRfModel.PinType, new { @class = "form-control" })
+                                </p>
+
+
+                            </div>
+                            <div class="col-md-6">
+
+
+                                <p>
+                                    PinNumber
+                                    @Html.TextBoxFor(model => model.HwRfModel.PinNumber, new { @class = "form-control", @type = "number" })
+                                </p>
+                                <p>
+                                    Remarks
+                                    @Html.TextAreaFor(model => model.HwRfModel.Remarks, new { @class = "form-control" })
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveRfIc" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ PMU1 IC PART START =======================================================================*@
+    <div id="pmu1Modal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Flash IC</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <p>
+                                    PMU1 IC No/Size
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.IcNoSize, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.HwPmu1IcModel.IcNoSize, "", new { @class = "text-danger" })
+                                </p>
+                                <p>
+                                    PMU1 IC Vendor
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.Pmu_1_Vendor, new { @class = "form-control" })
+                                </p>
+                                <p>
+                                    PinType
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.PinType, new { @class = "form-control" })
+                                </p>
+                                <p>
+                                    New Item no
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.NewItemNo, new { @class = "form-control" })
+                                </p>
+
+                            </div>
+                            <div class="col-md-6">
+
+
+                                <p>
+                                    PinNumber
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.PinNumber, new { @class = "form-control", @type = "number" })
+                                </p>
+                                <p>
+                                    Item Code
+                                    @Html.TextBoxFor(model => model.HwPmu1IcModel.ItemCode, new { @class = "form-control" })
+                                </p>
+                                <p>
+                                    Remarks
+                                    @Html.TextAreaFor(model => model.HwPmu1IcModel.Remarks, new { @class = "form-control" })
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSavePmu1Ic" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Modal End-->
+@{
+    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+    var chipsetModelJson = jss.Serialize(ViewBag.HwChipsetModel);
+    var flashIcModelJson = jss.Serialize(ViewBag.HwFlashIcModel);
+    var rfIcModelJson = jss.Serialize(ViewBag.HwRfModel);
+    var pmu1IcModelJson = jss.Serialize(ViewBag.HwPmu1IcModel);
+}
+
+
+<script src="~/Scripts/Hardware/HwChipsetScript.js"></script>
+<script src="~/Scripts/Hardware/HwFlashIcScript.js"></script>
+<script src="~/Scripts/Hardware/HwRfIcScript.js"></script>
+<script src="~/Scripts/Hardware/Pmu1IcScript.js"></script>
+
+<script>
+    $(function () {
+        //alert($('#hdnHwQcAssignId').val());
+        //=======SAVE/UPDATE Confiramtion message==============
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+
+
+        //==============================================================================================================
+        $('[class*="btnFilePreview"]').on('click', function () {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+                modalData += '<embed src="@ViewBag.src" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+            }
+        });
+
+        //============================================================================ CHIPSET PART START =======================================================================
+
+
+        //---------------------------------------------
+        var chipsetModel = '@Html.Raw(chipsetModelJson)';
+        var jsonObj = $.parseJSON(chipsetModel);
+        console.log(jsonObj);
+        hwChipset(jsonObj);
+
+
+        //============================================================================ FLASH IC PART START =======================================================================
+
+        //------------------------
+        var flashIcModel = '@Html.Raw(flashIcModelJson)';
+        var jsonObjFlashIc = $.parseJSON(flashIcModel);
+        console.log(jsonObjFlashIc);
+        hwFlashIc(jsonObjFlashIc);
+
+        //============================================================================ RF IC PART START =======================================================================
+
+        var rfICModel = '@Html.Raw(rfIcModelJson)';
+        var jsonObjRfIc = $.parseJSON(rfICModel);
+        console.log(jsonObjRfIc);
+        hwRfIc(jsonObjRfIc);
+
+
+        //============================================================================ PMU1 IC PART START =======================================================================
+        var pmu1IcModel = '@Html.Raw(pmu1IcModelJson)';
+        var jsonObjPmu1Ic = $.parseJSON(pmu1IcModel);
+        console.log(jsonObjPmu1Ic);
+        hwPmu1Icpmu1Ic(jsonObjPmu1Ic);
+    });
+
+</script>

@@ -1,0 +1,19 @@
+﻿@model ProjectManagement.Models.LcOpeningOtherProductPriceModel
+
+<tr>
+    @using (Html.BeginCollectionItem("LcOpeningOtherProductPriceModels"))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.AddedBy)
+        @Html.HiddenFor(m => m.AddedDate)
+        <td>
+            @Html.TextBoxFor(m=>m.Model,new{@class="form-control"})
+        </td>
+        <td>
+            @Html.TextBoxFor(m => m.Quantity, new { @class = "form-control" ,type="number"})
+        </td>
+        <td>
+            @Html.TextBoxFor(m=>m.Price,new{@class="form-control",type="number"})
+        </td>
+    }
+</tr>

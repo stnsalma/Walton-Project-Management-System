@@ -1,0 +1,470 @@
+﻿@*<h2>FocClaimDetailsLotWise</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectManager.AssignProjectsViewModel
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .DTFC_LeftBodyWrapper {
+        position: relative;
+        top: -11px !important;
+        left: 0px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .DTFC_LeftBodyLiner {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        height: 200px;
+        max-height: 200px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Lot Wise FOC Claim Details
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box">
+
+                <div class="portlet-body">
+                    <div class="row">
+                        @if (User.IsInRole("PM") || User.IsInRole("PMHEAD"))
+                        {
+                            <div class="col-lg-12">
+                                <div class="col-lg-2"></div>
+                                <div class="col-lg-8">
+                                    <button type="button" class="btn btn-danger btnOpenModal" style="text-align: center">
+                                        <span class="glyphicon glyphicon-plus blink" style="font-weight: bold">ADD NEW FOC IF NECESSARY</span>
+                                    </button>
+                                </div>
+                                <div class="col-lg-2"></div>
+                            </div>
+
+                        }
+                    </div>
+                    <div class="table-scrollable table-responsive">
+                        <table class="table table-bordered table-striped table-condensed flip-content" id="tbl1" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                            <thead>
+                                <tr>
+                                    <th style="display: none"></th>
+                                    <th>Project Name</th>
+                                    <th style="display: none">ProjectMasterId</th>
+                                    <th>Orders</th>
+                                    <th>PoCategory</th>
+                                    <th>PoQuantity</th>
+                                    <th>Lot No.</th>
+                                    <th>Lot Quantity</th>
+                                    <th>BOMType</th>
+                                    <th>ItemName</th>
+                                    <th>Color</th>
+                                    <th>Foc_Quantity</th>
+                                    <th>PM Remarks</th>
+                                    <th>Receive Quantity</th>
+                                    <th>Receive Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetBomDetails != null)
+                                {
+                                    foreach (var items in ViewBag.GetBomDetails)
+                                    {
+                                        <tr>
+                                            <td style="display: none">@items.FocClaimId</td>
+                                            @*<td style="display: none">@items.RawMaterialId</td>*@
+                                            <td>@items.ProjectName</td>
+                                            <td style="display: none">@items.ProjectMasterId</td>
+                                            <td>@items.Orders</td>
+                                            <td>@items.PoCategory</td>
+                                            <td>@items.PoQuantity</td>
+                                            <td>@items.LotNumber</td>
+                                            <td>@items.LotQuantity</td>
+                                            <td>@items.BOMType</td>
+                                            <td>@items.BOMName</td>
+                                            <td>@items.Color</td>
+                                            <td>@items.ItemQuantity</td>
+                                            <td>@items.BomRemarks</td>
+                                            <td>
+                                                @if (User.IsInRole("INV") || User.IsInRole("INVHEAD"))
+                                                {
+                                                    <input type="text" class="form-control receiveQuantity" value="@items.ReceiveQuantity" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control receiveQuantity" readonly="" value="@items.ReceiveQuantity" />
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (User.IsInRole("INV") || User.IsInRole("INVHEAD"))
+                                                {
+                                                    <input type="text" class="form-control receiveRemarks" value="@items.ReceiveRemarks" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control receiveRemarks" readonly="" value="@items.ReceiveRemarks" />
+                                                }
+
+                                            </td>
+                                            <td>
+                                                @if (User.IsInRole("INV") || User.IsInRole("INVHEAD"))
+                                                {
+                                                    <input type="button" class="btn btn-success btnUpdate" value="Update" />
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold; color: black;">Add New Foc</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" style="display: none;">
+                        <label class="control-label">Ids :</label>
+                        <input name="ProIds" id="ProIds" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-3">
+                            Project Name:
+                        </div>
+                        <div class="col-lg-9">
+                            <input name="ProjectName" id="ProjectName" disabled="disabled" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-3">
+                            Order:
+                        </div>
+                        <div class="col-lg-9">
+                            <input name="Orders" id="Orders" disabled="disabled" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-3">
+                            PO Category:
+                        </div>
+                        <div class="col-lg-9">
+                            <input name="PoCategory" id="PoCategory" disabled="disabled" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-12" style="color: red"> BOM Type**:</label>
+                        <div class="col-lg-12">
+                            <select name="issueList1[0].BOMType" class="form-control col-lg-12 bomsType" id="bomsType" onchange="LoadBomName()">
+                                <option value="0">SELECT</option>
+                                <option value="EBOM">EBOM</option>
+                                <option value="SKDBOM">SKDBOM</option>
+                                <option value="OTHERS">OTHERS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-12" style="color:red">Item Name**:</label>
+                        <div class="col-lg-12" id="existedBom" style="display: none">
+                            @if (ViewBag.ProjectBomName != null)
+                            {
+                               
+                                @Html.DropDownListFor(model => model.BOMName, new SelectList(ViewBag.ProjectBomName, "Value", "Text"), "Select One", new { @class = "form-control col-lg-12", @id = "BOMName1", @style = "display:block" })
+
+                            }
+                        </div>
+                        <div class="col-lg-12" id="othersBom" style="display: none">
+                            @Html.TextAreaFor(model => model.BOMName, new { @type = "text", @class = "form-control col-lg-12", @id = "BOMName2" })
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="control-label col-lg-12" style="color: red">Foc Quantity**:</label>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(i => i.ItemQuantity, new { @type = "text", @class = "form-control col-lg-12" })
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="control-label col-lg-12">Color:</label>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(model => model.Color, new { @type = "text", @class = "form-control col-lg-12",@id="color" })
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="control-label col-lg-12">Remarks:</label>
+                        <div class="col-lg-9">
+                            @Html.TextAreaFor(model => model.BomRemarks, new { @type = "text", @class = "form-control col-lg-12", @id = "BomRemarks" })
+                        </div>
+                    </div>
+                </form>
+                <br /><br /><br />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave" class="btn btn-danger smitModalOfSave" value="SAVE" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    function blink_text() {
+        $('.blink').fadeOut(20);
+        $('.blink').fadeIn(500);
+    }
+    setInterval(blink_text, 2000);
+    function LoadBomName() {
+        $('#loading').show();
+        
+        var selectedBoms = document.getElementById('bomsType');
+        var bomsTypes = selectedBoms.options[selectedBoms.selectedIndex].text;
+
+        var rowIndex = $(this).closest('tr').index() + 2;
+        var table = document.getElementById('tbl1');
+
+        var projectNames = '@ViewBag.Project.ProjectName';
+        var proId = '@ViewBag.Project.ProjectMasterId';
+
+        if (bomsTypes != "OTHERS") {
+            document.getElementById('existedBom').style.display = "block";
+            document.getElementById('othersBom').style.display = "none";
+
+            $.ajax({
+                url: '@Url.Action("GetBomName", "ProjectManager")',
+                type: "POST",
+                dataType: "JSON",
+                data: { proId: proId, bomsTypes: bomsTypes, projectNames: projectNames },
+                success: function (data) {
+
+                    console.log(data);
+                    $('#BOMName1').empty();
+                    $('#BOMName1').append($('<option>', {
+                        value: '',
+                        text: 'Select One'
+                    }));
+                    var items = $.parseJSON(data);
+                    $.each(items, function (i, item) {
+                        $('#BOMName1').append($('<option>', {
+                            value: item.Value,
+                            text: item.Text
+                        }));
+                    });
+                    document.getElementById('existedBom').style.display = "block";
+                    $("#BOMName1").chosen();
+                    $("#BOMName1").trigger("chosen:updated");
+                    $('#loading').hide();
+                }
+            });
+        }
+        else {
+            document.getElementById('existedBom').style.display = "none";
+            document.getElementById('othersBom').style.display = "block";
+            $('#loading').hide();
+        }
+    }
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    var url = window.location.href;
+    var split = url.split("RawMaterialId=");
+    var rawMatIds = '@ViewBag.RawMaterialId';
+
+    $(document).ready(function () {
+
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "visible": false,
+                "targets": [0]
+            }],
+            "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+        });
+
+        $('#tbl1 tbody').on('click', '.btnUpdate', function () {
+            var url = '@Url.Action("SaveReceiveInfo","Inventory")';
+            var currentRow = $(this).closest("tr");
+            var detailId = t.row(currentRow).data()[0];
+            var receiveQuantity = currentRow.find('.receiveQuantity').val();
+            var receiveRemarks = currentRow.find('.receiveRemarks').val();
+            console.log(detailId + '>> quantity:' + receiveQuantity + '>> remark:' + receiveRemarks);
+            $.post(url, { id: detailId, receiveQuantity: receiveQuantity, receiveRemarks: receiveRemarks }, function (response) {
+                console.log(response);
+                if (response == "success") {
+                    alertify.success(response);
+                } else {
+                    alertify.error(response);
+                }
+            });
+        });
+        $('.btnOpenModal').on('click', function () {
+
+            var rowIndex = $(this).closest('tr').index() + 2;
+            console.log(rowIndex);
+            var table = document.getElementById('tbl1');
+
+            var projectName = '@ViewBag.Project.ProjectName';
+            var order = '@ViewBag.Project.OrderNuber';
+            var poCategory = '@ViewBag.Project.SourcingType';
+
+            $('#draggable').modal();
+
+
+            $('#ProIds').val(rawMatIds);
+            $('#ProjectName').val(projectName);
+            $('#Orders').val(order);
+            $('#PoCategory').val(poCategory);
+
+        });
+        //t.on('order.dt search.dt', function () {
+        //    t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+       
+    });
+    $('#smitModalOfSave').click(function (e) {
+        e.preventDefault();
+        $('#loading').show();
+        
+        var bomsType = $('#bomsType option:selected').text();
+        console.log("bomsType :" + bomsType);
+
+        var bomName="";
+
+        if (bomsType == "SELECT") {
+            $('#draggable').modal('hide');
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must select BOM Type",
+            }).show();
+            return false;
+        }
+        else if (bomsType == "OTHERS") {
+
+            bomName = $('#BOMName2').val();
+
+            if (bomName == "") {
+                $('#loading').hide();
+                $('#draggable').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Item Name",
+                }).show();
+                return false;
+            }
+        }
+        else if (bomsType != "SELECT" && bomName != "") {
+            bomName = $('#BOMName1 option:selected').text();
+           
+        }
+        else if (bomsType != "SELECT" && bomName == "") {
+            bomName = $('#BOMName1 option:selected').text();
+            if (bomName == "Select One") {
+                $('#loading').hide();
+                $('#draggable').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Item Name",
+                }).show();
+                return false;
+            }
+        }
+        var BOMQuantity = $('#ItemQuantity').val();
+        console.log("BOMQuantity  :" + BOMQuantity);
+
+        if (BOMQuantity == "") {
+            BOMQuantity = "0";
+        }
+
+        if (BOMQuantity == "0") {
+            $('#loading').hide();
+            $('#draggable').modal('hide');
+            
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must select Foc Quantity",
+            }).show();
+            return false;
+        }
+
+        var color = $('#color').val();
+        var BomRemarks = $('#BomRemarks').val();
+
+        $.ajax({
+            url: '@Url.Action("AddNewFoc", "ProjectManager")',
+            type: "POST",
+            dataType: "JSON",
+            data: { rawMatIds: rawMatIds, bomsType: bomsType, bomName: bomName, BOMQuantity: BOMQuantity, color: color, BomRemarks: BomRemarks },
+            success: function (data) {
+                console.log("data :" + data);
+                if (data == "OK") {
+                    $('#draggable').modal('hide');
+                    window.location.reload(true);
+                    $('#loading').hide();
+                }
+            }
+        });
+    });
+</script>

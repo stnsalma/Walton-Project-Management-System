@@ -1,0 +1,403 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProjectCriticalControlPoint
+@{
+    ViewBag.Title = "Critical Control Point";
+}
+<div class="page-head">
+    <h2>Critical Control Point</h2>
+</div>
+
+
+
+@using (Html.BeginForm("CriticalControlPoint", "Commercial", FormMethod.Post))
+{
+    
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Project Basics
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="row">
+                    
+                    @{
+                        if (TempData["message"] != null)
+                        {
+                            var msgType = TempData["messageType"];
+                            var msg = TempData["message"];
+                            if ((int)msgType == 1)
+                            {
+                                <div class="alert alert-success alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                            else if ((int)msgType == 2)
+                            {
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <div class="row">
+                    @Html.HiddenFor(model=>model.ProjectCriticalControlPointModel.ProjectCriticalControlPointId);
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })</div>
+                        <div class="col-md-1">
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("CriticalControlPoint", "Commercial")?projectId=' + $('option:selected', $('#ProjectMasterModel_ProjectMasterId')).val()" />
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Company Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierName, new {@class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.SupplierName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Model Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ProjectName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ProjectName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier Model Name</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierModelName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.SupplierModelName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                @*<div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">PO Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ApproxProjectOrderDate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ApproxProjectOrderDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Appx. Shipment Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ApproxShipmentDate, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ApproxShipmentDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+
+        </div>
+    </div>
+
+    if (@Model != null && @Model.ProjectMasterModel.ProjectMasterId > 0)
+    {
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    Short Technical Info
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Earphone</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.Earphone, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.Earphone, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Charger</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.Charger, new { @type = "number", @class = "form-control", @placeholder = "Ampere (amp)	A" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.Charger, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Battery</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.Battery, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.Battery, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Back Cover Material</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.BackCoverMaterial, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BackCoverMaterial, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Back Cover Finishing</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.BackCoverFinishing, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BackCoverFinishing, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Logo Print Type</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.LogoPrintType, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.LogoPrintType, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Flash</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.Flash, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.Flash, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">OTG Cable</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.OtgCable, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.OtgCable, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Flip Cover</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.FlipCover, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.FlipCover, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">3 Layer Screen Protector</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.ThreeLayerScreenProOnPhone, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.ThreeLayerScreenProOnPhone, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Free Screen Pro. On GB</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.FreeScreenProOnGb, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.FreeScreenProOnGb, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Back Side Screen Protector</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.BackSideScreenPro, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BackSideScreenPro, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Back Side Thermal Paper</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.BackSideThermalPaper, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BackSideThermalPaper, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Raw Design File Of ID</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.RawDesignFileOfId, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.RawDesignFileOfId, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">BSI Sensor</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.BsiSensor, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BsiSensor, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">SAR & CCC</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.SarAndCcc, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.SarAndCcc, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Both Sim 4G</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectCriticalControlPointModel.BothSimFourG, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                    new SelectListItem { Text = "Yes", Value = "Yes"},
+                                    new SelectListItem { Text = "No", Value = "No"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BothSimFourG, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">USB Cable Length</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.UsbCableLength, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.UsbCableLength, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Back Camera</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.BackCamera, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.BackCamera, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Fron Camera</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectCriticalControlPointModel.FronCamera, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCriticalControlPointModel.FronCamera, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <button class="btn sbold uppercase btn-outline blue">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}

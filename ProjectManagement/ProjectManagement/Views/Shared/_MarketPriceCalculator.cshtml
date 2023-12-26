@@ -1,0 +1,232 @@
+﻿@using Newtonsoft.Json
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-share font-dark hide"></i>
+                    <span class="caption-subject font-dark bold uppercase">Market Price Calculator</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div id="flag">
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Project</label>
+                                <div class="col-md-9">
+
+                                    @Html.DropDownList("ProjectId", Enumerable.Empty<SelectListItem>(), new { @class = "form-control projectstat" })
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Price</label>
+                                <div class="col-md-9">
+                                    <input type="number" min="0" class="form-control" readonly="" placeholder="Unit Price" id="FinalPrice" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Multiplier</label>
+                                <div class="col-md-9">
+                                    <input type="number" min="0" placeholder="Multiplier" class="form-control" id="multiplier" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Market Price</label>
+                                <div class="col-md-9">
+                                    <input type="number" min="0" placeholder="MarketPrice" class="form-control" id="marketprice" />
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="col-lg-12">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3">
+                                <input class="btn sbold btn-outline blue" id="btnSave" type="submit" value="Save" onclick="save_market_price(0)" />
+                            </div>
+                            <div class="col-md-3">
+                                <input class="btn sbold btn-outline red" id="btnLock" type="submit" value="Lock" onclick="save_market_price(1)" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        
+        $.get('@Url.Action("GetAllProjects", "Common")', {}, function (data) {
+            var mySelect = $('.projectstat');
+            mySelect.empty();
+            mySelect.append($('<option></option>').val("").html("--Select--"));
+            for (var i in data) {
+                mySelect.append($('<option></option>').val(data[i].ProjectMasterId).html(data[i].ProjectName));
+            }
+
+        });
+
+        $('.projectstat').on('change', function () {
+            var projectId = $('.projectstat :selected').val();
+            //alert(projectId);
+            if (projectId != null && projectId != "") {
+                $.get('@Url.Action("GetProjectInfoByProjectId", "Common")', { projectId: projectId }, function (data) {
+                    console.log(data);
+
+                    if (data.FinalPrice == null) {
+                        alertify.alert("No Unit Price");
+                        $('#FinalPrice').val("");
+                        $('#marketprice').val("");
+                        $('#multiplier').val("");
+                    }
+                    if (data.FinalPrice != null) {
+                        $('#FinalPrice').val(data.FinalPrice);
+                        $('#marketprice').val(data.MarketPrice1);
+                        $('#multiplier').val(data.Multiplier);
+                        
+                        $('#marketprice').prop("readonly", false);
+                        $('#multiplier').prop("readonly", false);
+                        
+                        $('#btnSave').prop("disabled", false);
+                        $('#btnLock').prop("disabled", false);
+                    }
+                    if (data.IsLocked == true) {
+                        $('#FinalPrice').val(data.FinalPrice);
+                        $('#marketprice').val(data.MarketPrice1);
+                        $('#multiplier').val(data.Multiplier);
+
+                        $('#marketprice').prop("readonly", true);
+                        $('#multiplier').prop("readonly", true);
+                        
+                        $('#btnSave').prop("disabled", true);
+                        $('#btnLock').prop("disabled", true);
+
+                        alertify.error("Price Locked");
+                    }
+                    if (data.IsLocked == false) {
+                        $('#FinalPrice').val(data.FinalPrice);
+                        $('#marketprice').val(data.MarketPrice1);
+                        $('#multiplier').val(data.Multiplier);
+
+                        $('#marketprice').prop("readonly", false);
+                        $('#multiplier').prop("readonly", false);
+                        
+                        $('#btnSave').prop("disabled", false);
+                        $('#btnLock').prop("disabled", false);
+                    }
+                });
+            } else {
+                $('#FinalPrice').val("");
+                $('#marketprice').val("");
+                $('#multiplier').val("");
+            }
+
+        });
+
+        $('#multiplier').on('input', function (e) {
+            var mutiplier = $('#multiplier').val();
+            var finalprice = $('#FinalPrice').val();
+            var marketprice = finalprice * mutiplier;
+            marketprice = marketprice.toFixed(3);
+            $('#marketprice').val(marketprice);
+        });
+
+        $('#marketprice').on('input', function (e) {
+            var marketprice = $('#marketprice').val();
+            var finalprice = $('#FinalPrice').val();
+            var multiplier = marketprice / finalprice;
+            multiplier = multiplier.toFixed(3);
+            //multiplier = roundNumber(multiplier, 3);
+            $('#multiplier').val(multiplier);
+        });
+    });
+
+
+    function save_market_price(param) {
+        var price = parseFloat($('#FinalPrice').val());
+        var mul = parseFloat($('#multiplier').val());
+        var marketPrice = parseFloat($('#marketprice').val());
+        var projectId = $('.projectstat :selected').val();
+        var res;
+        $('#flag').empty();
+        if (isNaN(price) || (isNaN(mul) || mul <= 0) || (isNaN(marketPrice) || marketPrice <= 0)) {
+            console.log("invalid");
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+            $('#flag').append(res);
+
+
+        } else {
+            if (param == 1) {
+                alertify.confirm('Are you sure to lock this data ???',
+                    function() {
+                        $.post('@Url.Action("SaveMarketPrice", "Common")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function(data) {
+                            if (data == "ok") {
+                                res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                                $('#flag').append(res);
+                                alertify.success("success");
+                                
+                                    $('#marketprice').prop("readonly", true);
+                                    $('#multiplier').prop("readonly", true);
+
+                                    $('#btnSave').prop("disabled", true);
+                                    $('#btnLock').prop("disabled", true);
+                                    alertify.error("Price Locked");
+                                
+                            } else if (data == "err") {
+                                res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                                $('#flag').append(res);
+                            }
+
+                        });
+                    },
+                    function() {
+                        alertify.error('Cancel');
+                    });
+            } else {
+                $.post('@Url.Action("SaveMarketPrice", "Common")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function (data) {
+                    if (data == "ok") {
+                        res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                        $('#flag').append(res);
+                        alertify.success("success");
+                    } else if (data == "err") {
+                        res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                        $('#flag').append(res);
+                    }
+
+                });
+            }
+            
+        }
+        console.log(price + "  --  " + mul + "  --  " + marketPrice);
+    }
+    function roundNumber(num, scale) {
+        var number = Math.round(num * Math.pow(10, scale)) / Math.pow(10, scale);
+        if (num - number > 0) {
+            return (number + Math.floor(2 * Math.round((num - number) * Math.pow(10, (scale + 1))) / 10) / Math.pow(10, scale));
+        } else {
+            return number;
+        }
+    }
+</script>

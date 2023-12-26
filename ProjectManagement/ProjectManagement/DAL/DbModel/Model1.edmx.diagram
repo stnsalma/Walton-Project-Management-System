@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="9ada4ab7cb1142be9a076b9449dc68f0" Name="Diagram1" ZoomLevel="26">
+        <EntityTypeShape EntityType="CellPhoneProjectModel.C__EFMigrationsHistory" Width="1.5" PointX="9.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AccessoriesPrice" Width="1.5" PointX="5.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AcknowledgeLog" Width="1.5" PointX="11.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_FocIncentive" Width="1.5" PointX="14.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_Holiday" Width="1.5" PointX="16.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_Incentive" Width="1.5" PointX="17.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_Issue_Incentive" Width="1.5" PointX="16.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_Issue_Percentage" Width="1.5" PointX="18.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_IssueVerification" Width="1.5" PointX="19.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_IssueVerificationStatusLog" Width="1.5" PointX="5.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_ValidationReport" Width="1.5" PointX="19.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AllTrialInfo" Width="1.5" PointX="11.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ApplicationForNoc" Width="1.5" PointX="18.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AssemblyProductionEvent" Width="1.5" PointX="20.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BabtRaw" Width="1.5" PointX="13.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Battery" Width="1.5" PointX="20.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryAssemblyAndPacking" Width="1.5" PointX="14.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryAssemblyLineCapacityDetail" Width="1.5" PointX="17" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryHousing" Width="1.5" PointX="21.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryHousingLineCapacityDetail" Width="1.5" PointX="0.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryLineCapacityDetail" Width="1.5" PointX="21.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryPackingLineCapacityDetail" Width="1.5" PointX="7.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatterySMT" Width="1.5" PointX="12.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatterySMTLineCapacityDetail" Width="1.5" PointX="15" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BatteryTestResultSummary" Width="1.5" PointX="5.25" PointY="21.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BdIqcBomPassRecord" Width="1.5" PointX="22.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BdIqc" Width="1.5" PointX="22.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_BidderAttachment" Width="1.5" PointX="23.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_BidderPriceDetails" Width="1.5" PointX="23.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_BidderPriceDetailsApproveStatusLog" Width="1.5" PointX="22.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_CreateBid" Width="1.5" PointX="9.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_HeadBidderPriceDetails" Width="1.5" PointX="24.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_ItemTypes" Width="1.5" PointX="24.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Bid_StatusLog" Width="1.5" PointX="15.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BomUpload" Width="1.5" PointX="17.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BpFeedbackProject" Width="1.5" PointX="24.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BpFeedback" Width="1.5" PointX="24.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Brand" Width="1.5" PointX="0.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BTRCIMEIExportLog" Width="1.5" PointX="25.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BTRCIMEIRegistration" Width="1.5" PointX="12" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BTRCModel" Width="1.5" PointX="9.75" PointY="11.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.BtrcRaw" Width="1.5" PointX="25.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerAssembly" Width="1.5" PointX="0.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerAssemblyLineCapacityDetail" Width="1.5" PointX="26.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerHousing" Width="1.5" PointX="26.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerHousingLineCapacityDetail" Width="1.5" PointX="26.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerPos" Width="1.5" PointX="19.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerSMT" Width="1.5" PointX="26.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ChargerSMTLineCapacityDetail" Width="1.5" PointX="27.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Cm_CkdSkdRewardAndPenalties" Width="1.5" PointX="2.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Cm_MaterialPassChinaIqcIncentive" Width="1.5" PointX="28.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Cm_OthersIncentive" Width="1.5" PointX="4.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Cm_RefundProjectAmount" Width="1.5" PointX="28.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CmnIssue" Width="1.5" PointX="28.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CmnRole" Width="1.5" PointX="11.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CmnUserRole" Width="1.5" PointX="24.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CmnUser" Width="1.5" PointX="7.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ColorWiseVariantQuantity" Width="1.5" PointX="26.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CommonIssue" Width="1.5" PointX="28.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CommonParam" Width="1.5" PointX="29.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CpuCore" Width="1.5" PointX="2.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CreateFocForAftersalesPm" Width="1.5" PointX="14.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.DailyUnproducedLog" Width="1.5" PointX="21.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.DiagnosticCodeFromOracle" Width="1.5" PointX="30.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.DiscussionFileUpload" Width="1.5" PointX="30.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.DiscussionReply" Width="1.5" PointX="30.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Discussion" Width="1.5" PointX="30.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.DocManagementFileUpload" Width="1.5" PointX="16.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.EarphonePos" Width="1.5" PointX="30.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ErrorLog" Width="1.5" PointX="30.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.FeatureSpecFromApiImage" Width="1.5" PointX="30.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.FeatureSpecFromApi" Width="1.5" PointX="30.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.FocClaimBomDetailLog" Width="1.5" PointX="32.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.FocClaimBomDetail" Width="1.5" PointX="32.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.FocClaim" Width="1.5" PointX="32.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Folder" Width="1.5" PointX="32.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ForeignIqcBomPassRecord" Width="1.5" PointX="18.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ForeignIqc" Width="1.5" PointX="32.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentAssign" Width="1.5" PointX="32.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentAttachment" Width="1.5" PointX="32.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentCategory" Width="1.5" PointX="4.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentLog" Width="1.5" PointX="20.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncident" Width="1.5" PointX="22.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentSolution" Width="1.5" PointX="24.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIncidentSubCategory" Width="1.5" PointX="26.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIssueForward" Width="1.5" PointX="34.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GeneralIssue" Width="1.5" PointX="34.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.GovernmentHolidayTable" Width="1.5" PointX="34.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hashtag" Width="1.5" PointX="11.75" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw2gPas" Width="1.5" PointX="34.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw3gPa1s" Width="1.5" PointX="34.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw3gPa2s" Width="1.5" PointX="34.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw3gPa3s" Width="1.5" PointX="34.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw4gPa1s" Width="1.5" PointX="34.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw4gPa2s" Width="1.5" PointX="36.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw4gPa3s" Width="1.5" PointX="0.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Hw4gPa4s" Width="1.5" PointX="2.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwAudioPa" Width="1.5" PointX="4.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwBackCameraIc" Width="1.5" PointX="36.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwBacklightIc" Width="1.5" PointX="36.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwBtWifiIc" Width="1.5" PointX="13.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwChargingIc" Width="1.5" PointX="36.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwChipset" Width="1.5" PointX="15.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwEngineerAssign" Width="1.5" PointX="36.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgBatteryTestCondition" Width="1.5" PointX="9.75" PointY="28.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgBatteryTestMaster" Width="1.5" PointX="7.5" PointY="28.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgBatteryTestResult" Width="1.5" PointX="12" PointY="29.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgChargerDetail" Width="1.5" PointX="9.75" PointY="35.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgChargerTest" Width="1.5" PointX="7.5" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgUsbCableTest" Width="1.5" PointX="0.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFgUsbTestDetail" Width="1.5" PointX="3" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFieldTestMaster" Width="1.5" PointX="36.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFieldTest" Width="1.5" PointX="26.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFlashIc" Width="1.5" PointX="36.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwFrontCameraIc" Width="1.5" PointX="17.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwIcComponentNumber" Width="1.5" PointX="28.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwInchargeAssign" Width="1.5" PointX="30.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwInchargeIssue" Width="1.5" PointX="32.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwInternalResistanceBatteryTest" Width="1.5" PointX="34.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwIssueComment" Width="1.5" PointX="7.5" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwIssueMaster" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwIssueTypeDetail" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwIssueType" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwItemComponent" Width="1.5" PointX="36.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwItemizationItemName" Width="1.5" PointX="38.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwItemization" Width="1.5" PointX="3" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwPmu1s" Width="1.5" PointX="38.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwPmu2s" Width="1.5" PointX="38.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwQcAssign" Width="1.5" PointX="5.25" PointY="77.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwQcInchargeAssign" Width="1.5" PointX="3" PointY="73.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwRf" Width="1.5" PointX="38.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwRuCameraTestDetail" Width="1.5" PointX="38.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwRuCameraTestMaster" Width="1.5" PointX="38.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwRuDisplayElectricalOpticalTest" Width="1.5" PointX="38.75" PointY="28.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwRuOperatingHeatTest" Width="1.5" PointX="38.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwSelfTest" Width="1.5" PointX="19.75" PointY="39.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestAdditionalInfo" Width="1.5" PointX="40.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestBatteryInfo" Width="1.5" PointX="7.5" PointY="46.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestCameraInfo" Width="1.5" PointX="7.5" PointY="51.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestChargerInfo" Width="1.5" PointX="7.5" PointY="59.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestChargingInfo" Width="1.5" PointX="7.5" PointY="64.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestCrossMatchInfo" Width="1.5" PointX="7.5" PointY="69" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestEarphoneInterfaceInfo" Width="1.5" PointX="7.5" PointY="73.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestFileUpload" Width="1.5" PointX="40.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestFPCandSIMSlotInfo" Width="1.5" PointX="7.5" PointY="77.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestHousingInfo" Width="1.5" PointX="7.5" PointY="82.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestInchargeAssign" Width="1.5" PointX="40.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestMaster" Width="1.5" PointX="9.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestOverallResult" Width="1.5" PointX="7.5" PointY="86.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestPcbA" Width="1.5" PointX="7.5" PointY="111.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestPcb" Width="1.5" PointX="7.5" PointY="91.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestSoundInfo" Width="1.5" PointX="7.5" PointY="95.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestTpLcdInfo" Width="1.5" PointX="7.5" PointY="100" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTestUSBCableInfo" Width="1.5" PointX="7.5" PointY="107" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.HwTouchIc" Width="1.5" PointX="40.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Incentive" Width="1.5" PointX="40.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.IncentiveParameter" Width="1.5" PointX="21.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.IncentiveShare" Width="1.5" PointX="23.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.JigsAndFixture" Width="1.5" PointX="40.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.KpiByTeamLeaderAndHr" Width="1.5" PointX="40.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LC_IDH_Details" Width="1.5" PointX="40.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LC_IDH_Final_BOM" Width="1.5" PointX="36.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcApprovalHandsetPriceRanx" Width="1.5" PointX="38.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcOpeningOtherProductPrice" Width="1.5" PointX="0.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LCOpeningPermission" Width="1.5" PointX="2.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcOpeningPermissionFile" Width="1.5" PointX="4.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcOpeningPermissionLog" Width="1.5" PointX="11.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcOpeningPermissionOtherFile" Width="1.5" PointX="13.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcOpeningPermissionOtherProduct" Width="1.5" PointX="28.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LcPermissionAmount" Width="1.5" PointX="42.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LineInformation" Width="1.5" PointX="42.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MajorIssue" Width="1.5" PointX="42.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MarketPrice" Width="1.5" PointX="42.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MkMarketOrderQuantityDetail" Width="1.5" PointX="15.75" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MkOtherBrandModel" Width="1.5" PointX="42.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MkProjectSpecFile" Width="1.5" PointX="42.75" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MkProjectSpec" Width="1.5" PointX="42.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MobileImport" Width="1.5" PointX="25.75" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ModelAnalysi" Width="1.5" PointX="30.75" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.NinetyFivePercentProductionReward" Width="1.5" PointX="32.75" PointY="42.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.NinetyFivePercentSalesOutReward" Width="1.5" PointX="42.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Notification" Width="1.5" PointX="42.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Opinion" Width="1.5" PointX="17.75" PointY="43.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Oracle_Material_REC_DATE_With_PO_NO" Width="1.5" PointX="44.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.OrderWiseMultiplePrice" Width="1.5" PointX="44.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PackingProductionEvent" Width="1.5" PointX="4.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PenaltiesForAllProject" Width="1.5" PointX="44.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PenaltiesProjectListWithId" Width="1.5" PointX="44.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhAccessory" Width="1.5" PointX="3" PointY="134.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhBatteryInfo" Width="1.5" PointX="44.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhCamInfo" Width="1.5" PointX="3" PointY="139.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhChipsetInfo" Width="1.5" PointX="3" PointY="143.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhColorInfo" Width="1.5" PointX="19.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhHousingInfo" Width="1.5" PointX="3" PointY="147.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhMemoryInfo" Width="1.5" PointX="3" PointY="151" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhNetworkFreqAndBand" Width="1.5" PointX="3" PointY="154.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhoneAccessory" Width="1.5" PointX="44.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhoneColor" Width="1.5" PointX="21.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhoneOffer" Width="1.5" PointX="0.75" PointY="148.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhoneSpec" Width="1.5" PointX="1.5" PointY="108.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhoneSpecType" Width="1.5" PointX="0.75" PointY="112.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhOperatingSy" Width="1.5" PointX="3" PointY="158.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhPcbaInfo" Width="1.5" PointX="3" PointY="162.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhSensorAndOther" Width="1.5" PointX="3" PointY="165.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PhTpLcdInfo" Width="1.5" PointX="3" PointY="170.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PlanTable" Width="1.5" PointX="44.75" PointY="24.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Accessories" Width="1.5" PointX="44.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_AccessoriesProject" Width="1.5" PointX="44.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_DocumentUploadIncentive" Width="1.5" PointX="44.75" PointY="38.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_FollowUpFocMaterial" Width="1.5" PointX="38.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Guidelines" Width="1.5" PointX="40.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_HeadTeamIncentivePercentage" Width="1.5" PointX="42.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Incentive" Width="1.5" PointX="44.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Incentive_Base" Width="1.5" PointX="46.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_PiClosing" Width="1.5" PointX="46.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_PiClosingIncentive" Width="1.5" PointX="46.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Po_Incentive" Width="1.5" PointX="46.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_PoFeedback" Width="1.5" PointX="46.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_PolicyUpdate" Width="1.5" PointX="46.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_ProjectClosingIncentive" Width="1.5" PointX="46.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_ProjectMarketingSpec" Width="1.5" PointX="34.75" PointY="46.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_RawMaterialUploadDelayPenalties" Width="1.5" PointX="46.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_SampleHandsetManagement" Width="1.5" PointX="46.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_Shipment_Incentive" Width="1.5" PointX="46.75" PointY="45.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_ShipmentClearanceVsLsdIncentive" Width="1.5" PointX="13.75" PointY="47.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pm_SupplierPenalties" Width="1.5" PointX="15.75" PointY="47.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PMAcknowledgement" Width="1.5" PointX="48.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmAndQcLsdToVesselData" Width="1.5" PointX="48.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmBootImageAnimation" Width="1.5" PointX="5.25" PointY="192.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmBootImageAnimationsLog" Width="1.5" PointX="48.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmGiftBox" Width="1.5" PointX="5.25" PointY="196.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmGiftBoxesLog" Width="1.5" PointX="48.75" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmHead_PerPoIncentive" Width="1.5" PointX="17.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmHead_VesselPenaltiesForPo" Width="1.5" PointX="19.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmID" Width="1.5" PointX="5.25" PointY="200.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmIDsLog" Width="1.5" PointX="48.75" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmLabel" Width="1.5" PointX="5.25" PointY="204.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmLabelsLog" Width="1.5" PointX="21.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmOrderQuantityWithColor" Width="1.5" PointX="23.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmOtaUpdate" Width="1.5" PointX="48.75" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmPhnAccessory" Width="1.5" PointX="25.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmPhnAccessoriesLog" Width="1.5" PointX="48.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmPhnCamera" Width="1.5" PointX="48.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmPhnCameraLog" Width="1.5" PointX="36.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmPhnColor" Width="1.5" PointX="38.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmProjectCompletedTaskLog" Width="1.5" PointX="48.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmScreenProtector" Width="1.5" PointX="5.25" PointY="208.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmScreenProtectorsLog" Width="1.5" PointX="40.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmServiceDocument" Width="1.5" PointX="5.25" PointY="212" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmSpec" Width="1.5" PointX="5.25" PointY="215.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmSwCustomization" Width="1.5" PointX="5.25" PointY="218.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmSwCustomizationFinal" Width="1.5" PointX="48.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmSwCustomizationInitial" Width="1.5" PointX="48.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmWalpaper" Width="1.5" PointX="5.25" PointY="222.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmWalpapersLog" Width="1.5" PointX="30.75" PointY="49.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Post" Width="1.5" PointX="10" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PostComment" Width="1.5" PointX="50.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PostProductionIssue" Width="1.5" PointX="50.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_CapacityPlanning" Width="1.5" PointX="4.75" PointY="50.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Category" Width="1.5" PointX="50.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_DailyPlan" Width="1.5" PointX="50.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_HandsetAssemblyAndPacking" Width="1.5" PointX="50.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_HandsetBattery" Width="1.5" PointX="32.75" PointY="50.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_HandsetHousing" Width="1.5" PointX="50.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_HandsetSmt" Width="1.5" PointX="42.75" PointY="50.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Line" Width="1.5" PointX="50.75" PointY="43.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_MaterialRules" Width="1.5" PointX="50.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_PlanTable" Width="1.5" PointX="44.75" PointY="51.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Product" Width="1.5" PointX="52.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Shift" Width="1.5" PointX="52.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Team" Width="1.5" PointX="52.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Pro_Type" Width="1.5" PointX="52.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProcessCostMonthWise" Width="1.5" PointX="52.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProductionPlanRemark" Width="1.5" PointX="52.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProductionPlanRemarksLog" Width="1.5" PointX="52.75" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProductionTracker" Width="1.5" PointX="52.75" PointY="30.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjcetBabt" Width="1.5" PointX="34.75" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectAccessory" Width="1.5" PointX="3" PointY="175.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectAgreementCondition" Width="1.5" PointX="5.25" PointY="178.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectAgreement" Width="1.5" PointX="3" PointY="178.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectBtrcNocDocument" Width="1.5" PointX="52.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectBtrcNoc" Width="1.5" PointX="36.75" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectCategorization" Width="1.5" PointX="38.75" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectCcpParameterDetail" Width="1.5" PointX="10" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectCcpParameter" Width="1.5" PointX="7.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectClosePenalty" Width="1.5" PointX="52.75" PointY="39.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectCriticalControlPoint" Width="1.5" PointX="52.75" PointY="43.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectLc" Width="1.5" PointX="46.75" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectMasterLog" Width="1.5" PointX="52.75" PointY="50.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectMaster" Width="1.5" PointX="0.75" PointY="116.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectNocDocumentList" Width="1.5" PointX="0.75" PointY="53.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOffer" Width="1.5" PointX="3" PointY="130.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderCondition" Width="1.5" PointX="5.25" PointY="185.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderQuantityDetailLog" Width="1.5" PointX="25.75" PointY="53.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderQuantityDetail" Width="1.5" PointX="54.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrder" Width="1.5" PointX="3" PointY="185.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderShipment" Width="1.5" PointX="54.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPhoneSpecType" Width="1.5" PointX="3" PointY="126.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPhoneSupplier" Width="1.5" PointX="9.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPmAssign" Width="1.5" PointX="3" PointY="212.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPmReAssignLog" Width="1.5" PointX="11.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPoFeedbackLog" Width="1.5" PointX="54.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPoFeedback" Width="1.5" PointX="54.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPrice" Width="1.5" PointX="3" PointY="237.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectProformaInvoice" Width="1.5" PointX="3" PointY="241.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPurchaseOrderConditionLog" Width="1.5" PointX="27.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPurchaseOrderCondition" Width="1.5" PointX="54.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPurchaseOrderFormLog" Width="1.5" PointX="29.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPurchaseOrderForm" Width="1.5" PointX="3" PointY="245" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectPurchaseOrderHandset" Width="1.5" PointX="54.75" PointY="33.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Project" Width="1.5" PointX="54.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectType" Width="1.5" PointX="17.75" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectUpdateLog" Width="1.5" PointX="19.75" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectVariantCalculator" Width="1.5" PointX="21.75" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectVariant" Width="1.5" PointX="48.75" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProPlanTable" Width="1.5" PointX="56.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.RawMaterialInspection" Width="1.5" PointX="2.75" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ReturnImeiLog" Width="1.5" PointX="56.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SampleReturnLog" Width="1.5" PointX="4.75" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SampleTracker" Width="1.5" PointX="56.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ServiceToSalesRatioWarningMail" Width="1.5" PointX="56.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ShipmentFinishGoodModel" Width="1.5" PointX="56.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SmtCapacityExceedLog" Width="1.5" PointX="56.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpareAnalysisReportMonitor" Width="1.5" PointX="56.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpareClaim" Width="1.5" PointX="56.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpareName" Width="1.5" PointX="38.75" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpareOrderByMultipleModel" Width="1.5" PointX="56.75" PointY="40.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpareOrder" Width="1.5" PointX="56.75" PointY="44.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpecFromApiBrand" Width="1.5" PointX="56.75" PointY="49.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpecFromApiFeatureBrand" Width="1.5" PointX="56.75" PointY="52.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpecFromApiImage" Width="1.5" PointX="56.75" PointY="55.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SpecFromApi" Width="1.5" PointX="58.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SupplierRating" Width="1.5" PointX="58.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Supplier" Width="1.5" PointX="11.75" PointY="58.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwCustomization" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwCustomizationSubType" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwCustomizationType" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwFieldTestAssign" Width="1.5" PointX="58.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwFieldTestDetail" Width="1.5" PointX="17.75" PointY="58.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwFieldTest" Width="1.5" PointX="58.75" PointY="18.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_AllMembersRewardAndPenalties" Width="1.5" PointX="58.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_BrandCost" Width="1.5" PointX="58.75" PointY="31.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_BrandIssues" Width="1.5" PointX="34.75" PointY="58.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_CTS" Width="1.5" PointX="58.75" PointY="37.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_ExtraWork" Width="1.5" PointX="44.75" PointY="58.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_FieldByHead" Width="1.5" PointX="58.75" PointY="45.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_Issue" Width="1.5" PointX="58.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_Others" Width="1.5" PointX="54.75" PointY="58.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_Penalties" Width="1.5" PointX="4.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_PersonalUse" Width="1.5" PointX="19.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_PmShipmentClearanceVsLsd" Width="1.5" PointX="21.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAccessoriesTest" Width="1.5" PointX="36.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAllIncentiveList" Width="1.5" PointX="38.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAllIncentiveListLog" Width="1.5" PointX="40.75" PointY="59.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAssignIssue" Width="1.5" PointX="60.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAssign" Width="1.5" PointX="60.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcAssignsFromQcHead" Width="1.5" PointX="60.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcBatteryAssignIssue" Width="1.5" PointX="60.75" PointY="21.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcBatteryTest" Width="1.5" PointX="23.75" PointY="60.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcCallSetting" Width="1.5" PointX="25.75" PointY="60.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcCamera" Width="1.5" PointX="60.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcChargerTest" Width="1.5" PointX="31.75" PointY="60.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcConnectivity" Width="1.5" PointX="60.75" PointY="34.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcDisplay" Width="1.5" PointX="60.75" PointY="41.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcDisplayLoop" Width="1.5" PointX="46.75" PointY="60.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcEarphoneTest" Width="1.5" PointX="60.75" PointY="48.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcFieldTestDetail" Width="1.5" PointX="48.75" PointY="60.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcFieldTestStaticData" Width="1.5" PointX="60.75" PointY="56.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcFileManager" Width="1.5" PointX="62.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcGame" Width="1.5" PointX="62.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcGlassProtectorTest" Width="1.5" PointX="9.75" PointY="62.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcGoogleService" Width="1.5" PointX="11.75" PointY="62.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcHeadAssignsFromPm" Width="1.5" PointX="62.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcHeadStatusChangeActivity" Width="1.5" PointX="62.75" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcInactiveOrAssignLog" Width="1.5" PointX="62.75" PointY="27.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcInchargeAssign" Width="1.5" PointX="5.25" PointY="227.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcInternHistory" Width="1.5" PointX="62.75" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcIssueCategory" Width="1.5" PointX="62.75" PointY="35.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcIssueDetail" Width="1.5" PointX="62.75" PointY="39.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcIssueDetailsDeleteLog" Width="1.5" PointX="62.75" PointY="51.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcIssueDetailsLog" Width="1.5" PointX="0.75" PointY="63.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcIssue" Width="1.5" PointX="33.75" PointY="63.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcMassage" Width="1.5" PointX="56.75" PointY="63.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcMultimedia" Width="1.5" PointX="62.75" PointY="63.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcNewInnovation" Width="1.5" PointX="64.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcPausedOrRestartActivityLog" Width="1.5" PointX="64.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcPersonalUseFindingsIssueDetail" Width="1.5" PointX="64.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcPostProductionAssign" Width="1.5" PointX="64.75" PointY="17.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcProjectWiseIssue" Width="1.5" PointX="64.75" PointY="22.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcSetting" Width="1.5" PointX="64.75" PointY="29.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcShutDown" Width="1.5" PointX="64.75" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcStartUp" Width="1.5" PointX="38.75" PointY="64.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcStorageCheck" Width="1.5" PointX="40.75" PointY="64.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcTabColor" Width="1.5" PointX="64.75" PointY="43.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcTestingApp" Width="1.5" PointX="64.75" PointY="47.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcTestPhase" Width="1.5" PointX="64.75" PointY="54.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwQcToolsCheck" Width="1.5" PointX="64.75" PointY="57.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwRequirementSpecification" Width="1.5" PointX="58.75" PointY="64.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwRequirementSpecificationDetail" Width="1.5" PointX="64.75" PointY="64.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.sysdiagram" Width="1.5" PointX="2.75" PointY="65.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.TableDescription" Width="1.5" PointX="4.75" PointY="65.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.TeamKpiPercentageList" Width="1.5" PointX="27.75" PointY="65.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.TeamKpiRoleTable" Width="1.5" PointX="29.75" PointY="65.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.TestPhase" Width="1.5" PointX="42.75" PointY="65.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.VariantWiseProductionStartDate" Width="1.5" PointX="66.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.WarehouseDetail" Width="1.5" PointX="66.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Projects1" Width="1.5" PointX="66.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.Accessory" Width="1.5" PointX="66.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmSwCustomizationMenu" Width="1.5" PointX="66.75" PointY="16.75" IsExpanded="true" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_BatteryAssemblyLineCapacityDetails_BatteryAssemblyAndPacking" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_BatterySMTLineCapacityDetails_BatterySMT" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_BatteryTestResultSummarys_HwQcInchargeAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_BTRCIMEIRegistration_BTRCModels" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_Post_CmnUsers" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgBatteryTestConditions_HwFgBatteryTestMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgBatteryTestResults_HwFgBatteryTestConditions" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgBatteryTestMasters_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgChargerDetails_HwFgChargerTests" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgChargerTests_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwFgUsbTestDetails_HwFgUsbCableTests" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwIssueComments_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwIssueTypes_HwIssueMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwIssueTypeDetails_HwIssueTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwItemizations_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwQcAssigns_HwQcInchargeAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestBatteryInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestCameraInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestChargerInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestChargingInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestCrossMatchInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestEarphoneInterfaceInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestFPCandSIMSlotInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestHousingInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestOverallResult_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestPcbAs_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestPcbs_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestSoundInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestTpLcdInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwTestUSBCableInfos_HwQcAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_HwQcInchargeAssigns_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhAccessories_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhCamInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhChipsetInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhHousingInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhMemoryInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhNetworkFreqAndBands_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectOffers_PhoneOffers" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_SpecTypes_Specs" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectPhoneSpecTypes_PhoneSpecTypes" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhOs_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhPcbaInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhSensorAndOthers_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PhTpLcdInfos_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectBootImageAnimations_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectGiftBoxes_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectIDs_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectLabels_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectScreenProtectors_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectServiceDocuments_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectSpecs_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_PmSwCustomization_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectWalpapers_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectAccessories_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectAgreementConditions_ProjectAgreements" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectAgreements_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CmCcpParameterDetails_CmCcpParameters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectAssigns_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectOffers_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectOrders_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectPhoneSpecs_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectPis_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectPrices_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectPurchaseOrderForms_ProjectMasters" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectOrderConditions_ProjectOrders" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_ProjectSwQcs_ProjectAssigns" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_SwCustomizationTypes_SwCustomizations" ManuallyRouted="false" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_SwCustomizationSubTypes_SwCustomizationTypes" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostEmail" Width="1.5" PointX="18.375" PointY="67.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostManagementModel" Width="1.5" PointX="18.375" PointY="72" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostMaster" Width="1.5" PointX="20.625" PointY="71.5" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostMasterDetail" Width="1.5" PointX="22.875" PointY="68.375" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostMasterEmailLog" Width="1.5" PointX="22.875" PointY="75.875" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostProposal" Width="1.5" PointX="22.875" PointY="72.375" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CostMaster_CostManagementModels" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CostMasterDetail_CostMaster" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CostMasterEmailLog_CostMaster" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CostProposals_CostMaster" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.CostSimulationLog" Width="1.5" PointX="22.875" PointY="79.75" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_CostSimulationLog_CostMaster" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_QcStatusForSupplierFeedback" Width="1.5" PointX="67.75" PointY="33.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.AftersalesPm_SupplierFeedBack" Width="1.5" PointX="67.75" PointY="36.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.LC_IDH_Masters" Width="1.5" PointX="67.75" PointY="40.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.OracleLcDetail" Width="1.5" PointX="67.75" PointY="44.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmChinaQcInspectionApprovalLog" Width="1.5" PointX="45.75" PointY="67.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmChinaQcInspectionsClearance" Width="1.5" PointX="67.75" PointY="50.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.PmChinaQcInspectionsClearanceMailList" Width="1.5" PointX="67.75" PointY="56.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderAcknowledgeMaster" Width="1.5" PointX="67.75" PointY="61.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderAcknowledgeMasterLog" Width="1.5" PointX="67.75" PointY="66.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectOrderAcknowledgerId" Width="1.5" PointX="30.75" PointY="68.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SourcingTypeChangingApprovalLog" Width="1.5" PointX="32.75" PointY="68.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwIncentive_PenaltiesForIssues" Width="1.5" PointX="34.75" PointY="68.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwRequirementSpecificationDetailsLog" Width="1.5" PointX="69.75" PointY="0.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.SwRequirementSpecificationEditPermissionLog" Width="1.5" PointX="0.75" PointY="69.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.tbHwTestlFileUpload" Width="1.5" PointX="2.75" PointY="69.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.tblTest" Width="1.5" PointX="69.75" PointY="5.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MaterialWastageRecommendation" Width="1.5" PointX="69.625" PointY="16.5" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.tblHeaderDetail" Width="1.5" PointX="69.375" PointY="9.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MaterialWastageItem" Width="1.5" PointX="69.375" PointY="9.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MaterialWastageDetail" Width="1.5" PointX="69.625" PointY="20" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.MaterialWastageMaster" Width="1.5" PointX="67.375" PointY="19" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_MaterialWastageDetails_MaterialWastageMaster" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_MaterialWastageRecommendations_MaterialWastageMaster" />
+        <AssociationConnector Association="CellPhoneProjectModel.FK_MaterialWastageItem_MaterialWastageMaster" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectImage" Width="1.5" PointX="10.375" PointY="69.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.tblColumnHeader" Width="1.5" PointX="12.375" PointY="69.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.UserLoginTracker" Width="1.5" PointX="67.375" PointY="30.75" />
+        <EntityTypeShape EntityType="CellPhoneProjectModel.ProjectMasterTracker" Width="1.5" PointX="14.375" PointY="54.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

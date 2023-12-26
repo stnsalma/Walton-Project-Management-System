@@ -1,0 +1,97 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectLcModel>
+    @{
+        ViewBag.Title = "LcsReportByDateRange";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">Date Wise LC Report</div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label">From <span style="font-size: smaller">(Opening Date)</span></label>
+                        <input class="form-control date_picker" type="text" id="fromDate" value="@ViewBag.From" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="control-label">To <span style="font-size: smaller">(Opening Date)</span></label>
+                        <input class="form-control date_picker" type="text" id="toDate" value="@ViewBag.To" />
+                    </div>
+                </div>
+                <div class="col-lg-1">
+                    <div class="form-group">
+                        <label class="control-label"></label>
+                        <input class="form-control btn btn-success" value="Search" type="button" id="btnSearch" />
+                    </div>
+                </div>
+                @*<div class="col-lg-2">
+                        <div class="form-group">
+                            <label class="control-label">Grand Total</label>
+                            <span class="form-control" id="grandTotal"></span>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Order No</th>
+                                    <th>PO No</th>
+                                    <th>LC No</th>
+                                    <th>Opening Date</th>
+                                    <th>Lc Amount</th>
+                                    <th>Currency</th>
+                                    <th>Added By</th>
+                                    <th>Added Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in Model)
+                                {
+                                    <tr>
+                                        <td>@v.ProjectName</td>
+                                        <td>@v.OrderNo</td>
+                                        <td>@v.PoNo</td>
+                                        <td>@v.LcNo</td>
+                                        <td>
+                                            @if (v.OpeningDate != null)
+                                            {
+                                                @v.OpeningDate.Value.ToShortDateString()
+                                            }
+                                        </td>
+                                        <td>@v.LcValue</td>
+                                        <td>@v.Currency</td>
+                                        <td>@v.AddedByName</td>
+                                        <td>
+                                            @if (v.AddedDate != null)
+                                            {
+                                                @v.AddedDate.Value.ToShortDateString()
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#btnSearch').on('click', function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            console.log(fromDate + '-----' + toDate);
+            var url = '@Url.Action("LcsReportByDateRange", "Commercial")?fromDate=' + fromDate + '&toDate=' + toDate;
+            location.href = url;
+            console.log(url);
+        });
+    </script>

@@ -1,0 +1,199 @@
+﻿@model List<ProjectManagement.ViewModels.Management.OrderQuantityDetailsVm>
+    @{
+        ViewBag.Title = "AddVariant";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+@*<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">Previous Variants</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table id="tblPreviousVariant" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Project ID</th>
+                        <th>Project Name</th>
+                        <th>Order Number</th>
+                        <th>Project Model</th>
+                        <th>Order Quantity</th>
+                        <th>OrderDetailProjectModel</th>
+                        <th>QuantityInOrderDetailTable</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>@v.ProjectMasterId</td>
+                            <td>@v.ProjectName</td>
+                            <td>@v.OrderNuber</td>
+                            <td>@v.ProjectModel</td>
+                            <td>@v.OrderQuantity</td>
+                            <td>@v.VariantName</td>
+                            <td>@v.QuantityInCalculator</td>
+                            <td><button type="button" class="btn btn-danger btnAddPrevVariant">Add This Variant</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>*@
+    
+<div class="portlet light">
+    <div class="portlet-title">
+        <div class="caption">Add Variant</div>
+        <div class="tools">
+            <button type="button" class="btn btn-danger btnAddVariant">Add Variant</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("ProjectVariantLists", "Management")'" ><i class="fa fa-list"></i> List</button>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-bordered" id="tblAddVariant">
+                <thead>
+                    <tr>
+                        <th class="text-center">Variant Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    
+<script>
+    $(document).ready(function () {
+        var prevUrl = '@Url.Action("GetVariantCalculator","Management")';
+        $.post(prevUrl, { projectId: '@ViewBag.ProjectId' }, function (data) {
+            console.log(data);
+            var row = '';
+            
+            for (var i = 0; i < data.length; i++) {
+                var button = data[i].IsLocked == false ? '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                          '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' : '<span class="badge badge-danger">Locked</span>';
+                row = '<tr>' +
+                        '<td hidden=""><input type="text" value="' + data[i].ProjectId + '" class="form-control text-center projectId"/></td>' +
+                        '<td hidden=""><input type="text" value="' + data[i].Id + '" class="form-control text-center variantId"/></td>' +
+                        '<td><input type="text" value="' + data[i].VariantName + '" class="form-control text-center variantName"/></td>' +
+                        '<td>' +
+                           button +
+                        '</td>' +
+                      '</tr>';
+                $('#tblAddVariant tbody').append(row);
+            }
+        });
+
+        
+
+
+        @*$('#tblPreviousVariant tbody').on('click', '.btnAddPrevVariant', function() {
+            var variantName = $(this).closest('tr').find('td:eq(5)').html();
+            console.log(variantName);
+            var row = '<tr>' +
+                        '<td hidden="">'+@ViewBag.ProjectId+'</td>' +
+                        '<td><input type="text" hidden="" class="form-control text-center variantId"/></td>'+
+                        '<td><input type="text" value="'+variantName+'" class="form-control text-center variantName"/></td>'+
+                        '<td><input type="number" value="0" class="form-control text-center variantQuantity"/></td>'+
+                        '<td>' +
+                          '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                          '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>'+
+                        '</td>' +
+                      '</tr>';
+            $('#tblAddVariant tbody').append(row);
+        });*@
+
+        $('.btnAddVariant').on('click', function () {
+            var row = '<tr>' +
+                        '<td hidden=""><input type="text" value="' + @ViewBag.ProjectId + '" class="form-control text-center projectId"/></td>' +
+                        '<td hidden=""><input type="text" class="form-control text-center variantId"/></td>' +
+                        '<td><input type="text" class="form-control text-center variantName"/></td>' +
+                        '<td>' +
+                          '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                          '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' +
+                        '</td>' +
+                      '</tr>';
+            $('#tblAddVariant tbody').append(row);
+        });
+
+        $(document).on('click', '.btnRemove', function () {
+            var url = '@Url.Action("RemoveVariantCalculator", "Management")';
+            var row = $(this).closest('tr');
+            var variantId = row.find('.variantId').val();
+            console.log(variantId);
+            if (variantId == '') {
+                row.remove();
+            } else if (variantId > 0) {
+                var counter = 0;
+                $('#tblAddVariant tbody tr').each(function() {
+                    counter = counter + 1;
+                });
+                console.log(counter);
+                if (counter == 1) {
+                    alertify.error('There must be one variant for the project');
+                } else {
+                    $.post(url, { variantId: variantId }, function (data) {
+                        row.remove();
+                        alertify.success('Row removed from database');
+                    });
+                }
+            }    
+        });
+
+        $(document).on('click', '.btnSave', function () {
+            var url = '@Url.Action("SaveVariant","Management")';
+            var row = $(this).closest('tr');
+            var variantName = row.find('.variantName').val();
+            var projectId = row.find('.projectId').val();
+            var variantId = row.find('.variantId').val();
+            console.log(projectId + ' ' + variantName+' '+variantId);
+            $.post(url, { variantName: variantName,variantId:variantId, projectId: projectId,isLocked:false }, function (data) {
+                console.log(data);
+                if (variantId == '') {
+                    alertify.error('Saved');
+                }
+                else if (data.Id > 0) {
+                    alertify.success('Update');
+                }
+            });
+        });
+    });
+    
+    $(window).on('load', function () {
+        var otherVariantUrl = '@Url.Action("GetPreviousOrderVariants","Management")';
+        $.post(otherVariantUrl, { projectId: '@ViewBag.ProjectId' }, function (data) {
+            console.log(data);
+            var row = '';
+
+            for (var i = 0; i < data.length; i++) {
+                var flag = 0;
+                $('#tblAddVariant tbody tr').each(function () {
+                    var prevRow = $(this).closest('tr');
+                    var variantName = prevRow.find('.variantName').val();
+                    if (variantName == data[i].VariantName) {
+                        flag = 1;
+                    }
+                });
+                if (flag == 0) {
+                    row = '<tr>' +
+                        '<td hidden=""><input type="text" value="' + @ViewBag.ProjectId + '" class="form-control text-center projectId"/></td>' +
+                        '<td hidden=""><input type="text" class="form-control text-center variantId"/></td>' +
+                        '<td><input type="text" style="color:blue" value="' + data[i].VariantName + '" class="form-control text-center variantName"/></td>' +
+                        '<td>' +
+                           '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                          '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' +
+                        '</td>' +
+                      '</tr>';
+                    $('#tblAddVariant tbody').append(row);
+                }
+            }
+        });
+    });
+</script>
+

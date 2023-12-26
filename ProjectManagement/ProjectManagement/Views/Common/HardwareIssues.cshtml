@@ -1,0 +1,243 @@
+﻿@model ProjectManagement.ViewModels.Common.VmHardwareIssueModel
+@{
+    ViewBag.Title = "HardwareIssu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>HardwareIssu</h2>
+
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=all" rel="stylesheet" type="text/css" />
+<link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+@*<link href="/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />*@
+<link href="/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<!-- END GLOAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<link href="/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL STYLES -->
+<link href="/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+<link href="/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME GLOBAL STYLES -->
+<!-- BEGIN THEME LAYOUT STYLES -->
+<link href="/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME LAYOUT STYLES -->
+<link rel="shortcut icon" href="favicon.ico" />
+<style type="text/css">
+    .modal {
+    }
+
+    .vertical-alignment-helper {
+        display: table;
+        height: 100%;
+        width: 100%;
+    }
+
+    .vertical-align-center {
+        /* To center vertically */
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    .modal-content {
+        /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+        width: inherit;
+        height: inherit;
+        /* To center horizontally */
+        margin: 0 auto;
+    }
+</style>
+
+
+
+@using (Html.BeginForm("StartProject", "Commercial", FormMethod.Post, new { @class = "form-horizontal portlet-body" }))
+{
+    @Html.ValidationSummary(true)
+    if (TempData["message"] != null)
+    {
+        if (TempData["messageType"] == (object)1)
+        {
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Warning!</strong> @TempData["message"]
+            </div>
+        }
+    }
+    <div class="form-body">
+        
+
+        <div class="row">
+
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control" })</div>
+                <div class="col-md-1">
+                    <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("StartProject", "Commercial")?projectId=' + $('option:selected', $('#ProjectDropdownId')).val()" />
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <br/>
+
+       
+        <div class="row">
+            <div class="col-md-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="col-lg-2">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase">Screening Test Issues</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>
+                        @*<div class="col-lg-2">
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="New LC" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=0'" />
+                        </div>*@
+
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-bordered table-hover" id="sample_1">
+                            <thead>
+                                <tr>
+                                    <th>ProjectName</th>
+                                    <th>ProjectType</th>
+                                    <th>IssueRaiseName</th>
+                                    <th>VerifiedName</th>
+                                    <th>IssueName</th>
+                                    <th>IssueTypeName</th>
+                                    <th>IssueTypeDetailName</th>
+                                    <th>IssueComment</th>
+                                    <th>VerifierComment</th>
+                                    <th>CommercialComment</th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.HardwareIssueCustomModels != null)
+                                {
+                                    foreach (var item in Model.HardwareIssueCustomModels)
+                                    {
+                                        <tr>
+                                            @*@Html.HiddenFor(modelItem=>item.HwIssueCommentId)*@
+                                            <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.ProjectType)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.IssueRaiseName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.VerifiedName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.IssueName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.IssueTypeName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.IssueTypeDetailName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.IssueComment)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.VerifierComment)</td>
+                                            <td>@Html.TextBoxFor(modelItem => item.CommercialComment)</td>
+                                            <td>
+                                                <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("CommercialComment", "Common", new { id = item.HwIssueCommentId, projectId = item.CommercialComment })'" />
+
+
+
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+            </div>
+        </div>
+        
+        
+        
+        
+        
+
+        @*-------------------------*@
+        
+        
+       
+       
+    </div>
+    <div class="form-actions">
+        <div class="row">
+            <div class="col-md-offset-3 col-md-9">
+                <input type="submit" value="Save" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+@*<div id='gameModal' class='modal hide fade in' data-url='@Url.Action("Create")'>
+
+    </div>*@
+<!-- Modal -->
+<div class="modal fade" id="gameModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="vertical-alignment-helper">
+        <div class="modal-dialog vertical-align-center">
+            <div class="modal-content">
+                <div id='gameContainer'>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+
+    function goToController(url) {
+        $(function () {
+            $.get(url, function (data) {
+                console.log(data);
+                $('#gameContainer').html(data);
+                $('#gameModal').modal('show');
+            });
+        });
+    }
+
+</script>
+
+@*<script src="/assets/global/plugins/jquery.min.js" type="text/javascript"></script>*@
+@*<script src="/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>*@
+<script src="/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="/assets/global/scripts/app.min.js" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+<script src="/assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>
+<script src="/assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>
+<script src="/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>

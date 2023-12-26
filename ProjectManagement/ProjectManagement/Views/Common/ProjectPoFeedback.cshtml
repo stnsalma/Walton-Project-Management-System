@@ -1,0 +1,114 @@
+﻿@model ProjectManagement.Models.ProjectPoFeedbackModel
+@{
+    ViewBag.Title = "ProjectPoFeedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ProjectPoFeedback", "Common", FormMethod.Post, new { id = "formFeedback", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.AddedBy)
+    @Html.HiddenFor(m => m.AddedDate)
+    @Html.HiddenFor(m => m.UpdatedBy)
+    @Html.HiddenFor(m => m.UpdatedDate)
+    <div class="portlet box blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">Feedback for PO</div>
+            <div class="tools">
+                <input type="button" class="btn btn-sm btn-warning" value="List" onclick="location.href='@Url.Action("ProjectPoFeedbacks","Common")'" />
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Project</div>
+                    <div class="col-md-10">
+                        @if (Model != null && Model.Id > 0)
+                        {
+                            @Html.HiddenFor(m => m.ProjectId)
+                            @Html.HiddenFor(m => m.ProjectModel)
+                            @Html.DropDownListFor(m => m.ProjectId, new SelectList(ViewBag.projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control", @disabled = "" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.ProjectId, new SelectList(ViewBag.projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                        }
+                    </div>
+                </div>
+            </div>
+                <br/>
+                <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">On Behalf Of</div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m=>m.OnBehalfOf, new SelectList(ViewBag.OnBehalfOf), "Select", new { @class = "form-control ddChosen" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Feedback</div>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(m => m.FeedBack, new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Reorder</div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.AllowReorder, new List<SelectListItem>
+                        {
+                            new SelectListItem{Value = "Yes",Text = "Yes"},
+                            new SelectListItem{Value = "No",Text = "No"}
+                        }, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">File Upload</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <input type="submit" value="Save" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    $(function () {
+        $(window).on('load', function () {
+            var status = '@ViewBag.Status';
+            console.log(status);
+            if (status != "blank") {
+                alertify.success(status);
+            }
+        });
+
+        $('#formFeedback').on('submit', function (e) {
+            if ($('#ProjectId option:selected').text() == 'Select') {
+                e.preventDefault();
+                alertify.error('Select a project');
+            }
+        });
+    });
+</script>
+
+
+

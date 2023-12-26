@@ -1,0 +1,23 @@
+﻿@*<h2>_SwQcOthersIncentiveField</h2>*@
+@model ProjectManagement.Models.Custom_Sw_IncentiveModel
+
+<tr class="tableTrCls">
+    @using (Html.BeginCollectionItem("SwQcOthersIncentiveModel.Custom_Sw_IncentiveModel"))
+    {
+        <td style="width:300px;" id="incentiveTypes" class="incentiveTypes">@Model.IncentiveTypes</td>
+        <td id="proName" class="proName">@Model.ProjectName</td>
+        <td id="assignedPersons" class="assignedPersons" style="display: none">@Model.AssignedPersons</td>
+        <td id="assignedEmployees" class="assignedEmployees">@Model.AssignedEmployees</td>
+        <td id="testPhaseId" class="testPhaseId" style="display: none">@Model.TestPhaseId</td>
+        <td id="testPhaseName" class="testPhaseName">@Model.TestPhaseName</td>
+        <td id="critical" class="critical">@Model.Critical</td>
+        <td id="major" class="major">@Model.Major</td>
+        <td id="minor" class="minor">@Model.Minor</td>
+        <td style="width:15%;" id="remarks" class="remarks">@Model.AddAmountRemarks</td>
+        <td id="effectiveMonth" class="effectiveMonth">
+            @if (@Model.EffectiveMonth != null)
+            { @String.Format("{0:yyyy-MM-dd}", @Model.EffectiveMonth) }
+        </td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow($(this).closest('tr'));">Remove</button></td>
+    }
+</tr>

@@ -1,0 +1,534 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.BTRCRegistrationVM
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<form id="pminfo">
+
+
+    <h3 class="form-section">Basic Information</h3>
+    @Html.HiddenFor(model => model.StartDate)
+    @Html.HiddenFor(model => model.EndDate)
+    @Html.HiddenFor(model => model.ProjectMasterId)
+    @Html.HiddenFor(model => model.ProjectMaster.ModelID)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectTypeId)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectName)
+    @Html.HiddenFor(model => model.ProjectMaster.SupplierId)
+    @Html.HiddenFor(model => model.ProjectMaster.SupplierName)
+    @Html.HiddenFor(model => model.ProjectMaster.SupplierModelName)
+    @Html.HiddenFor(model => model.ProjectMaster.NumberOfSample)
+    @Html.HiddenFor(model => model.ProjectMaster.Added)
+    @Html.HiddenFor(model => model.ProjectMaster.AddedDate)
+    @Html.HiddenFor(model => model.ProjectMaster.IsActive)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectType)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectNameForScreening)
+    @Html.HiddenFor(model => model.ProjectMaster.ScreeningCommentFromCommercial)
+    @Html.HiddenFor(model => model.ProjectMaster.SupplierTrustLevel)
+    @Html.HiddenFor(model => model.ProjectMaster.IsApproved)
+    @Html.HiddenFor(model => model.ProjectMaster.IsNew)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectManagerAssigned)
+    @Html.HiddenFor(model => model.ProjectMaster.IsReorder)
+    @Html.HiddenFor(model => model.ProjectMaster.Chipset)
+    @Html.HiddenFor(model => model.ProjectMaster.Battery)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectStatus)
+    @Html.HiddenFor(model => model.ProjectMaster.RevisedStatus)
+    @Html.HiddenFor(model => model.ProjectMaster.ManagentComment)
+    @Html.HiddenFor(model => model.ProjectMaster.OrderNuber)
+
+    @Html.HiddenFor(model => model.ProjectMaster.IsScreenTestComplete)
+    @Html.HiddenFor(model => model.ProjectMaster.ApproxProjectFinishDate)
+    @Html.HiddenFor(model => model.ProjectMaster.ApproxProjectOrderDate)
+    @Html.HiddenFor(model => model.ProjectMaster.ApproxShipmentDate)
+    @Html.HiddenFor(model => model.ProjectMaster.ApproximatePrice)
+    @Html.HiddenFor(model => model.ProjectMaster.GivenSampleToScreening)
+    @Html.HiddenFor(model => model.ProjectMaster.SlotType)
+    @Html.HiddenFor(model => model.ProjectMaster.BatteryType)
+    @Html.HiddenFor(model => model.ProjectMaster.ChargerSupplierName)
+    @Html.HiddenFor(model => model.ProjectMaster.OsVersion)
+    @Html.HiddenFor(model => model.ProjectMaster.MemoryBrandName)
+    @Html.HiddenFor(model => model.ProjectMaster.RomVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.RamVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.PcbaVendorName)
+    @Html.HiddenFor(model => model.ProjectMaster.PcbaFinalVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.DisplaySize)
+    @Html.HiddenFor(model => model.ProjectMaster.DisplayName)
+    @Html.HiddenFor(model => model.ProjectMaster.DisplayResulution)
+    @Html.HiddenFor(model => model.ProjectMaster.DisplaySpeciality)
+    @Html.HiddenFor(model => model.ProjectMaster.ProcessorName)
+    @Html.HiddenFor(model => model.ProjectMaster.ProcessorClock)
+    @Html.HiddenFor(model => model.ProjectMaster.TpVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.TpFinalVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.LcdVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.LcdFinalVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.CpuName)
+    @Html.HiddenFor(model => model.ProjectMaster.ChipsetFrequency)
+    @Html.HiddenFor(model => model.ProjectMaster.ChipsetBit)
+    @Html.HiddenFor(model => model.ProjectMaster.ChipsetCore)
+    @Html.HiddenFor(model => model.ProjectMaster.BackCam)
+    @Html.HiddenFor(model => model.ProjectMaster.BackCamSensor)
+    @Html.HiddenFor(model => model.ProjectMaster.BackCamBsi)
+    @Html.HiddenFor(model => model.ProjectMaster.FrontCam)
+    @Html.HiddenFor(model => model.ProjectMaster.BackCamAutoFocus)
+    @Html.HiddenFor(model => model.ProjectMaster.FrontCamAutoFocus)
+    @Html.HiddenFor(model => model.ProjectMaster.FrontCamSensor)
+    @Html.HiddenFor(model => model.ProjectMaster.FrontCamBsi)
+    @Html.HiddenFor(model => model.ProjectMaster.CameraVendor)
+    @Html.HiddenFor(model => model.ProjectMaster.HousingVendorName)
+    @Html.HiddenFor(model => model.ProjectMaster.HousingFinalVendorName)
+    @Html.HiddenFor(model => model.ProjectMaster.Gsensor)
+    @Html.HiddenFor(model => model.ProjectMaster.Psensor)
+    @Html.HiddenFor(model => model.ProjectMaster.Lsensor)
+    @Html.HiddenFor(model => model.ProjectMaster.Compass)
+    @Html.HiddenFor(model => model.ProjectMaster.Gyroscope)
+    @Html.HiddenFor(model => model.ProjectMaster.HallSensor)
+    @Html.HiddenFor(model => model.ProjectMaster.Otg)
+    @Html.HiddenFor(model => model.ProjectMaster.Gps)
+    @Html.HiddenFor(model => model.ProjectMaster.SpecialSensor)
+    @Html.HiddenFor(model => model.ProjectMaster.OrderQuantity)
+    @Html.HiddenFor(model => model.ProjectMaster.BateeryPossibleSupplierNames)
+    @Html.HiddenFor(model => model.ProjectMaster.ApprovalReviewRemarks)
+    @Html.HiddenFor(model => model.ProjectMaster.InitialApprovalDate)
+    @Html.HiddenFor(model => model.ProjectMaster.FinalApprovalDate)
+    @Html.HiddenFor(model => model.ProjectMaster.BatterySupplierName)
+    @Html.HiddenFor(model => model.ProjectMaster.EarphoneConfirmPrice)
+    @Html.HiddenFor(model => model.ProjectMaster.EarphoneSupplierName)
+    @Html.HiddenFor(model => model.ProjectMaster.ThreeLayerScreenProtector)
+    @Html.HiddenFor(model => model.ProjectMaster.BatteryCoverFinishingType)
+    @Html.HiddenFor(model => model.ProjectMaster.BatteryCoverLogoType)
+    @Html.HiddenFor(model => model.ProjectMaster.OtgCable)
+    @Html.HiddenFor(model => model.ProjectMaster.FlashLight)
+    @Html.HiddenFor(model => model.ProjectMaster.ScreeningIssueReviewDate)
+    @Html.HiddenFor(model => model.ProjectMaster.Cdma)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectModel)
+    @Html.HiddenFor(model => model.ProjectMaster.FourthGenFdd)
+    @Html.HiddenFor(model => model.ProjectMaster.FourthGenTdd)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectClosingStatus)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectClosingDate)
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectClosedBy)
+    @Html.HiddenFor(model => model.ProjectMaster.IsProjectManagerAssigned)
+    @Html.HiddenFor(model=>model.ProjectMaster.ChipsetName)
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Marketing Name<span class="required"> * </span></label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.MarketingName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Product Type<span class="required"> * </span></label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.ProjectMaster.SourcingType, new SelectList(new[]
+                                            {
+                                                new SelectListItem { Text = "Select", Value = "", Selected = true },
+                                                new SelectListItem { Text = "CBU", Value = "CBU"},
+                                                new SelectListItem { Text = "SKD", Value = "SKD"},
+                                                new SelectListItem { Text = "CKD", Value = "CKD"},
+                                                new SelectListItem { Text = "B-CKD", Value = "B-CKD"},
+                                                new SelectListItem { Text = "C-CKD", Value = "C-CKD"},
+                                                new SelectListItem { Text = "H-CKD", Value = "H-CKD"},
+                                                new SelectListItem { Text = "BC-CKD", Value = "BC-CKD"},
+                                                new SelectListItem { Text = "CH-CKD", Value = "CH-CKD"},
+                                                new SelectListItem { Text = "BH-CKD", Value = "BH-CKD"},
+                                                new SelectListItem { Text = "BCH-CKD", Value = "BCH-CKD"}
+                                            }, "Value", "Text"), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ProjectMaster.SourcingType, String.Empty, new { @class = "required" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Color</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.Color, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Application Ref</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.ApplicationRef, new { type = "text", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Number Of Slot</label>
+                <div class="col-md-9">
+
+                    @Html.DropDownListFor(model => model.ProjectMaster.SimSlotNumber, new List<SelectListItem>
+                                    {
+                                        new SelectListItem()
+                                        {
+                                            Text = "Single",Value = "1"
+                                        },
+                                        new SelectListItem()
+                                        {
+                                            Text = "Dual",Value = "2"
+                                        }
+                                    }, "select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Battery Capacity<span class="required"> * </span></label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.BatteryRating, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Battery Capacity(Tested)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.BatteryCapacityTested, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Charger Adapter Type</label>
+                <div class="col-md-9">
+
+                    @Html.DropDownListFor(model => model.ProjectMaster.ChargerAdapterType, new List<SelectListItem>
+                                    {
+                                        new SelectListItem()
+                                        {
+                                            Text = "Fast",Value = "Fast"
+                                        },
+                                        new SelectListItem()
+                                        {
+                                            Text = "Normal",Value = "Normal"
+                                        }
+                                    }, "select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Charger Output</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.ChargerRating, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">OS Name</label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.ProjectMaster.OsName, new List<SelectListItem>
+                                        {
+
+                                            new SelectListItem()
+                                            {
+                                                Text = "Lollipop",Value = "Lollipop"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Marshmallow",Value = "Marshmallow"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Nougat",Value = "Nougat"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Oreo",Value = "Oreo"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Pie",Value = "Pie"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Final Price</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.FinalPrice, new { type = "number", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">BDT Price</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.PriceBDT, new { type = "number", @readonly = "readonly", @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">ROM<span class="required"> * </span></label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.Rom, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">RAM<span class="required"> * </span></label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.Ram, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">NFC</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.NFC, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">BlueTooth</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.BlueTooth, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">WLAN</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.WLAN, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Data Speed</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.DataSpeed, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">SAR Value</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.SARValue, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Rare Camera</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.BackCamera, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Front Camera</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.FrontCamera, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Camera Resulution(In Software)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.CameraResulution, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">RadioInterface</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.RadioInterface, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Supported Spectrum Bands(2G)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.SecondGen, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Supported Spectrum Bands(3G)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.ThirdGen, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Supported Spectrum Bands(4G)</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.FourthGen, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Mother Board</label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.ProjectMaster.Motherboard, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Mediatek",Value = "Mediatek"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Spreadtrum",Value = "Spreadtrum"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Chipset Model</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.ChipsetName, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Marketing Period</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.MarketingPeriod, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">SerialNo</label>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.ProjectMaster.SerialNo, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label col-md-3">Shipment Mode</label>
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.ProjectMaster.ShipmentMode, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Air",Value = "Air"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Sea",Value = "Sea"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-lg-3 col-lg-offset-4">
+            <button id="btnSave" class="btn btn-success btn-circle">Save Information</button>
+        </div>
+    </div>
+    
+    <script>
+        $('#btnSave').on('click', function (event) {
+            event.preventDefault();
+            debugger;
+            var dt = $('#pminfo').serialize();
+            console.log(dt);
+            $.ajax({
+                url: '@Url.Action("SaveBTRCModelInfo", "ProjectManager")',
+                type: 'POST',
+                dataType: 'json',
+                data: $('#pminfo').serialize(),
+                success: function (result) {
+                    if (result.Success)
+                    {
+                        //$('#successModal').modal('show');
+                        ////$(".modelname option:selected").remove();
+                        //$("#successModalText").empty();
+                        //$('#successModalText').append("Project Information have been Updated!");
+                        window.location.href = '@Url.Action("BTRCModelInformation", "ProjectManager")';
+                    }
+                  }
+            });
+
+        });
+
+    </script>
+
+</form>

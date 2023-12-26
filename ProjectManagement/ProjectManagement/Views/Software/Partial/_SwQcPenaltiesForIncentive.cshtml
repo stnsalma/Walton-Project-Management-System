@@ -1,0 +1,22 @@
+﻿
+@*<h2>_SwQcPenaltiesForIncentive</h2>*@
+
+@model ProjectManagement.Models.Custom_Sw_IncentiveModel
+
+<tr id="@Model.ProjectName" class="tableTrCls">
+    @using (Html.BeginCollectionItem("SwQcOthersIncentiveModel2.Custom_Sw_IncentiveModel"))
+    {
+        <td style="display:none;" id="monNum" class="monNum">@Model.MonNum</td>
+        <td style="width:300px;" id="PenaltiesReason" class="PenaltiesReason">@Model.PenaltiesReason</td>
+        <td id="proName" class="proName">@Model.ProjectName</td>
+        <td id="employeeCode" class="employeeCode">@Model.EmployeeCode</td>
+        <td id="TotalPenalties" class="TotalPenalties">@Model.TotalPenalties</td>
+        <td id="AssignedPersons" class="AssignedPersons">@Model.AssignedPersons</td>
+        <td id="ParticularPersonsPenalties" class="ParticularPersonsPenalties">@Model.ParticularPersonsPenalties</td>
+        <td id="PenaltiesRemarks" class="PenaltiesRemarks">@Model.PenaltiesRemarks</td>
+    <td id="finalAmounts" class="finalAmounts">@Model.FinalAmount</td>
+        <td id="month" class="month">@Model.Month</td>
+        <td id="year" class="year">@Model.Year</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>

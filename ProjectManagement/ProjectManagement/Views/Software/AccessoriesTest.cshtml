@@ -1,0 +1,2039 @@
+﻿@*<h2>AccessoriesTest</h2>*@
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+@{
+    ViewBag.Title = "AccessoriesTest";
+
+}
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/loadingText.css" rel="stylesheet" />
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="alert alert-block alert-warning fade in">
+    <p style="color: green;font-size: 20px;"> Raise Accessories Issues </p>
+</div>
+
+@using (@Html.BeginForm("AccessoriesTest", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box alert-warning fade in" style="color: green">
+        <div class="portlet-title alert-warning fade in" style="color:green">
+            <div class="caption">
+                <i class="fa fa-picture" style="color: green"></i>Project select
+            </div>
+        </div>
+        <div class="portlet-body" style="display: block;">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-lg-2" style="font-weight: bold">
+                    Select Project
+                </div>
+                <div class="col-lg-8">
+                    @if (ViewBag.GetAccessoriesModel != null)
+                    {
+                        <div class="col-lg-9">
+                            @Html.DropDownListFor(model => model.ProjectsDetails, new SelectList(ViewBag.GetAccessoriesModel, "Value", "Text"), new { @class = "form-control ddChosen" })
+                        </div>
+                        <div class="col-lg-3">
+                            <input type="button" id="btnforSearch" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("AccessoriesTest", "Software")?ProjectsDetails=' + $('option:selected', $('#ProjectsDetails')).val()  " />
+                        </div>
+                    }
+                </div>
+                <div class="col-lg-2"></div>
+            </div>
+            <br /><br /><br />
+            <div class="row">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    <input type="button" id="btnforFinalSubmit" class="btn sbold uppercase btn-outline red" value="Do you want to submit finally?" />
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="color: brown;">
+                        <span class="caption-subject #569450 sbold uppercase"> Added Test</span>
+                    </div>
+                </div>
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:brown;">
+                            <i class="fa fa-cogs"></i>Test
+                        </div>
+                        <div class="tools" style="background-color:green;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-responsive table-scrollable">
+                            <table id="tblForEarDetails" class="table table-striped table-bordered table-hover tblForEarDetails" style="display: none">
+                                <thead class="flip-content">
+                                    <tr>
+                                        @*<th class="text-center"> # </th>*@
+                                        <th class="numeric" style="display: none"> AccessId </th>
+                                        <th class="numeric"> Headphone<br /> Model </th>
+                                        <th class="numeric">Music Player<br /> Playback</th>
+                                        <th class="numeric"> Video Player<br /> Playback </th>
+                                        <th class="numeric">Voice Call </th>
+                                        <th class="numeric"> Voice Call <br />Controller</th>
+                                        <th class="numeric"> FM Playback </th>
+                                        <th class="numeric"> FM Controller </th>
+                                        <th class="numeric"> Controller </th>
+                                        <th class="numeric"> Remarks </th>
+                                        <th class="numeric"> Music Base</th>
+                                        <th class="numeric">Youtube<br /> Playback </th>
+                                        <th class="numeric">Youtube<br /> Controller </th>
+                                        <th class="numeric">Volume<br /> Controller </th>
+                                        <th class="numeric">High End <br /> Device </th>
+                                        <th class="numeric">Mid Range <br /> Device </th>
+                                        <th class="numeric">Lower Mid <br />Range Device </th>
+                                        <th class="numeric">Low <br />Range Device </th>
+                                        <th style="text-align: center;">Delete </th>
+                                        <th style="text-align: center;">Edit </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.GetSavedAccessoriesDataEarphone != null)
+                                    {
+                                        foreach (var item in ViewBag.GetSavedAccessoriesDataEarphone)
+                                        {
+                                    <tr>
+                                        <td style="display: none" class="AccessId">
+                                            @item.AccessId
+                                        </td>
+                                        <td>@item.HeadphoneModel</td>
+                                        <td>@item.MusicPlayerPlayback</td>
+                                        <td>@item.VideoPlayerPlayback</td>
+                                        <td>@item.VoiceCall</td>
+                                        <td>@item.VoiceCallController</td>
+                                        <td>@item.FmPlayback</td>
+                                        <td>@item.FmController</td>
+                                        <td>@item.Controller</td>
+                                        <td>@item.Remarks</td>
+                                        <td>@item.MusicBase</td>
+                                        <td>@item.YoutubePlayback</td>
+                                        <td>@item.YoutubeController</td>
+                                        <td>@item.VolumeController</td>
+                                        <td>@item.HighEndDevice</td>
+                                        <td>@item.MidRangeDevice</td>
+                                        <td>@item.LowerMidRangeDevice</td>
+                                        <td>@item.LowRangeDevice</td>
+                                        <td>
+                                            <button type="submit" style="width:120px" class="btn btn-danger removeBtns" id="removeBtns">
+                                                <span class="glyphicon glyphicon-remove"></span> DELETE
+                                            </button>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-success btnOpenModal">
+                                                <span class="glyphicon glyphicon-edit"></span> EDIT
+                                            </button>
+                                        </td>
+                                    </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-responsive table-scrollable">
+                            <table id="tblForBatteryDetails" class="table table-striped table-bordered table-hover tblForBatteryDetails" style="display: none">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th class="numeric" style="display: none"> BatteryId </th>
+                                        <th class="numeric"> Check points <br /> \Charging slots > </th>
+                                        <th class="numeric">Battery<br />(mAh)</th>
+                                        <th class="numeric">100-90%</th>
+                                        <th class="numeric">90-80%</th>
+                                        <th class="numeric">80-70%</th>
+                                        <th class="numeric">70-60%</th>
+                                        <th class="numeric">60-50%</th>
+                                        <th class="numeric">50-40%</th>
+                                        <th class="numeric">40-30%</th>
+                                        <th class="numeric">30-20%</th>
+                                        <th class="numeric">20-10%</th>
+                                        <th class="numeric">10-0%</th>
+                                        <th class="numeric">Average full Discharge</th>
+                                        <th style="text-align: center;">Delete </th>
+                                        <th style="text-align: center;">Edit </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.GetSavedAccessoriesDataBattery != null)
+                                    {
+                                        foreach (var item in ViewBag.GetSavedAccessoriesDataBattery)
+                                        {
+                                            <tr>
+                                                <td style="display: none" class="BatteryId">
+                                                    @item.BatteryId
+                                                </td>
+                                                <td>@item.CheckPoints</td>
+                                                <td>@item.BatterymAh</td>
+                                                <td>@item.HundredToNighty</td>
+                                                <td>@item.NightyToEighty</td>
+                                                <td>@item.EightyToSeventy</td>
+                                                <td>@item.SeventyToSixty</td>
+                                                <td>@item.SixtyToFifty</td>
+                                                <td>@item.FiftyToFourty</td>
+                                                <td>@item.FourtyToThirty</td>
+                                                <td>@item.ThirtyToTwenty</td>
+                                                <td>@item.TwentyToTen</td>
+                                                <td>@item.TenToZero</td>
+                                                <td>@item.AverageFullDischarge</td>
+                                                <td>
+                                                    <button type="submit" style="width:120px" class="btn btn-danger removeBtns" id="removeBtns">
+                                                        <span class="glyphicon glyphicon-remove"></span> DELETE
+                                                    </button>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-success btnOpenModal2">
+                                                        <span class="glyphicon glyphicon-edit"></span> EDIT
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="table-responsive table-scrollable">
+                            <table id="tblForGlassDetails" class="table table-striped table-bordered table-hover tblForGlassDetails" style="display: none">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th class="numeric"> Issue <br />Sr. </th>
+                                        <th class="numeric"> Issue <br />Scenario </th>
+                                        <th class="numeric">Expected<br />Outcome</th>
+                                        <th class="numeric">Walton Qc <br />Status</th>
+                                        <th class="numeric"> Upload </th>
+                                     
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.SwQcGlassProtectorTests.Any())
+                                    {
+                                        for (int k = 0; k < Model.SwQcGlassProtectorTests.Count; k++)
+                                        {
+                                            if (Model.SwQcGlassProtectorTests[k].SwQcHeadAssignId != 0)
+                                            {
+                                               <tr>
+                                                    <td>@Model.SwQcGlassProtectorTests[k].IssueSerial</td>
+                                                    <td>@Model.SwQcGlassProtectorTests[k].IssueScenario</td>
+                                                    <td>@Model.SwQcGlassProtectorTests[k].ExpectedOutcome</td>
+                                                    <td>@Model.SwQcGlassProtectorTests[k].WaltonQcStatus</td>
+                                                    <td>
+                                                       <div class="file-preview-thumbnails">
+                                                           <div class="">
+                                                               <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                   <div class="col-lg-12">
+                                                                       @Html.HiddenFor(model => model.SwQcGlassProtectorTests[k].Upload, new { @class = "clsRmv" })
+                                                                     
+                                                                       @if (Model.SwQcGlassProtectorTests[k].FilesDetails != null && Model.SwQcGlassProtectorTests[k].FilesDetails.Any())
+                                                                       {
+                                                                           for (int m = 0; m < Model.SwQcGlassProtectorTests[k].FilesDetails.Count; m++)
+                                                                           {
+                                                                               if (Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".jpg" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".png" ||
+                                                                                   Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".mp4" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".jpeg" ||
+                                                                                   Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".txt" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".xls" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".wav")
+                                                                               {
+                                                                                   <div class="col-lg-3">
+                                                                                       <embed class="" src="@Model.SwQcGlassProtectorTests[k].FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                                       <br />
+                                                                                       <a target="_blank" href="@Model.SwQcGlassProtectorTests[k].FilesDetails[m].FilePath">Download</a>
+                                                                                   </div>
+                                                                                   <div class="col-lg-3" style="width: 50px;"></div>
+                                                                               }
+                                                                               if (Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".zip" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".pdf" ||
+                                                                                   Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".docx" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".xlsx" ||
+                                                                                   Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".rar" || Model.SwQcGlassProtectorTests[k].FilesDetails[m].Extention == ".pptx")
+                                                                               {
+                                                                                   var urls = Model.SwQcGlassProtectorTests[k].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                   for (int k1 = 0; k1 < urls.Count; k1++)
+                                                                                   {
+                                                                                       var last = urls[k1].Split('-').Last();
+                                                                                       var lastNameForM = Model.SwQcGlassProtectorTests[k].FilesDetails[m].FilePath;
+
+                                                                                       lastNameForM = Path.GetFileName(last);
+
+                                                                                       <div class="col-lg-3" style="width: 100px; height: 100px;">
+                                                                                           @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+                                                                                           <br />
+                                                                                           <a href="@Model.SwQcGlassProtectorTests[k].FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                                       </div>
+                                                                                       <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                   }
+                                                                               }
+
+                                                                           }
+                                                                       }
+
+                                                                   </div>
+
+
+                                                               </div>
+
+                                                           </div>
+                                                       </div>
+
+                                                   </td>
+                                                </tr> 
+                                            }
+                                                
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box alert-warning fade in">
+        <div class="portlet-title">
+            <div class="caption alert-warning fade in" style="color: green">
+                <i class="fa fa-cogs"></i>Add Test Result
+            </div>
+            <div class="tools">
+                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+            </div>
+        </div>
+        <div class="portlet-body" style="color: black">
+            <div class="table-scrollable table-responsive">
+                <table id="tblForFeatureInsert" class="table table-bordered table-striped table-condensed flip-content tblForFeatureInsert" style="display: none;">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addmoreForFeature"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                            <th class="numeric"> Headphone<br /> Model </th>
+                            <th class="numeric">Music Player<br /> Playback<br />(Pause/Play)</th>
+                            <th class="numeric"> Video Player<br /> Playback </th>
+                            <th class="numeric"> Voice Call</th>
+                            <th class="numeric"> Voice Call <br />Controller & Hold </th>
+                            <th class="numeric"> FM Playback <br />& Controller </th>
+                            <th class="numeric"> Controller </th>
+                            <th class="numeric"> Remarks </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">0</td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td style="display: none;"><input type="text" name="issueList[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[0].HeadphoneModel" id="HeadphoneModel" class="form-control input-small" rows="4" placeholder="Headphone Model"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[0].MusicPlayerPlayback" class="form-control input-small" rows="4" placeholder="Music Player Playback"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[0].VideoPlayerPlayback" class="form-control input-small" rows="4" placeholder="Video Player Playback"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList[0].VoiceCall" class="form-control input-small" rows="4" placeholder="Voice Call"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList[0].VoiceCallController" class="form-control input-small" rows="4" placeholder="Voice Call Controller & Hold"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList[0].FmPlayback" class="form-control input-small" rows="4" placeholder="FM Playback & Controller"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList[0].Controller" class="form-control input-small" rows="4" placeholder="Controller"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList[0].Remarks" class="form-control input-small" rows="4" placeholder="Remarks"></textarea>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-scrollable table-responsive">
+                <table id="tblForSmartInsert" class="table table-bordered table-striped table-condensed flip-content tblForSmartInsert" style="display: none;">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addmoreForSmart"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                            <th class="numeric"> Headphone<br /> Model </th>
+                            <th class="numeric">Music Player<br /> Playback</th>
+                            <th class="numeric"> Video Player<br /> Playback </th>
+                            <th class="numeric"> Music Base</th>
+                            <th class="numeric">Youtube<br /> Playback </th>
+                            <th class="numeric">Youtube<br /> Controller </th>
+                            <th class="numeric">Voice Call<br /> (Receive<br />/Drop/Mute) </th>
+                            <th class="numeric"> Voice Call <br />Controller</th>
+                            <th class="numeric"> FM Playback </th>
+                            <th class="numeric"> FM Controller </th>
+                            <th class="numeric">Volume<br /> Controller </th>
+                            <th class="numeric"> Remarks </th>
+                            <th class="numeric">High End <br /> Device </th>
+                            <th class="numeric">Mid Range <br /> Device </th>
+                            <th class="numeric">Lower Mid <br />Range Device </th>
+                            <th class="numeric">Low <br />Range Device </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">0</td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td style="display: none;"><input type="text" name="issueList1[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].HeadphoneModel" id="HeadphoneModel" class="form-control input-small" rows="4" placeholder="Headphone Model" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].MusicPlayerPlayback" class="form-control input-small" rows="4" placeholder="Music Player Playback" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].VideoPlayerPlayback" class="form-control input-small" rows="4" placeholder="Video Player Playback" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].MusicBase" class="form-control input-small" rows="4" placeholder="Music Base" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].YoutubePlayback" class="form-control input-small" rows="4" placeholder="Youtube Playback" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].YoutubeController" class="form-control input-small" rows="4" placeholder="Youtube Controller" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].VoiceCall" class="form-control input-small" rows="4" placeholder="Voice Call(Receive/Drop/Mute)" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].VoiceCallController" class="form-control input-small" rows="4" placeholder="Voice Call Controller" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].FmPlayback" class="form-control input-small" rows="4" placeholder="FM Playback" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].FmController" class="form-control input-small" rows="4" placeholder="FM Controller" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].VolumeController" class="form-control input-small" rows="4" placeholder="Volume Controller" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].Remarks" class="form-control input-small" rows="4" placeholder="Remarks" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].HighEndDevice" class="form-control input-small" rows="4" placeholder="High End Device" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].MidRangeDevice" class="form-control input-small" rows="4" placeholder="Mid Range Device" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].LowerMidRangeDevice" class="form-control input-small" rows="4" placeholder="Lower Mid Range Device" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="form-group">
+                                    <textarea name="issueList1[0].LowRangeDevice" class="form-control input-small" rows="4" placeholder="Low Range Device" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-scrollable table-responsive">
+                <table id="tblForBattery" class="table table-bordered table-striped table-condensed flip-content tblForBattery" style="display: none;">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addmoreForBattery"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                            <th class="numeric"> Check points <br /> \Charging slots > </th>
+                            <th class="numeric">Battery<br />(mAh)</th>
+                            <th class="numeric">100-90%</th>
+                            <th class="numeric">90-80%</th>
+                            <th class="numeric">80-70%</th>
+                            <th class="numeric">70-60%</th>
+                            <th class="numeric">60-50%</th>
+                            <th class="numeric">50-40%</th>
+                            <th class="numeric">40-30%</th>
+                            <th class="numeric">30-20%</th>
+                            <th class="numeric">20-10%</th>
+                            <th class="numeric">10-0%</th>
+                            <th class="numeric">Average full Discharge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">0</td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td style="display: none;"><input type="text" name="issueList3[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].CheckPoints" id="CheckPoints" class="form-control input-small" rows="4" placeholder="Check Points\Charging slots" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList3[0].BatterymAh" type="number" min="0" class="form-control input-small" rows="4" placeholder="Battery mAh" style="text-align: left" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].HundredToNighty" class="form-control input-small" rows="4" placeholder="100-90%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].NightyToEighty" class="form-control input-small" rows="4" placeholder="90-80%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].EightyToSeventy" class="form-control input-small" rows="4" placeholder="80-70%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].SeventyToSixty" class="form-control input-small" rows="4" placeholder="70-60%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].SixtyToFifty" class="form-control input-small" rows="4" placeholder="60-70%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].FiftyToFourty" class="form-control input-small" rows="4" placeholder="50-40%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].FourtyToThirty" class="form-control input-small" rows="4" placeholder="40-30%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].ThirtyToTwenty" class="form-control input-small" rows="4" placeholder="30-20%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].TwentyToTen" class="form-control input-small" rows="4" placeholder="20-10%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].TenToZero" class="form-control input-small" rows="4" placeholder="10-0%" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList3[0].AverageFullDischarge" class="form-control input-small" rows="4" placeholder="Average Full Discharge" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-scrollable table-responsive">
+                <table id="tblForGlassProtector" class="table table-bordered table-striped table-condensed flip-content tblForGlassProtector" style="display:none">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addmoreForGlass"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                            <th class="numeric"> Issue <br />Scenario </th>
+                            <th class="numeric">Expected<br />Outcome</th>
+                            <th class="numeric">Walton Qc <br />Status</th>
+                            <th class="numeric"> Upload </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">0</td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td style="display: none;"><input type="text" name="issueList4[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList4[0].IssueScenario" id="IssueScenario" class="form-control input-small" rows="4" placeholder="Issue Scenario" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList4[0].ExpectedOutcome" id="ExpectedOutcome" class="form-control input-small" rows="4" placeholder="Expected Outcome" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList4[0].WaltonQcStatus" id="WaltonQcStatus" class="form-control input-small" rows="4" placeholder="Walton Qc Status" style="text-align: left"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <div class="col-md-11">
+                                    <table class="File11" id="hh1">
+                                        <tr id="trIdForFile">
+                                            <td class="filesss" id="filesId">
+                                                <div class="col-md-9" id="fileIdForCr">
+                                                    <input type="file" name="issueList4[0].File" id="File11" />
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr'));">
+                                                        <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                    </button>
+                                                </div>
+                                                <br /><br />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="col-md-2">
+                                        <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success center" onclick="javascript: addField('issueList4[0].File', $(this).closest('tr'));">
+                                            <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                        </button><br /><br />
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <input type="text" name="SwQcHeadAssignId" id="SwQcHeadAssignId" value="" style="display:none;" />
+            <input type="text" name="ProjectType" id="ProjectType" value="" style="display:none;" />
+            <input type="text" name="SwQcAssignId" id="SwQcAssignId" value="" style="display:none;" />
+            <input type="text" name="ProjectMasterId" id="ProjectMasterId" value="" style="display:none;" />
+            <input type="text" name="TestPhaseID" id="TestPhaseID" value="" style="display:none;" />
+            <input type="text" name="AccessoriesTestType" id="AccessoriesTestType" value="" style="display:none;" />
+        </div>
+    </div>
+
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+
+    <div class="form-actions">
+        <button id="btnSubmit" type="submit" class="btn blue">Submit</button>
+    </div>
+}
+@*//modal*@
+
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Edit An Issue</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <div class="form-group" style="display: none">
+                        <label class="control-label">AccessId</label>
+                        <input name="AccessId" id="AccessId" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Headphone Model:</label>
+                        <textarea name="HeadphoneModel1" id="HeadphoneModel1" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Music Player Playback:</label>
+                        <textarea name="MusicPlayerPlayback" id="MusicPlayerPlayback" class="form-control"></textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Video Player Playback:</label>
+                        <textarea name="VideoPlayerPlayback" id="VideoPlayerPlayback" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">VoiceCall:</label>
+                        <textarea name="VoiceCall" id="VoiceCall" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Voice Call Controller:</label>
+                        <textarea name="VoiceCallController" id="VoiceCallController" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">FM Playback:</label>
+                        <textarea name="FmPlayback" id="FmPlayback" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">FM Controller:</label>
+                        <textarea name="FmController" id="FmController" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Controller:</label>
+                        <textarea name="Controller" id="Controller" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Remarks:</label>
+                        <textarea name="Remarks" id="Remarks" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Music Base:</label>
+                        <textarea name="MusicBase" id="MusicBase" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Youtube Playback:</label>
+                        <textarea name="YoutubePlayback" id="YoutubePlayback" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Youtube Controller:</label>
+                        <textarea name="YoutubeController" id="YoutubeController" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Volume Controller:</label>
+                        <textarea name="VolumeController" id="VolumeController" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">High End Device:</label>
+                        <textarea name="HighEndDevice" id="HighEndDevice" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Mid Range Device:</label>
+                        <textarea name="MidRangeDevice" id="MidRangeDevice" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Lower Mid Range Device:</label>
+                        <textarea name="LowerMidRangeDevice" id="LowerMidRangeDevice" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Low Range Device:</label>
+                        <textarea name="LowRangeDevice" id="LowRangeDevice" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave" class="btn green smitModalOfSave" value="Save changes" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade " id="draggable2" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Edit An Issue</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+
+                    <div class="form-group" style="display: none">
+                        <label class="control-label">BatteryId</label>
+                        <input name="BatteryId" id="BatteryId" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Check Points:</label>
+                        <textarea name="CheckPoints1" id="CheckPoints1" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Battery (mAh):</label>
+                        <input name="BatterymAh" id="BatterymAh" min="0" type="number" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">100-90%:</label>
+                        <textarea name="HundredToNighty" id="HundredToNighty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">90-80%:</label>
+                        <textarea name="NightyToEighty" id="NightyToEighty" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">80-70%:</label>
+                        <textarea name="EightyToSeventy" id="EightyToSeventy" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">70-60%:</label>
+                        <textarea name="SeventyToSixty" id="SeventyToSixty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">60-50%:</label>
+                        <textarea name="SixtyToFifty" id="SixtyToFifty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">50-40%:</label>
+                        <textarea name="FiftyToFourty" id="FiftyToFourty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">40-30%:</label>
+                        <textarea name="FourtyToThirty" id="FourtyToThirty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">30-20%:</label>
+                        <textarea name="ThirtyToTwenty" id="ThirtyToTwenty" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">20-10%:</label>
+                        <textarea name="TwentyToTen" id="TwentyToTen" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">10-0%:</label>
+                        <textarea name="TenToZero" id="TenToZero" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Average Full Discharge:</label>
+                        <textarea name="AverageFullDischarge" id="AverageFullDischarge" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave2" class="btn green smitModalOfSave2" value="Save changes" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    var projectsDetails = $('#ProjectsDetails :selected').val();
+    var array = [];
+    array = projectsDetails.split(",");
+    console.log(array[0].trim());
+    console.log(array[1].trim());
+    console.log(array[2].trim());
+    console.log(array[3].trim());
+    console.log(array[4].trim());
+    console.log(array[5].trim());
+
+    var proType = array[2].trim();
+    var accessType = array[5].trim();
+    //tblForBattery
+    if (proType == "Feature" && accessType == "Earphone") {
+        document.getElementById('tblForFeatureInsert').style.display = "table";
+        document.getElementById('tblForSmartInsert').style.display = "none";
+        document.getElementById('tblForEarDetails').style.display = "table";
+        document.getElementById('tblForGlassProtector').style.display = "none";
+        document.getElementById('tblForGlassDetails').style.display = "none";
+    } else if (proType == "Smart" && accessType == "Earphone") {
+        document.getElementById('tblForSmartInsert').style.display = "table";
+        document.getElementById('tblForFeatureInsert').style.display = "none";
+        document.getElementById('tblForEarDetails').style.display = "table";
+        document.getElementById('tblForGlassProtector').style.display = "none";
+        document.getElementById('tblForGlassDetails').style.display = "none";
+    } else if (accessType == "Battery") {
+        document.getElementById('tblForFeatureInsert').style.display = "none";
+        document.getElementById('tblForSmartInsert').style.display = "none";
+        document.getElementById('tblForEarDetails').style.display = "none";
+
+        document.getElementById('tblForBattery').style.display = "table";
+        document.getElementById('tblForBatteryDetails').style.display = "table";
+
+        document.getElementById('tblForGlassProtector').style.display = "none";
+        document.getElementById('tblForGlassDetails').style.display = "none";
+    }
+    else if (accessType == "Glass Protector" || accessType == "Charger") {
+        document.getElementById('tblForFeatureInsert').style.display = "none";
+        document.getElementById('tblForSmartInsert').style.display = "none";
+        document.getElementById('tblForEarDetails').style.display = "none";
+        document.getElementById('tblForBattery').style.display = "none";
+        document.getElementById('tblForBatteryDetails').style.display = "none";
+
+        document.getElementById('tblForGlassProtector').style.display = "table";
+        document.getElementById('tblForGlassDetails').style.display = "table";
+    }
+    $(document).ready(function () {
+
+        if (proType == "Feature" && accessType == "Earphone") {
+            var t1 = $('#tblForEarDetails').DataTable({
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+
+            });
+        } else if (proType == "Smart" && accessType == "Earphone") {
+            var t2 = $('#tblForEarDetails').DataTable({
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+
+            });
+        }
+        else if (accessType == "Battery") {
+            var t3 = $('#tblForBatteryDetails').DataTable({
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+
+            });
+        }
+        else if (accessType == "Glass Protector" || accessType == "Charger") {
+            var t4 = $('#tblForGlassDetails').DataTable({
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+
+            });
+        }
+    });
+    $(function () {
+        var index = 0;
+
+        var currentRow;
+        $("body").on("click", "#tblForEarDetails .btnOpenModal", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblForEarDetails');
+
+
+            var AccessId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var HeadphoneModel1 = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var MusicPlayerPlayback = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var VideoPlayerPlayback = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var VoiceCall = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var VoiceCallController = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+            var FmPlayback = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+            var FmController = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+            var Controller = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+            var Remarks = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+            var MusicBase = $.trim(table.rows[rowIndex].cells[10].innerHTML);
+            var YoutubePlayback = $.trim(table.rows[rowIndex].cells[11].innerHTML);
+            var YoutubeController = $.trim(table.rows[rowIndex].cells[12].innerHTML);
+            var VolumeController = $.trim(table.rows[rowIndex].cells[13].innerHTML);
+            var HighEndDevice = $.trim(table.rows[rowIndex].cells[14].innerHTML);
+            var MidRangeDevice = $.trim(table.rows[rowIndex].cells[15].innerHTML);
+            var LowerMidRangeDevice = $.trim(table.rows[rowIndex].cells[16].innerHTML);
+            var LowRangeDevice = $.trim(table.rows[rowIndex].cells[17].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#AccessId').val(AccessId);
+            $('#HeadphoneModel1').val(HeadphoneModel1);
+            $('#MusicPlayerPlayback').val(MusicPlayerPlayback);
+            $('#VideoPlayerPlayback').val(VideoPlayerPlayback);
+            $('#VoiceCall').val(VoiceCall);
+            $('#VoiceCallController').val(VoiceCallController);
+            $('#FmPlayback').val(FmPlayback);
+            $('#FmController').val(FmController);
+            $('#Controller').val(Controller);
+            $('#Remarks').val(Remarks);
+            $('#MusicBase').val(MusicBase);
+            $('#YoutubePlayback').val(YoutubePlayback);
+            $('#YoutubeController').val(YoutubeController);
+            $('#VolumeController').val(VolumeController);
+            $('#HighEndDevice').val(HighEndDevice);
+            $('#MidRangeDevice').val(MidRangeDevice);
+            $('#LowerMidRangeDevice').val(LowerMidRangeDevice);
+            $('#LowRangeDevice').val(LowRangeDevice);
+
+            currentRow = $(this).closest('tr');
+
+
+        });
+
+        $("body").on("click", "#tblForBatteryDetails .btnOpenModal2", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblForBatteryDetails');
+
+            var BatteryId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var CheckPoints1 = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var BatterymAh = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var HundredToNighty = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var NightyToEighty = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var EightyToSeventy = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+            var SeventyToSixty = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+            var SixtyToFifty = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+            var FiftyToFourty = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+            var FourtyToThirty = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+            var ThirtyToTwenty = $.trim(table.rows[rowIndex].cells[10].innerHTML);
+            var TwentyToTen = $.trim(table.rows[rowIndex].cells[11].innerHTML);
+            var TenToZero = $.trim(table.rows[rowIndex].cells[12].innerHTML);
+            var AverageFullDischarge = $.trim(table.rows[rowIndex].cells[13].innerHTML);
+
+            $('#draggable2').modal();
+
+            $('#BatteryId').val(BatteryId);
+            $('#CheckPoints1').val(CheckPoints1);
+            $('#BatterymAh').val(BatterymAh);
+            $('#HundredToNighty').val(HundredToNighty);
+            $('#NightyToEighty').val(NightyToEighty);
+            $('#EightyToSeventy').val(EightyToSeventy);
+            $('#SeventyToSixty').val(SeventyToSixty);
+            $('#SixtyToFifty').val(SixtyToFifty);
+            $('#FiftyToFourty').val(FiftyToFourty);
+            $('#FourtyToThirty').val(FourtyToThirty);
+            $('#ThirtyToTwenty').val(ThirtyToTwenty);
+            $('#TwentyToTen').val(TwentyToTen);
+            $('#TenToZero').val(TenToZero);
+            $('#AverageFullDischarge').val(AverageFullDischarge);
+
+            currentRow = $(this).closest('tr');
+        });
+
+        //removeBtn
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+        $('#addmoreForFeature').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+                <tr class="tableTrCls1" id="trIdForUpload">
+                     <td  style="display: none;">$#</td>
+                     <td style="display: none;"><input type="text" name="issueList[$#].IsRemoved" class="IsRemoved form-control input-small" value="0"  /></td>
+                      <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].HeadphoneModel" id="HeadphoneModel" class="form-control input-small" rows="4" placeholder="Headphone Model"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].MusicPlayerPlayback" class="form-control input-small" rows="4" placeholder="Music Player Playback"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].VideoPlayerPlayback" class="form-control input-small" rows="4" placeholder="Video Player Playback"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].VoiceCall" class="form-control input-small" rows="4" placeholder="Voice Call"></textarea>
+                        </div>
+                    </td>
+                   <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].VoiceCallController" class="form-control input-small" rows="4" placeholder="Voice Call Controller & Hold"></textarea>
+                        </div>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList[$#].FmPlayback" class="form-control input-small" rows="4" placeholder="FM Playback & Controller"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList[$#].Controller" class="form-control input-small" rows="4" placeholder="Controller"></textarea>
+                        </div>
+                    </td>
+                  <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList[$#].Remarks" class="form-control input-small" rows="4" placeholder="Remarks"></textarea>
+                        </div>
+                    </td>
+
+                </tr>
+*/
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblForFeatureInsert > tbody:last').append(replaceTr);
+
+
+        });
+
+        $('#addmoreForSmart').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+                <tr class="tableTrCls1" id="trIdForUpload">
+                     <td  style="display: none;">$#</td>
+                     <td style="display: none;"><input type="text" name="issueList1[$#].IsRemoved" class="IsRemoved form-control input-small" value="0"  /></td>
+                      <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].HeadphoneModel" id="HeadphoneModel" class="form-control input-small" rows="4" placeholder="Headphone Model"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].MusicPlayerPlayback" class="form-control input-small" rows="4" placeholder="Music Player Playback"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].VideoPlayerPlayback" class="form-control input-small" rows="4" placeholder="Video Player Playback"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].MusicBase" class="form-control input-small" rows="4" placeholder="Music Base"></textarea>
+                        </div>
+                    </td>
+                   <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].YoutubePlayback" class="form-control input-small" rows="4" placeholder="Youtube Playback"></textarea>
+                        </div>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].YoutubeController" class="form-control input-small" rows="4" placeholder="Youtube Controller"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].VoiceCall" class="form-control input-small" rows="4" placeholder="Voice Call(Receive/Drop/Mute)"></textarea>
+                        </div>
+                    </td>
+                  <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].VoiceCallController" class="form-control input-small" rows="4" placeholder="Voice Call Controller"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].FmPlayback" class="form-control input-small" rows="4" placeholder="FM Playback"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].FmController" class="form-control input-small" rows="4" placeholder="FM Controller"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].VolumeController" class="form-control input-small" rows="4" placeholder="Volume Controller"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].Remarks" class="form-control input-small" rows="4" placeholder="Remarks"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].HighEndDevice" class="form-control input-small" rows="4" placeholder="High End Device"></textarea>
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].MidRangeDevice" class="form-control input-small" rows="4" placeholder="Mid Range Device"></textarea>
+                        </div>
+                    </td>
+                   <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].LowerMidRangeDevice" class="form-control input-small" rows="4" placeholder="Lower Mid Range Device"></textarea>
+                        </div>
+                    </td>
+                   <td class="numeric">
+                        <div class="form-group">
+                            <textarea name="issueList1[$#].LowRangeDevice" class="form-control input-small" rows="4" placeholder="Low Range Device"></textarea>
+                        </div>
+                    </td>
+                </tr>
+*/
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblForSmartInsert > tbody:last').append(replaceTr);
+        });
+
+        $('#addmoreForBattery').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+            var CheckPoints;
+            $("#tblForBattery tr.tableTrCls1").each(function () {
+
+                CheckPoints = $.trim($(this).find('#CheckPoints').val());
+
+                console.log("CheckPoints  1:   " + CheckPoints);
+
+                if (CheckPoints == null || CheckPoints == "undefined" || CheckPoints == "") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please Insert Check Points.",
+                    }).show();
+                    return false;
+                }
+
+            });
+
+            console.log("CheckPoints  :   " + CheckPoints);
+
+            if (CheckPoints == null || CheckPoints == "undefined" || CheckPoints == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Check Points.",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+                <tr class="tableTrCls1" id="trIdForUpload">
+                     <td  style="display: none;">$#</td>
+                     <td style="display: none;"><input type="text" name="issueList3[$#].IsRemoved" class="IsRemoved form-control input-small" value="0"  /></td>
+                      <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].CheckPoints" id="CheckPoints" class="form-control input-small" rows="4" placeholder="Check Points\Charging slots"></textarea>
+                        </div>
+                    </td>
+                   <td>
+                        <div class="form-group">
+                            <input name="issueList3[$#].BatterymAh" type="number" min="0" class="form-control input-small" rows="4" placeholder="Battery mAh" style="text-align: left"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].HundredToNighty" class="form-control input-small" rows="4" placeholder="100-90%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].NightyToEighty" class="form-control input-small" rows="4" placeholder="90-80%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].EightyToSeventy" class="form-control input-small" rows="4" placeholder="80-70%"></textarea>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].SeventyToSixty" class="form-control input-small" rows="4" placeholder="70-60%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].SixtyToFifty" class="form-control input-small" rows="4" placeholder="60-50%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].FiftyToFourty" class="form-control input-small" rows="4" placeholder="50-40%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].FourtyToThirty" class="form-control input-small" rows="4" placeholder="40-30%"></textarea>
+                        </div>
+                   </td>
+                   <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].ThirtyToTwenty" class="form-control input-small" rows="4" placeholder="30-20%"></textarea>
+                        </div>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].TwentyToTen" class="form-control input-small" rows="4" placeholder="20-10%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].TenToZero" class="form-control input-small" rows="4" placeholder="10-0%"></textarea>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <textarea name="issueList3[$#].AverageFullDischarge" class="form-control input-small" rows="4" placeholder="Average Full Discharge"></textarea>
+                        </div>
+                    </td>
+                </tr>
+*/
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblForBattery > tbody:last').append(replaceTr);
+
+
+        });
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+            var CheckPoints;
+            $("#tblForBattery tr.tableTrCls1").each(function () {
+
+                CheckPoints = $.trim($(this).find('#CheckPoints').val());
+
+                console.log("CheckPoints  1:   " + CheckPoints);
+
+                //if (CheckPoints == null || CheckPoints == "undefined" || CheckPoints == "") {
+                //    alertify.dialog('alert').set({
+                //        'title': '   ',
+                //        'transition': 'zoom',
+                //        'message': "Please Insert Check Points.",
+                //    }).show();
+                //    return false;
+                //}
+
+            });
+
+
+
+            if (proType == "Feature" && accessType == "Earphone") {
+
+                alertify.confirm('Confirm message', 'Do you want to submit Issues?', function () {
+                    $('#loading').show();
+                    alertify.success('Ok');
+
+                    var obj = [];
+
+                    obj.SwQcHeadAssignId = array[0].trim();
+                    obj.SwQcAssignId = array[1].trim();
+                    obj.ProjectType = array[2].trim();
+                    obj.ProjectMasterId = array[3].trim();
+                    obj.TestPhaseID = array[4].trim();
+                    obj.AccessoriesTestType = array[5].trim();
+
+                    $('#SwQcHeadAssignId').val(obj.SwQcHeadAssignId);
+                    $('#ProjectType').val(obj.ProjectType);
+                    $('#SwQcAssignId').val(obj.SwQcAssignId);
+                    $('#ProjectMasterId').val(obj.ProjectMasterId);
+                    $('#TestPhaseID').val(obj.TestPhaseID);
+                    $('#AccessoriesTestType').val(obj.AccessoriesTestType);
+
+
+                    $('#form1').trigger('submit');
+                    $('#loading').hide();
+                }, function () {
+                    alertify.error('Cancel');
+
+                });
+            }
+            else if (proType == "Smart" && accessType == "Earphone") {
+
+                alertify.confirm('Confirm message', 'Do you want to submit Issues?', function () {
+                    $('#loading').show();
+                    alertify.success('Ok');
+
+                    var obj = [];
+
+                    obj.SwQcHeadAssignId = array[0].trim();
+                    obj.SwQcAssignId = array[1].trim();
+                    obj.ProjectType = array[2].trim();
+                    obj.ProjectMasterId = array[3].trim();
+                    obj.TestPhaseID = array[4].trim();
+                    obj.AccessoriesTestType = array[5].trim();
+
+                    $('#SwQcHeadAssignId').val(obj.SwQcHeadAssignId);
+                    $('#ProjectType').val(obj.ProjectType);
+                    $('#SwQcAssignId').val(obj.SwQcAssignId);
+                    $('#ProjectMasterId').val(obj.ProjectMasterId);
+                    $('#TestPhaseID').val(obj.TestPhaseID);
+                    $('#AccessoriesTestType').val(obj.AccessoriesTestType);
+
+                    $('#form1').trigger('submit');
+                    $('#loading').hide();
+                }, function () {
+                    alertify.error('Cancel');
+
+                });
+            }
+            else if (accessType == "Battery") {
+                console.log("CheckPoints  :   " + CheckPoints);
+
+                if (CheckPoints == null || CheckPoints == "undefined" || CheckPoints == "") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please Insert Check Points.",
+                    }).show();
+                    return false;
+                }
+                alertify.confirm('Confirm message', 'Do you want to submit Issues?', function () {
+                    $('#loading').show();
+                    alertify.success('Ok');
+
+                    var obj = [];
+
+                    obj.SwQcHeadAssignId = array[0].trim();
+                    obj.SwQcAssignId = array[1].trim();
+                    obj.ProjectType = array[2].trim();
+                    obj.ProjectMasterId = array[3].trim();
+                    obj.TestPhaseID = array[4].trim();
+                    obj.AccessoriesTestType = array[5].trim();
+
+                    $('#SwQcHeadAssignId').val(obj.SwQcHeadAssignId);
+                    $('#ProjectType').val(obj.ProjectType);
+                    $('#SwQcAssignId').val(obj.SwQcAssignId);
+                    $('#ProjectMasterId').val(obj.ProjectMasterId);
+                    $('#TestPhaseID').val(obj.TestPhaseID);
+                    $('#AccessoriesTestType').val(obj.AccessoriesTestType);
+
+
+                    $('#form1').trigger('submit');
+                    $('#loading').hide();
+                }, function () {
+                    alertify.error('Cancel');
+
+                });
+            }
+            else if (accessType == "Glass Protector" || accessType == "Charger") {
+               
+                alertify.confirm('Confirm message', 'Do you want to submit Issues?', function () {
+                    $('#loading').show();
+                    alertify.success('Ok');
+
+                    var obj = [];
+
+                    obj.SwQcHeadAssignId = array[0].trim();
+                    obj.SwQcAssignId = array[1].trim();
+                    obj.ProjectType = array[2].trim();
+                    obj.ProjectMasterId = array[3].trim();
+                    obj.TestPhaseID = array[4].trim();
+                    obj.AccessoriesTestType = array[5].trim();
+
+                    $('#SwQcHeadAssignId').val(obj.SwQcHeadAssignId);
+                    $('#ProjectType').val(obj.ProjectType);
+                    $('#SwQcAssignId').val(obj.SwQcAssignId);
+                    $('#ProjectMasterId').val(obj.ProjectMasterId);
+                    $('#TestPhaseID').val(obj.TestPhaseID);
+                    $('#AccessoriesTestType').val(obj.AccessoriesTestType);
+
+
+                    $('#form1').trigger('submit');
+                    $('#loading').hide();
+                }, function () {
+                    alertify.error('Cancel');
+
+                });
+            }
+        });
+
+        //
+        $("body").on("click", "#tblForEarDetails .removeBtns", function () {
+            event.preventDefault();
+
+            var row = $(this).closest("tr");
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblForEarDetails');
+
+
+            var AccessId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            var supplierUpdate = {};
+
+            supplierUpdate.AccessId = AccessId;
+
+
+            $('#ProjectMasterId').val(selecteddropValue);
+
+
+            alertify.confirm('Delete A Issue', 'Do you want to Delete this Issue?', function () {
+                alertify.success('Successfully Deleted.');
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AccessoriesIssueDelete", "Software")',
+                    data: '{supplierUpdate:' + JSON.stringify(supplierUpdate) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data == "OK") {
+                            $('#loading').hide();
+                            row.hide();
+                        }
+
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+        });
+
+        //edit
+        $('.smitModalOfSave').on('click', function () {
+
+            $('#draggable').modal('hide');
+
+            var AccessId;
+            var HeadphoneModel1;
+            var MusicPlayerPlayback;
+            var VideoPlayerPlayback;
+            var VoiceCall;
+            var VoiceCallController;
+            var FmPlayback;
+            var FmController;
+            var Controller;
+            var Remarks;
+            var MusicBase;
+            var YoutubePlayback;
+            var YoutubeController;
+            var VolumeController;
+            var HighEndDevice;
+            var MidRangeDevice;
+            var LowerMidRangeDevice;
+            var LowRangeDevice;
+
+            var obj = {};
+
+            AccessId = $('#AccessId').val();
+            HeadphoneModel1 = $('#HeadphoneModel1').val();
+            MusicPlayerPlayback = $('#MusicPlayerPlayback').val();
+            VideoPlayerPlayback = $('#VideoPlayerPlayback').val();
+            VoiceCall = $('#VoiceCall').val();
+            VoiceCallController = $('#VoiceCallController').val();
+            FmPlayback = $('#FmPlayback').val();
+            FmController = $('#FmController').val();
+            Controller = $('#Controller').val();
+            Remarks = $('#Remarks').val();
+            MusicBase = $('#MusicBase').val();
+            YoutubePlayback = $('#YoutubePlayback').val();
+            YoutubeController = $('#YoutubeController').val();
+            VolumeController = $('#VolumeController').val();
+            HighEndDevice = $('#HighEndDevice').val();
+            MidRangeDevice = $('#MidRangeDevice').val();
+            LowerMidRangeDevice = $('#LowerMidRangeDevice').val();
+            LowRangeDevice = $('#LowRangeDevice').val();
+
+
+            $('#loading').show();
+            obj.AccessId = AccessId;
+            obj.HeadphoneModel1 = HeadphoneModel1;
+            obj.MusicPlayerPlayback = MusicPlayerPlayback;
+            obj.VideoPlayerPlayback = VideoPlayerPlayback;
+            obj.VoiceCall = VoiceCall;
+            obj.VoiceCallController = VoiceCallController;
+            obj.FmPlayback = FmPlayback;
+            obj.FmController = FmController;
+            obj.Controller = Controller;
+            obj.Remarks = Remarks;
+            obj.MusicBase = MusicBase;
+            obj.YoutubePlayback = YoutubePlayback;
+            obj.YoutubeController = YoutubeController;
+            obj.VolumeController = VolumeController;
+            obj.HighEndDevice = HighEndDevice;
+            obj.MidRangeDevice = MidRangeDevice;
+            obj.LowerMidRangeDevice = LowerMidRangeDevice;
+            obj.LowRangeDevice = LowRangeDevice;
+
+            $.ajax({
+                url: '@Url.Action("SaveEditAccessoriesData", "Software")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data == "OK") {
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+        //
+        //edit
+        $('.smitModalOfSave2').on('click', function () {
+
+            $('#draggable2').modal('hide');
+
+            var BatteryId;
+            var CheckPoints1;
+            var BatterymAh;
+            var HundredToNighty;
+            var NightyToEighty;
+            var EightyToSeventy;
+            var SeventyToSixty;
+            var SixtyToFifty;
+            var FiftyToFourty;
+            var FourtyToThirty;
+            var ThirtyToTwenty;
+            var TwentyToTen;
+            var TenToZero;
+            var AverageFullDischarge;
+
+            var obj = {};
+
+            BatteryId = $('#BatteryId').val();
+            CheckPoints1 = $('#CheckPoints1').val();
+            BatterymAh = $('#BatterymAh').val();
+            HundredToNighty = $('#HundredToNighty').val();
+            NightyToEighty = $('#NightyToEighty').val();
+            EightyToSeventy = $('#EightyToSeventy').val();
+            SeventyToSixty = $('#SeventyToSixty').val();
+            SixtyToFifty = $('#SixtyToFifty').val();
+            FiftyToFourty = $('#FiftyToFourty').val();
+            FourtyToThirty = $('#FourtyToThirty').val();
+            ThirtyToTwenty = $('#ThirtyToTwenty').val();
+            TwentyToTen = $('#TwentyToTen').val();
+            TenToZero = $('#TenToZero').val();
+            AverageFullDischarge = $('#AverageFullDischarge').val();
+
+            $('#loading').show();
+            obj.BatteryId = BatteryId;
+            obj.CheckPoints1 = CheckPoints1;
+            obj.BatterymAh = BatterymAh;
+            obj.HundredToNighty = HundredToNighty;
+            obj.NightyToEighty = NightyToEighty;
+            obj.EightyToSeventy = EightyToSeventy;
+            obj.SeventyToSixty = SeventyToSixty;
+            obj.SixtyToFifty = SixtyToFifty;
+            obj.FiftyToFourty = FiftyToFourty;
+            obj.FourtyToThirty = FourtyToThirty;
+            obj.ThirtyToTwenty = ThirtyToTwenty;
+            obj.TwentyToTen = TwentyToTen;
+            obj.TenToZero = TenToZero;
+            obj.AverageFullDischarge = AverageFullDischarge;
+
+            $.ajax({
+                url: '@Url.Action("SaveEditBatteryData", "Software")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data == "OK") {
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+
+        //delete battery data
+        $("body").on("click", "#tblForBatteryDetails .removeBtns", function () {
+            event.preventDefault();
+
+            var row = $(this).closest("tr");
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblForBatteryDetails');
+
+
+            var BatteryId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            var supplierUpdate = {};
+
+            supplierUpdate.BatteryId = BatteryId;
+
+
+            $('#ProjectMasterId').val(selecteddropValue);
+
+
+            alertify.confirm('Delete A Issue', 'Do you want to Delete this Issue?', function () {
+                alertify.success('Successfully Deleted.');
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("BatteryIssueDelete", "Software")',
+                    data: '{supplierUpdate:' + JSON.stringify(supplierUpdate) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data == "OK") {
+                            $('#loading').hide();
+                            row.hide();
+                        }
+
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+        });
+
+
+
+        $('#btnforFinalSubmit').on('click', function () {
+            var proSelectId = document.getElementById('ProjectsDetails');
+
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+            var obj = [];
+            obj.ProjectDetails = $("select#ProjectsDetails").val();
+
+            alertify.confirm('Confirm message', 'Do you want to finally submit this project to QcHead?', function () {
+                alertify.success('Ok');
+                $('#loading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveAccessoriesSubmittedProjectToQcHead", "Software")',
+                    data: "{ ProjectDetails: '" + obj.ProjectDetails + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (data == "OK") {
+                            window.location = '@Url.Action("AccessoriesTest", "Software")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                e.preventDefault(); //Prevent the default submit
+            }
+                , function () {
+                    alertify.error('Cancel');
+
+                });
+        });
+
+        $('#addmoreForGlass').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proSelectId = document.getElementById('ProjectsDetails');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "SELECT PROJECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+            var issueScenario;
+            $("#tblForGlassProtector tr.tableTrCls1").each(function () {
+
+                issueScenario = $.trim($(this).find('#IssueScenario').val());
+
+                console.log("IssueScenario  1:   " + issueScenario);
+
+                if (issueScenario == null || issueScenario == "undefined" || issueScenario == "") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please Insert Issue Scenario.",
+                    }).show();
+                    return false;
+                }
+            });
+
+            console.log("IssueScenario  :   " + issueScenario);
+
+            if (issueScenario == null || issueScenario == "undefined" || issueScenario == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Issue Scenario.",
+                }).show();
+                return false;
+            }
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+                <tr class="tableTrCls1" id="trIdForUpload">
+                     <td  style="display: none;">$#</td>
+                     <td style="display: none;"><input type="text" name="issueList4[$#].IsRemoved" class="IsRemoved form-control input-small" value="0"  /></td>
+                      <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <textarea name="issueList4[$#].IssueScenario" id="IssueScenario" class="form-control input-small" rows="4" placeholder="Issue Scenario"></textarea>
+                        </div>
+                    </td>
+                   <td>
+                        <div class="form-group">
+                            <textarea name="issueList4[$#].ExpectedOutcome" id="ExpectedOutcome" class="form-control input-small" rows="4" placeholder="Expected Outcome"></textarea>
+                       </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                             <textarea name="issueList4[$#].WaltonQcStatus" id="WaltonQcStatus" class="form-control input-small" rows="4" placeholder="Walton Qc Status"></textarea>
+                       </div>
+                    </td>
+                                         <td class="numeric">
+                        <div class="col-md-11">
+                            <table class="File11" id="hh1">
+                                <tr id="trIdForFile">
+                                    <td class="filesss" id="filesId">
+
+                                        <div class="col-md-9" id="fileIdForCr">
+                                            <input type="file" name="issueList4[$#].File" id="File11" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr'));">
+                                                <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                            </button>
+                                        </div>
+                                        <br /><br />
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-2">
+
+                                <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success center" onclick="javascript: addField('issueList4[$#].File', $(this).closest('tr'));">
+                                    <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </button><br /><br />
+                            </div>
+                            <div class="col-md-6"></div>
+                        </div>
+                    </td>
+
+                </tr>
+*/
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblForGlassProtector > tbody:last').append(replaceTr);
+        });
+    });//end document
+    function addField(id, td) {
+        td.find('.File11').append($("<tr id='trIdForFile'><td class='filesss' id='filesId'><div class='col-md-9' id='fileIdForCr'><input type='file' name='" + id + "' id='File11' /></div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true'></i></span></button></div><br /><br /></td></tr>"));
+    }
+
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+</script>
+
+
+

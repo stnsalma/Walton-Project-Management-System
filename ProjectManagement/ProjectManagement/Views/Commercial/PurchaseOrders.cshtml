@@ -1,0 +1,309 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPurchaseOrderFormModel>
+    @{
+        ViewBag.Title = "PurchaseOrders";
+    }
+
+    <h2>Purchase Orders</h2>
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    @*<div class="col-lg-2">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase">TAC Requests</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>*@
+                    @*<div class="col-lg-2">
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="New LC" onclick="location.href='@Url.Action("Lc", "Commercial")?projectId=0'" />
+                        </div>*@
+
+                </div>
+                <div class="portlet-body">
+                    <div id="resultMsg">
+                        @*<div class="alert alert-danger alert-dismissable">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                <strong>Message:</strong> Hello World
+                            </div>*@
+                    </div>
+
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>P.O No</th>
+                                <th>P.O Type</th>
+                                <th>Company</th>
+                                <th>P.O Date</th>
+                                <th>Repeat<br /> Order<br /> Approved</th>
+                                <th style="display: none">ProjectMasterID</th>
+                                <th style="display: none">ProjectPurchaseOrderFormId</th>
+                                @*<th style="display: none"></th>*@
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="dfNeed">
+                                        <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PurchaseOrderNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoCategory)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoDate)</td>
+                                        <td>
+                                            @if (item.OrderNumber == 1)
+                                            {
+                                                <span class="label label-sm label-default"> NA </span>
+                                            }
+                                            else
+                                            {
+                                                if (item.RepeatOrderApproved == "APPROVED")
+                                                {
+                                                    <span class="label label-sm label-success"> APPROVED </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-sm label-warning"> APPROVAL PENDING </span>
+                                                }
+                                            }
+                                        </td>
+                                        <td style="display: none" class="ProjectMasterId1" id="ProjectMasterId1">@item.ProjectMasterId</td>
+                                        <td style="display: none" class="ProjectPurchaseOrderFormId1" id="ProjectPurchaseOrderFormId1">@item.ProjectPurchaseOrderFormId</td>
+                                        @*<td style="display: none;"><input type="text" name="IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>*@
+                                        <td>
+                                            @if (item.IsCompleted == false)
+                                            {
+                                                <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Detail" onclick=" location.href = '@Url.Action("PurchaseOrder", "Commercial", new {id = item.ProjectPurchaseOrderFormId})' " />
+                                                <button type="button" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle btnOpenModal">
+                                                    Close
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-default">ORDER CLOSED</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+    @*---------modal for Market Clearance Date and BD IQC Result-------*@
+    <div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" style="font-weight: bold;color: black;">Close the following project</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group" style="display: none">
+                            <label class="control-label">Project Master ID</label>
+                            <input name="ProjectMasterId" id="ProjectMasterId" type="text" class="form-control">
+                        </div>
+                        <div class="form-group" style="display: none">
+                            <label class="control-label">ProjectPurchaseOrderFormId</label>
+                            <input name="ProjectPurchaseOrderFormId" id="ProjectPurchaseOrderFormId" type="text" class="form-control">
+                        </div>
+                        @*<div class="form-group" style="display: none">
+                            <label class="control-label">IsRemoved</label>
+                            <input name="IsRemoved1" id="IsRemoved1" type="text" class="form-control">
+                        </div>*@
+                        <div class="form-group">
+                            <label class="control-label" style="font-weight: bold">Project Name</label>
+                            <input name="ProjectName" id="ProjectName" type="text" class="form-control" disabled="disabled">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" style="color:red">Market Clearance Date:**</label>
+                            <input class="form-control" name="marketClearanceDate" id="marketClearanceDate" type="text" placeholder="yyyy-mm-dd">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label" style="color:red">BD IQC Result:**</label>
+                            <textarea name="BdIqcResult" id="BdIqcResult" class="form-control"></textarea>
+                        </div>
+                        @*<div class="form-group">
+                            <label for="message-text" class="control-label" style="color:red">Order Color Ratio With Qty:**</label>
+                            <textarea name="OrderColorRatioWithQty" id="OrderColorRatioWithQty" class="form-control"></textarea>
+                        </div>*@
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                    <input type="submit" id="btnSaveModal" class="btn green btnSaveModal" value="Save" />
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+    <script type="text/javascript">
+    $(function () {
+        $('#marketClearanceDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        var currentRow;
+
+        $("body").on("click", "#sample_1 .btnOpenModal", function () {
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('sample_1');
+
+            var proIds = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+            var proOrderIds = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+           // var isRemv = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+            var proName = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+
+            $('#draggable').modal();
+
+            $('#ProjectMasterId').val(proIds);
+            $('#ProjectPurchaseOrderFormId').val(proOrderIds);
+            $('#ProjectName').val(proName);
+          //  $('#IsRemoved1').val(isRemv);
+
+            $('#marketClearanceDate').val("");
+            $("#BdIqcResult").val("");
+
+            currentRow = $(this).closest('tr');
+
+        });
+
+        $('#btnSaveModal').on('click', function () {
+            $('#resultMsg').empty();
+            $('#draggable').modal('hide');
+
+            var proId;
+            var proOrderIds;
+            var marketClearance;
+            var bdIqc;
+           // var orderColorQty;
+           // var isRmv;
+
+            var obj = {};
+
+            proId = $('#ProjectMasterId').val();
+            proOrderIds = $('#ProjectPurchaseOrderFormId').val();
+            marketClearance = $('#marketClearanceDate').val();
+            bdIqc = $("#BdIqcResult").val().trim();
+           // orderColorQty = $("#OrderColorRatioWithQty").val().trim();
+           // isRmv = $("#IsRemoved1").val();
+
+            if (marketClearance == "" || marketClearance == null) {
+                $('#draggable').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Market Clearance Date.",
+                }).show();
+                return false;
+            }
+            if (bdIqc == "" || bdIqc == null) {
+                $('#draggable').modal('hide');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input BD IQC Result.",
+                }).show();
+                return false;
+            }
+
+            console.log("all ids :" + proId + proOrderIds + marketClearance + bdIqc);
+            $('#loading').show();
+            obj.ProjectMasterId = proId;
+            obj.ProjectPurchaseOrderFormId = proOrderIds;
+            obj.MarketClearanceDate = marketClearance;
+            obj.BdIqcResult = bdIqc;
+            //obj.OrderColorRatioWithQty = orderColorQty;
+            
+            var row = $('#sample_1').closest("tr");
+
+            $.ajax({
+                    url: '@Url.Action("ClosePurchaseOrder", "Commercial")',
+                    type: 'POST',
+                    data: JSON.stringify(obj),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        console.log("data :" + data);
+                        $('#resultMsg').append(data.Text);
+                        
+                        if (data.Value == "0") {
+
+                            row.hide();
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Purchase order closed successfully.",
+                            }).show();
+                           
+                            window.location = '@Url.Action("PurchaseOrders", "Commercial")';
+                            window.location.reload(true);
+                           
+                        }
+
+                       //if (data == "ok") {
+                            //$('#resultMsg').append(data.Text);
+                            //$('#SwInchargeAssignToQcComment').val('');
+                            //$('#ApproxInchargeToQcDeliveryDate').val('');
+                            //$('#multiple').val('');
+                       //}
+                    }
+                });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+
+    });
+
+
+    //function close_purchase_order(url, tablePrimaryId, ths) {
+    //    $('#resultMsg').empty();
+
+    //    alertify.prompt('Market Clearance Date:', 'Prompt Value'
+    //           , function (evt, value) {
+    //               //alertify.success('You entered: ' + value);
+    //               var marketClearanceDate = value;
+    //               if (marketClearanceDate.length != 0) {
+    //                   alertify.confirm('Are you sure to close this PO?', function () {
+    //                       alertify.success(marketClearanceDate);
+    //                       $.post(url, { marketClearanceDate: marketClearanceDate, purchaseOrderId: tablePrimaryId }).done(function (data) {
+
+    //                           $('#resultMsg').append(data.Text);
+    //                           if (data.Value == "0") {
+    //                               ths.closest('tr').fadeOut('slow', function (here) {
+    //                                   $(here).parents('tr:first').remove();
+    //                               });
+    //                           }
+    //                       }).fail(function (xhr, status, error) {
+    //                           alertify.error(error);
+    //                       });
+    //                   }, function () { alertify.error('Canceled'); });
+    //               }
+    //           }
+    //           , function () {
+    //               alertify.error('Cancel');
+    //           }).set('type', 'date');
+
+    //}
+    </script>
+
+
+

@@ -1,0 +1,227 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.BTRCRegistrationVM
+
+@{
+    ViewBag.Title = "BTRCModelInformation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
+<style type="text/css">
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('http://i.stack.imgur.com/FhHRx.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading .modal {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+</style>
+
+
+<div class="row">
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Model Information According to BTRC</span>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <label class="control-label col-md-3">Select Model(PMS)<span class="required"> * </span></label>
+                        <div class="col-md-3">
+                            @if (ViewBag.PMSModels != null)
+                            {
+                                @Html.DropDownList("ModelName", new SelectList(ViewBag.PMSModels, "Value", "Text"), "Please select", new { @class = "form-control modelname" })
+                            }
+
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">Select Date Range for Excel Download</div>
+                            <div class="panel-body">
+                                <label class="control-label col-md-3">S. Date<span class="required"> * </span></label>
+                                <div class="col-md-3">
+                                    @Html.TextBoxFor(i => i.StartDate, new { @class = "form-control date_picker" })
+
+                                </div>
+                                
+                                
+                                <label class="control-label col-md-3">E. Date<span class="required"> * </span></label>
+                                <div class="col-md-3">
+                                   @Html.TextBoxFor(i => i.EndDate, new { @class = "form-control date_picker" })
+
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                    <div class="row"></div>
+                    
+                    
+                </div>
+                <div class="col-md-6">
+                    <h5>Updated Models with BTRC Information</h5>
+                    <table class="table table-bordered table-striped table-condensed flip-content" id="NewProjectTable">
+                        <thead class="flip-content">
+                            <tr>
+                                <th width="70%"> Model Name </th>
+                                <th class="numeric"> Action </th>
+                                <th class="numeric"> Export </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.BTRCModels != null)
+                            {
+                                foreach (var project in ViewBag.BTRCModels)
+                                {
+                                    <tr>
+                                        <td style="display:none;"><input type="hidden" value="@project.ProjectMasterId" id="idProjectMaseterId"  /></td>
+                                        <td class="pName"> @project.ProjectModel </td>
+                                        <td class="numeric">
+                                            <button class="btn btn-circle btn-sm blue btn-outline" onclick="LoadModelInformation(@project.ProjectMasterId)">Edit </button>
+                                        </td>
+                                        <td class="numeric">
+                                            @Html.ActionLink("Select", null, null, new { @onclick = "DownloadExcel($(this).closest('tr'));" })
+                                            @*@Html.ActionLink(
+                                                "Export to Excel",                                                  // linkText
+                                                "GetExcel1",                                    // actionName
+                                                "ProjectManager",                                                   // controllerName
+                                                new
+                                                {
+                                                    
+                                                    models = project.ProjectModel
+                    
+                                                },
+                                                new { target = "_blank" })*@
+                                               
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <br />
+
+        </div>
+
+        <hr />
+        <div class="portlet-body">
+            <div class="form-body" id="targetDiv">
+
+            </div>
+        </div>
+
+    </div>
+    <div id="successModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" data-attention-animation="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="successModalText"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn green">Ok</button>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal"><!-- Place at bottom of page --></div>
+
+<script>
+    function getStartDate() {
+        
+    }
+
+
+    $body = $("body");
+    $(document).on({
+        ajaxStart: function () { $body.addClass("loading"); },
+        ajaxStop: function () { $body.removeClass("loading"); }
+    });
+    $('#ModelName').change(function () {
+        var modelname = $('#ModelName').children("option:selected").val();
+        LoadModelInformation(modelname);
+    });
+
+    var LoadModelInformation = function (modelname) {
+        $('#targetDiv').empty();
+        if (modelname != "") {
+            $.ajax({
+                url: '@Url.Action("GetProjectMaster", "ProjectManager")',
+                type: 'POST',
+                dataType: 'html',
+                data: { pmid: modelname },
+                success: function (vm) {
+                    $body.removeClass("loading");
+                    $('#targetDiv').html(vm);
+                    //$('#successModal').modal('show');
+                    //$("#successModalText").empty();
+                    //$('#successModalText').append("Project Information have been loaded!");
+                }
+            });
+        }
+        else {
+            $('#targetDiv').empty();
+            $('#successModal').modal('show');
+            $("#successModalText").empty();
+            $('#successModalText').append("Project Information have not Found!");
+        }
+    }
+    debugger;
+    var ExportIMEIRecord = function (modelname) {
+        debugger;
+        debugger;
+        var url = '@Url.Action("GetExcel1", "ProjectManager")';
+        url = url + '?models=' + modelname;
+        console.log(url);
+        window.open(url, '_blank');
+    };
+
+
+    function DownloadExcel(ths) {
+        var modelname = ths.find('.pName').text();
+        var sdate = $('#StartDate').val();
+        var edate = $('#EndDate').val();
+
+        var url = '@Url.Action("GetExcel1", "ProjectManager")';
+        url = url + '?models=' + modelname + "&sdate="+sdate+"&edate="+edate;
+        //console.log(url);
+        window.open(url, '_blank');
+    }
+
+</script>
+

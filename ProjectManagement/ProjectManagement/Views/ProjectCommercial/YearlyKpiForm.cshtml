@@ -1,0 +1,698 @@
+﻿@*<h2>YearlyKpiForm</h2>*@
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectCommercial.VmCommercialKpi
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+</style>
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Yearly KPI</label>
+    <i class="icon-calendar pull-right"><label class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+@using (Html.BeginForm("YearlyKpiForm", "ProjectCommercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-calendar-check-o"></i>Report Parameter
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable table-responsive col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2">
+                    <div class="col-lg-2"></div>
+                    <div class="form-control col-lg-8" style="text-align: right; color: black; font-weight: bold; font-size: 16px; border: transparent">Date Range</div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="input-group date form_datetime default col-lg-4" id="StartTime" data-date=" " data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="StartTime">
+                        <input class="form-control col-lg-12 input-small srtclr ui-state-default" name="StartTime" id="StartTime" size="66" type="text" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove removebtn"></span></span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    <div class="col-lg-2" style="text-align: center; color: black; font-weight: bold;">to</div>
+                    <div class="input-group date form_datetime col-lg-4" id="EndTime" data-date=" " data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="EndTime">
+                        <input class="form-control col-lg-12 input-small endclr" name="EndTime" id="EndTime" size="66" type="text" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove removebtn1"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="col-lg-3"></div>
+            </div>
+
+            <div class="table-scrollable table-responsive col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2">
+                    <div class="col-lg-2"></div>
+                    <div class="form-control col-lg-8" style="text-align: right; color: black; font-weight: bold; font-size: 16px; border: transparent">Role Name</div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-4">
+                        @if (ViewBag.GetKpiRoleName != null)
+                        {
+                            @Html.DropDownListFor(model => model.kpiRoles, new SelectList(ViewBag.GetKpiRoleName, "Value", "Text"), new { @class = "kpiRoles form-control", @id = "kpiRoles", @onchange = "LoadRolePerson()" })
+                        }
+                    </div>
+                    <div class="col-lg-3" style="text-align: center; color: black; font-weight: bold;">Select Person</div>
+                    @*@if (Model != null && Model.CmnUserModelList.Any())
+                    {
+
+                        @Html.DropDownListFor(model => model.EmployeeCode, new SelectList(@Model.CmnUserModelList, "EmployeeCode", "UserFullName"), "SELECT PERSON", new { @class = "dropForPerson form-control", @id = "sltPerson", @onchange = "LoadFocData()", Value = @Model.CmnUserModel.UserFullName })
+
+
+                    }*@
+                    <div class="col-lg-4">
+                        @*@if (ViewBag.GetRolePerson != null)
+                        {*@
+                            @*@Html.DropDownListFor(model => model.kpiRolePersonName, new SelectList(ViewBag.GetRolePerson, "Value", "Text"), new { @class = "kpiRolePerson1 form-control", @id = "kpiRolePerson1", Value = @Model.kpiRolePerson, Test = @Model.kpiRolePersonName })*@
+                            @*@Html.DropDownListFor(model => model.kpiRolePersonName, new SelectList(ViewBag.GetRolePerson, "Value", "Text"), new { @class = "kpiRolePerson1 form-control", @id = "kpiRolePerson1", Value = @Model.kpiRolePerson, Test = @Model.kpiRolePersonName })*@
+                        
+
+                        @*}*@
+                        
+                        @*@if (Model != null && Model.CmnUserModels.Any())*@
+                        @if (ViewBag.GetRolePerson !=null)
+                        {
+                             @Html.DropDownListFor(model => model.kpiRolePerson, new SelectList(@Model.CmnUserModels, "EmployeeCode", "UserFullName"), "SELECT PERSON", new { @class = "dropForPerson form-control kpiRolePerson1", @id = "kpiRolePerson1", Value = @Model.kpiRolePersonName })
+
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    @*<button type="button" class="btn blue btn-circle col-lg-6 btnSearch" id="btnSearch" onclick="window.open('@Url.Action("YearlyKpiPrint", "ProjectCommercial")?startValue=' + $('.srtclr').val() + '&endValue=' + $('.endclr').val() + '&kpiRoles=' + $('option:selected', $('#kpiRoles')).val() + '&kpiRolePerson=' + $('option:selected', $('#kpiRolePerson')).val())">*@
+                    <button type="button" class="btn blue btn-circle col-lg-4 btnSearch" id="btnSearch" onclick="location.href='@Url.Action("YearlyKpiForm", "ProjectCommercial")?startValue=' + $('.srtclr').val() + '&endValue=' + $('.endclr').val() + '&kpiRoles=' + $('option:selected', $('#kpiRoles')).val() + '&kpiRolePerson=' + $('option:selected', $('#kpiRolePerson1')).val()+ '&kpiRolePersonName='+ $('option:selected', $('#kpiRolePerson1')).text()">
+                        <span class="glyphicon glyphicon-search"> SEARCH</span>
+                    </button>
+                    <div class="col-lg-6">
+                        <button type="button" class="btn green btn-circle col-lg-6 btnPrint" id="btnPrint" onclick="window.open('@Url.Action("YearlyKpiPrint", "ProjectCommercial")?startValue=' + $('.srtclr').val() + '&endValue=' + $('.endclr').val() + '&kpiRoles=' + $('option:selected', $('#kpiRoles')).val() + '&kpiRolePerson=' + $('option:selected', $('#kpiRolePerson1')).val()+ '&kpiRolePersonName='+ $('option:selected', $('#kpiRolePerson1')).text())">
+                            <span class="glyphicon glyphicon-print">  Print</span>
+                        </button>
+                    </div>
+                </div>
+                <input type="hidden" id="stTime" value='@Request.QueryString["startValue"]' />
+                <input type="hidden" id="enTime" value="@Request.QueryString["endValue"]" />
+                <input type="hidden" id="kpiRoles" value="@Request.QueryString["kpiRoles"]" />
+                <input type="hidden" id="kpiRolePerson" value="@Request.QueryString["kpiRolePerson"]" />
+                <input type="hidden" id="kpiRolePersonName" value="@Request.QueryString["kpiRolePersonName"]" />
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            PART - A: Functional  KPI
+                        </div>
+
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl1" class="tbl1" style="width:900px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="text-align: center; padding: 6px;color: black">Srl.</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Evaluation Criteria/Descriptions</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Weight</th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Achievement</th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Point Achieve </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetCmYearlyKpi != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCmYearlyKpi)
+                                        {
+                                            <tr class="trClsforSize" style="border: 1px solid black">
+                                                <td style="text-align: center; padding: 6px"></td>
+                                                <td style="border: 1px solid black; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - A")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.KpiName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.KpiName
+                                                    }
+
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - A")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.Weight</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.Weight
+                                                    }
+
+                                                </td>
+
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - A")
+                                                    {
+                                                        @*<p style="color: red; font-weight: bold">@items.YearKpiAchievement.ToString("0.00")%</p>
+                                                            <p style="color: red; font-weight: bold">@items.YearKpiAchievement.ToString("0.00")%</p>*@
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <div>@items.YearKpiAchievement.ToString("0.00")%</div>
+                                                    }
+                                                </td>
+                                                <td id="TlAvScore" class="TlAvScore" style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - A")
+                                                    {
+
+                                                        <input type="text" id="TlAvScore_Id" class="form-control TlAvScore_Id" value="@items.YearKpiScore.ToString("0.00")" disabled="disabled" style="text-align: center;color: red;font-weight: bold" />
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.YearKpiScore.ToString("0.00")
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+
+        </div>
+    </div>
+    <br />
+    @*if (TempData["Message2"] != null)
+        {
+            var msgss = TempData["Message2"];
+
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msgss
+            </div>
+
+        }*@
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            PART - B: Value  KPI
+                        </div>
+
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl2" class="tbl2" style="width:900px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="text-align: center; padding: 6px;color: black">Srl.</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Evaluation Criteria/Descriptions</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Weight</th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Achievement</th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Point Achieve </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetCmYearlyOthersKpi != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCmYearlyOthersKpi)
+                                        {
+                                            <tr class="trClsforSize" style="border: 1px solid black">
+                                                <td style="text-align: center; padding: 6px"></td>
+                                                <td style="border: 1px solid black; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - B")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.KpiName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.KpiName
+
+                                                    }
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - B")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.Weight</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.Weight
+                                                    }
+
+                                                </td>
+
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px" class="ach">
+                                                    @if (@items.KpiName == "Sub Total - B")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        if (@items.RoleName == "CM" && @items.KpiName == "Attendance & Punctuality")
+                                                        {
+                                                            <input id="kpiAchievement" class="form-control kpiAchievement" value="@items.YearlyKpiAchievement" min="0" type="number" disabled="disabled" onchange="achievementChange(this)" />
+
+                                                        }
+                                                        else if (@items.RoleName == "HR" && @items.KpiName != "Attendance & Punctuality")
+                                                        {
+                                                            <input id="kpiAchievement" class="form-control kpiAchievement" value="@items.YearlyKpiAchievement" min="0" type="number" disabled="disabled" onchange=" achievementChange(this) " />
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <input id="kpiAchievement" class="form-control kpiAchievement" value="@items.YearlyKpiAchievement" min="0" type="number" onchange=" achievementChange(this) " />
+
+                                                        }
+                                                        @*<div>@items.YearKpiAchievement</div>*@
+                                                    }
+                                                </td>
+                                                <td id="TlAvScore" class="TlAvScore" style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Sub Total - B")
+                                                    {
+
+                                                        <input type="text" id="kpiScoreForSum" class="form-control kpiScoreForSum" value="@items.YearlyKpiScore" disabled="disabled" style="text-align: center;color: red;font-weight: bold" />
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @*items.YearKpiScore*@
+                                                        <input type="text" id="kpiScore" class="form-control kpiScore" value="@items.YearlyKpiScore" disabled="disabled" style="text-align: center;color: red;font-weight: bold" />
+
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            @*<input type="text" id="kpiScore25" class="form-control kpiScore25" value="" disabled="disabled" style="text-align: center;color: red;font-weight: bold" />*@
+
+        </div>
+    </div>
+
+    <br />
+    <div class="form-actions">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSave" value="Save" onchange="winLoads()" />
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+}
+
+<script>
+    var AllFinalAmount = 0;
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+        
+
+        $("#tbl2 tr.trClsforSize").each(function () {
+            var finalAmId1 = $.trim($(this).find('.TlAvScore .kpiScore').val());
+            console.log("incentive :" + finalAmId1);
+            //AllFinalAmount += +$.trim($(this).find('.TlAvScore .kpiScoreForSum').val());
+            AllFinalAmount += +$.trim($(this).find('.TlAvScore .kpiScore').val());
+        });
+
+        $.trim($(this).find('.TlAvScore .kpiScoreForSum').val(AllFinalAmount));
+    });
+    
+    //weight = $.trim($(this).find('td:eq(2)').text());
+    //achievement = $(this).find(".ach .kpiAchievement").val();
+ 
+    function winLoads() {
+        windows.load();
+    }
+
+    var allScoreSum = 0;
+    function achievementChange(ids) {
+
+        if (ids.value == "") {
+            ids.value = "0";
+        }
+
+        var kpiWeight1 = 0;
+        var kpiScore1 = 0;
+        var kpiScore2 = 0;
+        allScoreSum = 0;
+
+        //$.trim($('#kpiScoreForSum').text(0));
+        //$.trim($('#kpiScoreForSum').val(0));
+
+        $("body").on("change", "#tbl2 #kpiAchievement", function () {
+
+
+            kpiWeight1 = $.trim($(ids).closest("tr").find('td:eq(2)').text());
+            kpiScore1 = kpiWeight1 * (ids.value / 100);
+
+
+            kpiScore2 = $.trim($(ids).closest("tr").find('td:eq(4)').text(kpiScore1.toFixed(2)));
+            //kpiScore2 = $.trim($(ids).closest("tr").find('#TlAvScore').text(kpiScore1.toFixed(2)));
+            allScoreSum += kpiScore1;
+
+            var kpiScoreForSum3 = $.trim($('#kpiScoreForSum').text(allScoreSum.toFixed(2)));
+            var kpiScoreForSum4 = $.trim($('#kpiScoreForSum').val(allScoreSum.toFixed(2)));
+
+            //var kpiScoreForSum3 = $.trim($('#kpiScore25').text(allScoreSum.toFixed(2)));
+            //var kpiScoreForSum4 = $.trim($('#kpiScore25').val(allScoreSum.toFixed(2)));
+
+            //if (ids.value == "0") {
+            //    allScoreSum = 0;
+            //    kpiScore1 = 0;
+
+            //    var kpiScoreForSum1 = $.trim($('#kpiScoreForSum').text(0));
+            //    var kpiScoreForSum2 = $.trim($('#kpiScoreForSum').val(0));
+            //} else {
+            //  //  allScoreSum += kpiScore1;
+            //    var kpiScoreForSum3 = $.trim($('#kpiScoreForSum').text(allScoreSum.toFixed(2)));
+            //    var kpiScoreForSum4 = $.trim($('#kpiScoreForSum').val(allScoreSum.toFixed(2)));
+            //}
+
+        });
+
+
+    }
+    function LoadRolePerson() {
+        var proRoleId = document.getElementById('kpiRoles');
+        var proRoleName = proRoleId.options[proRoleId.selectedIndex].text;
+        var proRoleValue = proRoleId.options[proRoleId.selectedIndex].value;
+
+        $.ajax({
+            url: '@Url.Action("GetRolePerson", "ProjectCommercial")',//'/ProjectManager/GetPoProject',
+            type: "POST",
+            dataType: "JSON",
+            data: { proRoleName: proRoleName },
+            success: function (data) {
+                console.log(data);
+                $('#kpiRolePerson1').empty();
+                $('#kpiRolePerson1').append($('<option>', {
+                    value: '',
+                    text: 'SELECT'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                   // $('#kpiRolePerson1').empty();
+                    $('#kpiRolePerson1').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+        //$('#DDDCats').empty();
+    }
+    $(function () {
+
+        $(".removebtn").click(function (e) {
+            e.preventDefault();
+            $('.srtclr').val("");
+
+        });
+        $(".removebtn1").click(function (e) {
+            e.preventDefault();
+            $('.endclr').val("");
+        });
+        //Added Time picker
+        $(document).on('focus', '.form_datetime', function (e) {
+            $(this).datepicker({
+                language: 'fr',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                autofocus: true,
+                todayHighlight: 1,
+                start: 1,
+
+            });
+        });
+
+        $('.form_datetime').on('changeTime', function () {
+            $('#EndTime').datepicker('option', 'minTime', $(this).val());
+        });
+
+        $('.btnSearch').on('click', function (e) {
+            e.preventDefault();
+            var stTime1 = $('.srtclr').val();
+
+            if (stTime1 == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Start Date",
+                }).show();
+                return false;
+            }
+            var enTime1 = $('.endclr').val();
+            if (enTime1 == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select End Date",
+                }).show();
+                return false;
+            }
+
+            var userKpi = document.getElementById('kpiRoles');
+            var userKpiText = userKpi.options[userKpi.selectedIndex].text;
+            var userKpiValue = userKpi.options[userKpi.selectedIndex].value;
+
+            if (userKpiText == "SELECT ROLE") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Role",
+                }).show();
+                return false;
+            }
+
+            //name
+            var kpiUserName = document.getElementById('kpiRolePerson1');
+            var kpiUserNameText = kpiUserName.options[kpiUserName.selectedIndex].text;
+            var kpiUserNameValue = kpiUserName.options[kpiUserName.selectedIndex].value;
+
+            if (kpiUserNameText == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select person",
+                }).show();
+                return false;
+            }
+
+                        @*window.open('@Url.Action("YearlyKpiPrint", "ProjectCommercial")' + '?startValue=' + stTime1 +
+                '&endValue=' + enTime1 + '&kpiRoles=' + userKpiValue + '&kpiRolePerson=' + kpiUserNameValue);*@
+
+                        @*window.location = '@Url.Action("YearlyKpiForm", "ProjectCommercial")' + '?startValue=' + stTime1 +
+             '&endValue=' + enTime1 + '&kpiRoles=' + userKpiValue + '&kpiRolePerson=' + kpiUserNameValue;*@
+
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        var stTime = $('#stTime').val();
+        var enTime = $('#enTime').val();
+
+        //  var empCode1 = $('#empCode1').val();
+
+
+        $('#stTime').val(stTime);
+        $('#enTime').val(enTime);
+        // $('#empCode1').val(empCode1);
+
+        console.log(stTime + "" + enTime);
+
+        $(".srtclr").val(stTime);
+        $(".endclr").val(enTime);
+
+
+        var userKpi11 = document.getElementById('kpiRoles');
+        var userKpiText11 = userKpi11.options[userKpi11.selectedIndex].text;
+        var userKpiValue11 = userKpi11.options[userKpi11.selectedIndex].value;
+
+        var t1 = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            //"lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+        t1.on('order.dt search.dt', function () {
+            t1.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var t2 = $('#tbl2').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            //"lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+        t2.on('order.dt search.dt', function () {
+            t2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+
+    $("#btnSave").on('click', function (e) {
+        e.preventDefault();
+        $('#loading').show();
+        var userKpi = document.getElementById('kpiRoles');
+        var userKpiText = userKpi.options[userKpi.selectedIndex].text;
+        var userKpiValue = userKpi.options[userKpi.selectedIndex].value;
+
+        //name
+        var kpiUserName = document.getElementById('kpiRolePerson1');
+        var kpiUserNameText = kpiUserName.options[kpiUserName.selectedIndex].text;
+        var kpiUserNameValue = kpiUserName.options[kpiUserName.selectedIndex].value;
+
+
+        var obj = {};
+        var objArr = [];
+
+        var kpiName;
+        var weight;
+        var achievement;
+        var score;
+        var role;
+        var empId;
+
+        $("#tbl2 tr.trClsforSize").each(function () {
+            obj = new Object();
+
+            kpiName = $.trim($(this).find('td:eq(1)').text());
+            weight = $.trim($(this).find('td:eq(2)').text());
+            achievement = $(this).find(".ach .kpiAchievement").val();
+            //var  cc1 = $(this).find(".ach input").val();
+            score = $.trim($(this).find('td:eq(4)').text());
+            role = userKpiText;
+            empId = kpiUserNameValue;
+
+            obj.KpiName = kpiName;
+            obj.Weight = weight;
+
+            if (achievement == "") {
+                obj.YearKpiAchievement = 0;
+            } else {
+                obj.YearKpiAchievement = achievement;
+            }
+            obj.YearKpiScore = score;
+            obj.EmployeeCode = empId;
+            obj.KpiFor = role;
+
+            objArr.push(obj);
+
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("YearlyKpiForm", "ProjectCommercial")',
+            data: "{objArr:'" + JSON.stringify(objArr) + "'}",
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                location.reload();
+                if (!data.success) {
+                    if (data.errors.name) {
+                        //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                    }
+                }
+                else {
+                    //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                }
+                $('#loading').hide();
+            }
+        });
+    });
+</script>

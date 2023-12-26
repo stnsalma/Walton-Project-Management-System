@@ -1,0 +1,22 @@
+﻿@*<h2>_CmOthersIncentiveList</h2>*@
+@*@model ProjectManagement.Models.CmIncentiveModel*@
+
+<tr class="tableTrCls">
+    @using (Html.BeginCollectionItem("VmIncentivePolicy.CmIncentiveModel"))
+    {
+        @*<td style="display:none;" id="monNum" class="monNum">@Model.MonNum</td>*@
+        <td style="width:300px;" id="incentiveTypes" class="incentiveTypes">@Model.OthersType</td>
+         <td id="addAmount" class="addAmount">@Model.Amount</td>
+        <td style="width:15%;" id="addAmountRemarks" class="addAmountRemarks">@Model.Remarks</td>
+        <td id="deductionAmount" class="deductionAmount">@Model.DeductAmount</td>
+        <td style="width:15%;" id="deductionRemarks" class="deductionRemarks">@Model.DeductRemarks</td>
+        <td id="effectiveMonth" class="effectiveMonth">
+            @if (@Model.EffectiveMonth != null)
+            {@String.Format("{0:yyyy-MM-dd}", @Model.EffectiveMonth)}
+        </td>
+        <td id="finalAmount" class="finalAmount">@Model.FinalAmount</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+       
+    }
+</tr>
+

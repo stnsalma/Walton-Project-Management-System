@@ -1,0 +1,409 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectMasterModel>
+
+@{
+    ViewBag.Title = "SampleSetApprovalDecision";
+
+}
+<div class="page-head">
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-title">
+        <h1>
+            Welcome,@ViewBag.userInfo.UserFullName
+            
+        </h1>
+    </div>
+
+</div>
+
+
+
+<style>
+    .hiddenColumn {
+        display: none;
+    }
+    .popover-title {
+        background: #428bca;
+        color: white;
+    }
+</style>
+
+
+<!-- BEGIN EXAMPLE TABLE PORTLET-->
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-3">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">New Project List</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-2">
+            @*<button id='newIssue' class="btn sbold uppercase btn-outline red-haze" onclick="goToController('/Common/Create')">New Issue</button>*@
+        </div>
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover dtTable" id="tblDetails" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="hiddenColumn" >@Html.DisplayNameFor(model => model.ProjectMasterId)</th>
+                        <th class="hiddenColumn" >@Html.DisplayNameFor(model => model.ProjectTypeId)</th>
+                        <th class="text-center" data-toggle="true">Project Name</th>
+                        <th class="text-center" data-toggle="true">Screening Name</th>
+                        <th class="text-center" >Supp. Name</th>
+                        <th class="text-center" >Supp. Model</th>
+                        <th class="text-center" >No.Samples</th>
+                        <th class="text-center" >Appx. Finish</th>
+                        <th class="text-center" >Trust Level</th>
+                        <th class="text-center" >Appx. PO</th>
+                        <th class="text-center" >A.Shipment</th>
+                        <th class="text-center" >Price($)</th>
+                        <th class="text-center" >Total Price($)</th>
+                        <th class="text-center">SWOT Remarks</th>
+                        <th class="text-center">BI Analyst Action Date</th>
+                        <th class="text-center">BI Remarks</th>
+                        <th class="text-center">Acknowledged By</th>
+                        <th class="text-center">Acknowledge Date</th>
+                        <th class="text-center">Acknowledge Remarks</th>
+                        <th class="text-center">CEO Action Date</th>
+                        <th class="text-center">&nbsp;&nbsp;Images&nbsp;&nbsp;</th>
+                        <th class="text-center" >Details</th>
+                        <th class="text-center" >Action</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model)
+                {
+                    var total = item.FinalPrice + item.TotalPrice;
+                    <tr>
+                        <td class="hiddenColumn">@Html.DisplayFor(modelItem => item.ProjectMasterId)</td>
+                        <td class="hiddenColumn">@Html.DisplayFor(modelItem => item.ProjectTypeId)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ProjectNameForScreening)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierModelName)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.NumberOfSample)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ApproxProjectFinishDate)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierTrustLevel)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ApproxProjectOrderDate)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ApproxShipmentDate)</td>
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.ApproximatePrice)</td>
+                        <td class="text-center">Accessories total price @item.TotalPrice, <br/> Total Price (@total) </td>
+                        <td class="text-center">
+                            @if (item.ProjectTypeId == 1)
+                            {
+                                @Html.DisplayFor(modelItem=>item.SwotOpportunityRemarks)
+                            }
+                            else
+                            {
+                                @Html.Raw("NA")
+                            }
+                        </td>
+                        <td class="text-center">@item.BiApprovalDate</td>
+                        <td class="text-center">@item.BiRemarks</td>
+                        <td class="text-center">@item.PsApprovalByName</td>
+                        <td class="text-center">@item.PsApprovalDate</td>
+                        <td class="text-center">@item.PsRemarks</td>
+                        <td class="text-center">@item.CeoApprovalDate</td>
+                        <td class="text-center">
+                            @if (item.ProjectImageModels.Count > 0)
+                            {
+                                foreach (var img in item.ProjectImageModels)
+                                {
+                                    <a target="_blank" href="@img.ImagePath">
+                                        <img class="thumbnail" src="@img.ImagePath" alt="image">
+                                    </a>
+                                <br/>
+                                }
+                            }
+                        </td>
+                        <td class="text-center">
+                            OS: @Html.DisplayFor(modelItem => item.OsName),
+                            OS Version:@Html.DisplayFor(modelItem => item.OsVersion),
+                            <a id="popoverOption" class="btn popoverOption" style="font-weight: bolder;z-index: 100;"  data-content="Display:@Html.DisplayFor(modelItem => item.DisplaySize) ,Display Name:=@Html.DisplayFor(modelItem => item.DisplaySpeciality),Processor:@Html.DisplayFor(modelItem => item.CpuName),
+                               clock:@Html.DisplayFor(modelitem => item.ChipsetFrequency),
+                               chipset:@Html.DisplayFor(modelitem => item.ChipsetName),f.camera:@Html.DisplayFor(modelitem => item.FrontCam),
+                               r.camera:@Html.DisplayFor(modelitem => item.BackCam) ,
+                               ram:@Html.DisplayFor(modelitem => item.Ram) ,
+                               rom:@Html.DisplayFor(modelitem => item.Rom) ,
+                               battery:@Html.DisplayFor(modelitem => item.BatteryRating)" rel="popover" data-placement="top" data-original-title="@item.ProjectName">Details</a>
+
+                        </td>
+                        <td>
+                            <button id="btnApprove" type="button" class="modalButton btn btn-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                            <button id="btnDecline" type="button" class="modalButton btn btn-danger">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- PROJECT LISTS WITH INITIAL APPROVAL-->
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-5">
+            <div class="caption font-dark">
+                <i class="icon-list font-dark"></i>
+                <span class="caption-subject bold uppercase">Initially Approved Project List</span>
+            </div>
+        </div>
+        
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover dtTable" id="tblDetails" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="hiddenColumn">@Html.DisplayNameFor(model => model.ProjectMasterId)</th>
+                        <th class="hiddenColumn">@Html.DisplayNameFor(model => model.ProjectTypeId)</th>
+                        <th class="text-center" data-toggle="true">Project Name</th>
+                        <th class="text-center">Supp. Name</th>
+                        <th class="text-center">Supp. Model</th>
+                        <th class="text-center">Initial Approval Date</th>
+                        <th class="text-center">BI Approval Date</th>
+                        <th class="text-center">Appx. Finish</th>
+                        <th class="text-center">Trust Level</th>
+                        <th class="text-center">Appx. PO</th>
+                        <th class="text-center">A.Shipment</th>
+                        <th class="text-center">Price($)</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in ViewBag.InitialApprovedProjects)
+                {
+                    if (@item.ProjectStatus == "APPROVED")
+                    {
+                        <tr>
+                            <td class="hiddenColumn">@item.ProjectMasterId</td>
+                            <td class="hiddenColumn">@item.ProjectTypeId</td>
+                            <td class="text-center">@item.ProjectName</td>
+                            <td class="text-center">@item.SupplierName</td>
+                            <td class="text-center">@item.SupplierModelName</td>
+                            <td class="text-center">@item.InitialApprovalDate</td>
+                            <td class="text-center">@item.BiApprovalDate</td>
+                            <td class="text-center">@item.ApproxProjectFinishDate</td>
+                            <td class="text-center">@item.SupplierTrustLevel</td>
+                            <td class="text-center">@item.ApproxProjectOrderDate</td>
+                            <td class="text-center">@item.ApproxShipmentDate</td>
+                            <td class="text-center">@item.ApproximatePrice</td>
+                        </tr>
+                    }
+
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+<!--Approve Modal-->
+<div class="modal fade" id="approveProjectModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Sample Approval</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label hidden">Projectmasterid</label>
+                    <input id="projectMasterId" type="text" class="form-control hidden" placeholder="Project master id">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipient-name" class="control-label">Project Name</label>
+                    <input name="ProjectName" id="ProjectName" type="text" class="form-control ProjectName" disabled>
+                </div>
+                <div class="row-details">
+                    <label for="message-text" class="control-label">Comment:</label>
+                    <textarea name="Comment" id="Comment" class="form-control" id="message-text"></textarea>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btnConfirm" type="button" class="btn btn-success">Confirm</button>
+
+
+            </div>
+        </div>
+    </div>
+ </div>
+
+    <!--Decline Modal-->
+ <div class="modal fade" id="declineProjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="z-index: 10040;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Decline Project</h4>
+            </div>
+            <div class="modal-body">
+                @*<form class="from">*@
+                <div class="row-border">
+                    @*<div class="col-lg-3">Project master id :</div>
+    <div class="col-lg-9">*@
+                    <label for="projectMasterId" class="control-label hidden">Project master id:</label>
+                    <input id="projectMasterId" type="text" class="form-control hidden" placeholder="Project master id">
+
+                    @*</div>*@
+                </div>
+                <div class="row-border">
+
+                    <label for="ProjectName" class="control-label">ProjectName</label>
+                    <input name="ProjectName" id="ProjectName" type="text" class="form-control ProjectName" disabled>
+                </div>
+                <div class="row-details">
+                    <label for="message-text" class="control-label">Comment:</label>
+                    <textarea name="Comment" id="Comment" class="form-control" id="message-text"></textarea>
+                </div>
+                @*</form>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="btnModalDecline" type="button" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-remove"></span> Decline
+                </button>
+                @*<input type="submit"/>*@
+            </div>
+        </div>
+    </div>
+ </div>
+
+<script type="text/javascript">
+    function onSuccess() {
+        alert('onSuccess');
+        // $('#declineProjectModal').modal('hide');
+    }
+    $(function () {
+        var projectMasterId = 0;
+        //$('.footable').footable();
+        $('.popoverOption').popover({ trigger: "click" });
+        var currentRow =0;
+        var trrow;
+        $('.modalButton').on('click', function (e) {
+            e.preventDefault();
+            //  alert('hi');
+            projectMasterId = $(this).closest('tr').find('td:eq(0)').text();
+            // console.log(projectMasterId);
+            $('#projectMasterId').val(projectMasterId.trim());
+
+            var projectName = $(this).closest('tr').find('td:eq(2)').text();
+            $('.ProjectName').val(projectName.replace(/\s+/, " "));
+
+            var buttonid = $(this).attr('id');
+            if (buttonid == "btnApprove") {
+
+                $('#approveProjectModal').modal({
+                    show: true,
+                    backdrop: 'static'
+                });
+            } else if (buttonid == "btnDecline") {
+                $('#declineProjectModal').modal({
+                    show: true,
+                    backdrop: 'static'
+                });
+            }
+            // var currentRow = $(this).closest('tr').rowIndex;
+            trrow = $(this).closest('tr');
+            
+            //console.log(currentRow);
+
+        });
+        //Project Decline
+        $('#btnModalDecline').on('click', function (e) {
+            e.preventDefault();
+
+            //alert(projectMasterId);
+
+            var obj = {};
+            obj.projectMasterId = projectMasterId;
+            obj.managementComment = $('#Comment').val();
+            console.log(obj);
+            $.post('@Url.Action("SampleSetRejection", "Management")', { projectId: obj.projectMasterId, comment: obj.managementComment }, function (data) {
+                $('#declineProjectModal').modal('hide');
+                trrow.remove();
+                if (data.Status == "success") {
+                    alertify.alert('SampleSetRejection', 'Rejected Sample Set Successfully', function () { alertify.error('Ok'); });
+                }
+                else if (data.Status == "failure") {
+                    alertify.alert('SampleSetRejection', 'Error occured.', function () { alertify.error('Ok'); });
+                }
+            });
+            //var data = commonJqueryAjax(myUrl, obj);
+            //console.log(data);
+            
+
+        });
+        //Project Approval
+        $('#btnConfirm').on('click', function (e) {
+            
+            e.preventDefault();
+            $("#btnConfirm").attr("disabled", true);
+            setTimeout(function () { $("#btnConfirm").removeAttr("disabled"); }, 2000);
+            var obj = {};
+            obj.projectMasterId = $('#projectMasterId').val();
+            obj.managementComment = $('#Comment').val();
+            var url = 'SampleSetApproval';
+            console.log(obj);
+
+           
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: { projectId: obj.projectMasterId, comment: obj.managementComment },
+                async: false,
+                success: function (respText) {
+                    //$('#btnConfirm').prop('disabled', false);
+                    $('#btnConfirm').attr("disabled", false);
+                    theResponse = respText;
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    alert('error ..Check log for details');
+                    console.log(textStatus, errorThrown);
+                    var msg = '';
+                    if (jqXhr.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXhr.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXhr.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (errorThrown === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (errorThrown === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (errorThrown === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.\n' + jqXhr.responseText;
+                    }
+                    console.log(msg);
+                }
+            });
+
+            $('#approveProjectModal').modal('hide');
+            //alert(data.Status);
+            if (obj.projectMasterId>0) { //data.Status=='success' throwing "Uncaught reference error : data is not defined"
+                alertify.alert('SampleSetApproval', 'Handset approval successful', function () { alertify.success('Approved'); }
+
+                    );
+                trrow.remove();
+            }
+
+
+        });
+    });
+</script>

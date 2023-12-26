@@ -1,0 +1,147 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+
+@using (Html.BeginForm("_HwIssueComment", "Hardware", FormMethod.Post))
+{
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <h3 class="form-section">Comment</h3>
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcInchargeAssignId, new { id = "hwQcInchargeAssignId" })
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcAssignDate, new { @Value = DateTime.Now })
+                    @Html.HiddenFor(model => model.ProjectMasterModel.ProjectMasterId)
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcAssignId, new { id = "hdnHwQcAssignId" })
+                    @Html.HiddenFor(model => model.HwIssueCommentModel.IssueName, new { id = "hdnIssueName" })
+                    @Html.HiddenFor(model => model.HwIssueCommentModel.IssueTypeName, new { id = "hdnIssueTypeName" })
+                    @Html.HiddenFor(model => model.HwIssueCommentModel.IssueTypeDetailName, new { id = "IssueTypeDetailName" })
+                    @Html.HiddenFor(model=>model.HwQcInchargeAssignModel.IsScreeningTest)
+                    @Html.HiddenFor(model => model.HwQcInchargeAssignModel.IsRunningTest)
+                    @Html.HiddenFor(model => model.HwQcInchargeAssignModel.IsFinishedGoodTest)
+                    <br />
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.HwIssueMasterModel.HwIssueMasterId, new SelectList(ViewBag.HwIssueMaster, "HwIssueMasterId", "IssueName"), "Select Issue", new { @class = "form-control", id = "ddlIssueMaster" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.HwIssueTypeModel.HwIssueTypeId, new SelectList(ViewBag.HwIssueType, "HwIssueTypeId", "IssueTypeName"), "Select Issue Type", new { @class = "form-control", id = "ddlIssueType" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.HwIssueTypeDetailModel.HwIssueTypeDetailId, new SelectList(ViewBag.HwIssueTypeDetail, "HwIssueTypeDetailId", "IssueTypeDetailName"), "Select Issue Detail", new { @class = "form-control", id = "ddlIssueTypeDetail" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 font-sm">Issue Comment</label>
+                                <div class="col-md-8">
+                                    @Html.TextAreaFor(model => model.HwIssueCommentModel.IssueComment, new { @class = "form-control", Style = "max-width:400px" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 font-sm">Issue Comment Date</label>
+                                <div class="col-md-8">
+                                    @Html.TextBoxFor(model => model.HwIssueCommentModel.IssueCommetDate, new { type = "text", @class = "form-control", @readonly = "readonly", @Value = DateTime.Now.ToShortDateString() })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-info col-md-3" id="btnSubmitHwIssueComment">submit</button>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="portlet box green">
+                            <div class="portlet-title">
+                                <div class="caption">
+                                    <i class="icon-list"></i>List of Issues Added
+                                </div>
+                                <div class="tools">
+                                    <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                                    <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                                    <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                                </div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="table-scrollable">
+                                        <table class="table table-bordered table-hover" id="tblIssueListByQcUserId">
+                                            <thead>
+                                                <tr>
+                                                    <th> # </th>
+                                                    <th> Issue Name </th>
+                                                    <th> Issue Type </th>
+                                                    <th> Issue Detail </th>
+                                                    <th> Issue Comment </th>
+                                                    <th> Comment Date </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                @foreach (var item in ViewBag.HwAllIssueCommentsByQcAssignId)
+                                                {
+                                                    <tr>
+                                                        <td> 1 </td>
+                                                        <td> @item.IssueName </td>
+                                                        <td> @item.IssueTypeName </td>
+                                                        <td> @item.IssueTypeDetailName </td>
+                                                        <td> @item.IssueComment </td>
+                                                        <td> @item.IssueCommetDate </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+                    <div class="row">
+                        <div class="col-md-offset-5">
+                            <button class="btn btn-transparent red btn-outline btn-circle active" id="btnSubmitForVerification">Submit for Verification</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function() {
+        if ('@(TempData["message"])' !== "") {
+            alertify.alert('@(TempData["message"])');
+        }
+    });
+</script>
+

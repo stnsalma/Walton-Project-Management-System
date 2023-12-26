@@ -1,0 +1,86 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.Models.ProductionTrackerModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Index", "Production", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="row upload">
+                        <div class="col-md-5">
+                            <div class="form-group">
+
+                                <div>
+                                    @Html.TextBoxFor(model => model.FilePath, new { type = "file", @class = "form-control" })
+                                @*<input class="form-control" type="file"/>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-info">Import</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-3">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">List</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-2">
+            @*<button id='newIssue' class="btn sbold uppercase btn-outline red-haze" onclick="goToController('/Common/Create')">New Issue</button>*@
+        </div>
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover dtTable" id="" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="text-center">Model Name</th>
+                        <th class="text-center">IMEI1</th>
+                        <th class="text-center">IMEI2</th>
+                        <th class="text-center">Color</th>
+                        <th class="text-center">Order No</th>
+                        <th class="text-center">Production Date<br/>(MM/DD/YYYY)</th>
+                        <th class="text-center">Software Version</th>
+                        
+                    </tr>
+                </thead>
+
+                @*@foreach (var item in ViewBag.ProductionTracker)
+                {
+                    <tr>
+                        <td class="text-center">@item.ModelName</td>
+                        <td class="text-center">@item.IMEI1</td>
+                        <td class="text-center">@item.IMEI2</td>
+                        <td class="text-center">@item.Color</td>
+                        <td class="text-center">@item.OrderNo</td>
+                        <td class="text-center">@item.ProductionDate</td>
+                        <td class="text-center">@item.SoftwareVersion</td>
+                        
+                    </tr>
+                }*@
+
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,454 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<!-- BEGIN GLOBAL MANDATORY STYLES -->
+@*<link href="/assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />*@
+<link href="/assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<link href="/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL STYLES -->
+<link href="/assets/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+<link href="/assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME GLOBAL STYLES -->
+<!-- BEGIN THEME LAYOUT STYLES -->
+<link href="/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<!-- END THEME LAYOUT STYLES -->
+@*=====================================================================================================================================*@
+
+
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="btnAddItem" data-toggle="modal" href="#itemModal">Add Item</a>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="btnAddItemNumber" data-toggle="modal" href="#itemNumberModal">Add Item Number</a>
+</div>
+@using (Ajax.BeginForm("HwItemizationForm", "Hardware", new AjaxOptions() { HttpMethod = "post", OnSuccess = "getresult", OnFailure = "ajaxfailed" }))
+{
+    @Html.HiddenFor(model => model.HwItemizationModel.ProjectMasterId)
+    @Html.HiddenFor(model => model.HwItemizationModel.HwQcInchargeAssignId)
+    @Html.HiddenFor(model => model.HwItemizationModel.HwQcAssignId)
+    @Html.HiddenFor(model => model.HwItemizationModel.Compatibility)
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Begin: life time stats -->
+            <div class="portlet light portlet-fit portlet-datatable bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-settings font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">Project: @Html.Raw(Model.ProjectMasterModel.ProjectName) (Phase @Html.Raw(Model.ProjectMasterModel.OrderNuber))</span>
+
+                    </div>
+                    <div class="actions">
+                        @*<input type="submit" value="Save" class="btn btn-default" />*@
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div>
+                        <table class="table table-striped table-bordered">
+                            <th>Item/Components Name</th>
+                            <th>Yes/Not</th>
+                            <th>IC/Component Number</th>
+                            <th>IC/Component Vendors Information</th>
+                            <th>Compatible with other Model/Component</th>
+                            <th>Type</th>
+                            <th>Remarks</th>
+                            <th>Existing Item</th>
+                            <th>Supplier Code</th>
+                            <th>Actions</th>
+                            <tr>
+                                <td>@Html.DropDownListFor(model => model.HwItemizationModel.ItemComponentId, new SelectList(Model.HwItemComponentModels, "ItemComponentId", "ItemComponentName"), "select", new { @class = "form-control ddlItemComponent" })</td>
+                                <td class="text-center">
+                                    @Html.DropDownListFor(model => model.HwItemizationModel.YesNot, new List<SelectListItem>
+                                                {
+                                                    new SelectListItem()
+                                                    {
+                                                        Text = "yes",Value = "Yes"
+                                                    },
+                                                    new SelectListItem()
+                                                    {
+                                                        Text = "no",Value = "No"
+                                                    },
+                                                    new SelectListItem()
+                                                    {
+                                                        Text = "N/A",Value = "N/A"
+                                                    }
+                                                }, "select", new { @class = "form-control" })
+                                </td>
+                                <td class="text-center">
+                                    @Html.DropDownListFor(model => model.HwItemizationModel.IcComponentNumberId, new SelectList(Model.HwIcComponentNumberModels, "", ""), "Select", new { @class = "form-control ddlIcComponentNumber" })
+                                </td>
+                                <td class="text-center"> @Html.TextBoxFor(model => model.HwItemizationModel.IcComponent_Vendor, new { @class = "form-control" }) </td>
+                                <td class="text-center">
+                                    <select name="multiple" id="multiple" class="form-control" multiple>
+                                        @if (ViewBag.AllProjects != null)
+                                        {
+                                            foreach (var i in ViewBag.AllProjects)
+                                            {
+                                                <option value="@i.ProjectName">@i.ProjectName</option>
+                                            }
+                                        }
+
+                                    </select>
+                                </td>
+
+                                <td class="text-center"> @Html.TextBoxFor(model => model.HwItemizationModel.Type, new { @class = "form-control" }) </td>
+                                <td class="text-center"> @Html.TextBoxFor(model => model.HwItemizationModel.Remarks, new { @class = "form-control" }) </td>
+
+                                <td class="text-center">
+                                    @*@Html.TextBoxFor(model => model.HwItemizationModel.ExistingItem, new { @class = "form-control" })*@
+                                    @Html.DropDownListFor(model => model.HwItemizationModel.ExistingItem, new List<SelectListItem>
+                                                {
+                                                    new SelectListItem()
+                                                    {
+                                                        Text = "yes",Value = "Yes"
+                                                    },
+                                                    new SelectListItem()
+                                                    {
+                                                        Text = "no",Value = "No"
+                                                    }
+                                                }, "select", new { @class = "form-control" })
+                                </td>
+                                <td class="text-center"> @Html.TextBoxFor(model => model.HwItemizationModel.SupplierCode, new { @class = "form-control" }) </td>
+                                <td class="text-center"> <button class="btn btn-success" onclick="showData();">Save</button></td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <!-- End: life time stats -->
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- Begin: life time stats -->
+        <div class="portlet light portlet-fit portlet-datatable bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-settings font-green"></i>
+                    <span class="caption-subject font-green sbold uppercase">Sample Handset Itemization By R&D (HW)</span>
+
+                </div>
+                <div class="actions">
+                    @*<input type="submit" value="Save" class="btn btn-default" />*@
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-container">
+                    <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
+                        <div class="row">
+
+                        </div>
+
+                        <table class="table table-striped table-bordered table-condensed table-hover dataTable no-footer " id="sample_3" aria-describedby="sample_3_info">
+                            <thead>
+                                <tr role="row">
+                                    <th class="hidden" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 201px;" aria-label=" Browser : activate to sort column ascending"> HwItemizationFormId </th>
+                                    <th class="sorting_asc" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 159px;" aria-sort="ascending" aria-label=" Rendering engine : activate to sort column descending"> Item/Components<br /> Name </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 201px;" aria-label=" Browser : activate to sort column ascending"> Yes/Not </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 179px;" aria-label=" Platform(s) : activate to sort column ascending"> IC/Component<br /> Number  </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 179px;" aria-label=" Platform(s) : activate to sort column ascending"> IC/Component<br /> Vendors<br /> Information  </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Compatible with <br />other Model/ <br /> Component </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Type </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Remarks </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Existing<br />Item </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Supplier<br />code </th>
+                                    <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Actions </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.GetHwItemizationModels != null)
+                                {
+                                    for (int i = 0; i < Model.GetHwItemizationModels.Count; i++)
+                                    {
+                                        <tr>
+                                            <td class="text-center hidden"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].HwItemizationId, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].ItemComponentName, new { @class = "form-control" }) </td>
+                                            <td class="text-center">
+                                                @Html.DisplayFor(model => model.GetHwItemizationModels[i].YesNot, new { @class = "form-control" })
+                                            </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].IcComponentNumber, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].IcComponent_Vendor, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].Compatibility, new { @class = "form-control" }) </td>
+
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].Type, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].Remarks, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].ExistingItem, new { @class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.DisplayFor(model => model.GetHwItemizationModels[i].SupplierCode, new { @class = "form-control" }) </td>
+                                            <td class="text-center">
+                                                @if (Model.HwItemizationModel != null)
+                                                {
+                                                    <input type="submit" value="Delete" class="btn btn-default" />
+                                                }
+
+                                            </td>
+                                        </tr>
+                                    }
+
+                                }
+
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- End: life time stats -->
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ ITEM NAME PART START =======================================================================*@
+    <div id="itemModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Item</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <p>
+                                    Item/Component Name
+                                    @Html.TextBoxFor(model => model.HwItemComponentModel.ItemComponentName, new { @class = "form-control", id = "txtModalComponentName" })
+                                </p>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveItem" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ ITEM NUMBER PART START =======================================================================*@
+    <div id="itemNumberModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Item Number/Component</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    @Html.DropDownListFor(model => model.HwItemizationModel.ItemComponentId, new SelectList(Model.HwItemComponentModels, "ItemComponentId", "ItemComponentName"), "select", new { @class = "form-control", id = "ddlModalItemComponent" })
+                                </p>
+                                <p>
+                                    Ic/Component Number
+                                    @Html.TextBoxFor(model => model.HwIcComponentNumberModel.IcComponentNumber, new { @class = "form-control txtIcComponentNumber" })
+                                    @Html.ValidationMessageFor(model => model.HwPmu1IcModel.IcNoSize, "", new { @class = "text-danger" })
+                                </p>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnSaveItemNumber" class="btn btn-success">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal End-->
+
+
+<script>
+    function getresult(data) {
+        console.log(data);
+
+        alertify.success('Saved: ' + data.ItemComponentName);
+        console.log(data.ItemComponentName);
+        $('#sample_3 > tbody:last-child').append('<tr>' +
+            '<td class="text-center">' + data.ItemComponentName + '</td>' +
+            '<td class="text-center">' + data.YesNot + '</td>' +
+            '<td class="text-center">' + data.IcComponentNumber + '</td>' +
+            '<td class="text-center">' + data.IcComponent_Vendor + '</td>' +
+            '<td class="text-center">' + data.Compatibility + '</td>' +
+            '<td class="text-center">' + data.Type + '</td>' +
+            '<td class="text-center">' + data.Remarks + '</td>' +
+            '<td class="text-center">' + data.ExistingItem + '</td>' +
+            '<td class="text-center">' + data.SupplierCode + '</td>' +
+            '<td class="text-center"></td>' +
+            '</tr>');
+
+    };
+
+    function ajaxfailed(data) {
+        //var message = JSON.parse(data);
+        //console.log(message);
+        alertify.error('select Item/Component and Yes/Not fields');
+    };
+
+    function showData() {
+        var compatiblemodel = $('#multiple').val();
+        var test = $('#HwItemizationModel_Compatibility').val(compatiblemodel);
+        console.log(test);
+    };
+
+    $(function () {
+        $('#multiple').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+
+        $('.ddlItemComponent').chosen();
+        $('.ddlIcComponentNumber').chosen();
+
+        $('.ddlItemComponent').on('change', function () {
+            var itemComponentSelectedValue = $('.ddlItemComponent :selected').val();
+            var itemComponent = $('.ddlItemComponent :selected').text();
+            var mySelect = $('#HwItemizationModel_IcComponentNumberId');
+            mySelect.empty();
+            mySelect.append($('<option></option>').val("").html("Select"));
+            $(".ddlIcComponentNumber").trigger("chosen:updated");
+            console.log("ItemComponentValue--" + itemComponentSelectedValue + ", Item Component Name-- " + itemComponent);
+            $.get('@Url.Action("GetHwIcComponentNumberModels", "Hardware")', { hwItemComponentId: itemComponentSelectedValue }, function (data) {
+                for (var i = 0 ; i < data.length; i++) {
+                    mySelect.append($('<option></option>').val(data[i].IcComponentNumberId).html(data[i].IcComponentNumber));
+                    $(".ddlIcComponentNumber").trigger("chosen:updated");
+                }
+            });
+        });
+
+        $('#btnSaveItem').on('click', function (e) {
+            //alert();
+            e.preventDefault();
+            var obj = {};
+            obj.ItemComponentName = $.trim($('#txtModalComponentName').val());
+            var url = 'PostItemComponentName';
+
+            if (obj.ItemComponentName != "") {
+                //alert();
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: obj,
+                    async: false,
+                    success: function (response) {
+                        console.log(response);
+                        $('#itemModal').modal('hide');
+                        alertify.alert("Item/Component Name saved");
+                        var itemname = response;
+                        if (itemname != null) {
+                            var newOption = $('<option value="' + itemname.ItemComponentId + '">' + itemname.ItemComponentName + '</option>');
+                            $('#ddlModalItemComponent').append(newOption);
+                            $('.ddlItemComponent').append(newOption);
+                            $('.ddlItemComponent').trigger("chosen:updated");
+                            $('#txtModalComponentName').val('');
+                        }
+                    }
+                });
+            }
+        });
+
+
+        $('#btnSaveItemNumber').on('click', function (e) {
+            var itemComponentSelectedValue = $('#ddlModalItemComponent :selected').val();
+            var icComponentNumber = $('.txtIcComponentNumber').val();
+            console.log(itemComponentSelectedValue + "--" + icComponentNumber);
+            e.preventDefault();
+            var obj = {};
+            obj.ItemComponentId = itemComponentSelectedValue;
+            obj.IcComponentNumber = icComponentNumber;
+            var url = 'PostIcComponentNumber';
+
+            if (obj.IcComponentNumber != "") {
+                //alert();
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: obj,
+                    async: false,
+                    success: function (response) {
+                        console.log(response);
+                        $('#itemNumberModal').modal('hide');
+                        alertify.alert("Ic/Component Number saved");
+                        //var itemname = JSON.parse(response);
+                        //if (itemname != null) {
+                        //    var newOption = $('<option value="' + itemname.ItemComponentId + '">' + itemname.ItemComponentName + '</option>');
+                        //    $('.ddlItemComponent').append(newOption);
+                        //}
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+@*============================================================================================================================*@
+
+<!-- BEGIN CORE PLUGINS -->
+@*<script src="/assets/global/plugins/jquery.min.js" type="text/javascript"></script>*@
+@*<script src="/assets/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>*@
+<script src="/assets/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="/assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="/assets/global/scripts/app.min.js" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="/assets/pages/scripts/table-datatables-buttons.min.js" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+@*<script src="/assets/layouts/layout4/scripts/layout.min.js" type="text/javascript"></script>*@
+@*<script src="/assets/layouts/layout4/scripts/demo.min.js" type="text/javascript"></script>*@
+@*<script src="/assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>*@
+<!-- END THEME LAYOUT SCRIPTS -->

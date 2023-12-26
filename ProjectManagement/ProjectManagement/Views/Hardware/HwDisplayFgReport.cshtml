@@ -1,0 +1,229 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+<style>
+    div.scrollmenu {
+        background-color: #eee;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: black;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+@if (@ViewBag.FgReportInitialInfo.IsRunningTest == true)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+
+                <a class="btn btn-outline btn-default" id="btnItemization" onclick="location.href='@Url.Action("HwItemization", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'"><i class="fa fa-list-alt"></i> Itemization</a>
+                <a class="btn btn-outline btn-default" id="btnItemization" onclick="location.href='@Url.Action("HwBatteryTestReport", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'"><i class="fa fa-battery-0"></i> Battery Report</a>
+                <a class="btn btn-outline btn-default" id="btnItemization" onclick="location.href='@Url.Action("HwChargerTestReport", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'"><i class="fa fa-bolt"></i> Charger Report</a>
+                <a class="btn btn-outline btn-default" id="btnItemization" onclick="location.href='@Url.Action("HwUsbCableTestReport", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'"><i class="fa fa-usb"></i> USB Cable Report</a>
+                <a class="btn btn-outline btn-default" id="btnItemization" onclick="location.href='@Url.Action("HwFieldTestReport", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'"><i class="fa fa-paper-plane"></i> Field Test Report</a>
+                <a class="btn btn-outline btn-default" onclick="location.href='@Url.Action("GetAllDoc", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'+'&projectName='+encodeURIComponent('@ViewBag.FgReportInitialInfo.ProjectName')"><i class="fa fa-paperclip"></i> All Documents</a>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (@ViewBag.FgReportInitialInfo.IsFinishedGoodTest == true)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton"><i class="fa fa-print"></i> Print</a>
+            <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton" onclick="location.href='@Url.Action("GetAllDoc", "Hardware")?hwqcinchargeassignId='+'@ViewBag.hwqcinchargeassignId'+'&projectName='+encodeURIComponent('@ViewBag.FgReportInitialInfo.ProjectName')"><i class="fa fa-paperclip fa-lg"></i> All Documents</a>
+            &nbsp;
+        </div>
+    </div>
+    <br />
+    <div class="portlet light bordered" id="PageContent">
+
+        <div class="portlet-body">
+            <div class="note note-success text-center">
+                <h3 class="bold"> Finished Goods Hardware R&D Test Report </h3>
+            </div>
+            <div class="col-md-12">
+
+                <div class="row">
+                    <div class="portlet-body">
+                        <table class="table table-bordered table-striped table-condensed">
+
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"> Project Name : </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.ProjectName </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Project Manager : </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.UserFullName </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Product Stage : </td>
+                                    <td class="text-center"> Finished Goods </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Received Date : </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.HwQcInchargeAssignDate </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Sample /Finished Goods Quantity : </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.ReceivedSampleQuantity </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Clearance Date from H/W : </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.UpdatedDate </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @*==============================================================================*@
+
+
+                </div>
+
+
+            </div>
+
+
+            <h1 class="underline bold">Hardware Tested By:</h1>
+            <div class="col-md-12">
+
+                <div class="row">
+                    <div class="portlet-body">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead class="flip-content">
+                                <tr>
+                                    <th class="bold text-center"> Name </th>
+                                    <th class="bold text-center"> ID No. </th>
+                                    <th class="bold text-center">Signature</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in @ViewBag.HwTestedBy)
+                                {
+                                    <tr>
+                                        <td class="text-center"> @item.UserFullName </td>
+                                        <td class="text-center"> @item.UserName </td>
+                                        <td class="text-center"></td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    @*==============================================================================*@
+                    <h1 class="underline bold">Hardware Checked By:</h1>
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="portlet-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th class="bold text-center"> Name </th>
+                                            <th class="bold text-center"> ID No. </th>
+                                            <th class="bold text-center">Signature</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="text-center">
+                                                @if (ViewBag.HwTestCheckedBy != null)
+                                                {
+                                                    @ViewBag.HwTestCheckedBy.UserFullName
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (ViewBag.HwTestCheckedBy != null)
+                                                {
+                                                    @ViewBag.HwTestCheckedBy.UserName
+                                                }
+                                            </td>
+                                            <td class="text-center"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h1 class="underline bold">Hardware Remarks(Main Parts):</h1>
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="portlet-body">
+                                <p>@ViewBag.FgReportInitialInfo.Remark</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<script>
+    $(function () {
+        $("#PrintButton").click(function () {
+            printPageContent($("#PageContent").html());
+        });
+
+        function printPageContent(content) {
+            var mywindow = window.open('', '', '');
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'body {' +
+                'margin:5%;' +
+                '}' +
+                'h3{' +
+                'text-align: center;' +
+                'text-decoration: underline;' +
+                '}' +
+                'h1{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'table {' +
+                'font-family: arial, sans-serif;' +
+                'border-collapse: collapse;' +
+                'width: 100%;' +
+                '}' +
+                'table th, table td {' +
+                'border: 1px solid #dddddd;' +
+                'text-align: center;' +
+                '}' +
+                '</style>';
+            mywindow.document.write(htmlToPrint);
+            mywindow.document.write('<html><title>Finished Goods Test Report</title><body>');
+            mywindow.document.write(content);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+            return true;
+        }
+    })
+</script>

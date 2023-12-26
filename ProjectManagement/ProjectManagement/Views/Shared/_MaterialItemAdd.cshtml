@@ -1,0 +1,23 @@
+﻿@model ProjectManagement.Models.MaterialWastageItemModel
+
+<tr id="@Model.Id">
+    @using (Html.BeginCollectionItem("MaterialWastageItemModels"))
+    {
+        @Html.HiddenFor(m => m.AddedDate)
+        @Html.HiddenFor(m => m.AddedBy)
+        <td>@Html.DisplayFor(m => m.ItemCode)</td>
+        <td>@Html.DisplayFor(m => m.ItemDetail)</td>
+        <td>@Html.DisplayFor(m => m.BomUnit)</td>
+        <td>@Html.DisplayFor(m => m.WastagePercentage)</td>
+        <td>@Html.DisplayFor(m => m.AssemblyMaterialFault)</td>
+        <td>@Html.DisplayFor(m => m.AssemblyProcessFault)</td>
+        <td>@Html.DisplayFor(m => m.RepairMaterialFault)</td>
+        <td>@Html.DisplayFor(m => m.RepairProcessFault)</td>
+        <td>@Html.DisplayFor(m => m.TotalWastageFault)</td>
+        <td>@Html.DisplayFor(m => m.BOMType)</td>
+        <td>@Html.DisplayFor(m => m.MonthName)</td>
+        <td>@Html.DisplayFor(m => m.MonthNumber)</td>
+        <td>@Html.DisplayFor(m => m.YearNumber)</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>

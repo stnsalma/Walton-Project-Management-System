@@ -1,0 +1,232 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using Newtonsoft.Json
+@using ProjectManagement.Models
+@model ProjectManagement.Models.PmAllFilesModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("GetAllPmFiles", "ProjectManager"))
+{
+    @Html.HiddenFor(model => model.ProjectMasterId)
+    @Html.HiddenFor(model => model.ProjectName)
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-file-archive-o"></i>Files available for Download, Project: <b>@Html.DisplayFor(model => model.ProjectName)</b>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-group">
+                <label class="mt-checkbox">
+                    <i class="fa fa-file-o"></i>
+                    Select All
+                    <input value="1" id="selectall" name="all" type="checkbox">
+                    <span></span>
+                </label>
+                <hr />
+                <div class="">
+                    <h4 class="bold"><i class="fa fa-refresh"></i> Boot Image Animation</h4>
+                    <div class="mt-checkbox-list">
+
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(Model.ImageUpload1)
+                            <input value="@Model.ImageUpload1" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                        @if (Model.VideoUpload1 != null || Model.VideoUpload1 != "failed")
+                        {
+                            <label class="mt-checkbox">
+                                <i class="fa fa-file"></i>
+                                @Path.GetFileNameWithoutExtension(Model.VideoUpload1)
+                                <input value="@Model.VideoUpload1" class="selectfile" name="files" type="checkbox">
+                                <span></span>
+                            </label>
+                        }
+                        
+                    </div>
+                </div>
+                <div class="">
+                    <h4 class="bold"><i class="fa fa-gift"></i> Gift Box Design </h4>
+                    <div class="mt-checkbox-list">
+
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(Model.pmGbImageUploadPath)
+                            <input value="@Model.pmGbImageUploadPath" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="">
+                    <h4 class="bold"><i class="fa fa-list-alt"></i> ID</h4>
+                    <div class="mt-checkbox-list">
+
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(Model.PmFinishingImageUploadPath)
+                            <input value="@Model.PmFinishingImageUploadPath" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(Model.PmLogoTypeImageUploadPath)
+                            <input value="@Model.PmLogoTypeImageUploadPath" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(Model.PmModelPrintImageUploadPath)
+                            <input value="@Model.PmModelPrintImageUploadPath" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <h4 class="bold"><i class="fa fa-tag"></i> Label </h4>
+                <div class="mt-checkbox-list">
+
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.pmLabelImageUploadPath)
+                        <input value="@Model.pmLabelImageUploadPath" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="">
+                <h4 class="bold"><i class="fa fa-phone"></i> Phone Accessories Image</h4>
+                <div class="mt-checkbox-list">
+
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesEarphone)
+                        <input value="@Model.PmPhnAccessoriesEarphone" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesUSBCable)
+                        <input value="@Model.PmPhnAccessoriesUSBCable" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesCharger)
+                        <input value="@Model.PmPhnAccessoriesCharger" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesOTGCable)
+                        <input value="@Model.PmPhnAccessoriesOTGCable" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesBackCover)
+                        <input value="@Model.PmPhnAccessoriesBackCover" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmPhnAccessoriesFlipCover)
+                        <input value="@Model.PmPhnAccessoriesFlipCover" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="">
+                <h4 class="bold"><i class="fa fa-image"></i> Screen Protector</h4>
+                <div class="mt-checkbox-list">
+
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.PmScreenProtectorImageUploadPath)
+                        <input value="@Model.PmScreenProtectorImageUploadPath" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+            <div class="">
+                <h4 class="bold"><i class="fa fa-image"></i> Wallpapers</h4>
+                <div class="mt-checkbox-list">
+
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload1)
+                        <input value="@Model.WalpaperUpload1" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload2)
+                        <input value="@Model.WalpaperUpload2" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload3)
+                        <input value="@Model.WalpaperUpload3" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload4)
+                        <input value="@Model.WalpaperUpload4" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload5)
+                        <input value="@Model.WalpaperUpload5" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload6)
+                        <input value="@Model.WalpaperUpload6" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                    <label class="mt-checkbox">
+                        <i class="fa fa-file"></i>
+                        @Path.GetFileNameWithoutExtension(Model.WalpaperUpload7)
+                        <input value="@Model.WalpaperUpload7" class="selectfile" name="files" type="checkbox">
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+          
+            <div>
+                @*@foreach (var file in ViewBag.Files)
+                {
+                    if (file == null)
+                    {
+                        @Html.Raw("No docs to download")
+                        break;
+                    }
+                    else
+                    {
+                        <button class="btn btn-success"><i class="fa fa-download"></i> Download</button>
+                        break;
+                    }
+                }*@
+                <button class="btn btn-success"><i class="fa fa-download"></i> Download</button>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function() {
+        $("#selectall").click(function () {
+            $(".selectfile").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+
+

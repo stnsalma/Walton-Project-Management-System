@@ -1,0 +1,324 @@
+﻿@{
+    ViewBag.Title = "LcPermissionDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style type="text/css">
+    #chartdiv {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Dashboard</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-4">
+                @Html.DropDownList("ProjectModel", new SelectList(ViewBag.ProjectModel, "ProjectModel", "ProjectModel"), "All Project", new { @class = "form-control ddChosen" })
+            </div>
+            <div class="col-md-4">
+                <select id="ProjectMasterId" class="form-control">
+                    <option value="">Select Order</option>
+                </select>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <hr />
+        <div id="divProjectInfo" hidden="">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered" id="tblProjectInfo">
+                        <thead>
+                            <tr>
+                                <th>Supplier Name</th>
+                                <th>Supplier Model</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        
+        <div id="divGraph" hidden="">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="caption">
+                        <span class="caption-subject bold uppercase font-dark">Price Evolution</span>
+                    </div>
+                    <div id="chartdiv"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="allProjectTotalPipeline">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Smart Phone LC Pipeline Quantity</label>
+                            <table class="table table-bordered" id="tblSmartPipeline">
+                                <thead>
+                                    <tr>
+                                        <th>Project Model</th>
+                                        <th>Order No</th>
+                                        <th>Opening Month</th>
+                                        <th>Approx.Shipment Date</th>
+                                        <th>Pipeline Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var v in ViewBag.AllLcPermissions)
+                                    {
+                                        if (v.Model.Contains("Primo"))
+                                        {
+                                            <tr>
+                                                <td>@v.Model</td>
+                                                <td>@v.OrderNo</td>
+                                                <td>@v.OpeningDate.ToString("MMM") @v.OpeningDate.ToString("yy")</td>
+                                                <td>@v.ApproxDateOfShipment.ToString("dd-MMM-yyyy")</td>
+                                                <td>@v.OrderQuantity</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Feature Phone LC Pipeline Quantity</label>
+                            <table class="table table-bordered" id="tblFeaturePipeline">
+                                <thead>
+                                    <tr>
+                                        <th>Project Model</th>
+                                        <th>Order No</th>
+                                        <th>Opening Month</th>
+                                        <th>Approx.Shipment Date</th>
+                                        <th>Pipeline Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var v in ViewBag.AllLcPermissions)
+                                    {
+                                        if (v.Model.Contains("Olvio"))
+                                        {
+                                            <tr>
+                                                <td>@v.Model</td>
+                                                <td>@v.OrderNo</td>
+                                                <td>@v.OpeningDate.ToString("MMM") @v.OpeningDate.ToString("yy")</td>
+                                                <td>@v.ApproxDateOfShipment.ToString("dd-MMM-yyyy")</td>
+                                                <td>@v.OrderQuantity</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<script>
+    $(function () {
+        $('#ProjectMasterId').on('change', function () {
+            var projectId = $('#ProjectMasterId option:selected').val();
+            if (projectId > 0) {
+                $('#divGraph').hide();
+                console.log(projectId);
+                var url = '@Url.Action("GetLcPermissionsByProjectId","Common")';
+                $.post(url, { projectId: projectId }, function (data) {
+                    console.log(data);
+                    $('#divGraph').show();
+                    // Themes begin
+                    am4core.useTheme(am4themes_animated);
+                    // Themes end
+
+                    // Create chart instance
+                    var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+                    // Add data
+                    chart.data = data;
+
+                    // Set input format for the dates
+                    chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+                    // Create axes
+                    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.numberFormatter = new am4core.NumberFormatter();
+                    valueAxis.numberFormatter.numberFormat = '#.##';
+
+                    // Create series
+                    var series = chart.series.push(new am4charts.LineSeries());
+                    series.dataFields.valueY = "value";
+                    series.dataFields.dateX = "date";
+                    series.tooltipText = "avg: {value}";
+                    series.strokeWidth = 2;
+                    series.minBulletDistance = 15;
+
+                    // Drop-shaped tooltips
+                    series.tooltip.background.cornerRadius = 20;
+                    series.tooltip.background.strokeOpacity = 0;
+                    series.tooltip.pointerOrientation = "vertical";
+                    series.tooltip.label.minWidth = 40;
+                    series.tooltip.label.minHeight = 40;
+                    series.tooltip.label.textAlign = "middle";
+                    series.tooltip.label.textValign = "middle";
+
+                    // Make bullets grow on hover
+                    var bullet = series.bullets.push(new am4charts.CircleBullet());
+                    bullet.circle.strokeWidth = 2;
+                    bullet.circle.radius = 4;
+                    bullet.circle.fill = am4core.color("#fff");
+
+                    var bullethover = bullet.states.create("hover");
+                    bullethover.properties.scale = 1.3;
+
+                    // Make a panning cursor
+                    chart.cursor = new am4charts.XYCursor();
+                    chart.cursor.behavior = "panXY";
+                    chart.cursor.xAxis = dateAxis;
+                    chart.cursor.snapToSeries = series;
+
+                    // Create vertical scrollbar and place it before the value axis
+                    chart.scrollbarY = new am4core.Scrollbar();
+                    chart.scrollbarY.parent = chart.leftAxesContainer;
+                    chart.scrollbarY.toBack();
+
+                    // Create a horizontal scrollbar with previe and place it underneath the date axis
+                    chart.scrollbarX = new am4charts.XYChartScrollbar();
+                    chart.scrollbarX.series.push(series);
+                    chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+                    dateAxis.start = 0.79;
+                    dateAxis.keepSelection = true;
+                });
+            } else {
+
+            }
+        });
+
+        //====By Project model======
+        $('#ProjectModel').on('change', function () {
+            var projectModel = $('#ProjectModel option:selected').text();
+            $('#ProjectMasterId').empty();
+            $('#ProjectMasterId').append('<option>Loading...</option>');
+            if (projectModel != "All Project") {
+                $('#tblProjectInfo tbody').empty();
+                $('#divGraph').hide();
+                $('#divProjectInfo').hide();
+                $('#allProjectTotalPipeline').hide();
+                console.log(projectModel);
+                var url = '@Url.Action("GetLcPermissionsByProjectModel","Common")';
+                $.post(url, { projectModel: projectModel }, function (data) {
+                    console.log(data);
+                    $('#ProjectMasterId').empty();
+                    $('#ProjectMasterId').append('<option>Select Order</option>');
+                    for (var i = 0; i < data.orders.length; i++) {
+                        console.log(data.orders[i].ProjectMasterId);
+                        $('#ProjectMasterId').append($('<option></option>').val(data.orders[i].ProjectMasterId).html(data.orders[i].OrderNuber));
+                    }
+                    var row = '<tr>' +
+                                 '<td>' + (data.lcPer[0].SupplierName = 'undefined' ? "no data" : data.lcPer[0].SupplierName) + '</td>' +
+                                 '<td>' + (data.lcPer[0].SupplierModelName = 'undefined' ? "no data" : data.lcPer[0].SupplierModelName) + '</td>' +
+                              '</tr>';
+                    $('#tblProjectInfo tbody').append(row);
+                    $('#divProjectInfo').show();
+                    $('#divGraph').show();
+                    // Themes begin
+                    am4core.useTheme(am4themes_animated);
+                    // Themes end
+
+                    // Create chart instance
+                    var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+                    // Add data
+                    chart.data = data.chartData;
+
+                    // Set input format for the dates
+                    chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+                    // Create axes
+                    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                    valueAxis.numberFormatter = new am4core.NumberFormatter();
+                    valueAxis.numberFormatter.numberFormat = '#.##';
+
+                    // Create series
+                    var series = chart.series.push(new am4charts.LineSeries());
+                    series.dataFields.valueY = "value";
+                    series.dataFields.dateX = "date";
+                    series.tooltipText = "{value}";
+                    series.strokeWidth = 2;
+                    series.minBulletDistance = 15;
+
+                    // Drop-shaped tooltips
+                    series.tooltip.background.cornerRadius = 20;
+                    series.tooltip.background.strokeOpacity = 0;
+                    series.tooltip.pointerOrientation = "vertical";
+                    series.tooltip.label.minWidth = 40;
+                    series.tooltip.label.minHeight = 40;
+                    series.tooltip.label.textAlign = "middle";
+                    series.tooltip.label.textValign = "middle";
+
+                    // Make bullets grow on hover
+                    var bullet = series.bullets.push(new am4charts.CircleBullet());
+                    bullet.circle.strokeWidth = 2;
+                    bullet.circle.radius = 4;
+                    bullet.circle.fill = am4core.color("#fff");
+
+                    var bullethover = bullet.states.create("hover");
+                    bullethover.properties.scale = 1.3;
+
+                    // Make a panning cursor
+                    chart.cursor = new am4charts.XYCursor();
+                    chart.cursor.behavior = "panXY";
+                    chart.cursor.xAxis = dateAxis;
+                    chart.cursor.snapToSeries = series;
+
+                    // Create vertical scrollbar and place it before the value axis
+                    chart.scrollbarY = new am4core.Scrollbar();
+                    chart.scrollbarY.parent = chart.leftAxesContainer;
+                    chart.scrollbarY.toBack();
+
+                    // Create a horizontal scrollbar with previe and place it underneath the date axis
+                    chart.scrollbarX = new am4charts.XYChartScrollbar();
+                    chart.scrollbarX.series.push(series);
+                    chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+                    dateAxis.start = 0.79;
+                    dateAxis.keepSelection = true;
+                });
+            } else {
+                $('#divGraph').hide();
+                $('#divProjectInfo').hide();
+                $('#allProjectTotalPipeline').show();
+                $('#ProjectMasterId').empty();
+                $('#ProjectMasterId').append('<option>Select Order</option>');
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+

@@ -1,0 +1,221 @@
+﻿
+@{
+    ViewBag.Title = "ApprovedLcReportWithinDateRange";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Date Wise Approved LC Report</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label class="control-label">From <span style="font-size: smaller">(Approval Date)</span></label>
+                    <input class="form-control date_picker" type="text" id="fromDate" />
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="form-group">
+                    <label class="control-label">To <span style="font-size: smaller">(Approval Date)</span></label>
+                    <input class="form-control date_picker" type="text" id="toDate" />
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <div class="form-group">
+                    <label class="control-label"></label>
+                    <input class="form-control btn btn-success" value="Search" type="button" id="btnSearch" />
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label class="control-label">Grand Total</label>
+                    <span class="form-control" id="grandTotal"></span>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <span class="bold">Handset LC</span>
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblHandsetLc">
+                        <thead>
+                            <tr>
+                                <th>LC ID</th>
+                                <th>Model</th>
+                                <th>Order No</th>
+                                <th>Supplier Name</th>
+                                <th>Supplier<br/>Grade</th>
+                                <th>Product</th>
+                                <th>Opening Date</th>
+                                <th>LC Amount</th>
+                                @*<th>Total Amount</th>*@
+                                <th>Order Quantity</th>
+                                <th>Created By</th>
+                                <th>Creator Remarks</th>
+                                <th>Approval Date</th>
+                                <th>Approval Remarks</th>
+                                <th>Oracle PO No</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="7"></td>
+                                <td><span id="handsetLcTotal"></span></td>
+                                <td colspan="6"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <span class="bold">Other Product LC</span>
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblOtherLc">
+                        <thead>
+                            <tr>
+                                <th>LC ID</th>
+                                <th>Product Type</th>
+                                <th>Product</th>
+                                <th>Supplier Name</th>
+                                <th>Supplier<br/>Grade</th>
+                                <th>Product Model</th>
+                                <th>Handset Model</th>
+                                <th>Order No</th>
+                                <th>Opening Date</th>
+                                <th>LC Amount</th>
+                                <th>TT Date</th>
+                                <th>TT Value</th>
+                                <th>TT No</th>
+                                @*<th>Total Amount</th>*@
+                                <th>Order Quantity</th>
+                                <th>Created By</th>
+                                <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creator Remarks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                                <th>Approval Date</th>
+                                <th>Approval Remarks</th>
+                                <th>Oracle PO No</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="9"></td>
+                                <td><span id="otherLcTotal"></span></td>
+                                <td colspan="6"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#btnSearch').on('click', function () {
+        $('#tblHandsetLc tbody').empty();
+        $('#tblOtherLc tbody').empty();
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+        console.log(fromDate + '-----' + toDate);
+        var url = '@Url.Action("GetLcOpeningPermissionsByDateRange", "Commercial")';
+        $.post(url, {fromDate:fromDate,toDate:toDate}, function(data) {
+            console.log(data);
+            var row = '';
+            //handset lc
+            var handsetLcTotal = 0;
+            for (var i = 0; i < data.handsetLc.length; i++) {
+                //format opening date
+                var dateString = data.handsetLc[i].OpeningDate;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var openingDate = new Date(seconds);
+                openingDate = formatDate(openingDate);
+                //format approve date
+                dateString = data.handsetLc[i].ApprovedDate;
+                seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var approveDate = new Date(seconds);
+                approveDate = formatDate(approveDate);
+                row = row + '<tr>' 
+                    +'<td>'+data.handsetLc[i].Id+'</td>'
+                    +'<td>'+data.handsetLc[i].Model+'</td>'
+                    +'<td>'+data.handsetLc[i].OrderNo+'</td>'
+                    +'<td>'+data.handsetLc[i].SupplierName+'</td>'
+                    +'<td>'+data.handsetLc[i].SupplierGrade+'</td>'
+                    +'<td>'+data.handsetLc[i].Product+'</td>'
+                    + '<td>' + openingDate + '</td>'
+                    +'<td>'+data.handsetLc[i].LcAmount+'</td>'
+                    //+'<td>'+data.handsetLc[i].TotalAmount+'</td>'
+                    +'<td>'+data.handsetLc[i].OrderQuantity+'</td>'
+                    + '<td>' + data.handsetLc[i].AddedByName + '</td>'
+                    + '<td><span style="font-size: x-small">' + data.handsetLc[i].Remarks + '</span></td>'
+                    + '<td>' + approveDate + '</td>'
+                    + '<td>' + data.handsetLc[i].ApprovedByRemarks + '</td>'
+                    + '<td>' + data.handsetLc[i].OraclePoNo + '</td>'
+                    + '</tr>';
+                handsetLcTotal = handsetLcTotal + parseFloat(data.handsetLc[i].LcAmount);
+            }
+            $('#tblHandsetLc tbody').append(row);
+            $('#handsetLcTotal').html('Total = ' + handsetLcTotal.toFixed(2));
+            //other LC
+            var otherLcTotal = 0;
+            row = '';
+            for (i = 0; i < data.otherLc.length; i++) {
+                dateString = data.otherLc[i].OpeningDate;
+                seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                openingDate = new Date(seconds);
+                openingDate = formatDate(openingDate);
+                //format approve date
+                dateString = data.otherLc[i].ApprovedDate;
+                seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                approveDate = new Date(seconds);
+                approveDate = formatDate(approveDate);
+                row = row + '<tr>'
+                    + '<td>' + data.otherLc[i].Id + '</td>'
+                    + '<td>' + data.otherLc[i].ProductType + '</td>'
+                    + '<td>' + data.otherLc[i].Product + '</td>'
+                    + '<td>' + data.otherLc[i].SupplierName + '</td>'
+                    + '<td>' + data.otherLc[i].SupplierGrade + '</td>'
+                    + '<td>' + data.otherLc[i].Model + '</td>'
+                    + '<td>' + data.otherLc[i].OtherProductLcForTheProject + '</td>'
+                    + '<td>' + data.otherLc[i].OrderNo + '</td>'
+                    + '<td>' + openingDate + '</td>'
+                    + '<td>' + data.otherLc[i].LcAmount + '</td>'
+                    + '<td>' + data.otherLc[i].TtDate + '</td>'
+                    + '<td>' + data.otherLc[i].TtValue + '</td>'
+                    + '<td>' + data.otherLc[i].TtNumber + '</td>'
+                    //+ '<td>' + data.otherLc[i].TotalAmount + '</td>'
+                    + '<td>' + data.otherLc[i].OrderQuantity + '</td>'
+                    + '<td>' + data.otherLc[i].AddedByName + '</td>'
+                    + '<td><span style="font-size: x-small;font-weight:bold">' + data.otherLc[i].Remarks + '</span></td>'
+                    + '<td>' + approveDate + '</td>'
+                    + '<td>' + data.otherLc[i].ApprovedByRemarks + '</td>'
+                    + '<td>' + data.otherLc[i].OraclePoNo + '</td>'
+                    + '</tr>';
+                otherLcTotal = otherLcTotal + parseFloat(data.otherLc[i].LcAmount);
+            }
+            $('#tblOtherLc tbody').append(row);
+            $('#otherLcTotal').html('Total = ' + otherLcTotal.toFixed(2));
+            var grandTotal = handsetLcTotal + otherLcTotal;
+            $('#grandTotal').html(grandTotal.toFixed(2));
+        });
+    });
+    
+    function formatDate(date) {
+        var d = new Date(date),
+          month = '' + (d.getMonth() + 1),
+          day = '' + d.getDate(),
+          year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [day, month, year].join('-');
+    }
+</script>
+

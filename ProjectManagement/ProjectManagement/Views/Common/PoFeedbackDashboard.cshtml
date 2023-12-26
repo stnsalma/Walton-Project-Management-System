@@ -1,0 +1,253 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPoFeedbackModel>
+@{
+    ViewBag.Title = "PoFeedbackDashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box red">
+    <div class="portlet-title">
+        <div class="caption">PO Feedback Viewer</div>
+    </div>
+    <div class="portlet-body">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    @Html.DropDownList("ProjectId", new SelectList(ViewBag.projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblFeedbackByProjectId">
+                        <thead>
+                            <tr>
+                                <th>Feedback By</th>
+                                <th>Department</th>
+                                <th>Feedback</th>
+                                <th>Added Date</th>
+                                <th>Allow reorder</th>
+                                <th>Attachments</th>
+                                <th>Sourcing Comment</th>
+                                <th>Sourcing Comment By</th>
+                                <th>Allow Reorder (Sourcing)</th>
+                                <th>Management Comment</th>
+                                <th>Management Decision</th>
+                                @if (User.IsInRole("CM") || User.IsInRole("CMHEAD"))
+                                {
+                                    <th>Action</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">All Feedbacks</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-bordered" id="tblAllFeedBacks">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Order</th>
+                        <th>Feedback By</th>
+                        <th>Department</th>
+                        <th>On Behalf Of</th>
+                        <th>Feedback</th>
+                        <th>Added Date</th>
+                        <th>Allow reorder</th>
+                        <th>Sourcing Comment</th>
+                        <th>Sourcing Comment By</th>
+                        <th>Allow Reorder (Sourcing)</th>
+                        <th>Management Comment</th>
+                        <th>Management Decision</th>
+                        <th>Attachments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>@v.ProjectName</td>
+                            <td>@v.OrderNumber</td>
+                            <td>@v.AddedByName</td>
+                            <td>@v.Department</td>
+                            <td>@v.OnBehalfOf</td>
+                            <td>@v.FeedBack</td>
+                            <td>
+                                @if (v.AddedDate != null)
+                                {
+                                    @Html.Raw(@v.AddedDate.Value.ToString("dd-MMM-yyyy"))
+                                }                                
+                            </td>
+                            <td>@v.AllowReorder</td>
+                            <td>
+                                @if (@v.SourcingComment == null)
+                                {
+                                    <span class="label label-sm label-danger"> Pending </span>
+                                }
+                                else
+                                {
+                                    @v.SourcingComment
+                                }
+                            </td>
+                            <td>@v.SourcingCommentByName</td>
+                            <td>@v.SourcingAllowReorder</td>
+                            <td>
+                                @if (@v.SourcingAllowReorder == "Yes")
+                                {
+                                    <span class="label label-sm label-default"> NA </span>
+                                }
+                                @if (@v.SourcingAllowReorder == null)
+                                {
+                                    <span class="label label-sm label-warning" style="font-size: x-small"> Waiting for Sourcing Feedback </span>
+                                }
+                                @if (@v.SourcingAllowReorder == "No")
+                                {
+                                    if (@v.ManagementComment != null)
+                                    {
+                                        @v.ManagementComment
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-sm label-danger"> Pending </span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (@v.SourcingAllowReorder == "Yes")
+                                {
+                                    <span class="label label-sm label-default"> NA </span>
+                                }
+                                @if (@v.SourcingAllowReorder == null)
+                                {
+                                    <span class="label label-sm label-warning" style="font-size: x-small"> Waiting for Sourcing Feedback </span>
+                                }
+                                @if (@v.SourcingAllowReorder == "No")
+                                {
+                                    if (@v.ManagementDecision != null)
+                                    {
+                                        @v.ManagementDecision
+                                    }
+                                    else
+                                    {
+                                        <span class="label label-sm label-danger"> Pending </span>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @{string a = Path.GetFileNameWithoutExtension(v.FileUploadPath);}
+                                @if (a != null && v.FileUploadPath != "failed")
+                                {
+                                    <i class="fa fa-download"></i>
+                                    @Html.ActionLink(a, "DownloadPoFeedbackFile", "Common", new {id = @v.Id}, null)
+                                }
+                                else
+                                {
+                                    @Html.Raw("none")
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#tblAllFeedBacks').DataTable({            
+            "columnDefs": [
+                { "type": "date", "targets": 5, "order": [[5, "desc"]] },
+                {"width":"20%","targets":4}
+            ]
+        });
+
+        var userRole = '@(User.IsInRole("CM") || User.IsInRole("CMHEAD") ? "true" : "false")';
+        console.log(userRole);
+        $('#ProjectId').on('change', function () {
+            $('#tblFeedbackByProjectId tbody').empty();
+            var projectId = $('#ProjectId option:selected').val();
+            if (projectId > 0) {
+                console.log(projectId);
+                var url = '@Url.Action("PoFeedbacksByProjectId","Common")';
+                $.post(url, { projectId: projectId }, function(data) {
+                    console.log(data);
+                    var row = '';
+                    for (var i = 0; i < data.length; i++) {
+                        var dateString = data[i].AddedDate;
+                        var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                        var date = new Date(seconds);
+                        date = formatDate(date);
+                        var downloadUrl = '@Url.Action("DownloadPoFeedbackFile", "Common")' + "/" + data[i].Id;
+                        var downloadLink = data[i].FileUploadPath=='failed'?'none': '<i class="fa fa-download"></i><a href="' + downloadUrl + '">' + data[i].FileUploadPath + '</a>';
+                        var saveButton = '';
+                        if (userRole=='true') {
+                            saveButton = '<td><input type="button" class="btn btn-success btnSouCmSave" value="Save" /></td>';
+                        }
+                        var sourcingAllowReorder = '';
+                        if (data[i].SourcingAllowReorder == 'Yes' || data[i].SourcingAllowReorder == null) {
+                            sourcingAllowReorder = '<td><select class="form-control sourcingAllowReorder">' +
+                                '<option value="Yes" selected="">Yes</option>' +
+                                '<option value="No">No</option>' +
+                                '</select></td>';
+                        } else {
+                            sourcingAllowReorder = '<td><select class="form-control sourcingAllowReorder">' +
+                                                      '<option value="Yes">Yes</option>' +
+                                                      '<option value="No" selected="">No</option>' +
+                                                   '</select></td>';
+                        }
+                        row = row + '<tr>' +
+                                     '<td hidden="">' + data[i].Id + '</td>' +
+                                     '<td>' + data[i].AddedByName + '</td>' +
+                                     '<td>' + data[i].Department + '</td>' +
+                                     '<td>' + data[i].FeedBack + '</td>' +
+                                     '<td>' + date + '</td>' +
+                                     '<td>' + data[i].AllowReorder + '</td>' +
+                                     '<td>' + downloadLink + '</td>' +
+                                     '<td><textarea class="form-control sourcingComment" rows="3">' + (data[i].SourcingComment = data[i].SourcingComment == null ? "" : data[i].SourcingComment) + '</textarea></td>' +
+                                     '<td class="sourcingCommentByName">' + (data[i].SourcingCommentByName = data[i].SourcingCommentByName == null ? "" : data[i].SourcingCommentByName) + '</td>' +
+                                     sourcingAllowReorder +
+                                     '<td>' + (data[i].ManagementComment = data[i].ManagementComment == null ? "none" : data[i].ManagementComment) + '</td>' +
+                                     '<td>' + (data[i].ManagementDecision = data[i].ManagementDecision == null ? "Pending" : data[i].ManagementDecision) + '</td>' +
+                                     saveButton +
+                                   '</tr>';
+                    }
+                    $('#tblFeedbackByProjectId tbody').append(row);
+                });
+            }
+        });
+
+        $('#tblFeedbackByProjectId').on('click', '.btnSouCmSave', function () {
+            var row = $(this).closest('tr');
+            var url = '@Url.Action("SaveSourcingComment","Common")';
+            var id = row.find('td:eq(0)').html();
+            var sourcingComment = row.find('.sourcingComment').val();
+            var sourcingAllowReorder = row.find('.sourcingAllowReorder option:selected').val();
+            console.log(id + '>>' + sourcingComment+'>>'+sourcingAllowReorder);
+            $.post(url, { id: id, sourcingComment: sourcingComment, sourcingAllowReorder: sourcingAllowReorder }, function (data) {
+                alertify.success(data.message);
+                row.find('.sourcingCommentByName').html(data.user.UserFullName);
+            });
+        });
+
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            return [day, month, year].join('-');
+        }
+    });
+</script>

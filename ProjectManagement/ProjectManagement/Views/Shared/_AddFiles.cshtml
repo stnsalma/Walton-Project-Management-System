@@ -1,0 +1,38 @@
+﻿@model ProjectManagement.Models.LcOpeningPermissionFileModel
+
+<tr>
+    @using (Html.BeginCollectionItem("LcOpeningPermissionFileModels"))
+    {
+        @Html.HiddenFor(m=>m.Id)
+        @Html.HiddenFor(m=>m.LcPermissionId)
+        @Html.HiddenFor(m=>m.AddedBy)
+        @Html.HiddenFor(m=>m.AddedDate)
+        @Html.HiddenFor(m=>m.FilePath)
+        <td>
+            @if (Model==null)
+            {
+                @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" })
+            }
+            else
+            {
+                <i class="fa fa-download"></i>
+                {
+                    if (Model != null)
+                    {
+                        string a = Path.GetFileNameWithoutExtension(Model.FilePath);
+                        @Html.ActionLink(a, "DownloadLcPermissionFile", "Common", new { id = Model.Id }, null)
+                    }
+                }
+            }
+        </td>
+        <td>
+            @Html.TextBoxFor(m=>m.Remarks,new{@class="form-control"})
+        </td>
+        <td>
+            @if (User.IsInRole("CM") && Model!=null)
+            {
+                <button class="btn btn-danger" onclick="location.href='@Url.Action("DeleteLcFile", "Commercial", new { id = Model.Id })'"><i class="fa fa-trash"></i></button>
+            }
+        </td>
+    }
+</tr>

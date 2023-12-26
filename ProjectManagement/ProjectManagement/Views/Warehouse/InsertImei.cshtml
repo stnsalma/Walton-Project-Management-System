@@ -1,0 +1,173 @@
+﻿@{
+    ViewBag.Title = "InsertImei";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #distributiondate {
+        cursor: pointer;
+    }
+</style>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">Insert IMEI to Dealer Distribution details</div>
+        <div class="tools">
+            <label id="rowcounter" class="pull-right" style="color:red;font-weight: bold"></label>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="dealercode" class="form-control text-center" placeholder="Type Dealer Code Here" />
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="dealername" class="form-control text-center" placeholder="Dealer Name" readonly="" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" class="form-control text-center" id="imei1" placeholder="Scan Barcode" />
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control text-center" id="distributiondate" placeholder="Distribution Date" readonly=""/>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="table-container">
+                <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
+                    <table class="table table-striped table-bordered table-condensed table-hover dataTable no-footer " id="sample_3" aria-describedby="sample_3_info">
+                        <thead>
+                            <tr>
+                                <th class="text-center">BarCode</th>
+                                <th class="text-center">BarCode2</th>
+                                <th class="text-center">Model</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @*<input type="button" class="btn btn-danger" value="Clear"/>*@
+            <input type="button" class="btn btn-success" onclick="saveImei();" value="Save"/>
+        </div>
+    </div>
+</div>
+
+<link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<link href="~/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+<script>
+    $('#rowcounter').text('IMEI count: 0');
+    $('#distributiondate').datepicker({
+        format: "dd/mm/yyyy",
+        autoclose: true
+    });
+    
+    function saveImei() {
+        var dealercode = $('#dealercode').val();
+        var distdate = $('#distributiondate').val();
+        if (dealercode == '') {
+            alertify.error('enter dealer code');
+        }
+        if (distdate == '') {
+            alertify.error('Enter Distribution Date');
+        }
+        if (dealercode != '' && distdate != '') {
+            var url = '@Url.Action("SaveImei","Warehouse")';
+            var tableData = new Array();
+            $('#sample_3 tbody tr').each(function (row, tr) {
+                tableData[row] = {
+                    "BarCode": $(tr).find('td:eq(0)').text(),
+                    "BarCode2": $(tr).find('td:eq(1)').text(),
+                    "Model": $(tr).find('td:eq(2)').text(),
+                };
+            });
+            //tableData.shift();
+            console.log(tableData);
+
+            $.post(url, { imeilist: tableData,dealercode:dealercode,distdate:distdate }, function (data) {
+                console.log(data);
+                $('#sample_3 tbody').empty();
+                alertify.success('Saved');
+                $('#rowcounter').text('IMEI count: 0');
+                $('#imei1').focus();
+            });
+        }
+    }
+
+    $(function () {
+        $('#dealercode').keyup(function () {
+            var dealerCode = $('#dealercode').val();
+            //$('#dealername').val(dealerCode);
+            var url = '@Url.Action("GetDealerInfo", "WareHouse")';
+            $.post(url, { dealercode: dealerCode }, function (data) {
+                $('#dealername').prop('readonly', false);
+                $('#dealername').val(data.DealerName);
+                $('#dealername').prop('readonly', true);
+                if (data.DealerCode == null) {
+                    $('#dealername').val('');
+                }
+            });
+        });
+
+        $('#imei1').keyup(function () {
+            var imei1 = $('#imei1').val();
+            if ($('#imei1').val().length > 14) {
+                var url = '@Url.Action("IsExist", "Warehouse")';
+                $.post(url, { imei1: imei1 }, function (data) {
+                    console.log(data);
+                    if (!data) {
+                        var urlCheckInvalidImei = '@Url.Action("CheckInvalidImei","Warehouse")';
+                        $.post(urlCheckInvalidImei, { imei1: imei1 }, function(json) {
+                            console.log(json.BarCode);
+                            if (json.BarCode == null) {
+                                alertify.error('Invalid IMEI');
+                                $('#imei1').val('');
+                            } else {
+                                //>>check table already contains IMEI or not
+                                var isExist = false;
+                                $('#sample_3 tr td:nth-child(1)').each(function () {
+                                    var texttocheck = this.innerHTML;
+                                    if (texttocheck == imei1) {
+                                        alertify.error(imei1 + ' Already Added');
+                                        $('#imei1').val('');
+                                        isExist = true;
+                                    }
+                                });
+                                //>>fetch IMEI from database and append to table
+                                if (!isExist) {
+                                    var row = "<tr>" +
+                                        "<td class='text-center'>" + json.BarCode + "</td>" +
+                                        "<td class='text-center'>" + json.BarCode2 + "</td>" +
+                                        "<td class='text-center'>" + json.Model + "</td>" +
+                                        "<td class='text-center'><input type='button' class='btn btn-warning remove' value='Remove'/></td>" +
+                                        "</tr>";
+                                    $('#sample_3 tbody').append(row);
+                                    $('#rowcounter').text('IMEI count: ' + $('#sample_3 tbody tr').length);
+                                    $('#imei1').val('');
+                                }
+                            }
+                        }); 
+                    } else {
+                        alertify.error(imei1 + ' Already Exists! Please return this IMEI first.');
+                        $('#imei1').val('');
+                        $('#imei1').focus();
+                    }
+                });
+                $('#imei1').val('');
+            }
+        });
+
+        $('#sample_3').on('click','.remove', function() {
+            $(this).parent().parent().remove();
+            $('#rowcounter').text('IMEI count: ' + ($('#sample_3 tbody tr').length));
+        });
+    });
+</script>
+

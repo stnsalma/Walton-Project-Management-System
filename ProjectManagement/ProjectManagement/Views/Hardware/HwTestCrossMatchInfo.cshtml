@@ -1,0 +1,209 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.HwTestCrossMatchInfoModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwTestCrossMatchInfoModel.HwQcInchargeAssignId, new { @Value = @ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwTestCrossMatchInfoModel.Added)
+    @Html.HiddenFor(model => model.HwTestCrossMatchInfoModel.AddedDate)
+    @Html.HiddenFor(model => model.HwTestCustomModel.HwTestCrossMatchInfoId, new { @Value = @ViewBag.HwTestCustomModel.HwTestCrossMatchInfoId })
+    <input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome! @ViewBag.UserInfo.UserFullName
+                @*<small>only projects which passed QC</small>*@
+            </h1>
+        </div>
+        <div class="action">
+            @if (ViewBag.FgFlag == 1)
+            {
+                @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+            else
+            {
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+                <a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>
+                <a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>
+                <a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+                <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+                <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+                <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+                <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+                <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+                <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+                <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+                <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+                <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+                <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+                <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>
+                @if (ViewBag.FgFlag == 1)
+                {
+                    <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-list"></i>Hardware Test :
+            </div>
+            <div class="tools">
+                <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <h4 class="bold"><i class="fa fa-bolt"></i>Rework Flexibility Estimation & Components Cross Match Info</h4>
+                        <hr />
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("TP+LCD Opening", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestCrossMatchInfoModel.TpLcdOpening, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.TpLcdOpening)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Steel Shielding", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestCrossMatchInfoModel.SteelShielding, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.SteelShielding)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Overall", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestCrossMatchInfoModel.Overall, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.Overall)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.Label("Convenience of Work", new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.TextBoxFor(model => model.HwTestCrossMatchInfoModel.Overall,  new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.Overall)
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Recommendation", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestCrossMatchInfoModel.Recommendation, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.Recommendation)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Comment", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestCrossMatchInfoModel.Comment, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(model => model.HwTestCrossMatchInfoModel.Comment)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            @if (@ViewBag.HwTestCustomModel.HwTestCrossMatchInfoId == null)
+                                            {
+                                                <input type="submit" value="Save" class="btn btn-default" id="btnsave" />
+                                            }
+                                            else
+                                            {
+                                                <input type="submit" value="Update" class="btn btn-default" id="btnupdate" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+<script>
+    $(function () {
+        //var msg = $('#hdnSuccess').val();
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+    });
+</script>

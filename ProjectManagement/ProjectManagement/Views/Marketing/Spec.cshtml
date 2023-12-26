@@ -1,0 +1,738 @@
+﻿@using System.Web.UI.WebControls
+@model ProjectManagement.Models.MkProjectSpecModel
+@{
+    ViewBag.Title = "Spec";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        //Brand
+        $("#Brand").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetSpec", "Common")';
+                $.post(url, { specname: request.term, type: 'brand' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.Brand };
+                    }));
+                });
+            }
+        });
+        
+        //Model
+        $("#ModelName").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetSpec", "Common")';
+                $.post(url, { specname: request.term, type: 'model' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.ModelName };
+                    }));
+                });
+            }
+        });
+    });
+
+</script>
+
+@using (Html.BeginForm("Spec", "Marketing", FormMethod.Post, new { enctype = "multipart/form-data", id = "formSpec" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.AddedBy)
+    @Html.HiddenFor(model => model.AddedDate)
+    @Html.HiddenFor(model => model.DisplaySize)
+    <div class="portlet light portlet-fit portlet-form bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-settings font-red"></i>
+                <span class="caption-subject font-red sbold uppercase">Specification</span>
+            </div>
+            <div class="actions">
+                @if (Model != null && Model.Id > 0)
+                {
+                    <input type="submit" value="Update" class="btn btn-circle red-mint btn-outline sbold uppercase" />
+                }
+                else
+                {
+                    <input type="submit" value="Save" class="btn btn-circle red-mint btn-outline sbold uppercase" />
+                }
+                <input type="button" value="Back to List" class="btn btn-circle blue-chambray btn-outline sbold uppercase" onclick="location.href = '@Url.Action("AllModelList", "Marketing")'" />
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-body">
+                <h3 class="form-section">Basic Info</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Brand</label>
+                            <div class="col-md-9">
+                                @if (Model != null && !string.IsNullOrWhiteSpace(Model.Brand))
+                                {
+                                    @Html.TextBoxFor(model => model.Brand, new { @class = "form-control", @readonly = true })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Brand, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Brand, "", new { @class = "required" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Model</label>
+                            <div class="col-md-9">
+                                @if (Model != null && !string.IsNullOrWhiteSpace(Model.ModelName))
+                                {
+                                    @Html.TextBoxFor(model => model.ModelName, new { @class = "form-control", @readonly = true })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.ModelName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ModelName, "", new { @class = "required" })
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Product Type</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.ProductType, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Smart",Value = "Smart"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Feature",Value = "Feature"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Network</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Band</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.Network, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "2g",Value = "2g"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "3g",Value = "3g"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "4g",Value = "4g"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Display</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">Display Size<span class="font-sm">(inch)</span></label>
+                            <div class="col-md-8">
+                                <div class="col-md-5">
+                                    <input type="number" min="1" max="9" step="1" onkeypress="return !(event.charCode == 46)" class="form-control text-center" id="displaySize1stPart" />
+                                </div>
+                                <div class="col-md-2"><span style="font-weight: 900">.</span></div>
+                                <div class="col-md-5">
+                                    <input type="number" min="0" max="9" step="1" onkeypress="return !(event.charCode == 46)" pattern="[0-9]" class="form-control text-center" id="displaySize2ndPart" />
+                                </div>
+                                @*@Html.TextBoxFor(model => model.DisplaySize, new { @class = "form-control" })*@
+                            </div>
+                            <br />
+                            <br />
+                            <label class="control-label col-md-3">Resolution</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Resolution, new { @class = "form-control", PlaceHolder = "1080×1920" })
+                                @*@Html.DropDownListFor(model => model.Resolution, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "QVGA (240×320)",Value = "QVGA (240×320)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "WQVGA (240×400)",Value = "WQVGA (240×400)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "HVGA (240×480)",Value = "HVGA (240×480)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "WVGA (480×800)",Value = "WVGA (480×800)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "FWVGA (854x480)",Value = "FWVGA (854x480)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "(480×960)",Value = "(480×960)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "(128×160)",Value = "(128×160)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "qHD (540×960)",Value = "qHD (540×960)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "HD (720×1280)",Value = "HD (720×1280)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "FHD (1080×1920)",Value = "FHD (1080×1920)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "QHD (1440×2560)",Value = "QHD (1440×2560)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "HD+ (1520×720)",Value = "HD+ (1520×720)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "HD+ (1560×720)",Value = "HD+ (1560×720)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "HD+ IPS (1440×720)",Value = "HD+ IPS (1440×720)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "FHD+ (1080×2340)",Value = "FHD+ (1080×2340)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "(1080×2400)",Value = "(1080×2400)"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Quad HD+ (3040x1440)",Value = "Quad HD+ (3040x1440)"
+                                            },
+                                        }, "select", new { @class = "form-control" })*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Display Type</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.DisplayType, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Sim Card</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Sim Slot No</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.SimSlotNumber, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Single Sim",Value = "Single Sim"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Dual Sim",Value = "Dual Sim"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Sim Type</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.SimSlotType, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Standard",Value = "Standard"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Micro",Value = "Micro"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Nano",Value = "Nano"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">OS</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">OS Name</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.OperatingSystem, new List<SelectListItem>
+                                        {
+                                            //new SelectListItem()
+                                            //{
+                                            //    Text = "Ice Cream Sandwich",Value = "Ice Cream Sandwich"
+                                            //},
+                                            //new SelectListItem()
+                                            //{
+                                            //    Text = "Jelly Bean",Value = "Jelly Bean"
+                                            //},
+                                            //new SelectListItem()
+                                            //{
+                                            //    Text = "Kitkat",Value = "Kitkat"
+                                            //},
+                                            new SelectListItem()
+                                            {
+                                                Text = "Lollipop",Value = "Lollipop"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Marshmallow",Value = "Marshmallow"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Nougat",Value = "Nougat"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Oreo",Value = "Oreo"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Pie",Value = "Pie"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Q",Value = "Q"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "Android Go",Value = "Android Go"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">OS Version</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.OsVersion, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "5.0",Value = "5.0"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "5.0.1",Value = "5.0.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "5.0.2",Value = "5.0.2"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "5.1",Value = "5.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "5.1.1",Value = "5.1.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "6.0",Value = "6.0"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "6.0.1",Value = "6.0.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "7.0",Value = "7.0"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "7.1",Value = "7.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "7.1.1",Value = "7.1.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "7.1.2",Value = "7.1.2"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "8.0",Value = "8.0"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "8.1",Value = "8.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "9.0",Value = "9.0"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "9.1",Value = "9.1"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "10",Value = "10"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "11",Value = "11"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Procesor</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Chipset</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Chipset, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">CPU</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.CPU, new List<SelectListItem>
+                                {
+                                    new SelectListItem()
+                                    {
+                                        Text = "Dual-core",Value = "Dual-core"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Quad-core",Value = "Quad-core"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Hexa-core",Value = "Hexa-core"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Text = "Octa-core",Value = "Octa-core"
+                                    }
+                                }, "select", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">CPU Speed</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.CPUFrequency, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Camera</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Front Camera</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.FrontCamera, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Back Camera</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BackCamera, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Memory</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">RAM</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.RAM, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ROM</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ROM, new { @class = "form-control"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Expandable Storage</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ExpandableStorage, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Battery</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Battery Capacity</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BatteryCapacity, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Battery Type</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.BatteryType, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Pricing</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">MRP Price</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Price, new { @class = "form-control",@type="number" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Dealer Price</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.DealerPrice, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Invoice Price</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.InvoicePrice, new { @class = "form-control"})
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Dealer Commision</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.DealerComission, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Retailer Commision</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.RetailerComission, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Upcoming Price(USD)</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.UpcomingPrice, new { @class = "form-control" ,@type="number"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Accessories</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mt-checkbox-inline">
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.HeadPhone, new { @class = "form-control", @checked = "checked" })Headphone
+                                <span></span>
+                            </label>
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.Charger, new { @class = "form-control", @checked = "checked" })Charger
+                                <span></span>
+                            </label>
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.DataCable, new { @class = "form-control", @checked = "checked" })Data Cable
+                                <span></span>
+                            </label>
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.ScreenProtector, new { @class = "form-control", @checked = "checked" })Screen Protector
+                                <span></span>
+                            </label>
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.PhoneCase, new { @class = "form-control", @checked = "checked" })Phone Case
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Features (for feature phone only)</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mt-checkbox-inline">
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.Torch, new { @class = "form-control" })@Html.Raw("Torch")
+                                <span></span>
+                            </label>
+                            <label class="mt-checkbox">
+                                @Html.CheckBoxFor(model => model.FmRadio, new { @class = "form-control" })@Html.Raw("FM Radio")
+                                <span></span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-body">
+                <h3 class="form-section">Others</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Color Available</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ColorAvailable, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Gift</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.Gift, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Relese Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Extra Features</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ExtraFeatures, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        $('#formSpec').submit(function (e) {
+            //debugger;
+            console.log($('#ReleaseDate').val());
+            if ($('#ReleaseDate').val() == '' || $('#ReleaseDate').val() == null) {
+                alertify.error('Please select release date');
+                e.preventDefault();
+            }
+            var displaySize = $('#displaySize1stPart').val() + '.' + $('#displaySize2ndPart').val();
+            console.log(displaySize);
+            $('#DisplaySize').val(displaySize);
+            //e.preventDefault();
+        });
+
+        $(window).on('load', function () {
+            var displaySize = $('#DisplaySize').val();
+            if (displaySize != '' && displaySize != null) {
+                var splitDisplaySize = displaySize.split(".");
+                $('#displaySize1stPart').val(splitDisplaySize[0]);
+                $('#displaySize2ndPart').val(splitDisplaySize[1]);
+            }
+        });
+    });
+</script>
+

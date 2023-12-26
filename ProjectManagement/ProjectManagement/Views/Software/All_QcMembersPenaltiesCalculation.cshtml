@@ -1,0 +1,418 @@
+﻿@*<h2>All_QcMembersPenaltiesCalculation</h2>*@
+
+@using System
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmAllIncentiveList
+@{
+    ViewBag.Title = "All_QcMembersPenaltiesCalculation";
+
+}
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/New_2019/dataTables.fixedColumns.min.js"></script>
+<script src="~/Scripts/New_2019/dataTables.checkboxes.min.js"></script>
+<link href="~/Content/New_2019/dataTables.checkboxes.css" rel="stylesheet" />
+
+<style>
+    .backgroundForTotals {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        color: blue;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+</style>
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> All Penalties </p>
+</div>
+<div class="portlet box green-seagreen">
+    <div class="portlet-title">
+        <div class="caption">
+            Penalties of Software Qc
+        </div>
+    </div>
+    <div class="portlet-body">
+        <br /><br /><br />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Month</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Year</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-3" style="color: brown;">Select Projects</div>
+                    <div class="col-lg-9">
+
+                        @{
+                            Debug.Assert(@Model != null, "@Model != null");
+                        }
+                        @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.ProjectsName, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control dropForProject12", @id = "projectName" })
+
+
+                    </div>
+
+                </div>
+
+                <div class="col-lg-1"></div>
+            </div>
+            <br /><br />
+            <div class="col-lg-12">
+                <div class="col-lg-2"> </div>
+            
+                <div class="form-actions col-lg-4" >
+                    <input type="button" id="btnforLoad" class="btn sbold uppercase btn-outline blue" value="Load Penalties" onclick="location.href = '@Url.Action("All_QcMembersPenaltiesCalculation", "Software")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&Year=' + $('option:selected', $('#DDDYear')).val() + '&projectName=' + $('option:selected', $('#projectName')).val()+ '&penaltiesTypes=' + 'PenaltiesModels' " />
+                </div>
+                <div class="col-lg-4">
+                    <input type="button" id="btnforProcess" class="btn sbold uppercase btn-outline blue" value="Process Penalties" onclick="location.href = '@Url.Action("All_QcMembersPenaltiesCalculation", "Software")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&Year=' + $('option:selected', $('#DDDYear')).val() + '&projectName=' + $('option:selected', $('#projectName')).val()+ '&penaltiesTypes=' + 'PenaltiesProcesses' " />
+ 
+                </div>
+                <div class="col-lg-2"> </div>
+            </div>
+            <br /><br />
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties Policy from October 2020 :</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="col-lg-12">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; border: 1px solid black;color:blue;font-weight:bold">Area</th>
+                                <th style="text-align: center; border: 1px solid black;color:blue;font-weight:bold">Team Penalty</th>
+                                <th style="text-align: center; border: 1px solid black;color:blue;font-weight:bold">Deputy</th>
+                                <th style="text-align: center; border: 1px solid black;color:blue;font-weight:bold">In-Charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid black;padding:10px">2%(0.02) < Sum of Issue < 4%(0.04)</td>
+                                <td style="border: 1px solid black;padding:10px">21%(0.21) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">5.6%(0.056) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">7%(0.07) of Last MP SW</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;padding:10px">4%(0.04) < Sum of Issue < 8%(0.08)</td>
+                                <td style="border: 1px solid black;padding:10px">35%(0.35) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">8.4%(0.084) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">10.5%(0.105) of Last MP SW</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid black;padding:10px">8%(0.08) < Sum of Issue </td>
+                                <td style="border: 1px solid black;padding:10px">70%(0.7) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">14%(0.14) of Last MP SW</td>
+                                <td style="border: 1px solid black;padding:10px">23%(0.23) of Last MP SW</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Final Percentage(%) :</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="col-lg-12">
+                    <div class="col-lg-4" style="text-align: right;font-weight: bold;color:blue">Final Percentage(%) :</div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-4"><input type="text" id="final_percent" class="form-control final_percent" value="" disabled="disabled" style="text-align: left;font-weight: bold;color: brown" /></div>
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4"></div>
+                    </div>
+                    <div class="col-lg-4"></div>
+                </div>
+                <br /><br />
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<br /><br />
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties For Per Model</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover table-both-scroll tbl1" id="tbl1">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            <th style="text-align: center;font-size: 12px"> Month </th>
+                            <th style="text-align: center;font-size: 12px"> Year </th>
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Problem<br />Name </th>
+                            <th style="text-align: center;font-size: 12px">Sub<br />Category </th>
+                            <th style="text-align: center;font-size: 12px"> Sub<br />Category<br />Quantity </th>
+                            <th style="text-align: center;font-size: 12px"> Activated </th>
+                            <th style="text-align: center;font-size: 12px"> Percentage (%)</th>
+                            <th style="text-align: center;font-size: 12px"> Total<br />Issue<br />Percentage (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.PerProjectValues != null)
+                        {
+                            foreach (var item in ViewBag.PerProjectValues)
+                            {
+                             
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                    <td> @item.Month</td>
+                                    <td> @item.Year</td>
+                                    <td class="projectNames" id="projectnames">
+                                        @*@item.ProjectName*@
+
+                                        @if (@item.ProjectName == "Totals :")
+                                        {
+                                            <div class="backgroundForTotals">@item.ProjectName</div>
+                                        }
+                                        else
+                                        {
+                                            <div>@item.ProjectName</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.ProblemName
+                                    </td>
+                                    <td> @item.SubCategory</td>
+                                    <td> @item.SubCategoryQuantity</td>
+                                    <td> @item.Activated</td>
+                                    <td> @item.IssuePercentage</td>
+                                    <td class="TotalIssuePercentageTd" id="TotalIssuePercentageTd">
+                                        <input type="text" id="TotalIssuePercentage" style="text-align: center" class="form-control TotalIssuePercentage" value="@item.TotalIssuePercentage" disabled="disabled" />
+
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<br /><br />
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Penalties For All Model</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl2" id="tbl2">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            <th style="text-align: center;font-size: 12px"> Project<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Release<br />Date </th>
+                            <th style="text-align: center;font-size: 12px"> Penalties<br/>Effective last<br />Date </th>
+                            <th style="text-align: center;font-size: 12px"> Total<br />Issue<br />Percentage (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.AllProjectValues != null)
+                        {
+                            foreach (var item in ViewBag.AllProjectValues)
+                            {
+                                <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                    <td>@item.ProjectName</td>
+                                    <td>
+                                        @if (@item.ReleaseDate != null)
+                                        {@String.Format("{0:yyyy-MM-dd}", @item.ReleaseDate)}
+                                    </td>
+                                    <td>
+                                        @if (@item.PenaltiesDate != null)
+                                        {@String.Format("{0:yyyy-MM-dd}", @item.PenaltiesDate)}
+                                    </td>
+                                    <td>@item.TotalIssuePercentage</td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+<script>
+    var AllFinalAmount = 0;
+    $(function () {
+
+        $("#tbl1 tr.trClsforSize").each(function () {
+
+            var totalsPro = $.trim($(this).find('td:eq(3)').text());
+
+            if (totalsPro.trim() == "Totals :") {
+                var final_percent = +$.trim($(this).find('#TotalIssuePercentage').val());
+
+                AllFinalAmount += +final_percent.toFixed(4);
+                $('#final_percent').val(AllFinalAmount.toFixed(4));
+            }
+
+        });
+
+        $("#btnforLoad").on('click', function (e) {
+            e.preventDefault();
+            var proMon = document.getElementById('DDDMonth');
+            var proMonText = proMon.options[proMon.selectedIndex].text;
+            var MonNum1 = proMon.options[proMon.selectedIndex].value;
+
+            if (proMonText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+            //
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+            var Year = proYear.options[proYear.selectedIndex].value;
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+            //
+        });
+        
+        $("#btnforProcess").on('click', function (e) {
+            e.preventDefault();
+            var proMon = document.getElementById('DDDMonth');
+            var proMonText = proMon.options[proMon.selectedIndex].text;
+            var MonNum1 = proMon.options[proMon.selectedIndex].value;
+
+            if (proMonText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+            //
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+            var Year = proYear.options[proYear.selectedIndex].value;
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+            //
+
+
+        });
+
+        $(document).ready(function () {
+            var t = $('#tbl2').DataTable({
+                "columnDefs": [{
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                }],
+                "paging": false,
+            });
+            //t.on('order.dt search.dt', function () {
+            //    t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+            //        cell.innerHTML = i + 1;
+            //    });
+            //}).draw();
+        });
+    });
+</script>
+
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>

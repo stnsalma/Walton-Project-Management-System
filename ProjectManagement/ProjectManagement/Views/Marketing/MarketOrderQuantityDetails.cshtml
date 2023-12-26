@@ -1,0 +1,189 @@
+﻿@model ProjectManagement.Models.MkMarketOrderQuantityDetailModel
+@{
+    ViewBag.Title = "MarketOrderQuantityDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("MarketOrderQuantityDetails", "Marketing", FormMethod.Post, new { enctype = "multipart/form-data", id = "formOrderDetail" }))
+{
+    @Html.HiddenFor(m=>m.Id)
+    @Html.HiddenFor(m=>m.AddedBy)
+    @Html.HiddenFor(m=>m.AddedDate)
+    @Html.HiddenFor(m=>m.UpdatedBy)
+    @Html.HiddenFor(m=>m.UpdatedDate)
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">Market Order Quanity Details for Foreign Models</div>
+            <div class="tools">
+                <input type="button" value="List" onclick="location.href='@Url.Action("MarketOrderList", "Marketing")'" class="btn btn-default btn-sm"/>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">
+                    @if (Model!=null && Model.Id > 0)
+                    {
+                        @Html.HiddenFor(m=>m.MkProjectSpecId)
+                        @Html.TextBoxFor(m=>m.ModelName,new{@class="form-control",@readonly=""})
+                    }
+                    else
+                    {
+                        @Html.DropDownListFor(m => m.MkProjectSpecId, new SelectList(ViewBag.ForeignModels, "Id", "ModelName"),"Select", new {@class = "form-control ddChosen"})
+                    }
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Order Number</div>
+                    <div class="col-md-9">
+                        @if (Model!=null && Model.Id > 0){
+                            @Html.TextBoxFor(m => m.OrderNumber, new { @class = "form-control", @readonly = "" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(m => m.OrderNumber, new {@class = "form-control", type = "number"})
+                        }
+                        
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">PO Name</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.PoName, new {@class = "form-control"})
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">NOC Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.NOC_Quantity, new {@class = "form-control", type = "number", min = "1"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Order Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.OrderQuantity, new {@class = "form-control", type = "number", min = "1"})
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">FOB Price</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.FOB_Price, new {@class = "form-control", type = "number", min = "1"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">FOB CUrrency type</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.FOB_PriceCurrencyType, new List<SelectListItem>
+                        {
+                            new SelectListItem()
+                            {
+                                Text = "USD", Value = "USD"
+                            },
+                            new SelectListItem()
+                            {
+                                Text = "BDT", Value = "BDT"
+                            }
+                        }, "select", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">BTRC NOC Price</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.BTRC_NOC_Price, new {@class = "form-control", type = "number", min = "1"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">BTRC NOC Currency type</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.BTRC_NOC_PriceCurrencyType, new List<SelectListItem>
+                        {
+                            new SelectListItem()
+                            {
+                                Text = "USD", Value = "USD"
+                            },
+                            new SelectListItem()
+                            {
+                                Text = "BDT", Value = "BDT"
+                            }
+                        }, "select", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Custom assessment price</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(m => m.CustomsAssessmentPrice, new {@class = "form-control", type = "number", min = "1"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">Custom ass. Currency type</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m => m.CustAssPriceCurrencyType, new List<SelectListItem>
+                        {
+                            new SelectListItem()
+                            {
+                                Text = "USD", Value = "USD"
+                            },
+                            new SelectListItem()
+                            {
+                                Text = "BDT", Value = "BDT"
+                            }
+                        }, "select", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        @if (Model != null && Model.Id > 0)
+                        {
+                            <input type="submit" value="Update" class="btn btn-success"/>
+                        }
+                        else
+                        {
+                            <input type="submit" value="Save" class="btn btn-success"/>
+                        } 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function () {
+        var message = '@ViewBag.Message';
+        if (message != 'blank') {
+            alertify.error(message);
+        }
+
+        $('#formOrderDetail').on('submit', function(e) {
+            var model = $('#MkProjectSpecId option:selected').text();
+            var orderNumber = $('#OrderNumber').val();
+            if (model == 'Select') {
+                alertify.error('Please select a Model');
+                e.preventDefault();
+            }
+            if (orderNumber == '' || orderNumber == 0) {
+                alertify.error('Provide a valid order number');
+                e.preventDefault();
+            }
+        });
+    });
+</script>

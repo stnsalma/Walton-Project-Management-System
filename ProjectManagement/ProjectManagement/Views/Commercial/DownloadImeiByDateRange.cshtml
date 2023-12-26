@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "DownloadImeiByDateRange";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Download IMEI</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="form-control"><b>Start Date</b></span>
+                    <input type="date" class="form-control" id="startDate" />
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="form-control"><b>End Date</b></span>
+                    <input type="date" class="form-control" id="endDate" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="button" class="btn btn-danger btn-group-lg col-md-12" id="btnSearch" value="Search" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    $('#btnSearch').on('click', function () {
+        debugger;
+        var url = '@Url.Action("GetModelWiseReportData", "Commercial")';
+        //var cookieValue = Date.now().toString();
+        var fromDate = $('#startDate').val();
+        var todate = $('#endDate').val();
+        if (fromDate != '' && todate != '' && fromDate <= todate) {
+            console.log(fromDate + '>>' + todate + '>>');
+            location.href = url + '?fromDate=' + fromDate + '&todate=' + todate;
+
+        } else {
+            alertify.error('Please select valid start date and end date');
+        }
+    });
+
+</script>
+

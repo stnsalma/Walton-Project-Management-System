@@ -1,0 +1,331 @@
+﻿@*ForwardShiftAndCapacity*@
+@using System.Configuration
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+@*<link href="~/Content/bootstrap-3.3.6.min.css" rel="stylesheet" />*@
+
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+     .thing {
+         word-break: break-all;
+     }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .fixedHeader-floating {
+        left: 131px !important;
+    }
+
+    .datepicker {
+        /*top: 8px;
+        left: 243.375px;*/
+        /*display: block;*/
+        z-index: 9999;
+    }
+
+    .page-sidebar {
+        width: 235px;
+        float: left;
+        position: relative;
+        margin-right: -100%;
+    }
+</style>
+<style>
+    /*.ui-datepicker-calendar {
+        display: none;
+    }*/
+    body {
+        background: #EEE;
+        color: #444;
+        line-height: 1.4em;
+    }
+
+    #myDatepicker1 {
+        z-index: -999;
+    }
+
+    #myDatepicker2 {
+        z-index: -999;
+    }
+</style>
+
+<div class="note note-success">
+    <p style="color: red;font-size: 20px;"> Forward Shift and Capacity to particular month</p>
+</div>
+
+@*<div class="col-lg-2">
+        <label for="startDate">Date :</label>
+        <input name="startDate" id="startDate" class="form-control col-lg-1 date-picker" readonly="true" style="color:indianred;font-weight: bold" />
+    </div>*@
+<div class="portlet box red-haze">
+    <div class="portlet-title">
+        <div class="caption">
+            Shift forward if necessary
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left">Unit</div><br /><br />
+                    <div class="col-lg-12">
+                        @if (ViewBag.GetProductionType != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType1" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2" style="float: left">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left">Current Month & Year</div><br /><br />
+                    <div class="col-lg-12">
+                        <input class="form-control myDatepicker1" id="myDatepicker1" value="@Model.currentDate" style="float: left" type="text" readonly="true"/>
+                    </div>
+                </div>
+                <div class="col-lg-2" style="float: left">
+                    <div class="col-lg-12" style="color: green;font-weight: bold">Forwarded Month & Year</div><br /><br />
+                    <div class="col-lg-12">
+                        <input class="form-control myDatepicker2" id="myDatepicker2" value="@Model.forwardedDate" style="float: left" type="text" readonly="true"/>
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-12"></div><br /><br />
+                    <div class="form-actions col-lg-12">
+                        <input type="button" id="btnSearch1" class="btn sbold uppercase btn-outline blue" value="PROCESS SHIFT" />
+                    </div>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box green-dark">
+    <div class="portlet-title">
+        <div class="caption">
+            Capacity forward if necessary
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left">Unit</div><br /><br />
+                    <div class="col-lg-12">
+                        @if (ViewBag.GetProductionType != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls2 form-control", @id = "ProType2" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2" style="float: left">
+                    <div class="col-lg-12" style="color: green; font-weight: bold; float: left">Current Month & Year</div><br /><br />
+                    <div class="col-lg-12">
+                        <input class="form-control myDatepicker3" id="myDatepicker3" value="" style="float: left" type="text" readonly="true" />
+                    </div>
+                </div>
+                <div class="col-lg-2" style="float: left">
+                    <div class="col-lg-12" style="color: green;font-weight: bold">Forwarded Month & Year</div><br /><br />
+                    <div class="col-lg-12">
+                        <input class="form-control myDatepicker4" id="myDatepicker4" value="" style="float: left" type="text" readonly="true" />
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-12"></div><br /><br />
+                    <div class="form-actions col-lg-12">
+                        <input type="button" id="btnSearch2" class="btn sbold uppercase btn-outline red" value="PROCESS CAPACITY" />
+                    </div>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script type="text/javascript">
+    $('#myDatepicker1').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $('#myDatepicker2').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $('#myDatepicker3').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $('#myDatepicker4').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+
+        $('#btnSearch1').on('click', function () {
+            $('#loading').show();
+            var obj = {};
+            var unitValues = $("#ProType1").val();
+            if (unitValues == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select unit must",
+                }).show();
+                $('#loading').hide();
+                return false;
+
+            }
+            var currentDate = $("#myDatepicker1").val();
+            if (currentDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Current Month & Year",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            var forwardedDate = $("#myDatepicker2").val();
+            if (forwardedDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Forwarded Month & Year",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            var shiftForward = "shift";
+           
+            obj.unitValues = unitValues;
+            obj.currentDate = currentDate;
+            obj.forwardedDate = forwardedDate;
+            obj.shiftForward = shiftForward;
+
+            $.ajax({
+                url: '@Url.Action("ForwardShift", "Production")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data.data == "OK") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Successfully Saved",
+                        }).show();
+                        //window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                   
+                   
+                }
+            });
+        });//btn1
+        $('#btnSearch2').on('click', function () {
+            $('#loading').show();
+            var obj = {};
+            var unitValues = $("#ProType2").val();
+            
+            if (unitValues=="0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select unit must",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            var currentDate = $("#myDatepicker3").val();
+            if (currentDate=="") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Current Month & Year",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            var forwardedDate = $("#myDatepicker4").val();
+            if (forwardedDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Forwarded Month & Year",
+                }).show();
+                $('#loading').hide();
+                return false;
+            }
+            var capForward = "capacity";
+
+            obj.unitValues = unitValues;
+            obj.currentDate = currentDate;
+            obj.forwardedDate = forwardedDate;
+            obj.capForward = capForward;
+
+            $.ajax({
+                url: '@Url.Action("ForwardCapacity", "Production")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data.data == "OK") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Successfully Saved",
+                        }).show();
+                        //window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                    else if (data.data == "Okis") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Already Saved",
+                        }).show();
+                        //window.location.reload(true);
+                        $('#loading').hide();
+                    }
+
+                }
+            });
+        });//btn2
+    });
+
+</script>

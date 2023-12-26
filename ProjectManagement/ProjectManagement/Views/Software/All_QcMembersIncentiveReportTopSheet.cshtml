@@ -1,0 +1,184 @@
+﻿@*<h2>All_QcMembersIncentiveReportTopSheet</h2>*@
+@model IEnumerable<ProjectManagement.Models.Custom_Sw_IncentiveModel>
+
+    <script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+    <script src="~/Scripts/jquery.table2excel.min.js"></script>
+
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Incentive
+            </h1>
+
+            <br />
+
+        </div>
+        <div class="action">
+            <div class="col-md-2">
+
+                <button class="btn green btn-outline btn-circle btn-sm pull-left" onclick="tableToExcel('table2excel', 'TOP SHEET')">
+                    <i class="fa fa-save"></i>
+                    Export to Excel
+                </button>
+            </div>
+
+            <button class="btn green btn-outline btn-circle btn-sm pull-right pdf" id="pdf">
+                <i class="fa fa-save"></i>
+                Export as PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="portlet box blue-dark table2excel" id="table2excel">
+        <div class="portlet-title">
+
+
+        </div>
+        <div class="portlet-body">
+
+
+            <div class="table-toolbar">
+                <div class="row"></div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>
+                            </div>
+
+                            <div class="tools">
+                                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="col-lg-12" id="PDFWrapper">
+                                <br /><br /><br />
+                                <div class="col-lg-4"></div>
+
+                                <div class="col-lg-4">
+                                    <h1 style="text-align: center;font-weight: bold; font-size: 30px;"> WDTIL</h1>
+                                    <h2 style="text-align: center;font-size: 20px;"> Department : QC</h2>
+                                    <h2 style="text-align: center;font-size: 20px;">  Section : Software QA</h2>
+                                    <h2 style="text-align: center;font-size: 20px;"> Incentive Sheet</h2>
+
+                                    <h2 style="text-align: center;font-size: 20px;">
+                                        @Request.Params["Month"], @Request.Params["Year"]
+                                    </h2>
+
+                                </div>
+
+                                <br /><br />
+                                <div class="table-scrollable table-responsive">
+                                    <table class="table table-bordered table-striped table-condensed flip-content tbl12" id="tbl12" style="left: 0px;border: 2px solid black;color:black">
+                                        <thead class="flip-content">
+                                            <tr style="font-size: 16px; border: 2px solid black">
+                                                <th style="text-align: center; border-width: 2px; width: 200px; height: 50px; border: 1px solid black; "> NAME </th>
+                                                <th style="text-align: center; width: 80px; height: 50px; border: 1px solid black"> ID </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black"> MONTH </th>
+                                                <th style="text-align: center;width: 100px;height: 50px;border: 1px solid black;"> YEAR </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black">Issue<br />Penalties </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black"> Reward </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black"> Penalties </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black"> Work<br />Incentive </th>
+                                                <th style="text-align: center;width: 80px;height: 50px;border: 1px solid black"> AMOUNT(BDT) </th>
+                                                <th style="text-align: center; width: 100px; height: 50px; border: 1px solid black"> REMARKS </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="text-align: center;font-size: 14px;">
+
+                                            @foreach (var item1 in Model)
+                                            {
+                                                <tr class="tableTrCls12" id="trIdForIncentive12" style="border: 1px solid black;">
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.UserFullName</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.EmployeeCode</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.Month</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.Year1</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.TotalPenalties</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.Reward</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.Penalties</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.ThisMonthAmount</td>
+                                                    <td style="text-align: center; border: 1px solid black;">@item1.TotalIncentive</td>
+                                                    <td style="text-align: left; border: 1px solid black;">@item1.DepartmentName</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+                                <br /><br /><br /><br />
+                                @*<h4 style="text-align: left;">____________________</h4>
+                                    <p style="text-align: left;font-size: 20px;"> PREPARED BY</p>
+                                    <p>
+                                        @foreach (var item1 in ViewBag.GetPreparedUser)
+                                        {
+                                            <div style="text-align: left;font-size: 20px;">Name :@item1.UserFullName</div>
+                                            <div style="text-align: left;font-size: 20px;">ID :@item1.EmployeeCode</div>
+                                        }
+                                    </p>*@
+                                <div class="col-lg-12" style="text-align: center">
+                                    <div class="col-sm-12">
+                                        <div class="col-sm-4"></div>
+                                        <div class="col-sm-4">
+                                            <table id="forFooters">
+                                                <tr>
+                                                    <th>Prepared By</th>
+                                                    <th><div class="col-lg-4"></div></th>
+                                                    <th>Head Of The Department</th>
+                                                    <th><div class="col-lg-4"></div></th>
+                                                    <th>Management Approval</th>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-sm-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        $("#pdf").on("click", function () {
+            var divContents = $("#PDFWrapper").html();
+            var printWindow = window.open('', '', 'height=400,width=800');
+            printWindow.document.write('<html><head><title></title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(divContents);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+        var tableToExcel = (function () {
+            var uri = 'data:application/vnd.ms-excel;base64,', template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>', base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }, format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+            //return function(table, name) {
+            //    if (!table.nodeType) table = document.getElementById(table)
+            //    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            //    window.location.href = uri + base64(format(template, ctx))
+            //}
+            return function (table, name) {
+                if (!table.nodeType) table = document.getElementById(table)
+                var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                //window.location.href = uri + base64(format(template, ctx))
+                var link = document.createElement("a");
+                link.download = 'SoftwareQc team incentive structure' + '_' + '@Request.Params["Month"]' + '_' + '@Request.Params["Year"]' + '.xls';
+                link.href = uri + base64(format(template, ctx));
+                link.click();
+            }
+        })()
+
+
+    </script>
+
+

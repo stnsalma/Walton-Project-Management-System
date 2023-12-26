@@ -1,0 +1,43 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.ProjectManager.VmPmToBtrcNocRequest
+
+@{
+    ViewBag.Title = "ProjectForwardToSoftWareView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-head">
+
+    <div class="page-title">
+        <h1>
+            @*Welcome,@Model.UserName*@
+
+            <small> Project Manager</small>
+        </h1>
+    </div>
+
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="todo-ui">
+            
+
+            <div class="todo-content">
+
+                <!-- PROJECT HEAD -->
+                <!-- end PROJECT HEAD -->
+                @if (Model.ProjectMasterId>0)
+                {
+                    @Html.Partial("_PmToBtrcNocRequestView", Model)
+
+                }
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

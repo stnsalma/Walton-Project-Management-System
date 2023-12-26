@@ -1,0 +1,66 @@
+﻿@model ProjectManagement.Models.AccessoriesPricesModel
+@if (Model != null)
+{
+    <tr id="@Model.ProjectMasterId">
+        @using (Html.BeginCollectionItem("AccessoriesPrices"))
+        {
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.ProjectMasterId)
+            @Html.HiddenFor(m => m.AccessoryName)
+            @Html.HiddenFor(m => m.Vendor)
+            @Html.HiddenFor(m => m.Price)
+            @Html.HiddenFor(m => m.Currency)
+            @Html.HiddenFor(m => m.Type)
+            @Html.HiddenFor(m => m.Duty)
+            @Html.HiddenFor(m => m.TotalPrice)
+            <td>@Html.DisplayFor(m => m.AccessoryName)</td>
+            <td>@Html.DisplayFor(m => m.Type)</td>
+            <td>@Html.DisplayFor(m => m.Vendor)</td>
+            <td>@Html.DisplayFor(m => m.Price)</td>
+            <td>@Html.DisplayFor(m => m.Currency)</td>
+            <td>@Html.DisplayFor(m => m.Duty)</td>
+            <td>@Html.DisplayFor(m => m.TotalPrice)</td>
+            @Html.HiddenFor(m => m.AddedBy)
+            @Html.HiddenFor(m => m.AddedDate)
+            <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick=" removeDetailRow(this) ">Remove</button></td>
+        }
+    </tr>
+}
+else
+{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+}
+

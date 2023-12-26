@@ -1,0 +1,259 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.ViewModels.Commercial
+@model List<ProjectManagement.ViewModels.Commercial.VmIncentivePolicy>
+    
+<div class="portlet box green-seagreen">
+    <div class="portlet-title">
+        <div class="caption">
+            Welcome to Monthly Incentive Sheet of Commercial
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <br /><br /><br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Month</div>
+                    <div class="col-lg-7">
+                        @{
+                            List<SelectListItem> listItems = new List<SelectListItem>();
+
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "SELECT MONTH",
+                                Value = "0"
+                            });
+
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "January",
+                                Value = "1"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "February",
+                                Value = "2",
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "March",
+                                Value = "3"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "April",
+                                Value = "4"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "May",
+                                Value = "5"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "June",
+                                Value = "6"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "July",
+                                Value = "7"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "August",
+                                Value = "8"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "September",
+                                Value = "9"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "October",
+                                Value = "10"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "November",
+                                Value = "11"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "December",
+                                Value = "12"
+                            });
+                        }
+                        @Html.DropDownList("DDDMonth", new SelectList(listItems, "Value", "Text"), new { @class = "form-control DDDMonthCls1" })
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Year</div>
+                    <div class="col-lg-7">
+                        @{
+                            List<SelectListItem> listItems2 = new List<SelectListItem>();
+                           
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2017",
+                                Value = "2017"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2018",
+                                Value = "2018"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2019",
+                                Value = "2019"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2020",
+                                Value = "2010"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2021",
+                                Value = "2021"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2022",
+                                Value = "2022"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2023",
+                                Value = "2023"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2024",
+                                Value = "2024"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2025",
+                                Value = "2025"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2026",
+                                Value = "2026"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2027",
+                                Value = "2027"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2028",
+                                Value = "2028"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2029",
+                                Value = "2029"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2030",
+                                Value = "2030"
+                            });
+                        }
+                        @Html.DropDownList("DDDYear", new SelectList(listItems2, "Value", "Text"), "SELECT YEAR", new { @class = "form-control DDDYearCls" })
+                    </div>
+
+                </div>
+                
+                <div class="col-lg-5">
+                    <div class="col-md-6" style="text-align: center">
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnPrintForTopSheet" value="Print Top Sheet" />
+                    </div>
+                    <div class="col-md-6" style="text-align: center">
+                        <input type="button" id="btnforname" class="btn sbold uppercase btn-outline red" value="Show Incentive Policy" />
+
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+        <br /><br /><br />
+
+        <div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#btnPrintForTopSheet").on('click', function (e) {
+            e.preventDefault();
+            var monthName = $('#DDDMonth option:selected').text();
+            var monthNum = $('#DDDMonth option:selected').val();
+            var yearName = $('#DDDYear option:selected').text();
+
+            if (monthName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+
+            window.open('@Url.Action("IncentiveReport", "Commercial")' + '?monId=' + monthNum + '&month=' + monthName + '&yearId=' + yearName);
+        });
+        
+
+        $('#btnforname').on('click', function (e) {
+            e.preventDefault();
+            var monthName = $('#DDDMonth option:selected').text();
+            var monthNum = $('#DDDMonth option:selected').val();
+            var yearName = $('#DDDYear option:selected').text();
+
+            if (monthName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            window.open('@Url.Action("MonthlyIncentiveDetails", "Commercial")' + '?monId=' + monthNum + '&yearId=' + yearName);
+        });
+    });
+</script>
+
+
+

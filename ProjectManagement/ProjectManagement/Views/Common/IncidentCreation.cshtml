@@ -1,0 +1,44 @@
+﻿@model ProjectManagement.Models.MajorIssueModel
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident Picker
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6">
+                @Html.DropDownListFor(i => i.ModelName, new SelectList(ViewBag.ModelNamesHavingIssues, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+            </div>
+            <div class="col-md-6">
+                <select name="multiple" id="multiple" class="form-control" multiple>
+                    @if (ViewBag.Diagnostic != null)
+                    {
+                        foreach (var i in ViewBag.Diagnostic)
+                        {
+                            <option value="@i.DiagnosticCodeId">@i.DiagonsticCodeName</option>
+                        }
+                    }
+                </select>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        $('#multiple').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+    });
+</script>

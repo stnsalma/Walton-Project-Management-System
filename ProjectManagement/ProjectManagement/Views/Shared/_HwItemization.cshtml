@@ -1,0 +1,122 @@
+﻿@using Microsoft.Ajax.Utilities
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Hardware.HwCmQcStartProjectViewModel
+
+@using (Html.BeginForm("PostItemizationQc", "Hardware", FormMethod.Post))
+{
+    <div class="col-lg-12">
+        <div class="form-body">
+            <h3 class="form-section">Item Description</h3>
+            <div class="portlet-body">
+                <div id="sample_editable_1_wrapper" class="dataTables_wrapper no-footer">
+                    <div class="table-scrollable">
+                        <table id="tblItemization" class="table table-striped table-hover table-bordered dataTable no-footer" role="grid" aria-describedby="sample_editable_1_info">
+                            <thead>
+                                <tr role="row">
+                                    <th>
+                                        Items Name
+                                    </th>
+                                    <th>Exists</th>
+                                    <th>IC no/Size</th>
+                                    <th>Pin Type</th>
+                                    <th>Pin Number</th>
+                                    <th>Match With Latest Existing Model</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+
+
+                            @if (Model.HwItemizations==null)
+                            {
+                                for (int i = 0; i < Model.HwItemizationItemName.Count; i++)
+                                {
+                                    if (Model.HwItemizationItemName[i].IsActive == true)
+                                    {
+                                        <tr>
+                                            <td>
+
+                                                @Html.DisplayFor(modelItem => Model.HwItemizationItemName[i].ItemName, new { id = "ItemsName" })
+                                                @Html.HiddenFor(modelItem => Model.HwItemizationItemName[i].HwItemizationItemNameId, new { id = "HwItemizationItemNameId" })
+
+
+                                            </td>
+                                            <td>
+                                                <input type="checkbox" class="make-switch" name="exist">
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.HwItemizations.ICNoSize, new { @class = "form-control input-small ScreeningText", @disabled="true" })
+                                            </td>
+                                            <td>
+                                                @Html.TextBoxFor(model => model.HwItemizations.PinType, new { @class = "form-control input-small ScreeningText", @disabled = "true" })
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtPinNumber" value="" class="form-control input-small ScreeningText" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtMatchWithLtExModel" value="" class="form-control input-large ScreeningText" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtRemarks" value="" class="form-control input-small ScreeningText" disabled>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+
+                                        @Html.LabelFor(model => model.HwItemizations.HwItemizationItemNameId, new { id = "ItemsName" })
+                                        @*@Html.HiddenFor(modelItem => Model.HwItemizationItemName[i].HwItemizationItemNameId, new { id = "HwItemizationItemNameId" })*@
+
+
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="make-switch" name="exist">
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.HwItemizations.ICNoSize, new { @class = "form-control input-small ScreeningText"})
+                                        @*<input type="text" id="txtIcNoSize" value="" class="form-control input-small ScreeningText" disabled>*@
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.HwItemizations.PinType, new { @class = "form-control input-small ScreeningText"})
+                                        @*<input type="text" id="txtPinType" value="" class="form-control input-small ScreeningText" disabled>*@
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.HwItemizations.PinNumber, new { @class = "form-control input-small ScreeningText" })
+                                        @*<input type="text" id="txtPinNumber" value="" class="form-control input-small ScreeningText" disabled>*@
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.HwItemizations.MatchWithLatestExistingModel, new { @class = "form-control input-small ScreeningText" })
+                                        @*<input type="text" id="txtMatchWithLtExModel" value="" class="form-control input-large ScreeningText" disabled>*@
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtRemarks" value="" class="form-control input-small ScreeningText" disabled>
+                                    </td>
+                                </tr>
+
+
+                            }
+
+                        </table>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <button class="btn btn-info btnItemization">Submit</button>
+
+                        </div>
+                    </div>
+                    @*<div class="row">
+                            <div class="col-md-5 col-sm-5">
+                                <div class="dataTables_info" id="sample_editable_1_info" role="status" aria-live="polite">Showing 1 to 5 of 8 entries</div>
+                            </div><div class="col-md-7 col-sm-7"><div class="dataTables_paginate paging_bootstrap_number" id="sample_editable_1_paginate"><ul class="pagination" style="visibility: visible;"><li class="prev disabled"><a title="Prev" href="#"><i class="fa fa-angle-left"></i></a></li><li class="active"><a href="#">1</a></li><li><a href="#">2</a></li><li class="next"><a title="Next" href="#"><i class="fa fa-angle-right"></i></a></li></ul></div></div>
+                        </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

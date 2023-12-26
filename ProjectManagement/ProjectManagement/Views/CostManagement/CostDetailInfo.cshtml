@@ -1,0 +1,391 @@
+﻿@using DocumentFormat.OpenXml.Wordprocessing
+@using OfficeOpenXml.FormulaParsing.Excel.Functions.Math
+@model ProjectManagement.Models.CostMasterModel
+
+@{
+    ViewBag.Title = "CostDetailInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading" style="color: gray; font-size: 20px; font-weight: bolder">Project Information</div>
+                    <div class="col-md-12 panel panel-body">
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.COGS)
+                        <div class="row">
+                            <div class="col-md-4">Model Name : </div>
+                            <div class="col-md-8">@Html.DisplayFor(model => model.ModelName)</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">Phase No. :</div>
+                            <div class="col-md-8">@Html.DisplayFor(model => model.PhaseNo)</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">Is-Completed? :</div>
+                            <div class="col-md-8">
+
+                                @if (Model.IsCompleted == true)
+                                {
+                                    @Html.Raw("Yes")
+                                }
+                                else
+                                {
+                                    @Html.Raw("No")
+                                }
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">Management Price: </div>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="@Model.ManagementProposal" id="@Model.ManagementProposal">
+                                    <span class="input-group-btn">
+                                        <a href="javascript:;" class="btn green-dark" id="btn-management">
+                                            <i class="fa fa-check-circle"></i> Save
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading" style="color: gray; font-size: 20px; font-weight: bolder">User's Proposals</div>
+                    <div class="col-md-12 panel panel-body">
+
+                        <div class="table-scrollable" style="height: 300px;overflow: auto">
+                            <table class="table table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role Desc.</th>
+                                    <th>Proposed Prices</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @{
+                                    foreach (var proposal in Model.CostProposals)
+                                    {
+                                        <tr>
+                                            <td>@proposal.ProposalByName</td>
+                                            <td>@proposal.RoleDetailName</td>
+                                            <td>@proposal.PriceProposal</td>
+                                        </tr>
+
+                                    }
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading" style="color: gray; font-size: 20px; font-weight: bolder">System Generated</div>
+                    <div class="col-lg-12 panel panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-header-fixed" style="display: block;height: 300px;overflow-y: auto">
+                                <thead>
+                                    <tr>
+                                        <th>MSRP</th>
+                                        <th>Invoice</th>
+                                        <th>Rebate</th>
+                                        <th>Invoice After Rebate</th>
+                                        <th>COGS (Material +F.Over)</th>
+                                        <th>GP(%)</th>
+                                        <th>% on MSRP & Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var detailModel in Model.CostMasterDetails)
+                                        {
+                                            <tr>
+                                                <td>@detailModel.MSRP</td>
+                                                <td>@detailModel.Invoice</td>
+                                                <td>@detailModel.Rebate</td>
+                                                <td>@detailModel.InvoiceAfterRebate</td>
+                                                <td>@detailModel.COGS</td>
+                                                <td>@detailModel.GP</td>
+                                                <td>@detailModel.MSRP_IP_Percent</td>
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading" style="color: gray; font-size: 20px; font-weight: bolder">Simulation</div>
+                    <div class="col-md-12 panel panel-body">
+                        <div class="row">
+                            <div class="col-md-4">Simulate With : </div>
+                            <div class="col-md-8">
+                                @Html.DropDownList("EntryType", new SelectList(new[]
+                            {
+                                new SelectListItem { Text = "MSRP", Value = "MSRP", Selected = true },
+                                new SelectListItem { Text = "GP", Value = "GP(%)" }
+                            }, "Value", "Text"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                            <div class="col-md-4">Value: </div>
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="simulationValue" id="simulationValue">
+                                    <span class="input-group-btn">
+                                        <a href="javascript:;" class="btn btn-warning" id="btn-simulate">
+                                            <i class="fa fa-check-circle"></i> Simulate
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtSimMsrp" class="control-label">MSRP</label>
+                                    <input id="txtSimMsrp" type="text" class="form-control" placeholder="MSRP">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtSimInvoice" class="control-label">Invoice</label>
+                                    <input id="txtSimInvoice" type="text" class="form-control" placeholder="Invoice">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtSimCogs" class="control-label">CGOS</label>
+                                    <input id="txtSimCogs" type="text" class="form-control" placeholder="CGOS">
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtSimGp" class="control-label">GP</label>
+                                    <input id="txtSimGp" type="text" class="form-control" placeholder="GP">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <span class="input-group-btn">
+                                    <a href="javascript:;" class="btn btn-xs btn-success" id="btn-save-simulation">
+                                        <i class="fa fa-save"></i> Save this simulation for future use.
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel panel-heading" style="color: gray; font-size: 20px; font-weight: bolder">Previous Simulations</div>
+                    <div class="col-lg-12 panel panel-body">
+                        <div style="display: block;height: 300px;overflow-y: auto">
+                            <table class="table table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>MSRP</th>
+                                        <th>Invoice</th>
+                                        <th>Rebate</th>
+                                        <th>Invoice After Rebate</th>
+                                        <th>COGS (Material +F.Over)</th>
+                                        <th>GP(%)</th>
+                                        <th>% on MSRP & Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var detailModel in Model.CostSimulationLogs)
+                                        {
+                                            <tr>
+                                                <td>@detailModel.MSRP</td>
+                                                <td>@detailModel.Invoice</td>
+                                                <td>@detailModel.Rebate</td>
+                                                <td>@detailModel.InvoiceAfterRebate</td>
+                                                <td>@detailModel.COGS</td>
+                                                <td>@detailModel.GP</td>
+                                                <td>@detailModel.MSRP_IP_Percent</td>
+                                            </tr>
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#btn-save-simulation").disabled = true;
+        $("#btn-simulate").on('click', function () {
+            var txtSimulationValue = $("#simulationValue").val();
+            var simulateType = $("#EntryType").val();
+            var costMasterCogs = $(':hidden#COGS').val();
+            if (confirm("Are you sure that your proposed price is " + txtSimulationValue + "?")) {
+                $.ajax({
+                    url: ' @Url.Action("CostSimulation", "CostManagement")', //Changed For test
+                    type: 'POST',
+                    //data: JSON.stringify({ statusList: packagingQcList }),
+                    data: JSON.stringify({ simulationType: simulateType, simulationValue: txtSimulationValue, costMasterCogs: costMasterCogs }),
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.Id < 0) {
+                            alertify.error("Could not simulate. Please check your Simulation Value");
+                        } else {
+                            document.getElementById("btn-save-simulation").disabled = false;
+                            $("#txtSimMsrp").val(result.MSRP);
+                            $("#txtSimInvoice").val(result.Invoice);
+                            $("#txtSimCogs").val(result.COGS);
+                            $("#txtSimGp").val(result.GP);
+
+                            alertify.success("Success");
+
+                        }
+
+                    },
+                    error: function (result, textStatus, jqXHR) {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Connection Error !!!',
+                        });
+                    }
+                });
+            } else {
+                //btn.classList.remove("button--loading");
+                e.preventDefault();
+
+            }
+        });
+
+
+
+        $("#btn-save-simulation").on('click', function (e) {
+
+            var costMasterId = $(':hidden#Id').val();
+            var txtMsrp = $("#txtSimMsrp").val();
+            var txtInvicePrice = $("#txtSimInvoice").val();
+            var txtCogs = $("#txtSimCogs").val();
+            var txtGp = $("#txtSimGp").val();
+
+            if (txtMsrp === "" || txtInvicePrice === "" || txtCogs === "" || txtGp === "") {
+                alertify.error("Could not find simulation value. Please check");
+                return false;
+            }
+
+
+
+
+            if (confirm("Are you sure save this simulation?")) {
+                $.ajax({
+                    url: ' @Url.Action("SaveSimulation", "CostManagement")', //Changed For test
+                    type: 'POST',
+                    //data: JSON.stringify({ statusList: packagingQcList }),
+                    data: JSON.stringify({ txtMsrp: txtMsrp, txtInvicePrice: txtInvicePrice, txtCogs: txtCogs, txtGp: txtGp, costMasterId: costMasterId }),
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.Id < 0) {
+                            alertify.error("Could not simulate. Please check your Simulation Value");
+                        } else {
+                            alert(result.MSRP + '--' + result.Invoice + '--' + result.COGS + '--' + result.GP);
+                            $("#txtSimMsrp").val(result.MSRP);
+                            $("#txtSimInvoice").val(result.Invoice);
+                            $("#txtSimCogs").val(result.COGS);
+                            $("#txtSimGp").val(result.GP);
+                        }
+
+                    },
+                    error: function (result, textStatus, jqXHR) {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Connection Error !!!',
+                        });
+                    }
+                });
+            } else {
+                //btn.classList.remove("button--loading");
+                e.preventDefault();
+
+            }
+        });
+
+        $("#btn-management").on('click', function() {
+            if (confirm("Are you sure to save final MSRP?")) {
+
+                $.ajax({
+                    url: ' @Url.Action("SaveFinalMsrp", "CostManagement")', //Changed For test
+                    type: 'POST',
+                    //data: JSON.stringify({ statusList: packagingQcList }),
+                    data: JSON.stringify({ txtMsrp: txtMsrp, txtInvicePrice: txtInvicePrice, txtCogs: txtCogs, txtGp: txtGp, costMasterId: costMasterId }),
+                    dataType: 'json',
+                    async: false,
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result.Id < 0) {
+                            alertify.error("Could not simulate. Please check your Simulation Value");
+                        } else {
+                            alert(result.MSRP + '--' + result.Invoice + '--' + result.COGS + '--' + result.GP);
+                            $("#txtSimMsrp").val(result.MSRP);
+                            $("#txtSimInvoice").val(result.Invoice);
+                            $("#txtSimCogs").val(result.COGS);
+                            $("#txtSimGp").val(result.GP);
+                        }
+
+                    },
+                    error: function (result, textStatus, jqXHR) {
+                        iziToast.error({
+                            title: 'Error',
+                            message: 'Connection Error !!!',
+                        });
+                    }
+                });
+
+                alertify.success("success");
+            } else {
+                alertify.error("cancelled");
+            }
+        });
+
+    });
+</script>

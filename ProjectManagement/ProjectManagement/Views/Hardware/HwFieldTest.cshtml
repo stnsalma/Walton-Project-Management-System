@@ -1,0 +1,301 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+@{
+    ViewBag.Title = "HwFieldTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+            <small>@Html.DisplayFor(model => model.ProjectMasterModel.ProjectName) (Phase @Html.DisplayFor(model=>model.ProjectMasterModel.OrderNuber))</small>
+        </h1>
+    </div>
+</div>
+
+
+@using (Html.BeginForm("HwFieldTest", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.ProjectMasterModel.ProjectMasterId)
+    @Html.HiddenFor(model => model.HwFieldTestMasterModel.FieldTestMasterId)
+    @Html.HiddenFor(model => model.ProjectMasterModel.ProjectName)
+    @Html.HiddenFor(model => model.HwFieldTestMasterModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwFieldTestMasterModel.AddedBy)
+    @Html.HiddenFor(model => model.HwFieldTestMasterModel.AddedDate)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption font-red-sunglo">
+                        <i class="icon-settings font-red-sunglo"></i>
+                        <span class="caption-subject bold uppercase">
+                            Field Test Report
+                        </span>
+                    </div>
+
+                </div>
+                <div class="portlet-body form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="bold">Date</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.TestDate, new { @class = "form-control date_picker" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Benchmark Phone</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.BenchMarkPhone, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Route</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.Route, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Region</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.Region, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Frequency Band</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.FrequencyBand, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Operator</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.Operator, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Field Test Result</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.FieldTestResult, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="bold">Test Name</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.TestName, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Test Category</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.TestCategory, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Test Duration</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.TestDuration, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Test Focus</label>
+                                    @Html.TextAreaFor(model => model.HwFieldTestMasterModel.TestFocus, new { @class = "form-control", resize="vertical" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Number of Calls</label>
+                                    @Html.TextBoxFor(model => model.HwFieldTestMasterModel.NumberOfCalls, new { @class = "form-control" })
+                                </div>
+                                <div class="form-group">
+                                    <label class="bold">Remark</label>
+                                    @Html.TextAreaFor(model => model.HwFieldTestMasterModel.Remark, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        @if (Model.HwFieldTestMasterModel == null)
+                        {
+                            <button type="submit" class="btn blue">Submit</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn green">Update</button>
+                        }
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@if (Model.HwFieldTestMasterModel != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Begin: life time stats -->
+            <div class="portlet light portlet-fit portlet-datatable bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-settings font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">Sample Handset Itemization By R&D (HW)</span>
+
+                    </div>
+                    <div class="actions">
+                        @*<input type="submit" value="Save" class="btn btn-default" />*@
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    @using (Ajax.BeginForm("PostHwFieldTestJsonResult", "Hardware", new AjaxOptions() { HttpMethod = "post", OnSuccess = "getresult", OnFailure = "ajaxfailed" }))
+                    {
+                        @Html.HiddenFor(model=>model.HwFieldTestMasterModel.FieldTestMasterId)
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="bold">Operator Name</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.OperatorName, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Location</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.Location, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Speed Limit(40-60) Kmph</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.SpeedLimit, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">RSSI bars (Tested Mobile)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.TestedRssiBars, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Call Drop (Tested Mobile)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.TestedCallDrop, new { @class = "form-control" }).
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Short Mute (Tested Mobile)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.TestedShortMute, new { @class = "form-control" })
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="bold">Long Mute (Tested Mobile)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.TestedLongMute, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">RSSI bars (Benchmark)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.BechmarkRssiBars, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Call Drop (Benchmark)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.BenchmarkCallDrop, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Short Mute (Benchmark)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.BenchmarkShortMute, new { @class = "form-control" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="bold">Long Mute (Benchmark)</label>
+                                        @Html.TextBoxFor(model => model.HwFieldTestModel.BenchMarkLongMute, new { @class = "form-control" })
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn blue">Submit</button>
+                        </div>
+                    }
+                    <br />
+                    <div class="table-container">
+                        <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
+                            <div class="row">
+
+                            </div>
+
+                            <table class="table table-striped table-bordered table-condensed table-hover dataTable no-footer " id="sample_3" aria-describedby="sample_3_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 159px;" aria-sort="ascending" aria-label=" Rendering engine : activate to sort column descending"> Operator<br /> Name </th>
+                                        <th class="sorting_asc" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 159px;" aria-sort="ascending" aria-label=" Rendering engine : activate to sort column descending"> Location </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 201px;" aria-label=" Browser : activate to sort column ascending"> Speed Limit<br/> (40-60 Kmph) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 179px;" aria-label=" Platform(s) : activate to sort column ascending"> IC/Component<br /> RSSI Bar <br/>(Tested Mobile)  </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 179px;" aria-label=" Platform(s) : activate to sort column ascending"> IC/Component<br /> Call Drop<br /> (Tested Mobile)  </th>
+
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Compatible with <br />Short Mute <br /> (Tested Mobile) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Long Mute<br/>(Tested Mobile) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> RSSI bars<br/>(Benchmark) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Call Drop<br />(Benchmark) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Short Mute<br />(Benchmark) </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_3" rowspan="1" colspan="1" style="width: 95px;" aria-label=" CSS grade : activate to sort column ascending"> Long Mute<br/>(Benchmark) </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.HwFieldTestModels != null)
+                                    {
+                                        for (int i = 0; i < Model.HwFieldTestModels.Count; i++)
+                                        {
+                                            <tr>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].OperatorName, new { @class = "form-control" }) </td>
+                                                <td class="text-center">@Html.DisplayFor(model => model.HwFieldTestModels[i].Location, new { @class = "form-control" })</td>
+                                                <td class="text-center">@Html.DisplayFor(model => model.HwFieldTestModels[i].SpeedLimit, new { @class = "form-control" })</td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedRssiBars, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedCallDrop, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedShortMute, new { @class = "form-control" }) </td>
+
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].TestedLongMute, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BechmarkRssiBars, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchmarkCallDrop, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchmarkShortMute, new { @class = "form-control" }) </td>
+                                                <td class="text-center"> @Html.DisplayFor(model => model.HwFieldTestModels[i].BenchMarkLongMute, new { @class = "form-control" }) </td>
+                                                
+                                            </tr>
+                                        }
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End: life time stats -->
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/datetime/core.js"></script>
+<script src="~/Scripts/datetime/zebra_datepicker.js"></script>
+
+<script>
+    function getresult(data) {
+        console.log(data);
+
+        alertify.success('Saved ');
+        console.log(data);
+        //$('#sample_3 > tbody:last-child').append('<tr>' +
+        //    '<td class="text-center">' + data.ItemComponentName + '</td>' +
+        //    '<td class="text-center">' + data.YesNot + '</td>' +
+        //    '<td class="text-center">' + data.IcComponentNumber + '</td>' +
+        //    '<td class="text-center">' + data.IcComponent_Vendor + '</td>' +
+        //    '<td class="text-center">' + data.Compatibility + '</td>' +
+        //    '<td class="text-center">' + data.Type + '</td>' +
+        //    '<td class="text-center">' + data.Remarks + '</td>' +
+        //    '<td class="text-center">' + data.ExistingItem + '</td>' +
+        //    '<td class="text-center">' + data.SupplierCode + '</td>' +
+        //    '<td class="text-center"></td>' +
+        //    '</tr>');
+
+    };
+
+    $(function () {
+        $('#ProjectMasterModel_ApproxProjectOrderDate').Zebra_DatePicker();
+        if ('@(TempData["message"])' !== "") {
+            alertify.alert('@(TempData["message"])');
+        }
+    });
+</script>

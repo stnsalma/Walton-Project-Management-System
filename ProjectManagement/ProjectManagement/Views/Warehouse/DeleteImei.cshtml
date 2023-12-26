@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "DeleteImei";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Return IMEI
+        </div>
+        <div class="tools"></div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-2">
+                    <label>Type IMEI1</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="imei1" class="form-control" />
+                </div>
+                <div class="col-md-1">
+                    <label id="counter"></label>
+                </div>
+                <div class="col-md-5">
+                    <label id="rowcounter" class="pull-right"></label>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="table-container">
+                <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
+                    <table class="table table-striped table-bordered table-condensed table-hover dataTable no-footer " id="sample_3" aria-describedby="sample_3_info">
+                        <thead>
+                            <tr>
+                                <th class="text-center">IMEI</th>
+                                <th class="text-center">IMEI2</th>
+                                <th class="text-center">Model</th>
+                                <th class="text-center">Distributor Name</th>
+                                <th class="text-center">Distribution Date</th>
+                                <th class="text-center">Dealer Code</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn btn-warning form-group" id="btnClear" onclick="clearRows();">Clear</button>
+            <button class="btn btn-danger form-group" id="btnReturn" onclick="returnImei();">Return</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    
+    function clearRows() {
+        $('#sample_3 tbody').empty();
+        $('#rowcounter').text('IMEI count: 0');
+        $('#imei1').focus();
+    }
+
+    function returnImei() {
+        var url = '@Url.Action("ReturnImei", "Warehouse")';//'../Warehouse/ReturnImei';
+        var tableData = new Array();
+        $('#sample_3 tbody tr').each(function (row, tr) {
+            tableData[row] = {
+                "BarCode": $(tr).find('td:eq(0)').text(),
+                "BarCode2": $(tr).find('td:eq(1)').text(),
+                "Model": $(tr).find('td:eq(2)').text(),
+                "DealerName": $(tr).find('td:eq(3)').text(),
+                "DistributionDate": $(tr).find('td:eq(4)').text(),
+                "DealerCode": $(tr).find('td:eq(5)').text(),
+            };
+        });
+        //tableData.shift();
+        console.log(tableData);
+        //$.post(url, { imeilist: tableData }, function (data) {
+        //    console.log(data);
+        //    $('#sample_3 tbody').empty();
+        //    alertify.success('Deleted');
+        //    $('#imei1').focus();
+        //});
+        //================================
+        $.ajax({
+            url: url,
+            type: 'Post',
+            data: JSON.stringify(tableData),
+            dataType: 'json',
+            async: false,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data == "success") {
+                    $('#sample_3 tbody').empty();
+                    $('#imei1').focus();
+                    alertify.success('Deleted');
+                    console.log('Deleted');
+
+                } else {
+                    alertify.success(data);
+                    console.log(data);
+                }
+            },
+            error: function (result) {
+                alertify.success(result);
+                console.log(result);
+            }
+        });
+    }
+
+
+
+    $(function () {
+        $('#rowcounter').text('IMEI count: 0');
+        $('#imei1').focus();
+        $('#imei1').keyup(function () {
+            $('#counter').text($('#imei1').val().length);
+            if ($('#imei1').val().length > 14) {
+                var url = '@Url.Action("CheckImei", "Warehouse")';//'../Warehouse/CheckImei';
+                var imei1 = $('#imei1').val();
+                console.log('IMEI1 - ' + imei1);
+
+                //>>check table already contains IMEI or not
+                var isExist = false;
+                $('#sample_3 tr td:nth-child(1)').each(function () {
+                    var texttocheck = this.innerHTML;
+                    if (texttocheck == imei1) {
+                        alertify.error(imei1 + ' Already Added');
+                        $('#imei1').val('');
+                        $('#counter').text('0');
+                        isExist = true;
+                    }
+                });
+                //>>fetch IMEI from database and append to table
+                if (!isExist) {
+                    $.post(url, { imei1: imei1 }, function (data) {
+                        console.log(data);
+                        if (data.BarCode != null) {
+                            var row = "<tr>" +
+                                "<td class='text-center'>" + data.BarCode + "</td>" +
+                                "<td class='text-center'>" + data.BarCode2 + "</td>" +
+                                "<td class='text-center'>" + data.Model + "</td>" +
+                                "<td class='text-center'>" + data.DealerName + "</td>" +
+                                "<td class='text-center'>" + data.DistributionDate + "</td>" +
+                                "<td class='text-center'>" + data.DealerCode + "</td>" +
+                                "</tr>";
+                            $('#sample_3 tbody').append(row);
+                            $('#rowcounter').text('IMEI count: ' + $('#sample_3 tbody tr').length);
+                        } else {
+                            if (($.trim(imei1)).length < 15) {
+                                alertify.success('Scan again');
+                                $('#imei1').val('');
+                                $('#counter').text('0');
+                            } else {
+                                alertify.success('Invalid Imei');
+                                $('#imei1').val('');
+                                $('#counter').text('0');
+                            }
+                            $('#imei1').val('');
+                            $('#counter').text('0');
+                        }
+                    });
+                    $('#imei1').val('');
+                    $('#counter').text('0');
+                }
+            }
+        });
+    });
+</script>

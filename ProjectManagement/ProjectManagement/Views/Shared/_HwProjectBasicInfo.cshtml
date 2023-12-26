@@ -1,0 +1,147 @@
+﻿@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+@*@using (@Html.BeginForm("LoadProjectInfo", "Hardware", FormMethod.Post))
+{*@
+    @*@Html.HiddenFor(model=>model.HwQcInchargeAssignModel.HwQcInchargeUserId,new{@Value=2})*@
+    @Html.Hidden("AddedDate", @DateTime.Now, new {id = "AddedDate"})
+
+    <div class="col-md-12">
+        <div class="row">
+            <div class="form-group">
+                <br />
+                @Html.LabelFor(model => model.ProjectMasterModel.ProjectMasterId, "Select Project", new {@class = "control-label col-md-2 col-md-offset-2"})
+                <div class="col-md-5">
+                    @Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.ProjectMaster, "ProjectMasterId", "ProjectName"), "Select Project", new {@class = "form-control", @id = "single"})
+                    @*@Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.ProjectMaster, "ProjectMasterId", "ProjectName"),"Select One", new { @class = "form-control" })*@
+                    @Html.ValidationMessageFor(model => model.ProjectMasterModel.ProjectMasterId, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-3">
+                    <button id="btnLoadProject" class="btn btn-info" >Load Project</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-lg-12">
+                <div class="form-body">
+                    <h3 class="form-section">Initial Information<label class="control-label" hidden>(Status:@Html.DisplayFor(model => model.HwQcInchargeAssignModel.TestPhase))</label></h3>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Sample Name</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierModelName, new {@class = "form-control", @disabled = "true", @id = "txtSampleName"})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Sample Quantity</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.NumberOfSample, new {@class = "form-control", @disabled = "true", @id = "txtSampleQuantity"})
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Project Type</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.ProjectType, new { @class = "form-control", @disabled = "true", @id = "txtProjectType" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Added Date</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.AddedDate, new { @class = "form-control", @disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Rom</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.Rom, new { @class = "form-control", @disabled = "true", @id = "txtProjectStatus" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Processor Name</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.ProcessorName, new { @class = "form-control", @disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Processor Clock</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.ProcessorClock, new { @class = "form-control", @disabled = "true", @id = "txtProcessorClock" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">RAM</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.Ram, new { @class = "form-control", @disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Supplier Name</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierName, new { @class = "form-control", @disabled = "true", @id = "txtSupplierName" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            @*<div class="form-group">
+                                <label class="control-label col-md-3">RAM</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectMasterModel.Ram, new { @class = "form-control", @disabled = "true" })
+                                </div>
+                            </div>*@
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+﻿@using System.Web.UI.WebControls
+@model ProjectManagement.Models.ProcessCostMonthWiseModel
+@{
+    ViewBag.Title = "ImportMonthWiseProcessCost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("ImportMonthWiseProcessCost", "Common", FormMethod.Post, new { id = "formProcessCost", enctype = "multipart/form-data" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">Import Process Cost</div>
+        </div>
+        <div class="portlet-body">
+            @*<div class="row">
+                    <div class="col-md-6">
+                        <div class="col-md-2">Variant</div>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.VariantName, new SelectList(ViewBag.Variants, "Key", "Key"), "Select", new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                </div>
+                <br/>*@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Month</div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.Month, new List<SelectListItem>
+                    {
+                        new SelectListItem(){Value="1",Text = "January"},
+                        new SelectListItem(){Value="2",Text = "February"},
+                        new SelectListItem(){Value="3",Text = "March"},
+                        new SelectListItem(){Value="4",Text = "April"},
+                        new SelectListItem(){Value="5",Text = "May"},
+                        new SelectListItem(){Value="6",Text = "June"},
+                        new SelectListItem(){Value="7",Text = "July"},
+                        new SelectListItem(){Value="8",Text = "August"},
+                        new SelectListItem(){Value="9",Text = "September"},
+                        new SelectListItem(){Value="10",Text = "October"},
+                        new SelectListItem(){Value="11",Text = "November"},
+                        new SelectListItem(){Value="12",Text = "December"}
+                    }, "Select", new { @class = "form-control ddChosen" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Year</div>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(m => m.Year, new List<SelectListItem>
+                        {
+                            new SelectListItem(){Value="2019",Text = "2019"},
+                            new SelectListItem(){Value="2020",Text = "2020"},
+                            new SelectListItem(){Value="2021",Text = "2021"},
+                            new SelectListItem(){Value="2022",Text = "2022"}
+                        }, "Select", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2">Upload</div>
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.FileUpload, new { type = "file", @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-10">
+                        <input type="submit" value="Import" class="btn btn-success"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Process cost of Handsets</div>
+    </div>
+    <div class="portlet-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Variant Name</th>
+                    <th>Process Cost</th>
+                    <th>Excel file created on</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in ViewBag.ProcessCost)
+                {
+                    <tr>
+                        <td>@v.VariantName</td>
+                        <td>@v.ProcessCost</td>
+                        <td>@v.Month, @v.Year</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

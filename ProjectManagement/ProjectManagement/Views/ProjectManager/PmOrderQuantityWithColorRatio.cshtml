@@ -1,0 +1,128 @@
+﻿@model ProjectManagement.Models.PmOrderQuantityWithColorModel
+@{
+    ViewBag.Title = "PmOrderQuantityWithColorRatio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("PmOrderQuantityWithColorRatio", "ProjectManager", FormMethod.Post, new { id = "formPmOrderQuantity" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Order Quantity With Color Ratio
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        Project
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(i => i.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        Color
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(i => i.Color, new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        Order Quantity
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(i => i.PmOrderQuantity, new { @class = "form-control", type = "number", min = "1", required = "" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        Comment
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(i => i.ConcernPmComment, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <button class="btn btn-success" id="btnSave">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="portlet box red">
+    <div class="portlet-title">
+        <div class="caption">Ordered Projects</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-bordered dtTable">
+                <thead>
+                    <tr>
+                        <th class="text-center">Project Name</th>
+                        <th class="text-center">Order No</th>
+                        <th class="text-center">Color</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in ViewBag.OrderList)
+                    {
+                        <tr>
+                            <td class="text-center">@v.ProjectName</td>
+                            <td class="text-center">@v.OrderNumber</td>
+                            <td class="text-center">@v.Color</td>
+                            <td class="text-center">@v.PmOrderQuantity</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails">Details</button>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script>
+    $("#Color").autocomplete({
+        delay: 100,
+        source: function (request, response) {
+            var url = '@Url.Action("GetColors", "ProjectManager")';
+            $.post(url, { color: request.term}, function (data) {
+                console.log(data);
+                response($.map(data, function (item) {
+                    return { value: item.Color };
+                }));
+            });
+        }
+    });
+
+    $("#formPmOrderQuantity").submit(function (e) {
+        var projectName = $('#ProjectMasterId option:selected').text();
+        if (projectName == 'Select') {
+            alertify.error('Select a Project');
+            e.preventDefault();
+        }
+    })
+</script>
+
+

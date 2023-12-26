@@ -1,0 +1,131 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@using (Ajax.BeginForm("Specification", "Commercial", new AjaxOptions { OnBegin = "submit" }))
+{
+    <div class="col-lg-12">
+        <div class="form-body">
+            <h3 class="form-section">Accessories</h3>
+            @Html.HiddenFor(model=>model.ProjectMaster.ProjectMasterId)
+            @Html.HiddenFor(model => model.PhAccessory.PhAccessoriesId)
+            @Html.HiddenFor(model => model.TabIdentity, new { @Value = 8 })
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Earphone Confirm Price</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.EarphoneConfirmPrice, new { type = "number", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.EarphoneConfirmPrice, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Earphone Suppier Name</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.EarphoneSupplierName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.EarphoneSupplierName, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Charger Rating</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.ChargerRating, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.ChargerRating, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Charger Supplier Name</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.ChargerSupplierName, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.ChargerSupplierName, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">3 Layer Screen Protector</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhAccessory.ThreeLayerScreenProtector, new SelectList(new[]
+                                {
+                                
+                                new SelectListItem { Text = "Yes", Value = "true"},
+                                new SelectListItem { Text = "No", Value = "false"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.ThreeLayerScreenProtector, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Battery Cover Type</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.BatteryCoverFinishingType, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.BatteryCoverFinishingType, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Battery Cover Logo Type</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhAccessory.BatteryCoverLogoType, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.BatteryCoverLogoType, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Otg Cable</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhAccessory.OtgCable, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Yes", Value = "true"},
+                                    new SelectListItem { Text = "No", Value = "false"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.OtgCable, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Flash Light</label>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.PhAccessory.FlashLight, new SelectList(new[]
+                            {
+                                new SelectListItem { Text = "Yes", Value = "true"},
+                                new SelectListItem { Text = "No", Value = "false"}
+                            }, "Value", "Text"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhAccessory.FlashLight, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button class="btn sbold uppercase btn-outline blue">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

@@ -1,0 +1,163 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Spare.SpareViewModel
+@{
+    ViewBag.Title = "MultipleModelSpareOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-8">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">Spare Order for Multiple Model</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-1">
+            <button class="btn sbold uppercase btn-outline blue-chambray pull-right" onclick="spareModal();">Add Spare</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn sbold uppercase btn-outline red-haze pull-right" id="btnSubmitSpareOrder" onclick="submitToCommercial();">Submit</button>
+        </div>
+
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="col-lg-2">Models</div>
+                <div class="col-lg-10">
+                    <select name="multiple" id="multiple" class="form-control" multiple>
+                        @if (ViewBag.ProjectNamesWithPo != null)
+                        {
+                            foreach (var i in ViewBag.ProjectNamesWithPo)
+                            {
+                                <option value="@i.ProjectName">@i.ProjectName</option>
+                            }
+                        }
+
+                    </select> 
+                </div>
+                <br /><br />
+                @Html.TextBox("materialcode","",new {@class="form-control",PlaceHolder="material code"})
+                <br/>
+                @Html.TextBox("price", "", new { @class = "form-control", PlaceHolder = "price", type = "number" ,min="0"})
+                <br/>
+                
+                
+            </div>
+            <div class="col-lg-6">
+                @Html.DropDownListFor(model => model.SpareNameModel.SpareId, new SelectList(Model.SpareNameModels, "SpareId", "SparePartsName"), "Select Spare", new { @class = "form-control ddChosen" })
+                <br/><br />
+                @Html.TextBox("orderquantity", "", new { @class = "form-control", PlaceHolder = "order quantity", type = "number", min = "0" })
+                <br/>
+                @Html.TextBox("amount", "", new { @class = "form-control", PlaceHolder = "Amount", type = "number", min = "0" })
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2">
+                <button class="btn btn-success form-control" type="submit" onclick="saveSpareOrder();">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-8">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">List of Spare Order for Multiple Model</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        
+
+    </div>
+    <div class="portlet-body">
+        
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover" id="tblviewspare" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                <tr>
+                    <th class="text-center">SpareOrderByMultipleModelId</th>
+                    <th class="text-center">Model</th>
+                    <th class="text-center">Spare Name</th>
+                    <th class="text-center">Material Code</th>
+                    <th class="text-center">Order Quantity</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in ViewBag.SpareOrderByMultipleModel)
+                {
+                    <tr>
+                        <td>@item.SpareOrderByMultipleModelId</td>
+                        <td>@item.ModelNames</td>
+                        <td>@item.SpareName</td>
+                        <td>@item.MaterialCode</td>
+                        <td>@item.OrderQuantity</td>
+                        <td>@item.Price</td>
+                        <td>@item.Amount</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $('#multiple').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "95%"
+    });
+    
+    function saveSpareOrder() {
+        
+        var url = '../Spare/PostSpareForMultipleModel';
+        var models = $('#multiple').val();
+        var sparename = $('#SpareNameModel_SpareId :selected').text();
+        var orderquantity = $('#orderquantity').val();
+        var materialcode = $('#materialcode').val();
+        var price = $('#price').val();
+        var amount = $('#amount').val();
+        console.log('Projectnames: ' + models +
+            '...Spare Name:' + sparename +
+            '...OrderQuantity:' + orderquantity +
+            '...materialcode:' + materialcode +
+            '...Price:' + price +
+            '...Amount:' + amount);
+        $.post(url, { projectnames: models.join(","), sparename: sparename, orderquantity: orderquantity, materialcode: materialcode, price: price, amount: amount }, function (json) {
+            console.log(json);
+        });
+    }
+
+    $(function() {
+        var table = $('#tblviewspare').DataTable({
+            "ordering": false,
+            "columnDefs": [
+                { className: "text-center", "targets": [1, 2, 3, 4, 5, 6] },
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+                //,
+                //{
+                //    "targets": -1,
+                //    "data": null,
+                //    "defaultContent": "<button>Edit</button>"
+                //}
+            ]
+        });
+    });
+</script>
+

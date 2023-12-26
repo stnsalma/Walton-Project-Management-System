@@ -1,0 +1,101 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i> Screening Verification Pending
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwQcScreeningVerificationPendingList", Model)
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i> Running Verification Pending
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwQcRuningVerificationPendingList", Model)
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i> Finished Goods Verification Pending
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwQcFinishedGoodVerificationPendingList", Model)
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //get Automatic Serial number column in the HTML Table
+    $('#tblScreeningVerificationPending tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+
+    //get Automatic Serial number column in the HTML Table
+    $('#tblRunningVerificationPending tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblFinishedGoodsVerificationPending tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+
+
+    $('[class*="btnVerify"]').click(function () {
+        $('#tblScreeningVerificationPending tr').click(function (event) {
+            //console.log($(this).find('#hwQcAssignId').html());
+            //alertify.alert($(this).find('#hwQcAssignId').html());
+
+            var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $(this).find('#hwQcAssignId').html() + '&hwQcInchargeAssignId=' + $(this).find('#hwQcInchargeAssignId').html() + '&flag=' + '1';
+            window.location.href = url;
+        });
+
+        $('#tblRunningVerificationPending tr').click(function (event) {
+            //console.log($(this).find('#hwQcAssignId').html());
+            //alertify.alert($(this).find('#hwQcAssignId').html());
+
+            var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $(this).find('#hwQcAssignId').html() + '&hwQcInchargeAssignId=' + $(this).find('#hwQcInchargeAssignId').html() + '&flag=' + '2';
+            window.location.href = url;
+        });
+        
+        $('#tblFinishedGoodsVerificationPending tr').click(function (event) {
+            //console.log($(this).find('#hwQcAssignId').html());
+            //alertify.alert($(this).find('#hwQcAssignId').html());
+
+            var url = '@Url.Action("HwQcVerification", "Hardware")?hwQcAssignId=' + $(this).find('#hwQcAssignId').html() + '&hwQcInchargeAssignId=' + $(this).find('#hwQcInchargeAssignId').html()+'&flag='+'3';
+            window.location.href = url;
+        });
+    });
+</script>

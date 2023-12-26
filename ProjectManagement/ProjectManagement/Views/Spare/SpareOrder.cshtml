@@ -1,0 +1,618 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Spare.SpareViewModel
+
+@{
+    ViewBag.Title = "SpareOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-3">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">Spare Order</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-4"></div>
+        <div class="col-lg-1">
+            <button class="btn sbold uppercase btn-outline blue-chambray pull-right" onclick="spareModal();">Add Spare</button>
+        </div>
+        <div class="col-lg-3">
+            <button class="btn sbold uppercase btn-outline green-haze pull-right" onclick="submitWithoutSpare();">Submit Without Spare</button>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn sbold uppercase btn-outline red-haze pull-right" id="btnSubmitSpareOrder" onclick="submitToCommercial();">Submit</button>
+        </div>
+
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-3">
+                    @*@Html.DropDownList("ProjectName", new SelectList(ViewBag.ProjectNamesWithPo, "ProjectName", "ProjectName"), "Select Project", new { @class = "form-control ddChosen" })*@
+                    <select id="ProjectName" class="form-control ddlchosen">
+                        <option value="select">Select Project</option>
+                        @foreach (var item in ViewBag.ProjectNamesWithPo)
+                        {
+                            <option value="@item.ProjectType">@item.ProjectName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <select id="ProjectMasterId" class="form-control">
+                        <option value="">Select Order</option>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    @Html.TextBoxFor(model => model.SpareOrderModel.HandsetQuantity, new { @class = "form-control", PlaceHolder = "Handset Quantity", type = "number", min = "0" })
+                </div>
+                <div class="col-lg-3">
+                    @Html.TextBoxFor(model => model.ProjectPurchaseOrderFormModel.PiDate, new { @class = "form-control", PlaceHolder = "PI Date" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="table-container">
+            <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
+                <table class="table table-striped table-bordered table-condensed table-hover dataTable no-footer " id="sample_3" aria-describedby="sample_3_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Checked</th>
+                            <th class="text-center">Spare Name</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-center">Proposed Import Ratio</th>
+                            <th class="text-center">Remarks</th>
+                            @*<th class="text-center">Action</th>*@
+
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <br />
+        <hr />
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover" id="tblviewspare" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="text-center">SpareOrderId</th>
+                        <th class="text-center">SpareId</th>
+                        <th class="text-center">Spare Name</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Proposed Import Ratio</th>
+                        <th class="text-center">Remarks</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ ADD SPARE =======================================================================*@
+    <div id="spareAddModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Spare</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Spare Name:
+                                    <input type="text" class="form-control" id="modalSpareName" />
+                                </p>
+                                <p>
+                                    Proposed Import Ratio:
+                                    <input type="number" class="form-control" id="modalPir" />
+                                </p>
+                                <p>
+                                    Spare Type:
+                                    <div class="mt-checkbox-list">
+                                        <label class="mt-checkbox">
+                                            Smart
+                                            <input value="smart" name="smart" type="checkbox">
+                                            <span></span>
+                                        </label>
+                                        <label class="mt-checkbox">
+                                            Feature
+                                            <input value="feature" name="feature" type="checkbox">
+                                            <span></span>
+                                        </label>
+
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="saveSpareName();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ SPARE ORDER EDIT MODAL =======================================================================*@
+    <div id="spareOrderEditModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Update Spare Order</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="rowIndex" />
+                                <input type="hidden" id="spareOrerId" />
+                                <p>
+                                    Spare Name:
+                                    <select id="modalDdlSpareName" class="form-control"></select>
+                                </p>
+                                <p>
+                                    Quantity:
+                                    <input type="text" class="form-control" id="ddlModalQuantity" />
+                                </p>
+                                <p>
+                                    Proposed Import Ratio:
+                                    <input type="text" class="form-control" id="ddlModalPir" />
+                                </p>
+                                <p>
+                                    Remarks:
+                                    <textarea class="form-control" id="ddlModalRemarks"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="updatespareorder();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*=================================== SUBMIT WITHOUT SPARE ============================================*@
+    <div id="submitWithoutSpareModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">SUBMIT WITHOUT SPARE</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Remarks:
+                                    <input type="text" class="form-control" id="modalSubmitWithoutSpareRemark" />
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="submitWithoutSpareOrder();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/datetime/core.js"></script>
+<script src="~/Scripts/datetime/zebra_datepicker.js"></script>
+
+<script>
+    $('#ProjectName').chosen();
+    function spareModal() {
+        $('#spareAddModal').modal('show');
+    }
+
+
+    //=====On HANDSET QUANTITY VALUE CHANGE=====
+    $('#SpareOrderModel_HandsetQuantity').on('input', function () {
+        var handsetquantity = $('#SpareOrderModel_HandsetQuantity').val();
+        $('#sample_3 .pir').each(function () {
+            var pir = $(this).val();
+            console.log('pir:' + pir);
+            var sparequantity = (handsetquantity.trim() * pir.trim()) / 100;
+            $(this).closest('tr').find('.quantity').val(Math.round(sparequantity));
+        });
+    });
+
+    //====On Spare QUANTITY change=====
+    $(this).closest('tr').find('.quantity').on('input',
+        function () {
+            var handsetquantity = $(this).val();
+            alert(handsetquantity);
+        });
+
+    //====checkbox====
+    $("input[name~='smart']").on('click', function () {
+        if ($("input[name~='smart']").is(':checked')) {
+            $("input[name~='feature']").attr('checked', false);
+        }
+    });
+
+    //====checkbox====
+    $("input[name~='feature']").on('click', function () {
+        if ($("input[name~='feature']").is(':checked')) {
+            $("input[name~='smart']").attr('checked', false);
+        }
+    });
+
+    //==Add new spare parts====
+    function saveSpareName() {
+        var url = '@Url.Action("PostSpareName","Spare")';//'../Spare/PostSpareName';
+        var sparename = $('#modalSpareName').val();
+        var pir = $('#modalPir').val();
+        var projectname = $('#ProjectName :selected').text();
+        var sparetype = '';
+        if ($("input[name~='smart']").is(':checked')) {
+            sparetype = $("input[name~='smart']").val();
+        }
+        if ($("input[name~='feature']").is(':checked')) {
+            sparetype = $("input[name~='feature']").val();
+        }
+        //var mySelect = $('#SpareNameModel_SpareId');
+        if ($("input[name~='feature']").is(':checked') || $("input[name~='smart']").is(':checked')) {
+            $.post(url, { spareName: sparename, pir: pir, sparetype: sparetype }, function (json) {
+                //mySelect.empty();
+                //mySelect.append($('<option></option>').val("").html("Select Spare"));
+                //for (var i in json) {
+                //mySelect.append($('<option></option>').val(json[i].SpareId).html(json[i].SparePartsName+"("+json[i].SpareType+")"));
+                //mySelect.trigger("chosen:updated");
+                if (projectname != 'Select Project') {
+                    var row = "<tr>" +
+                                  "<td class='text-center hidden'>" + json.SpareId + "</td>" +
+                                  "<td class='text-center'><input type='checkbox' checked></td>" +
+                                  "<td class='text-center'>" + json.SparePartsName + "</td>" +
+                                  "<td class='text-center'><input type='text' class='form-control text-center quantity'></td>" +
+                                  "<td class='text-center'><input type='text' class='form-control text-center pir' value='" + json.ProposedImportRatio + "'></td>" +
+                              "</tr>";
+                    $('#sample_3 tbody').append(row);
+                    // }
+                }
+            });
+            $('#spareAddModal').modal('hide');
+            alertify.success('Spare Parts ' + sparename + ' Added successfully');
+            $('#modalSpareName').val('');
+        } else {
+            alertify.success('select spare type');
+        }
+
+    }
+
+    //====function for Saving spare order====
+    function saveSpareOrder(htmlTblArray) {
+        console.log(htmlTblArray);
+        for (key in htmlTblArray) {
+            if (htmlTblArray.hasOwnProperty(key)) {
+                var value = htmlTblArray[key];
+                console.log(value);
+            }
+        }
+        var projectname = $('#ProjectName :selected').text();
+        var ordernumber = $('#ProjectMasterId :selected').text();
+        var projectmasterid = $('#ProjectMasterId :selected').val();
+        var handsetquantity = $('#SpareOrderModel_HandsetQuantity').val();
+        console.log('ProjectNmame:' + projectname + ' ,OrderNumber:' + ordernumber + ' ,Handset Quantity:' + handsetquantity);
+        var url = "@Url.Action("PostSpareOrder", "Spare")";//'../Spare/PostSpareOrder';
+        $.post(url, { projectName: projectname, orderNumber: ordernumber, handsetquantity: handsetquantity, projectmasterid: projectmasterid, orderListObjects: htmlTblArray }, function (data) {
+            
+        });
+    }
+
+    //===On Submit Button click function===
+    function submitToCommercial() {
+        var data = [];
+        var spareObject = {};
+        var spareList = [];
+        var url = "@Url.Action("SubmitSpare", "Spare")";//'../Spare/SubmitSpare';
+        var projectname = $('#ProjectName :selected').text();
+        var ordernumberordinal = $('#ProjectMasterId :selected').text();
+        var projectmasterid = $('#ProjectMasterId :selected').val();
+        var pidate = $('#ProjectPurchaseOrderFormModel_PiDate').val();
+        var handsetquantity = $('#SpareOrderModel_HandsetQuantity').val();
+        var remark = $('#modalSubmitWithoutSpareRemark').val();
+        console.log(projectmasterid + '..' + pidate);
+
+
+        //======Convert HTML table to Jagged array========
+        var htmLtbl =
+        {
+            getData: function (table) {
+
+                table.find('tr').not(':first').each(function (rowIndex, r) {
+                    var cols = [];
+                    $(this).find('td').each(function (colIndex, c) {
+
+                        if ($(this).children(':text,:hidden,textarea,select').length > 0)
+                            cols.push($(this).children('input,textarea,select').val().trim());
+
+                            // if dropdown text is needed then uncomment it and remove SELECT from above IF condition//
+                            // else if ($(this).children('select').length > 0)
+                            // cols.push($(this).find('option:selected').text());
+
+                        else if ($(this).children(':checkbox').length > 0)
+                            cols.push($(this).children(':checkbox').is(':checked') ? true : false);
+                        else
+                            cols.push($(this).text().trim());
+                    });
+                    if (cols[1] == true) {
+                        spareObject = new Object();
+                        spareObject.SpareId = cols[0];
+                        spareObject.IsChecked = cols[1];
+                        spareObject.SpareName = cols[2];
+                        spareObject.Quantity = cols[3];
+                        spareObject.ProposedImportRatio = cols[4];
+                        spareObject.Remarks = cols[5];
+                        spareList.push(spareObject);
+                    }
+                    data.push(cols);
+                });
+                console.log(spareList);
+                return spareList;
+            }
+        };
+
+        htmLtbl.getData($('#sample_3'));  // passing that table's ID //
+        //=====end====
+        if (ordernumberordinal != 'Select Order') {
+            if (handsetquantity != '') {
+
+                $('#btnSubmitSpareOrder').prop('disabled', true);//disable button to prevent duplicate entry
+                saveSpareOrder(spareList);// function to save data in spare order table
+                $.post(url, { projectmasterid: projectmasterid, piDate: pidate, remark: remark }, function (data) {
+                    console.log(data);
+                    alertify.success('Spares parts Project ' + projectname + ',' + ordernumberordinal + ' successfully submitted');
+                    if (data.isRedirect) {
+                        window.location.href = data.redirectUrl;
+                    }
+                });
+            } else {
+                alertify.error('Please Enter Handset Quantity');
+            }
+        } else {
+            alertify.error('Select an order number');
+        }
+
+    }
+
+    function submitWithoutSpare() {
+        var ordernumberordinal = $('#ProjectMasterId :selected').text();
+        if (ordernumberordinal != 'Select Order') {
+            $('#submitWithoutSpareModal').modal('show');
+        } else {
+            alertify.error('Select an order number');
+        }
+    }
+
+    function submitWithoutSpareOrder() {
+        var url = "@Url.Action("SubmitSpare","Spare")";//'../Spare/SubmitSpare';
+        var remark = $('#modalSubmitWithoutSpareRemark').val();
+        var projectname = $('#ProjectName :selected').text();
+        var ordernumberordinal = $('#ProjectMasterId :selected').text();
+        var projectmasterid = $('#ProjectMasterId :selected').val();
+        console.log(projectmasterid);
+        $.post(url, { projectmasterid: projectmasterid, piDate: null, remark: remark }, function (data) {
+            console.log(data);
+            alertify.success('Spares parts Project ' + projectname + ',' + ordernumberordinal + ' successfully submitted');
+            if (data.isRedirect) {
+                window.location.href = data.redirectUrl;
+            }
+        });
+    }
+
+    //onclick function for updating Soare Order
+    function updatespareorder() {
+        var url = "@Url.Action("UpdateSpareOrder", "Spare")";//'../Spare/UpdateSpareOrder';
+        var spareid = $('#modalDdlSpareName :selected').val();
+        var sparename = $('#modalDdlSpareName :selected').text();
+        var quantity = $('#ddlModalQuantity').val();
+        var pir = $('#ddlModalPir').val();
+        var remarks = $('#ddlModalRemarks').val();
+        var spareorderid = $('#spareOrerId').val();
+        console.log(spareid + ',' + spareorderid + ',' + sparename + ',' + quantity + ',' + pir);
+        $.post(url, { spareOrderId: spareorderid, spareId: spareid, spareName: sparename, quantity: quantity, pir: pir, remarks: remarks }, function (data) {
+            //alert(data);
+            if (data == 1) {
+                var rowindex = $('#rowIndex').val();
+                $('#tblviewspare').DataTable().row(rowindex).data([spareorderid, spareid, sparename, quantity, pir, remarks]).draw();
+                $('#spareOrderEditModal').modal('hide');
+                alertify.success('Updated');
+            } else {
+                alertify.alert('OOPS! Something went wrong!');
+            }
+        });
+    }
+
+    $(function () {
+        $('#SpareNameModel_SpareId :selected').val(0);
+        $('#ProjectPurchaseOrderFormModel_PiDate').Zebra_DatePicker({
+            default_position: 'below'
+        });
+
+        var table = $('#tblviewspare').DataTable({
+            "ordering": false,
+            "columnDefs": [
+                { className: "text-center", "targets": [2, 3, 4, 5] },
+                {
+                    "targets": [0, 1],
+                    "visible": false,
+                    "searchable": false
+                },
+                {
+                    "targets": -1,
+                    "data": null,
+                    "defaultContent": "<button>Edit</button>"
+                }
+            ]
+        });
+        $('#tblviewspare').parents('div.dataTables_wrapper').first().hide();
+
+        //Show Modal on edit
+        $('#tblviewspare tbody').on('click', 'button', function () {
+            var rowindex = $(this).closest('tr').index();
+            //alert('Row Index:'+rowindex);
+            var mySelect = $('#modalDdlSpareName');
+            $('#spareOrderEditModal').modal('show');
+            var data = table.row($(this).parents('tr')).data();
+            var projecttype = $('#ProjectName option:selected').val().toLowerCase();
+            console.log('Spareid' + data[0] + 'Quantity:' + data[3] + " PIR:" + data[4] + " Remarks:" + data[5]);
+            $.get('@Url.Action("GetSpareNameModels", "Spare")', { sparetype: projecttype }, function (json) {
+                console.log(json);
+                mySelect.empty();
+                mySelect.append($('<option></option>').val("").html("Select Spare"));
+                for (var i in json) {
+                    mySelect.append($('<option></option>').val(json[i].SpareId).html(json[i].SparePartsName));
+                    //mySelect.trigger("chosen:updated");
+                }
+                $('#modalDdlSpareName :selected').val(data[1]);
+                $('#modalDdlSpareName :selected').text(data[2]);
+                $('#ddlModalQuantity').val(data[3]);
+                $('#ddlModalPir').val(data[4]);
+                $('#ddlModalRemarks').val(data[5]);
+                $('#spareOrerId').val(data[0]);
+                $('#rowIndex').val(rowindex);
+
+            });
+        });
+
+        $('#ProjectName').on('change', function () {
+            var projectname = $('#ProjectName option:selected').text();
+            var projecttype = $('#ProjectName option:selected').val().toLowerCase();
+            console.log(projecttype);
+            loadOrderNumbers(projectname);
+            loadDefaultSpares(projecttype);
+        });
+
+        function loadDefaultSpares(sparetype) {
+            //alert(sparetype);
+            var url = '../Spare/LoadDefaultSpare';
+            $.post(url, { sparetype: sparetype }, function (data) {
+                console.log(data);
+                $('#sample_3 tbody').empty();
+                //var spares = JSON.parse(data);
+                for (var i = 0; i < data.length; i++) {
+                    var row = "<tr>" +
+                                  "<td class='text-center hidden'>" + data[i].SpareId + "</td>" +
+                                  "<td class='text-center'><input type='checkbox'></td>" +
+                                  "<td class='text-center'>" + data[i].SparePartsName + "</td>" +
+                                  "<td class='text-center'><input type='text' class='form-control text-center quantity'></td>" +
+                                  "<td class='text-center'><input type='text' class='form-control text-center pir' value='" + data[i].ProposedImportRatio + "'></td>" +
+                                  "<td class='text-center'><input type='text' class='form-control text-center remarks'></td>" +
+                              "</tr>";
+                    $('#sample_3 tbody').append(row);
+                }
+            });
+        }
+
+        function loadOrderNumbers(projectname) {
+            $('#ProjectMasterId').empty();
+            $('#ProjectMasterId').append($('<option></option>').html('Loading...'));
+            var url = '../Spare/GetOrderNumbersByProjectNameWithPo';
+            $.post(url, { projectName: projectname }, function (data) {
+                console.log(data);
+                var orders = JSON.parse(data);
+                console.log(orders);
+                var mySelect;
+                if (projectname != "") {
+                    mySelect = $('#ProjectMasterId');
+                    mySelect.empty();
+                    mySelect.append($('<option></option>').val("").html("Select Order"));
+                    for (var i = 0; i < orders.length; i++) {
+                        mySelect.append($('<option></option>').val(orders[i].Value).html(orders[i].Text));
+                    }
+                } else {
+                    //makeAllprojectGanttChart();
+                    mySelect = $('#ProjectMasterId');
+                    mySelect.empty();
+                    mySelect.append($('<option></option>').val("").html("Select Order"));
+                }
+            });
+        }
+
+        $('#ProjectMasterId').on('change', function () {
+            var projectname = $('#ProjectName option:selected').val();
+            var ordernumber = $('#ProjectMasterId :selected').text();
+            var projectid = $('#ProjectMasterId :selected').val();
+            console.log(projectid + '....' + projectname + '..,..' + ordernumber);
+            checkSubmission(projectid);
+            loadSpareOrder(projectid);
+
+        });
+
+        function loadSpareOrder(projectid) {
+            var url = '../Spare/GetSpareOrderByProjectAndOrder';
+            $.post(url, { projectId: projectid }, function (data) {
+                console.log(data);
+                var spares = JSON.parse(data);
+                console.log(spares);
+                if (spares.length > 0) {
+                    table.clear().draw();
+                    for (var i = 0; i < spares.length; i++) {
+                        console.log(spares[i].SpareOrderId + '...' + spares[i].SparePartsName + '..' + spares[i].Quantity + '..' + spares[i].ProposedImportRatio + '..' + spares[i].Remarks);
+                        table.row.add([spares[i].SpareOrderId, spares[i].SpareId, spares[i].SparePartsName, spares[i].Quantity, spares[i].ProposedImportRatio, spares[i].Remarks]).draw();
+                        if (spares[0].HandsetQuantity != null) {
+                            $('#SpareOrderModel_HandsetQuantity').val(spares[0].HandsetQuantity);
+                            $('#ProjectPurchaseOrderFormModel_PiDate').val(moment(spares[0].PiDate).format('YYYY-MM-DD'));
+                        }
+                    }
+                } else {
+                    table.clear().draw();
+                    $('#SpareOrderModel_HandsetQuantity').val('');
+                }
+            });
+        }
+
+        function checkSubmission(projectid) {
+            var url = '../Spare/CheckSubmission';
+            $.post(url, { projectid: projectid }, function (data) {
+                console.log(data.IsSpareSubmittedDate);
+                if (data.IsSpareSubmittedDate == null) {
+                    $('#btnSubmitSpareOrder').prop('disabled', false);
+                    $('#sample_3').show();
+                    $('#tblviewspare').parents('div.dataTables_wrapper').first().hide();
+                }
+                if (data.IsSpareSubmittedDate != null) {
+                    $('#btnSubmitSpareOrder').prop('disabled', true);
+                    $('#sample_3').hide();
+                    //table.buttons().disable();
+                    $('#tblviewspare').parents('div.dataTables_wrapper').first().show();
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,366 @@
+﻿
+@{
+    ViewBag.Title = "SwotAnalysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/loader/loader.css" rel="stylesheet" />
+<link href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" rel="stylesheet" />
+<script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">SWOT Analysis</div>
+        <div class="tools">
+            <i class="fa fa-close fa-lg hidden" id="closeSwot" style="cursor: pointer"></i>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row" id="divSwotPendingList">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <table class="table-bordered" id="tblSwot">
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Project Name</th>
+                                <th>Order No</th>
+                                <th>Chipset</th>
+                                <th>Clock Speed</th>
+                                <th>Ram</th>
+                                <th>Rom</th>
+                                <th>Front Cam</th>
+                                <th>Back Cam</th>
+                                <th>Battery</th>
+                                <th>Multiplier</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.Projects)
+                            {
+                                <tr>
+                                    <td class="projectId">@v.ProjectMasterId</td>
+                                    <td>@v.ProjectName</td>
+                                    <td>@v.OrderNuber</td>
+                                    <td>@v.ChipsetName</td>
+                                    <td>@v.ChipsetFrequency</td>
+                                    <td>@v.Ram</td>
+                                    <td>@v.Rom</td>
+                                    <td>@v.FrontCam</td>
+                                    <td>@v.BackCam</td>
+                                    <td>@v.BatteryRating</td>
+                                    <td>
+                                        <input type="number" min="0" class="form-control txtMultipler" value="140"/>
+                                    </td>
+                                    <td>
+                                        <input type="button" class="btn btn-success btnSwot" value="SWOT Analysis" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="divSwotDetails" hidden="">
+            <div class="col-md-12">
+                <div id="ganttloaderdiv">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="table-scrollable" id="divForTblWithDynamicColumn">
+                    
+                </div>
+                @if (User.IsInRole("CM") || User.IsInRole("CMHEAD"))
+                {
+                    <div id="divOpportunityAndButtons">
+                    
+                    <h3>Opportunity</h3>
+                    <textarea class="form-control" rows="5" id="txtOpportunity"></textarea>
+                    <br />
+                    <input type="button" value="Save" class="btn btn-success" id="btnSave" />&nbsp<input type="button" value="Close" class="btn btn-danger" id="btnClose" />
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var globalProjectId = 0;
+        var $thiss;
+        var table = $('#tblSwot').DataTable({
+            "columnDefs": [
+                {
+                    //"targets": [0],
+                    //"orderable": false,
+                    //"searchable": false
+                },
+                {
+                    //"targets": [1],
+                    //"searchable": false,
+                    //"orderable": false
+                }
+            ]
+        });
+        
+        $('#tblSwot tbody').on('click', '.btnSwot', function () {
+            $('#ganttloaderdiv').addClass("loader");
+            var url = '@Url.Action("GetSwotAnalysis","Common")';
+            var row = $(this).closest('tr');
+            $thiss = $(this);
+            var projectId = row.find('.projectId').text();
+            var multiplier = row.find('.txtMultipler').val();
+            globalProjectId = projectId;
+            console.log('ProjectID:'+projectId+', multiplier:'+multiplier);
+            $('#divSwotPendingList').hide(500);
+            $('#divSwotDetails').prop('hidden', false);
+            $('#closeSwot').removeClass('hidden');
+            $.ajax({
+                type: "POST",
+                url: url,
+                timeout: 20000,
+                dataType: "json",
+                data:{ projectId: projectId, multiplier: multiplier },
+                success:function(data) {
+                    //$.post(url, { projectId: projectId, multiplier: multiplier }, function (data) {
+                        console.log(data);
+                        //====Brand row===
+                        var dynBrandColumn = '';
+                        for (var i = 0; i < data.length; i++) {
+                            dynBrandColumn = dynBrandColumn + '<td>' + data[i].Brand + '</td>';
+                        }
+                        var brandRow = '<tr>' + '<td>' + '<span class="bold">' + 'Brand' + '</span>' + '</td>' + dynBrandColumn + '</tr>';
+                        console.log(brandRow);
+                        //------o-----
+                        //====Model row===
+                        var dynModelColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynModelColumn = dynModelColumn + '<td>' + data[i].Model + '</td>';
+                        }
+                        var modelRow = '<tr>' + '<td>' + '<span class="bold">' + 'Model' + '</span>' + '</td>' + dynModelColumn + '</tr>';
+                        console.log(modelRow);
+                        //------o-----
+                        //====Chipset row===
+                        var dynChipsetColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynChipsetColumn = dynChipsetColumn + '<td>' + data[i].Chipset + '</td>';
+                        }
+                        var chipsetRow = '<tr>' + '<td>' + '<span class="bold">' + 'Chipset' + '</span>' + '</td>' + dynChipsetColumn + '</tr>';
+                        console.log(chipsetRow);
+                        //------o-----
+                        //====ClockSpeed row===
+                        var dynClockSpeedColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynClockSpeedColumn = dynClockSpeedColumn + '<td>' + data[i].ClockSpeed + '</td>';
+                        }
+                        var clockSpeedRow = '<tr>' + '<td>' + '<span class="bold">' + 'ClockSpeed' + '</span>' + '</td>' + dynClockSpeedColumn + '</tr>';
+                        console.log(clockSpeedRow);
+                        //------o-----
+                        //====CPU Core row===
+                        var dynCpuCoreColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynCpuCoreColumn = dynCpuCoreColumn + '<td>' + data[i].CpuCore + '</td>';
+                        }
+                        var cpuCoreRow = '<tr>' + '<td>' + '<span class="bold">' + 'CpuCore' + '</span>' + '</td>' + dynCpuCoreColumn + '</tr>';
+                        console.log(cpuCoreRow);
+                        //------o-----
+                        //====RAM row===
+                        var dynRamColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynRamColumn = dynRamColumn + '<td>' + data[i].Ram + '</td>';
+                        }
+                        var ramRow = '<tr>' + '<td>' + '<span class="bold">' + 'Ram' + '</span>' + '</td>' + dynRamColumn + '</tr>';
+                        console.log(ramRow);
+                        //------o-----
+                        //====ROM row===
+                        var dynRomColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynRomColumn = dynRomColumn + '<td>' + data[i].Rom + '</td>';
+                        }
+                        var romRow = '<tr>' + '<td>' + '<span class="bold">' + 'Rom' + '</span>' + '</td>' + dynRomColumn + '</tr>';
+                        console.log(romRow);
+                        //------o-----
+                        //====FrontCam row===
+                        var dynFrontCamColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynFrontCamColumn = dynFrontCamColumn + '<td>' + data[i].FrontCam + '</td>';
+                        }
+                        var frontCamRow = '<tr>' + '<td>' + '<span class="bold">' + 'FrontCam' + '</span>' + '</td>' + dynFrontCamColumn + '</tr>';
+                        console.log(frontCamRow);
+                        //------o-----
+                        //====BackCam row===
+                        var dynBackCamColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynBackCamColumn = dynBackCamColumn + '<td>' + data[i].BackCam + '</td>';
+                        }
+                        var backCamRow = '<tr>' + '<td>' + '<span class="bold">' + 'BackCam' + '</span>' + '</td>' + dynBackCamColumn + '</tr>';
+                        console.log(backCamRow);
+                        //====DisplaySize row===
+                        var dynDisplaySizeColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynDisplaySizeColumn = dynDisplaySizeColumn + '<td>' + data[i].DisplaySize + '</td>';
+                        }
+                        var displaySizeRow = '<tr>' + '<td>' + '<span class="bold">' + 'DisplaySize' + '</span>' + '</td>' + dynDisplaySizeColumn + '</tr>';
+                        console.log(displaySizeRow);
+                        //------o-----
+                        //====Resolution row===
+                        var dynResolutionColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynResolutionColumn = dynResolutionColumn + '<td>' + data[i].Resolution + '</td>';
+                        }
+                        var resolutionRow = '<tr>' + '<td>' + '<span class="bold">' + 'Resolution' + '</span>' + '</td>' + dynResolutionColumn + '</tr>';
+                        console.log(resolutionRow);
+                        //------o-----
+                        //====DisplayType row===
+                        var dynDisplayTypeColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynDisplayTypeColumn = dynDisplayTypeColumn + '<td>' + data[i].DisplayType + '</td>';
+                        }
+                        var displayTypeRow = '<tr>' + '<td>' + '<span class="bold">' + 'DisplayType' + '</span>' + '</td>' + dynDisplayTypeColumn + '</tr>';
+                        console.log(displayTypeRow);
+                        //------o-----
+                        //====Battery row===
+                        var dynBatteryColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynBatteryColumn = dynBatteryColumn + '<td>' + data[i].Battery + '</td>';
+                        }
+                        var batteryRow = '<tr>' + '<td>' + '<span class="bold">' + 'Battery' + '</span>' + '</td>' + dynBatteryColumn + '</tr>';
+                        console.log(batteryRow);
+                    //------o-----
+                    //====ReleaseDate row===
+                        var dynReleaseDateColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            dynReleaseDateColumn = dynReleaseDateColumn + '<td>' + data[i].ReleaseDate + '</td>';
+                        }
+                        var releaseDateRow = '<tr>' + '<td>' + '<span class="bold">' + 'ReleaseDate' + '</span>' + '</td>' + dynReleaseDateColumn + '</tr>';
+                        console.log(releaseDateRow);
+                    //------o-----
+                        //====Price row===
+                        var dynMrpPriceColumn = '';
+                        for (i = 0; i < data.length; i++) {
+                            if (i == 0) {// condition for walton model in first column
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold">' + data[i].MrpPrice + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice != null && parseFloat(data[i].MrpPrice) > parseFloat(data[0].MrpPrice)) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:green">' + data[i].MrpPrice + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice != null && parseFloat(data[i].MrpPrice) < parseFloat(data[0].MrpPrice)) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:red">' + data[i].MrpPrice + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice != null && parseFloat(data[i].MrpPrice) == parseFloat(data[0].MrpPrice) && i > 0) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:yellow">' + data[i].MrpPrice + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice == null && data[i].UpcomingPrice != null && parseFloat(data[i].UpcomingPrice) > parseFloat(data[0].MrpPrice)) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:green">' + data[i].UpcomingPrice + '(Upcoming)' + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice == null && data[i].UpcomingPrice != null && parseFloat(data[i].UpcomingPrice) < parseFloat(data[0].MrpPrice)) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:red">' + data[i].UpcomingPrice + '(Upcoming)' + '</span>' + '</td>';
+                            }
+                            if (data[i].MrpPrice == null && data[i].UpcomingPrice != null && parseFloat(data[i].UpcomingPrice) == parseFloat(data[0].MrpPrice) && i > 0) {
+                                dynMrpPriceColumn = dynMrpPriceColumn + '<td>' + '<span class="bold" style="color:yellow">' + data[i].UpcomingPrice + '(Upcoming)' + '</span>' + '</td>';
+                            }
+
+                        }
+                        var mrpPriceRow = '<tr>' + '<td>' + '<span class="bold">' + 'Mrp Price(BDT)' + '</span>' + '</td>' + dynMrpPriceColumn + '</tr>';
+                        console.log(mrpPriceRow);
+                        //------o-----
+                        var frameOfTable = '<table class="table table-bordered">'
+                                              + '<tbody>'
+                                              + brandRow
+                                              + modelRow
+                                              + chipsetRow
+                                              + clockSpeedRow
+                                              + cpuCoreRow
+                                              + ramRow
+                                              + romRow
+                                              + frontCamRow
+                                              + backCamRow
+                                              + displaySizeRow
+                                              + resolutionRow
+                                              + displayTypeRow
+                                              + batteryRow
+                                              + releaseDateRow
+                                              + mrpPriceRow
+                                              + '</tbody>'
+                                         + '</table>';
+                        console.log(frameOfTable);
+                        //var opportunity = '<hr/><h3>Opportunity</h3><textarea class="form-control" rows="5" id="txtOpportunity"></textarea>';
+                        //var buttons = '<br/><input type="button" value="Save" class="btn btn-success" id="btnSave"/>&nbsp<input type="button" value="Close" class="btn btn-danger" id="btnClose"/>';
+                        $('#ganttloaderdiv').removeClass("loader");
+                        //$('#divForTblWithDynamicColumn').append(frameOfTable + opportunity + buttons);
+                        $('#divForTblWithDynamicColumn').append(frameOfTable);
+                    //});
+                },
+                error:function(request, status, err) {
+                    if (status == "timeout") {
+                        // timeout -> reload the page and try again
+                        alertify.error('Request timed out');
+                        window.location.reload(); //make it comment if you don't want to reload page
+                    } else {
+                        // another error occured  
+                        alert("error: " + request + status + err);
+                    }
+                }
+            });
+            
+        });
+
+        $('#divSwotDetails').on('click', '#btnClose', function () {
+            $('#divSwotDetails').prop('hidden', true);
+            $('#divSwotPendingList').show(500);
+            $('#closeSwot').addClass('hidden');
+            $('#divForTblWithDynamicColumn').empty();
+            $('#txtOpportunity').val('');
+            globalProjectId = 0;
+        });
+        
+        $('#closeSwot').on('click', function () {
+            $('#divSwotDetails').prop('hidden', true);
+            $('#divSwotPendingList').show(500);
+            $('#closeSwot').addClass('hidden');
+            $('#divForTblWithDynamicColumn').empty();
+            $('#txtOpportunity').val('');
+            globalProjectId = 0;
+        });
+        
+        $('#divSwotDetails').on('click', '#btnSave', function () {
+            var opportunity = $('#txtOpportunity').val();
+            console.log(opportunity);
+            if (opportunity.trim() != '') {
+                var url = '@Url.Action("SaveOpportunity","Common")';
+                $.post(url, { projectId: globalProjectId, opportunity: opportunity }, function (data) {
+                    if (data == 'Success') {
+                        alertify.success("Saved");
+                        $('#divSwotDetails').prop('hidden', true);
+                        $('#divSwotPendingList').show(500);
+                        $thiss.closest('tr').remove();
+                        $('#closeSwot').addClass('hidden');
+                        $('#divForTblWithDynamicColumn').empty();
+                        $('#txtOpportunity').val('');
+                        globalProjectId = 0;
+                    }
+                });
+            } else {
+                alertify.error('Please enter opportunity');
+            }
+        });
+    });
+</script>
+
+

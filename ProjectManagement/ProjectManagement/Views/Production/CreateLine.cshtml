@@ -1,0 +1,546 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+@*<h2>CreateTeam</h2>*@
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+</style>
+@using (@Html.BeginForm("CreateLine", "Production", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box  blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">
+                Create Line
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-5" style="color: black;font-weight:bold">Production Unit</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.GetProductionType != null)
+                            {
+                                @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType" })
+
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="col-lg-4"> </div>
+
+                        <div class="form-actions col-lg-4">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href = '@Url.Action("CreateLine", "Production")?productionType=' + $('option:selected', $('#ProType')).val()" />
+                        </div>
+
+                    </div>
+                    <div class="col-lg-5">
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            Saved Line
+                        </div>
+
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl3" class="tbl3" style="width:900px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="display: none; border: 1px solid black">Id</th>
+                                        <th style="border: 1px solid black;text-align:left">Line</th>
+                                        <th style="border: 1px solid black;text-align:left">Production<br />Unit</th>
+                                        <th style="border: 1px solid black;text-align:left">Line<br />Type</th>
+                                        <th style="text-align: left; border: 1px solid black">Effective<br />Production<br />Days/Month </th>
+                                        <th style="text-align: left; border: 1px solid black">Shift Per<br />Day </th>
+                                        <th style="text-align: left; border: 1px solid black">Hours/Shift </th>
+                                        <th style="text-align: center; border: 1px solid black">Update </th>
+                                        <th style="text-align: center; border: 1px solid black">Delete </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetLineForUpdate != null)
+                                    {
+                                        foreach (var items in ViewBag.GetLineForUpdate)
+                                        {
+                                            <tr style="border: 1px solid black">
+                                                <td style="display: none;border: 1px solid black" class="teamId">@items.Id</td>
+                                                <td style="border: 1px solid black">@items.Line</td>
+                                                <td style="border: 1px solid black">@items.ProductionType</td>
+                                                <td style="border: 1px solid black">@items.LineType</td>
+                                                <td style="border: 1px solid black">@items.ProductionDaysPerMonth</td>
+                                                <td style="border: 1px solid black">@items.ShiftPerDay</td>
+                                                <td style="border: 1px solid black">@items.HoursPerShift</td>
+                                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+
+                                                    <button type="button" class="btn btn-success btnOpenModal">
+                                                        <span class="glyphicon glyphicon-edit"></span>
+                                                    </button>
+                                                </td>
+                                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                                    <button type="submit" class="btn btn-danger removeBtns" id="removeBtns">
+                                                        <span class="glyphicon glyphicon-remove"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption" style="color:black;font-weight: bold;">
+                Create Line
+            </div>
+            <div class="tools" style="background-color: dimgray;">
+                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div class="table-scrollable table-responsive">
+                <table id="tblSmart" class="table table-bordered table-striped table-condensed flip-content" style="display: block;width: 600px">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addMore1"><span class="glyphicon glyphicon-plus"></span>Add</button></th>
+                            <th> Line </th>
+                            <th> Line Type </th>
+                            <th> Effective <br />Production<br /> Days/Month </th>
+                            <th> Shift Per<br /> Day</th>
+                            <th> Hours/Shift </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="tableTrCls1">
+                            <td style="display: none;">0</td>
+                            <td style="display: none;"><input type="text" name="issueList1[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[0].Line" id="Line" type="text" class="form-control input-medium" placeholder="Create Line" />
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList1[0].LineType" class="form-control input-small">
+                                    <option value="">SELECT</option>
+                                    <option>Automatic</option>
+                                    <option>SemiAutomatic</option>
+                                    <option>Manual</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[0].ProductionDaysPerMonth" id="ProductionDaysPerMonth" type="number" min="0" class="form-control input-medium" placeholder="Effective Production Days/Month" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[0].ShiftPerDay" id="ShiftPerDay" type="number" min="0" class="form-control input-medium" placeholder="Shift Per Day" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[0].HoursPerShift" id="HoursPerShift" type="text" class="form-control input-medium" placeholder="Hours/Shift" />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div>
+            <input type="text" name="productionType" id="productionType" value="" style="display: none;" />
+            <input type="text" name="pro_id" id="pro_id" value="" style="display: none;" />
+        </div>
+    </div>
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+    <div class="form-actions">
+        <button id="btnSubmit" type="submit" class="btn blue">Submit</button>
+    </div>
+}
+@*//modal*@
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Edit</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" style="display: none">
+                        <label class="control-label">Line ID :</label>
+                        <input name="lineId" id="lineId" type="text" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Line Name :</label>
+                        <input name="lineName" id="lineName" class="form-control" disabled="disabled"/>
+                    </div>
+                    @*<div class="form-group">
+                        <label for="message-text" class="control-label">Line Type :</label>
+                        <textarea name="lineName" id="lineName" class="form-control"></textarea>
+                    </div>*@
+                    <div class="form-group">
+                        <label for="single" class="control-label">Line Type :</label>
+                        <select name="single" id="singleResult6" class="form-control" style="width: 50%">
+                            <option value="0">Select</option>
+                            <option>Automatic</option>
+                            <option>SemiAutomatic</option>
+                            <option>Manual</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Effective Production Days/Month :</label>
+                        <input name="productionDaysPerMonth" id="productionDaysPerMonth" type="number" min="0" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Shift Per Day :</label>
+                        <input name="shiftPerDay" id="shiftPerDay" type="number" min="0" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Hours/Shift :</label>
+                        <input name="hoursPerShift" id="hoursPerShift" type="text" class="form-control">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="saveModalData" class="btn green saveModalData" value="Save changes" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    var currentRow;
+
+    $(function () {
+        var index = 0;
+
+
+        $("body").on("click", "#tbl3 .btnOpenModal", function () {
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl3');
+
+            var lineId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var lineName = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var singleResult6 = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+            var productionDaysPerMonth = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+            var shiftPerDay = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+            var hoursPerShift = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+            
+            $('#draggable').modal();
+
+            $('#lineId').val(lineId);
+            $('#lineName').val(lineName);
+            $('#singleResult6').val(singleResult6);
+            $('#productionDaysPerMonth').val(productionDaysPerMonth);
+            $('#shiftPerDay').val(shiftPerDay);
+            $('#hoursPerShift').val(hoursPerShift);
+
+            currentRow = $(this).closest('tr');
+
+            console.log("lineId  :" + lineId);
+            console.log("lineName  :" + lineName);
+
+        });
+
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                // alert("Please select Project must..........");
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Type must",
+                }).show();
+                return false;
+            }
+        });
+
+        //removeBtn
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Type must",
+                }).show();
+                return false;
+            }
+            alertify.confirm('Confirm message', 'Do you want to Save this?', function () {
+                $('#loading').show();
+                alertify.success('Ok');
+
+                var obj = [];
+                obj.productionType = $("select#ProType").val();
+
+                $('#productionType').val(obj.productionType);
+
+                $('#form1').trigger('submit');
+                $('#loading').hide();
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+        });
+        $('#addMore1').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Type must",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+               <tr class="tableTrCls1" id="tableTrCls1">
+                    <td style="display: none;">$#</td>
+                    <td style="display: none;"><input type="text" name="issueList1[$#].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                    <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input name="issueList1[$#].Line" id="Line" type="text" class="form-control input-medium" placeholder="Create Line" />
+                        </div>
+                    </td>
+                     <td class="numeric">
+                                <select name="issueList1[$#].LineType" class="form-control input-small">
+                                    <option value="">SELECT</option>
+                                    <option>Automatic</option>
+                                    <option>SemiAutomatic</option>
+                                    <option>Manual</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[$#].ProductionDaysPerMonth" id="ProductionDaysPerMonth" type="number" min="0" class="form-control input-medium" placeholder="Effective Production Days/Month" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[$#].ShiftPerDay" id="ShiftPerDay" type="number" min="0" class="form-control input-medium" placeholder="Shift Per Day" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input name="issueList1[$#].HoursPerShift" id="HoursPerShift" type="text" class="form-control input-medium" placeholder="Hours/Shift" />
+                                </div>
+                            </td>
+               </tr>
+             */
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblSmart > tbody:last').append(replaceTr);
+
+        });
+
+
+        $('.saveModalData').on('click', function () {
+
+            $('#draggable').modal('hide');
+
+            var lineId;
+            var lineName;
+            var singleResult6;
+            var productionDaysPerMonth;
+            var shiftPerDay;
+            var hoursPerShift;
+            
+            var obj = {};
+
+            lineId = $('#lineId').val();
+            lineName = $('#lineName').val();
+            singleResult6 = $('#singleResult6').val();
+            productionDaysPerMonth = $('#productionDaysPerMonth').val();
+            shiftPerDay = $('#shiftPerDay').val();
+            hoursPerShift = $('#hoursPerShift').val();
+
+            $('#loading').show();
+            obj.Id = lineId;
+            obj.Line = lineName;
+            obj.LineType = singleResult6;
+            obj.ProductionDaysPerMonth = productionDaysPerMonth;
+            obj.ShiftPerDay = shiftPerDay;
+            obj.HoursPerShift = hoursPerShift;
+
+            $.ajax({
+                url: '@Url.Action("EditLine", "Production")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data == "OK") {
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+    });
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    $(document).ready(function () {
+
+        var t = $('#tbl3').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "paging": false,
+            "order": [[3, 'desc']]
+        });
+
+        $("body").on("click", "#tbl3 .removeBtns", function () {
+
+            event.preventDefault();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl3');
+            var row = $(this).closest("tr");
+
+            var lineId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var inactiveObj = {};
+            inactiveObj.Id = lineId;
+            $('#pro_id').val(lineId);
+            alertify.confirm('Delete A Line', 'Do you want to Delete this Line?', function () {
+                alertify.success('Successfully Deleted.');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("InActiveLine", "Production")',
+                    data: '{inactiveObj:' + JSON.stringify(lineId) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Successfully Deleted",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+        });
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

@@ -1,0 +1,1460 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.AftersalesPm.VmAftersalesIncentivePolicy
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        /*background-color: #65C1E0;*/
+        background-color: #569450;
+        color: white;
+    }
+
+    .nav-stacked > li.active > a, .nav-stacked > li.active > a:hover, .nav-stacked > li.active > a:focus {
+        background-color: #65C1E0;
+        color: white;
+    }
+</style>
+<style type="text/css">
+    .tabColor {
+        color: white !important;
+        background-color: rgb(209, 234, 170);
+        /*background-color:greenyellow;*/
+    }
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet box red-pink">
+            <div class="portlet-title">
+                <div class="caption">
+                    Welcome to Aftersales PM Monthly Incentive
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+
+                <div class="row">
+
+                    <br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">
+                                                              Incentive Type<br />
+                                                              -------------------
+                                                          </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-3" style="color: red;">**Select Month</div>
+                            <div class="col-lg-9">
+                                @{
+                                    List<SelectListItem> listItems = new List<SelectListItem>();
+
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "SELECT MONTH",
+                                        Value = "0"
+                                    });
+
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "January",
+                                        Value = "1"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "February",
+                                        Value = "2",
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "March",
+                                        Value = "3"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "April",
+                                        Value = "4"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "May",
+                                        Value = "5"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "June",
+                                        Value = "6"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "July",
+                                        Value = "7"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "August",
+                                        Value = "8"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "September",
+                                        Value = "9"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "October",
+                                        Value = "10"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "November",
+                                        Value = "11"
+                                    });
+                                    listItems.Add(new SelectListItem
+                                    {
+                                        Text = "December",
+                                        Value = "12"
+                                    });
+                                }
+                                @Html.DropDownList("DDDMonth", new SelectList(listItems, "Value", "Text"), new { @class = "form-control DDDMonthCls1" })
+                            </div>
+
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-4" style="color: red;">**Select Year</div>
+                            <div class="col-lg-8">
+                                @{
+                                    List<SelectListItem> listItems2 = new List<SelectListItem>();
+                                  
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2019",
+                                        Value = "2019"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2020",
+                                        Value = "2010"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2021",
+                                        Value = "2021"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2022",
+                                        Value = "2022"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2023",
+                                        Value = "2023"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2024",
+                                        Value = "2024"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2025",
+                                        Value = "2025"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2026",
+                                        Value = "2026"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2027",
+                                        Value = "2027"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2028",
+                                        Value = "2028"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2029",
+                                        Value = "2029"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2030",
+                                        Value = "2030"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2031",
+                                        Value = "2031"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2032",
+                                        Value = "2032",
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2033",
+                                        Value = "2033"
+                                    });
+                                    listItems2.Add(new SelectListItem
+                                    {
+                                        Text = "2034",
+                                        Value = "2034"
+                                    });
+                                }
+                                @Html.DropDownList("DDDYear", new SelectList(listItems2, "Value", "Text"), "SELECT YEAR", new { @class = "form-control DDDYearCls"})
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-4" style="color: red;">**Select Person</div>
+                            <div class="col-lg-8">
+                                @if (Model != null && Model.CmnUserModelList.Any())
+                                {
+
+                                    @Html.DropDownListFor(model => model.EmployeeCode, new SelectList(@Model.CmnUserModelList, "EmployeeCode", "UserFullName"), "SELECT PERSON", new { @class = "dropForPerson form-control", @id = "sltPerson", @onchange = "LoadFocData()", Value = @Model.CmnUserModel.UserFullName })
+
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-3" style="color: brown;">  Select Type </div>
+                            <div class="col-lg-9">
+
+                                @if (Model != null && Model.PmIncentiveBaseModelsList.Any())
+                                {
+
+                                    @*@Html.DropDownListFor(model => model.PmIncentiveBaseModels.Id, new SelectList(@Model.PmIncentiveBaseModelsList, "Id", "IncentiveName"), "SELECT INCENTIVE TYPE", new { @class = "dropForIncentive form-control", Value = @Model.PmIncentiveBaseModels.Id })*@
+                                    @Html.DropDownListFor(model => model.PmIncentiveBaseModels.Id, new SelectList(ViewBag.IncentivesValue, "Value", "Text"), "SELECT INCENTIVE TYPE", new { @class = "dropForIncentive form-control" })
+
+
+
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <div class="col-lg-4" style="color: brown;">Select Project</div>
+                            <div class="col-lg-8">
+                                @{
+                                    Debug.Assert(@Model != null, "@Model != null");
+                                }
+                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control" })
+                                
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-3" style="color: brown;">Remarks</label>
+                            <div class="col-lg-9">
+                                @Html.TextAreaFor(model => model.PmIncentiveModels.Remarks, new { @class = "form-control" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduct Amount</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.PmIncentiveModels.DeductionAmount, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduct Remarks</label>
+                            <div class="col-lg-8">
+                                @Html.TextAreaFor(model => model.PmIncentiveModels.D_Remarks, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <button id="btnAdd" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                        </div>
+                        <div class="col-lg-4"></div>
+
+                    </div>
+                    <br /><br /><br />
+                </div>
+                <br /><br /><br />
+                @if (TempData["Message1"] != null)
+                {
+
+                    var msgss = TempData["Message1"];
+
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msgss
+                    </div>
+
+
+                }
+                <br /><br />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                        <table class="table table-bordered table-striped table-condensed flip-content" id="tblInsType" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 100px;">Incentive Type</th>
+                                                    <th>P_Name</th>
+                                                    <th>EmpCode</th>
+                                                    <th>Amount</th>
+                                                    <th>Remarks</th>
+                                                    <th>D_Amount</th>
+                                                    <th>D_Remarks</th>
+                                                    <th>F_Amount</th>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tBody" class="tBody" style="overflow-y: auto;overflow-x: auto">
+
+                                                @foreach (var pmCusModel in Model.PmIncentiveModels.CustomPmIncentiveModels)
+                                                {
+                                                    Html.RenderPartial("~/Views/AftersalesPm/Partial/_AftersalesPmIncentiveList.cshtml", pmCusModel);
+                                                }
+                                            
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                @if (TempData["Message2"] != null)
+                {
+
+                    var msgss = TempData["Message2"];
+
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msgss
+                    </div>
+
+
+                }
+                <br /><br />
+                <div class="row">
+
+                    <br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">
+                                                              Others<br />
+                                                              -------------------
+                                                          </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-3" style="color: brown;"> Others Type </div>
+                            <div class="col-lg-9">
+                                @Html.TextBoxFor(model => model.PmIncentiveModels.OthersType, new { @class = "form-control" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <div class="col-lg-4" style="color: brown;">Select Project</div>
+                            <div class="col-lg-8">
+                                @{
+                                    Debug.Assert(@Model != null, "@Model != null");
+                                }
+                                @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control dropForProject12", @id = "projectIdForOthers" })
+
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown;">Added Amount</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.PmIncentiveModels.Amount, new { @class = "form-control", @id = "othersAmount" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <br /><br />
+                    <div class="col-lg-12">
+
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-3" style="color: brown;">Remarks</label>
+                            <div class="col-lg-9">
+                                @Html.TextAreaFor(model => model.PmIncentiveModels.Remarks, new { @class = "form-control", @id = "othersRemarks" })
+                            </div>
+
+                        </div>
+
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduct Amount</label>
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(model => model.PmIncentiveModels.DeductionAmount, new { @class = "form-control", @id = "othersDeduct" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="control-label col-lg-4" style="color: brown">Deduct Remarks</label>
+                            <div class="col-lg-8">
+                                @Html.TextAreaFor(model => model.PmIncentiveModels.D_Remarks, new { @class = "form-control", @id = "others_D_Remarks" })
+                            </div>
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            <button id="btnAdd1" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                        </div>
+                        <div class="col-lg-4"></div>
+
+                    </div>
+                    <br /><br /><br />
+                </div>
+                <br /><br /><br />
+                @if (TempData["Message3"] != null)
+                {
+                    var msgss = TempData["Message3"];
+
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msgss
+                    </div>
+                }
+                <br /><br />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+
+                                        <table class="table table-bordered table-striped table-condensed flip-content" id="tblOthers" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 100px;">Incentive Type</th>
+                                                    <th>P_Name</th>
+                                                    <th>EmpCode</th>
+                                                    <th>Amount</th>
+                                                    <th>Remarks</th>
+                                                    <th>D_Amount</th>
+                                                    <th>D_Remarks</th>
+                                                    <th>F_Amount</th>
+                                                    <th>Month</th>
+                                                    <th>Year</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tBody5" class="tBody5" style="overflow-y: auto;overflow-x: auto">
+
+                                                @foreach (var pmCusModel in Model.PmIncentiveModels.CustomPmIncentiveModels)
+                                                {
+                                                    //Html.RenderPartial("~/Views/ProjectManager/Partial/_PmIncentiveOthersList.cshtml", pmCusModel);
+                                                    Html.RenderPartial("~/Views/AftersalesPm/Partial/_AftersalesPmIncentiveOthersList.cshtml", pmCusModel);
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">FOC All Data For Aftersales PMHead<br />------------------------------------------------</div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                        <table class="table table-bordered table-striped table-condensed flip-content tblFocForHead" id="tblFocForHead" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>Project Name</th>
+                                                    <th>SpareName</th>
+                                                    <th>Emp.Code</th>
+                                                    <th>FOC_Date</th>
+                                                    <th>InventoryDate</th>
+                                                    <th>UnitPrice</th>
+                                                    <th>Remarks</th>
+                                                    <th>DeductionAmount</th>
+                                                    <th>Deduction Remarks</th>
+                                                    @*<th>Final</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/><br/>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-8">Total FOC Incentive For Pm Head</div>
+                            <div class="col-lg-4"><input class="form-control totalFocValueForHead" id="totalFocValueForHead" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        <div class="col-lg-4">
+                        </div>
+                        <div class="col-lg-2"></div>
+                    </div>
+                </div>
+                <br /><br /><br />
+                @if (TempData["Message4"] != null)
+                {
+                    var msgss = TempData["Message4"];
+
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msgss
+                    </div>
+                }
+                <br /><br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-1">******</div><div class="col-lg-4">FOC Data For All<br />------------------------------------------------</div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                    </div>
+                    <br /><br /><br />
+                    <div class="col-sm-12">
+                        <div class="portlet light bordered">
+                            <div class="portlet box green-haze">
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                        <table class="table table-bordered table-striped table-condensed flip-content tblFocForAll" id="tblFocForAll" style="overflow-y: auto;overflow-x: auto">
+                                            <thead>
+                                                <tr>
+                                                    <th>Project Name</th>
+                                                    <th>SpareName</th>
+                                                    <th>Emp.Code</th>
+                                                    <th>FOC_Date</th>
+                                                    <th>InventoryDate</th>
+                                                    <th>UnitPrice</th>
+                                                    @*<th>Total Foc <br />Incentive</th>*@
+                                                    <th>Incentive For <br />Responsible Person(40/60%)</th>
+                                                    <th>Remarks</th>
+                                                    <th>Deduction <br />Amount</th>
+                                                    <th>Deduction <br />Remarks</th>
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+              
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-6" style="color:red">Employee Code</div>
+                            <div class="col-lg-6"><input class="form-control emp1" id="emp1" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-6">Total FOC Incentive</div>
+                            <div class="col-lg-6"><input class="form-control totalFocValue1" id="totalFocValue1" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-6">Responsible Person's Incentive For FOC (60%/40%)</div>
+                            <div class="col-lg-6"><input class="form-control totalForHim1" id="totalForHim1" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-4">
+                            <div class="col-lg-6" style="color:red">Employee Code</div>
+                            <div class="col-lg-6"><input class="form-control emp2" id="emp2" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-6">Total FOC Incentive</div>
+                            <div class="col-lg-6"><input class="form-control totalFocValue2" id="totalFocValue2" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-6">Responsible Person's Incentive For FOC (60%/40%)</div>
+                            <div class="col-lg-6"><input class="form-control totalForHim2" id="totalForHim2" type="text" value="" disabled="disabled" /></div>
+                        </div>
+                      
+                    </div>
+                </div>
+                <br /><br /><br />
+                @if (TempData["Message5"] != null)
+                {
+                    var msgss = TempData["Message5"];
+
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msgss
+                    </div>
+                }
+                <br /><br />
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input class="btn sbold uppercase btn-danger red" type="submit" id="btnSave" value="Save"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+<script>
+    function LoadFocData() {
+        var personEmpCode = $('#sltPerson option:selected').val();
+        console.log("personEmpCode  :" + personEmpCode);
+         var monthName = $('#DDDMonth option:selected').text();
+         var monNum = $('#DDDMonth option:selected').val();
+         var year = $('#DDDYear option:selected').val();
+         
+
+         if (monthName == "SELECT MONTH") {
+
+             alertify.dialog('alert').set({
+                 'title': '   ',
+                 'transition': 'zoom',
+                 'message': "Please must select Month",
+             }).show();
+             return false;
+         }
+         if (year == "SELECT YEAR") {
+
+             alertify.dialog('alert').set({
+                 'title': '   ',
+                 'transition': 'zoom',
+                 'message': "Please must select Year",
+             }).show();
+             return false;
+         }
+
+         if (monthName != null && year != null) {
+             //
+
+             $.ajax({
+                 url: '@Url.Action("GetFocDataForPmHeadIncentive", "AftersalesPm")',
+                 type: "GET",
+                 dataType: "JSON",
+                 data: { monthName: monthName, monNum: monNum, year: year, employeeCode: personEmpCode },
+                 success: function (data) {
+                     console.log(data);
+                     $('#tblFocForHead tbody').empty();
+                     $('#totalFocValueForHead').val("0");
+                     $('#totalFocValueForHead').text("0");
+                     var items = $.parseJSON(data);
+
+                     $.each(items, function (index, obj) {
+                         var newDate = new Date(obj.FocConfirmedDate);
+                         var focConfirmedDate = moment(obj.FocConfirmedDate).format('YYYY-MM-DD');
+                         var day = newDate.getDate();
+                         var month = newDate.getUTCMonth() + 1;
+                         var year = newDate.getFullYear();
+
+                         var newDate1 = new Date(obj.InventoryEntryDate);
+                         var inventoryEntryDate = moment(obj.InventoryEntryDate).format('YYYY-MM-DD');
+                         var day1 = newDate1.getDate();
+                         var month1 = newDate1.getUTCMonth() + 1;
+                         var year1 = newDate1.getFullYear();
+
+                         console.log(day + "-" + ("0" + (month)) + "-" + year);
+                         console.log(day1 + "-" + ("0" + (month1)) + "-" + year1);
+
+                         var row = ' <tr class="tableTrCls1" id="trIdForIncentive1"> <td id="foc_ProjectName" class="foc_ProjectName">' + obj.ProjectName + ' </td><td  id="foc_Id" class="foc_Id" style="display:none;">' + obj.Id + '</td><td  id="pro_Id" class="pro_Id" style="display:none;">' + obj.ProjectId +
+                             ' </td><td id="foc_SpareName" class="foc_SpareName">' + obj.SpareName + ' </td><td id="foc_EmployeeCode" class="foc_EmployeeCode">' + obj.EmployeeCode + '</td><td id="foc_FocConfirmedDate" class="foc_FocConfirmedDate">' + focConfirmedDate + '</td><td id="foc_InventoryEntryDate" class="foc_InventoryEntryDate">' + inventoryEntryDate +
+                             ' </td><td id="foc_UnitPrice" class="foc_UnitPrice">' + obj.UnitPrice.toFixed(4) + '</td><td><input class="form-control foc_IncentiveRemarks" id="foc_IncentiveRemarks">' + "" + '</input></td><td><input class="form-control foc_DeductionAmount" type="number" min="1" id="foc_DeductionAmount">' + "" + '</input></td><td><input class="form-control foc_D_Remarks"  id="foc_D_Remarks">' + "" + '</input></td></tr>';
+                         $("#tblFocForHead tbody").append(row);
+
+                         var totalFocValueForHead = obj.TotalShareIncentive;
+                         $('#totalFocValueForHead').val(totalFocValueForHead);
+                         $('#totalFocValueForHead').text(totalFocValueForHead);
+                     });
+                 }
+             });
+             //
+             $.ajax({
+                 url: '@Url.Action("GetFocDataForAllIncentive", "AftersalesPm")',
+                 type: "GET",
+                 dataType: "JSON",
+                 data: { monthName: monthName, monNum: monNum, year: year, employeeCode: personEmpCode },
+                 success: function (data) {
+                     console.log(data);
+                     
+                     $('#tblFocForAll tbody').empty();
+                     
+                     $('#emp1').val("0");
+                     $('#emp1').text("0");
+                     $('#totalFocValue1').val("0");
+                     $('#totalFocValue1').text("0");
+                     $('#totalForHim1').val("0");
+                     $('#totalForHim1').text("0");
+                     
+                     $('#emp2').val("0");
+                     $('#emp2').text("0");
+                     $('#totalFocValue2').val("0");
+                     $('#totalFocValue2').text("0");
+                     $('#totalForHim2').val("0");
+                     $('#totalForHim2').text("0");
+
+                     var items = $.parseJSON(data);
+                     
+                     $.each(items, function (index, obj) {
+                         var newDate = new Date(obj.FocConfirmedDate);
+                         var focConfirmedDate = moment(obj.FocConfirmedDate).format('YYYY-MM-DD');
+                         var day = newDate.getDate();
+                         var month = newDate.getUTCMonth() + 1;
+                         var year = newDate.getFullYear();
+
+                         var newDate1 = new Date(obj.InventoryEntryDate);
+                         var inventoryEntryDate = moment(obj.InventoryEntryDate).format('YYYY-MM-DD');
+                         var day1 = newDate1.getDate();
+                         var month1 = newDate1.getUTCMonth() + 1;
+                         var year1 = newDate1.getFullYear();
+
+                         console.log(day + "-" + ("0" + (month)) + "-" + year);
+                         console.log(day1 + "-" + ("0" + (month1)) + "-" + year1);
+                         
+                         if (obj.UnitPrice != null) {
+                             var row = ' <tr class="tableTrCls1" id="trIdForIncentive1"> <td id="foc_ProjectName" class="foc_ProjectName">' + obj.ProjectName + ' </td><td  id="foc_Id" class="foc_Id" style="display:none;">' + obj.Id + '</td><td  id="pro_Id" class="pro_Id" style="display:none;">' + obj.ProjectId +
+                            ' </td><td id="foc_SpareName" class="foc_SpareName">' + obj.SpareName + ' </td><td id="foc_EmployeeCode" class="foc_EmployeeCode">' + obj.EmployeeCode + '</td><td id="foc_FocConfirmedDate" class="foc_FocConfirmedDate">' + focConfirmedDate + '</td><td id="foc_InventoryEntryDate" class="foc_InventoryEntryDate">' + inventoryEntryDate +
+                            ' </td><td id="foc_UnitPrice" class="foc_UnitPrice">' + obj.UnitPrice + ' </td><td id="foc_SixtyShareIncentive" class="foc_SixtyShareIncentive">' + obj.SixtyShareIncentive + '</td><td><input class="form-control foc_IncentiveRemarks" id="foc_IncentiveRemarks">' + "" + '</input></td><td><input class="form-control foc_DeductionAmount" type="number" min="1" id="foc_DeductionAmount">' + "" + '</input></td><td><input class="form-control foc_D_Remarks"  id="foc_D_Remarks">' + "" + '</input></td></tr>';
+                             $("#tblFocForAll tbody").append(row);
+
+                         }
+                        
+                         if (obj.EmployeeCodes == "14925") {
+                             var emp1 = obj.EmployeeCodes;
+                             $('#emp1').val(emp1);
+                             $('#emp1').text(emp1);
+
+                             var totalFocValue1 = obj.TotalShareIncentive1;
+                             $('#totalFocValue1').val(totalFocValue1);
+                             $('#totalFocValue1').text(totalFocValue1);
+
+                             var totalForHim1 = obj.SixtyShareIncentive1;
+                             $('#totalForHim1').val(totalForHim1);
+                             $('#totalForHim1').text(totalForHim1);
+                         }
+                         if (obj.EmployeeCodes == "12075") {
+                             var emp2 = obj.EmployeeCodes;
+                             $('#emp2').val(emp2);
+                             $('#emp2').text(emp2);
+
+                             var totalFocValue2 = obj.TotalShareIncentive1;
+                             $('#totalFocValue2').val(totalFocValue2);
+                             $('#totalFocValue2').text(totalFocValue2);
+
+                             var totalForHim2 = obj.SixtyShareIncentive1;
+                             $('#totalForHim2').val(totalForHim2);
+                             $('#totalForHim2').text(totalForHim2);
+                         }
+                       
+                     });
+                 }
+             });
+          
+
+         }
+    }
+    function removeDetailRow(element) {
+        var detailRow = $(element).closest('tr');
+        $(detailRow).remove();
+    }
+    //function updateAmountDeduction() {
+    //    var deductAmount = 0.0000;
+    //    var totals = 0.0000;
+
+    //    $("#tbl1 tr.tableTrCls1").each(function () {
+
+    //        deductAmount = $.trim($(this).find('.foc_DeductionAmount').val());
+
+    //        if (deductAmount != "") {
+               
+    //            totals = $.trim($(this).find('.foc_finalAmount').text(+$.trim($(this).find('.foc_finalAmount').text()) - +$.trim($(this).find('.foc_DeductionAmount').val())));
+               
+    //        } else {
+                
+    //            totals = $.trim($(this).find('.foc_finalAmount').text());
+    //        }
+    //        console.log("Total  :" + totals);
+
+    //    });
+    //    console.log("Total  :" + totals);
+    //}
+    $(function () {
+        //save//
+        $("#btnSave").on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            var issueVal = "";
+            var othersVal = "";
+            var focHeadVal = "";
+            var focAllVal = "";
+
+
+            var obj = {};
+            var objArr = [];
+
+            var monthName = $('#DDDMonth option:selected').text();
+            var monthNum = $('#DDDMonth option:selected').val();
+            var yearName = $('#DDDYear option:selected').text();
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            if (monthName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (personEmpCode == "SELECT PERSON") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            
+            var projectId;
+            var pm_Incentive_Base_Id;
+            var monNum;
+            var proName;
+            var employeeCode;
+            var amount;
+            var remarks;
+            var deductionAmount;
+            var d_Remarks;
+            var finalAmount;
+            var month;
+            var year;
+
+            $("#tblInsType tr.tableTrCls1").each(function () {
+                obj = new Object();
+
+                projectId = $.trim($(this).find('td:eq(0)').text());
+                pm_Incentive_Base_Id = $.trim($(this).find('td:eq(1)').text());
+                monNum = $.trim($(this).find('td:eq(2)').text());
+                proName = $.trim($(this).find('td:eq(4)').text());
+                console.log("proName---->" + proName);
+
+                employeeCode = $.trim($(this).find('td:eq(5)').text());
+                amount = $.trim($(this).find('td:eq(6)').text());
+                remarks = $.trim($(this).find('td:eq(7)').text());
+                deductionAmount = $.trim($(this).find('td:eq(8)').text());
+                d_Remarks = $.trim($(this).find('td:eq(9)').text());
+                finalAmount = $.trim($(this).find('td:eq(10)').text());
+                month = $.trim($(this).find('td:eq(11)').text());
+                year = $.trim($(this).find('td:eq(12)').text());
+
+                obj.ProjectId = projectId;
+                obj.Pm_Incentive_Base_Id = pm_Incentive_Base_Id;
+                obj.MonNum = monNum;
+                obj.ProjectName = proName;
+                obj.EmployeeCode = employeeCode;
+                obj.Amount = amount;
+                obj.Remarks = remarks;
+                if (deductionAmount == undefined || deductionAmount == "" || deductionAmount == null) {
+                    obj.DeductionAmount = 0;
+                }
+                else {
+                    obj.DeductionAmount = deductionAmount;
+                }
+                obj.FinalAmount = finalAmount;
+                obj.D_Remarks = d_Remarks;
+
+
+                obj.Month = month;
+                obj.Year = year;
+
+                objArr.push(obj);
+
+                console.log(" obj.proName---->" + obj.ProjectName);
+                console.log("objArr---->" + objArr);
+
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AftersalesMonthlyIncentive", "AftersalesPm")',
+                data: "{objArr:'" + JSON.stringify(objArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    issueVal = "yes";
+                    
+                }
+            });
+
+            ///////////////Others//////////////////
+            var othersObj = {};
+            var othersObjArr = [];
+
+            var othersProjectId;
+            var othersProName;
+            var othersIncentiveTypes;
+            var othersEmployeeCode;
+            var othersAmount;
+            var othersRemarks;
+            var othersDeductionAmount;
+            var othersDRemarks;
+            var othersFinalAmount;
+            var othersMonth;
+            var othersYear;
+            var othersMonNum;
+
+            $("#tblOthers tr.tableTrCls1").each(function () {
+                othersObj = new Object();
+
+                othersProjectId = $.trim($(this).find('td:eq(0)').text());
+                othersMonNum = $.trim($(this).find('td:eq(1)').text());
+                othersIncentiveTypes = $.trim($(this).find('td:eq(2)').text());
+                othersProName = $.trim($(this).find('td:eq(3)').text());
+                console.log("othersProName---->" + othersProName);
+
+                othersEmployeeCode = $.trim($(this).find('td:eq(4)').text());
+                othersAmount = $.trim($(this).find('td:eq(5)').text());
+                othersRemarks = $.trim($(this).find('td:eq(6)').text());
+                othersDeductionAmount = $.trim($(this).find('td:eq(7)').text());
+                othersDRemarks = $.trim($(this).find('td:eq(8)').text());
+                othersFinalAmount = $.trim($(this).find('td:eq(9)').text());
+                othersMonth = $.trim($(this).find('td:eq(10)').text());
+                othersYear = $.trim($(this).find('td:eq(11)').text());
+
+                othersObj.ProjectId = othersProjectId;
+                othersObj.OthersIncentiveName = othersIncentiveTypes;
+                othersObj.MonNum = othersMonNum;
+                othersObj.ProjectName = othersProName;
+                othersObj.EmployeeCode = othersEmployeeCode;
+                othersObj.Amount = othersAmount;
+                othersObj.Remarks = othersRemarks;
+                if (othersDeductionAmount == undefined || othersDeductionAmount == "" || othersDeductionAmount == null) {
+                    othersObj.DeductionAmount = 0;
+                }
+                else {
+                    othersObj.DeductionAmount = othersDeductionAmount;
+                }
+                othersObj.FinalAmount = othersFinalAmount;
+                othersObj.D_Remarks = othersDRemarks;
+
+
+                othersObj.Month = othersMonth;
+                othersObj.Year = othersYear;
+
+                othersObjArr.push(othersObj);
+
+                console.log(" othersObj.proName---->" + othersObj.ProjectName);
+                console.log("othersObjArr---->" + othersObjArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveOthersIncentiveTypesDetails", "AftersalesPm")',
+                data: "{othersObjArr:'" + JSON.stringify(othersObjArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    othersVal = "yes";
+                    
+                }
+            });
+            /////////////////FocForHead////////////////
+
+            var focForHeadObj = {};
+            var focForHeadObjArr = [];
+                
+            var focForHeadProjectId;
+            var focForHeadProName;
+            var focForHeadtId;
+            var focForSpareName;
+            var focConfirmedDate;
+            var focForHeadEmployeeCode;
+            var focInventoryEntryDate;
+            var focUnitPrice;
+            var focForHeadRemarks;
+            var focForHeadDeductionAmount;
+            var focForHeadDRemarks;
+            var focForHeadFinalAmountForHead;
+         
+            $("#tblFocForHead tr.tableTrCls1").each(function () {
+                focForHeadObj = new Object();
+                // $.trim($(this).find('#po_D_Amount').val());
+
+                focForHeadProName = $.trim($(this).find('td:eq(0)').text());
+                focForHeadtId = $.trim($(this).find('td:eq(1)').text());
+                focForHeadProjectId = $.trim($(this).find('td:eq(2)').text());
+                focForSpareName = $.trim($(this).find('td:eq(3)').text());
+                focForHeadEmployeeCode = $.trim($(this).find('td:eq(4)').text());
+                focConfirmedDate = $.trim($(this).find('td:eq(5)').text());
+                focInventoryEntryDate = $.trim($(this).find('td:eq(6)').text());
+                focUnitPrice = $.trim($(this).find('td:eq(7)').text());
+                focForHeadRemarks = $.trim($(this).find('#foc_IncentiveRemarks').val());
+                focForHeadDeductionAmount = $.trim($(this).find('#foc_DeductionAmount').val());
+                focForHeadDRemarks = $.trim($(this).find('#foc_D_Remarks').val());
+               // focForHeadFinalAmount = $.trim($(this).find('td:eq(11)').text());
+               //obj
+                focForHeadObj.ProjectName = focForHeadProName;
+                focForHeadObj.Id = focForHeadtId;
+                focForHeadObj.ProjectId = focForHeadProjectId;
+                focForHeadObj.SpareName = focForSpareName;
+                focForHeadObj.EmployeeCode = focForHeadEmployeeCode;
+                focForHeadObj.FocConfirmedDate = focConfirmedDate;
+                focForHeadObj.InventoryEntryDate = focInventoryEntryDate;
+                focForHeadObj.Amount = focUnitPrice;
+                focForHeadObj.IncentiveRemarks = focForHeadRemarks;
+
+                if (focForHeadDeductionAmount == undefined || focForHeadDeductionAmount == "" || focForHeadDeductionAmount == null) {
+                    focForHeadObj.DeductionAmount = 0;
+                }
+                else {
+                    focForHeadObj.DeductionAmount = focForHeadDeductionAmount;
+                }
+                focForHeadObj.D_Remarks = focForHeadDRemarks;
+                focForHeadObj.FinalAmountForHead = +focForHeadObj.Amount - +focForHeadObj.DeductionAmount;
+            
+                focForHeadObj.Month = monthName;
+                focForHeadObj.MonNum = monthNum;
+                focForHeadObj.Year = yearName;
+
+                focForHeadObjArr.push(focForHeadObj);
+
+                //console.log("focForHeadObj---->" + focForHeadObj.ProjectName);
+                //console.log("focForHeadObjArr---->" + focForHeadObjArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveFocForHeadDetails", "AftersalesPm")',
+                data: "{focForHeadObjArr:'" + JSON.stringify(focForHeadObjArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    focHeadVal = "yes";
+                   
+                }
+            });
+
+            /////////////////FocForHead////////////////
+
+            var focForAllObj = {};
+            var focForAllObjArr = [];
+            
+            var focForAllProjectId;
+            var focForAllProName;
+            var focForAllId;
+            var focForAllSpareName;
+            var focForAllFocConfirmedDate;
+            var focForAllEmployeeCode;
+            var focForAllInventoryEntryDate;
+            var focForAllUnitPrice;
+            var focForAllRemarks;
+            var focForAllDeductionAmount;
+            var focForAllDRemarks;
+           
+            $("#tblFocForAll tr.tableTrCls1").each(function () {
+                focForAllObj = new Object();
+                
+                //$.trim($(this).find('#foc_IncentiveRemarks').val());
+                focForAllProName = $.trim($(this).find('td:eq(0)').text());
+                focForAllId = $.trim($(this).find('td:eq(1)').text());
+                focForAllProjectId = $.trim($(this).find('td:eq(2)').text());
+                focForAllSpareName = $.trim($(this).find('td:eq(3)').text());
+                focForAllEmployeeCode = $.trim($(this).find('td:eq(4)').text());
+                focForAllFocConfirmedDate = $.trim($(this).find('td:eq(5)').text());
+                focForAllInventoryEntryDate = $.trim($(this).find('td:eq(6)').text());
+                focForAllUnitPrice = $.trim($(this).find('td:eq(7)').text());
+                focForAllRemarks = $.trim($(this).find('#foc_IncentiveRemarks').val());
+                focForAllDeductionAmount = $.trim($(this).find('#foc_DeductionAmount').val());
+                focForAllDRemarks = $.trim($(this).find('#foc_D_Remarks').val());
+              
+                //obj
+                focForAllObj.ProjectName = focForAllProName;
+                focForAllObj.Id = focForAllId;
+                focForAllObj.ProjectId = focForAllProjectId;
+                focForAllObj.SpareName = focForAllSpareName;
+                focForAllObj.EmployeeCode = focForAllEmployeeCode;
+                focForAllObj.FocConfirmedDate = focForAllFocConfirmedDate;
+                focForAllObj.InventoryEntryDate = focForAllInventoryEntryDate;
+                focForAllObj.Amount = focForAllUnitPrice;
+                focForAllObj.IncentiveRemarks = focForAllRemarks;
+
+                if (focForAllDeductionAmount == undefined || focForAllDeductionAmount == "" || focForAllDeductionAmount == null) {
+                    focForAllObj.DeductionAmount = 0;
+                }
+                else {
+                    focForAllObj.DeductionAmount = focForAllDeductionAmount;
+                }
+                focForAllObj.D_Remarks = focForAllDRemarks;
+                focForAllObj.FinalAmountForOthers = +focForAllObj.Amount - +focForAllObj.DeductionAmount;
+              
+                focForAllObj.Month = monthName;
+                focForAllObj.MonNum = monthNum;
+                focForAllObj.Year = yearName;
+
+                focForAllObjArr.push(focForAllObj);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveFocForAllDetails", "AftersalesPm")',
+                data: "{focForAllObjArr:'" + JSON.stringify(focForAllObjArr) + "',employeeCode:'" + personEmpCode + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    focAllVal = "yes";
+                    
+                }
+            });
+            ////////////////////////////////////
+
+            var empCode = $('#sltPerson option:selected').val();
+            if (issueVal == "yes" && othersVal == "yes" && focHeadVal == "yes" && focAllVal == "yes") {
+                $('#loading').show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveTotalAftersalesPmIncentive", "AftersalesPm")',
+                    data: "{ Month: '" + monthName
+                        + "', MonNum: '" + monthNum
+                        + "', Year: '" + yearName
+                        + "', EmpCode: '" + empCode
+                        + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        console.log(data);
+                        console.log(data.data);
+                        if (data.data == "ok") {
+                       
+                            $('#loading').hide();
+                            window.location = '@Url.Action("AftersalesMonthlyIncentive", "AfterSalesPm")';
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Incentive is already generated.",
+                            }).show();
+                            return false;
+                        } else {
+                            $('#loading').hide();
+                            window.location = '@Url.Action("AftersalesMonthlyIncentive", "AfterSalesPm")';
+                            
+                        }
+                     
+                    }
+                });
+               
+            }
+          
+           
+        });
+
+        //end Save//
+        
+        $("#btnAdd").on('click', function (e) {
+            e.preventDefault();
+            var incentiveTypeAndAmount = $('#PmIncentiveBaseModels_Id option:selected').text();
+            console.log("incentiveTypeAndAmount  :" + incentiveTypeAndAmount);
+
+            var incentiveTypeAndAmountSplit = incentiveTypeAndAmount.split('-');
+            //alert(incentiveTypeAndAmountSplit);
+            var incentiveType = incentiveTypeAndAmountSplit[0];
+            var incentiveAmount = incentiveTypeAndAmountSplit[1];
+            console.log("incentiveType---" + incentiveType);
+            console.log("incentiveAmount---" + incentiveAmount);
+
+            var incentiveId = $('#PmIncentiveBaseModels_Id option:selected').val();
+            console.log("incentiveId  :" + incentiveId);
+
+            var personEmpName = $('#sltPerson option:selected').text();
+            console.log("personEmpName  :" + personEmpName);
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var projectName = $('#ProjectMasterId option:selected').text();
+            console.log("projectName  :" + projectName);
+            if (projectName == "SELECT PROJECT") {
+                projectName = "";
+            }
+
+            var projectMasterId = $('#ProjectMasterId option:selected').val();
+            console.log("projectMasterId  :" + projectMasterId);
+
+            if (projectMasterId == "") {
+                projectMasterId = 0;
+            }
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (personEmpName == "SELECT PERSON") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Person",
+                }).show();
+                return false;
+            }
+
+            var remarks = $('#PmIncentiveModels_Remarks').val();
+            console.log(remarks);
+
+            var deductAmount = $('#PmIncentiveModels_DeductionAmount').val();
+            console.log(deductAmount);
+
+            var d_remarks = $('#PmIncentiveModels_D_Remarks').val();
+            console.log(d_remarks);
+
+            var finalAmount = incentiveTypeAndAmountSplit[1] - deductAmount;
+            console.log("finalAmount :" + finalAmount);
+
+            $.post('@Url.Action("AddProject", "AftersalesPm")', {
+                    incentiveType: incentiveType,
+                    incentiveAmount: incentiveAmount,
+                    incentiveId: incentiveId,
+                    personEmpCode: personEmpCode,
+                    projectName: projectName,
+                    projectMasterId: projectMasterId,
+                    monName: monName,
+                    monId: monId,
+                    yearName: yearName,
+                    yearId: yearId,
+                    remarks: remarks,
+                    deductAmount: deductAmount,
+                    d_remarks: d_remarks,
+                    finalAmount: incentiveTypeAndAmountSplit[1] - deductAmount
+                }, function (data) {
+                    console.log(data);
+                    $('#tBody').append(data);
+                });
+
+            $('#PmIncentiveModels_Remarks').val("");
+            $('#PmIncentiveModels_DeductionAmount').val("");
+            $('#PmIncentiveModels_D_Remarks').val("");
+            //$('#sltPerson option:selected').text("");
+
+        });
+        
+
+        $("#btnAdd1").on('click', function (e) {
+            e.preventDefault();
+            var incentiveType = $('#PmIncentiveModels_OthersType').val();
+            console.log("incentiveTypeAndAmount  :" + incentiveType);
+
+            var personEmpName = $('#sltPerson option:selected').text();
+            console.log("personEmpName  :" + personEmpName);
+
+            var personEmpCode = $('#sltPerson option:selected').val();
+            console.log("personEmpCode  :" + personEmpCode);
+
+            var projectNameWithOrder = $('#projectIdForOthers option:selected').text();
+            console.log("projectName  :" + projectNameWithOrder);
+
+            var projectNameWithOrderSplit = projectNameWithOrder.split('(');
+            var projectName = projectNameWithOrderSplit[0];
+            
+            console.log("projectName  :" + projectName);
+            
+            if (projectName == "SELECT PROJECT") {
+                projectName = "";
+            }
+
+            var projectMasterId = $('#projectIdForOthers option:selected').val();
+            console.log("projectMasterId  :" + projectMasterId);
+
+            if (projectMasterId == "") {
+                projectMasterId = 0;
+            }
+
+            var monName = $('#DDDMonth option:selected').text();
+            var monId = $('#DDDMonth option:selected').val();
+            console.log(monName);
+            console.log(monId);
+
+            var yearName = $('#DDDYear option:selected').text();
+            var yearId = $('#DDDYear option:selected').val();
+            console.log(yearName);
+            console.log(yearId);
+
+
+            if (monName == "SELECT MONTH") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (yearName == "SELECT YEAR") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+            if (personEmpName == "SELECT PERSON") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Person",
+                }).show();
+                return false;
+            }
+
+            var addedAmount = $('#othersAmount').val();
+            console.log(addedAmount);
+
+            var remarks = $('#othersRemarks').val();
+            console.log(remarks);
+
+            var deductAmount = $('#othersDeduct').val();
+            console.log(deductAmount);
+
+            var d_remarks = $('#others_D_Remarks').val();
+            console.log(d_remarks);
+
+            var finalAmount = addedAmount - deductAmount;
+            console.log("finalAmount :" + finalAmount);
+
+            $.post('@Url.Action("AddProjectForOthers", "AftersalesPm")', {
+                incentiveType: incentiveType,
+                AddedAmount: addedAmount,
+                personEmpCode: personEmpCode,
+                projectName: projectName,
+                projectMasterId: projectMasterId,
+                monName: monName,
+                monId: monId,
+                yearName: yearName,
+                yearId: yearId,
+                remarks: remarks,
+                deductAmount: deductAmount,
+                d_remarks: d_remarks,
+                finalAmount: addedAmount - deductAmount
+            }, function (data) {
+                console.log(data);
+                $('#tBody5').append(data);
+            });
+
+            $('#PmIncentiveModels_OthersType').val("");
+            $('#othersAmount').val("");
+            $('#othersRemarks').val("");
+            $('#othersDeduct').val("");
+            $('#others_D_Remarks').val("");
+
+        });
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>

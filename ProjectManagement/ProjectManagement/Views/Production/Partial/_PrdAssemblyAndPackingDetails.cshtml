@@ -1,0 +1,67 @@
+﻿@model ProjectManagement.Models.CustomPrdAssemblyAndPackingDetails
+
+<tr id="@Model.ProjectId" class="tableTrCls5">
+    @using (Html.BeginCollectionItem("CustomPrdAssemblyAndPackingDetails"))
+    {
+        <td id="projectId1" class="projectId1" style="display:none;">
+            @Model.ProjectId
+        </td>
+        <td id="projectName1" class="projectName1" style="text-align: center;">
+            @Model.ProjectName
+        </td>
+        <td id="orderNum1" class="orderNum1" style="text-align: center;">
+            @Model.OrderNumber
+        </td>
+        <td id="poCategory1" class="poCategory1" style="text-align: center;">
+            @Model.PoCategory
+        </td>
+        <td id="materialReceiveDate1" class="materialReceiveDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.MaterialReceiveDate)
+        </td>
+        <td id="IqcCompleteDate1" class="IqcCompleteDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.IqcCompleteDate)
+        </td>
+        <td id="trialProductionDate1" class="trialProductionDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.TrialProductionDate)
+        </td>
+        <td id="softwareConfirmationDate1" class="softwareConfirmationDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.SoftwareConfirmationDate)
+        </td>
+        <td id="rnDClearanceDate1" class="rnDClearanceDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.RnDClearanceDate)
+        </td>
+        <td id="assemblyLine1" class="assemblyLine1" style="text-align: center;">
+           @Model.AssemblyLineInformation
+        </td>
+        <td id="assemblyProductionDate1" class="assemblyProductionDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.AssemblyProductionStartDate)
+        </td>
+        <td id="assemblyQuantity1" class="assemblyQuantity1" style="text-align: center;">
+            @Model.AssemblyQuantity
+        </td>
+        <td id="assemblyPerDayCapacity1" class="assemblyPerDayCapacity1" style="text-align: center;">
+            @Model.AssemblyPerDayCapacity
+        </td>
+        <td id="assemblyProductionEndDate1" class="assemblyProductionEndDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.AssemblyProductionEndDate)
+        </td>
+        <td id="packingLine1" class="packingLine1" style="text-align: center;">
+             @Model.PackingLineInformation
+        </td>
+        <td id="packingStartDate1" class="packingStartDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.PackingProductionStartDate)
+        </td>
+        <td id="packingQty1" class="packingQty1" style="text-align: center;">
+            @Model.PackingQuantity
+        </td>
+        <td id="packingPerDayCapacity1" class="packingPerDayCapacity1" style="text-align: center;">
+            @Model.PackingPerDayCapacity
+        </td>
+        <td id="packingProductionEndDate1" class="packingProductionEndDate1" style="text-align: center;">
+            @String.Format("{0:yyyy-MM-dd}", @Model.PackingProductionEndDate)
+        </td>
+
+        <td style="text-align: center;"><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+
+</tr>

@@ -1,0 +1,270 @@
+﻿@model ProjectManagement.ViewModels.Common.Produced_UnProducedIMEIViewModel
+@{
+    ViewBag.Title = "UnProducedIMEI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .selected {
+        background-color: #a1aec7;
+    }
+</style>
+<div class="row">
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Handset Production Status</span>
+                </div>
+
+            </div>
+
+        </div>
+        @using (Html.BeginForm("UnProducedIMEI", "Common"))
+        {
+            <div class="portlet-title">
+                <div class="row">
+
+                    <div class="col-lg-12">
+                        <label class="col-lg-2 ">Select Model :</label>
+
+                        <div class="col-lg-4">
+                            @Html.DropDownList("ModelName", new SelectList(ViewBag.Projects, "ProjectModel", "ProjectModel"), "Please select", new { @class = "form-control modelname ddChosen" })
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label class="col-lg-2 ">Select Order :</label>
+
+                        <div class="col-lg-4">
+                            @Html.DropDownList("Order", new SelectList(ViewBag.Orders, "Order_No", "Order_No"), "Please select", new { @class = "form-control order" })
+                        </div>
+
+                        <div class="col-lg-1">
+                            <button type="submit" id="btnsearch" class="btn btn-success btn-circle">Show</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        <div class="portlet-body">
+           
+            
+            <table class="table display table-scrollable table-bordered " id="sample_1">
+                <thead>
+                    <tr>
+                        <td>
+                        <input type="checkbox" id="SelectAll" />
+                        <label for="SelectAll">Select All</label>
+                        </td>
+                        <th>Project Model</th>
+                        <th>Order Number</th>
+                        <th>Order Quantity</th>
+                        @*<th>Gap</th>*@
+                        <th>Produced</th>
+                        <th>UnProduced</th>
+                        <th>Last 30 Days Production</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null)
+                    {
+                        var i = 0;
+                        foreach (var item in Model.Produced_UnproducedIMEIs)
+                        {
+                            var iid = "checkbox1_" + i;
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id=@iid />
+                                    
+                                </td>
+                                <td class="text-center"> @item.ProjectModel </td>
+                                <td class="text-center"> @item.OrderNumber </td>
+                                <td class="text-center"> @item.OrderQuantity </td>
+                                @*<td class="text-center"> @item.Difference </td>*@
+                                <td class="text-center"> @item.Produced </td>
+                                <td class="text-center"> @item.UnProduced </td>
+                                <td class="text-center"> @item.LastMonthIMEIProduced </td>
+
+                            </tr>
+                            i++;
+                        }
+
+                    }
+                </tbody>
+                <tfoot>
+                    @*<tr>
+                        <th colspan="4" style="text-align:right">Total:</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>*@
+                    <tr>
+                        <th colspan="4" style="text-align:right">Total:</th>
+                        @*<th id="selectedtotalOrderQuantity"></th>*@
+                        <th id="selectedtotalproduced"></th>
+                        <th id="selectedtotalunproduced"></th>
+                        <th id="selectedtotallastmonthproduced"></th>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        var selectedModel = $('.modelname').children("option:selected").val();
+        var selectedOrder = $('.order').children("option:selected").val();
+
+        $('#SelectAll').on('click', function () {
+            var checkBoxes = $('#sample_1 tbody').find("input[type=checkbox]");
+            if ($('#SelectAll').prop("checked") == true) {
+               
+                $('#sample_1 tbody tr').removeClass('selected');
+                $('#sample_1 tbody tr').addClass('selected');
+                
+                checkBoxes.prop("checked", true);
+               }
+            else {
+                
+                $('#sample_1 tbody tr').removeClass('selected');
+                //var checkBoxes = $('#sample_1 tbody').find("input[type=checkbox]");
+                checkBoxes.prop("checked", false);
+            }
+            
+            CalculateValues();
+        });
+
+        $('#sample_1 tbody').on('click', 'tr', function () {
+            
+            var checkBox = $(this).find("input[type=checkbox]");
+            checkBox.attr("checked", !checkBox.attr("checked"));
+                //$('input[type="checkbox"]')
+            $(this).toggleClass('selected');
+            //$('#button').trigger('click');
+            CalculateValues();
+            //alert( 'Column sum is: '+ table.column( 5 ).data().sum() );
+        });
+        var CalculateValues = function () {
+            var totalPSUM = 0;
+            var totalUpSUM = 0;
+            var totalLastSUM = 0;
+            $("tbody tr.selected").each(function () {
+                var getpValue = $(this).find("td:eq(4)").html().replace("$", "");
+                var filterespValue = getpValue.replace(/\,/g, '');
+                totalPSUM += Number(filterespValue);
+
+                var getupValue = $(this).find("td:eq(5)").html().replace("$", "");
+                var filteresupValue = getupValue.replace(/\,/g, '');
+                totalUpSUM += Number(filteresupValue);
+
+                var getlastValue = $(this).find("td:eq(6)").html().replace("$", "");
+                var filtereslastValue = getlastValue.replace(/\,/g, '');
+                totalLastSUM += Number(filtereslastValue);
+
+            });
+            $('#selectedtotalproduced').html(totalPSUM);
+            $('#selectedtotalunproduced').html(totalUpSUM);
+            $('#selectedtotallastmonthproduced').html(totalLastSUM);
+        };
+        //$('#button').click(function () {
+
+
+        //});
+        $('#sample_1').dataTable({
+            aLengthMenu: [
+                [10, 50, 100, 200, -1],
+                [10, 50, 100, 200, "All"]
+            ],
+            iDisplayLength: -1,
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                //var rows = api.rows({ class: 'selected' }).indexes();
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                //total = api
+                //    .column(4)
+                //    .data()
+                //    .reduce(function (a, b) {
+                //        return intVal(a) + intVal(b);
+                //    }, 0);
+
+                // Total over this page
+                pageTotalProduced = api
+                    .column(4, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                pageTotalUnProduced = api
+                    .column(5, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                pageTotalLastMonthProduced = api
+                   .column(6, { page: 'current' })
+                   .data()
+                   .reduce(function (a, b) {
+                       return intVal(a) + intVal(b);
+                   }, 0);
+
+                // Update footer
+                $(api.column(4).footer()).html(
+                     pageTotalProduced
+                );
+                $(api.column(5).footer()).html(
+                     pageTotalUnProduced
+                );
+                $(api.column(6).footer()).html(
+                     pageTotalLastMonthProduced
+                );
+            }
+        });
+        $('.modelname').change(function () {
+            var modelname = $('.modelname').children("option:selected").val();
+
+            $.ajax({
+                url: '@Url.Action("GetOrdersfromModel", "Common")',
+                type: 'GET',
+                data: { modelName: modelname },
+                contentType: 'application/json',
+                success: function (result) {
+
+                    $('.order').children('option:not(:first)').remove();
+                    $.each(result, function (key, value) {
+                        $('.order')
+                            .append($("<option></option>")
+                            .attr("value", value.Order_No)
+                            .text(value.Order_No));
+                    });
+
+                }
+            });
+        });
+    });
+
+</script>
+
+

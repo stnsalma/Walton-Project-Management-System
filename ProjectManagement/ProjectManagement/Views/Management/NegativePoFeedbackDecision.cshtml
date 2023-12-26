@@ -1,0 +1,285 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPoFeedbackModel>
+    @{
+        ViewBag.Title = "NegativePoFeedbackDecision";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Decision Pending PO Feedbacks
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblNegativeFeedBacks">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Project</th>
+                            <th>Order</th>
+                            <th>Feedback By</th>
+                            <th>Department</th>
+                            <th>Feedback</th>
+                            <th>Added Date</th>
+                            <th>Allow reorder</th>
+                            <th>Sourcing Comment</th>
+                            <th>Sourcing Comment By</th>
+                            <th>Allow Reorder (Sourcing)</th>
+                            <th>Attachments</th>
+                            <th>Management Comment</th>
+                            <th>Management Decision</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            if (v != null && v.ManagementDecision == null)
+                            {
+                                <tr>
+                                    <td>@v.Id</td>
+                                    <td>@v.ProjectModel</td>
+                                    <td>@v.OrderNumber</td>
+                                    <td>@v.AddedByName</td>
+                                    <td>@v.Department</td>
+                                    <td>@v.FeedBack</td>
+                                    <td>
+                                        @if (v.AddedDate != null)
+                                        {
+                                            @Html.Raw(@v.AddedDate.Value.ToString("dd-MMM-yyyy"))
+                                        }
+                                    </td>
+                                    <td>@v.AllowReorder</td>
+                                    <td>@v.SourcingComment</td>
+                                    <td>@v.SourcingCommentByName</td>
+                                    <td>@v.SourcingAllowReorder</td>
+                                    <td>
+                                        @{string a = Path.GetFileNameWithoutExtension(v.FileUploadPath);}
+                                        @if (a != null && v.FileUploadPath != "failed")
+                                        {
+                                            <i class="fa fa-download"></i>
+                                            @Html.ActionLink(a, "DownloadPoFeedbackFile", "Common", new { id = @v.Id }, null)
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("none")
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.TextArea("ManagementComment", @v.ManagementComment, new { @class = "form-control manCom" })
+                                    </td>
+                                    <td>
+                                        @if (v.ManagementDecision == "Yes" || v.ManagementComment == null)
+                                        {
+                                            @Html.DropDownList("ManagementDecision", new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Value = "Yes",Text = "Allow Reorder",Selected=true
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Value = "No",Text = "Don't Allow Reorder"
+                                            }
+                                        }, new { @class = "form-control manDecision" })
+                                        }
+                                        @if (v.ManagementDecision == "No")
+                                        {
+                                            @Html.DropDownList("ManagementDecision", new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Value = "Yes",Text = "Allow Reorder"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Value = "No",Text = "Don't Allow Reorder",Selected = true
+                                            }
+                                        }, new { @class = "form-control manDecision" })
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <input type="button" class="btn btn-success btnSave" value="Save" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                PO Feedbacks with decision
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblDecisionDone">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Project</th>
+                            <th>Order</th>
+                            <th>Feedback By</th>
+                            <th>Department</th>
+                            <th>Feedback</th>
+                            <th>Added Date</th>
+                            <th>Allow reorder</th>
+                            <th>Sourcing Comment</th>
+                            <th>Sourcing Comment By</th>
+                            <th>Allow Reorder (Sourcing)</th>
+                            <th>Attachments</th>
+                            <th>Management Comment</th>
+                            <th>Management Decision</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            if (v != null && v.ManagementDecision != null)
+                            {
+                                <tr>
+                                    <td>@v.Id</td>
+                                    <td>@v.ProjectModel</td>
+                                    <td>@v.OrderNumber</td>
+                                    <td>@v.AddedByName</td>
+                                    <td>@v.Department</td>
+                                    <td>@v.FeedBack</td>
+                                    <td>
+                                        @if (v.AddedDate != null)
+                                        {
+                                            @Html.Raw(@v.AddedDate.Value.ToString("dd-MMM-yyyy"))
+                                        }
+                                    </td>
+                                    <td>@v.AllowReorder</td>
+                                    <td>@v.SourcingComment</td>
+                                    <td>@v.SourcingCommentByName</td>
+                                    <td>@v.SourcingAllowReorder</td>
+                                    <td>
+                                        @{string a = Path.GetFileNameWithoutExtension(v.FileUploadPath);}
+                                        @if (a != null && v.FileUploadPath != "failed")
+                                        {
+                                            <i class="fa fa-download"></i>
+                                            @Html.ActionLink(a, "DownloadPoFeedbackFile", "Common", new { id = @v.Id }, null)
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("none")
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.TextArea("ManagementComment", @v.ManagementComment, new { @class = "form-control manCom" })
+                                    </td>
+                                    <td>
+                                        @if (v.ManagementDecision == "Yes" || v.ManagementComment == null)
+                                        {
+                                            @Html.DropDownList("ManagementDecision", new List<SelectListItem>
+                                {
+                                    new SelectListItem()
+                                    {
+                                        Value = "Yes",Text = "Allow Reorder",Selected=true
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Value = "No",Text = "Don't Allow Reorder"
+                                    }
+                                }, new { @class = "form-control manDecision" })
+                                        }
+                                        @if (v.ManagementDecision == "No")
+                                        {
+                                            @Html.DropDownList("ManagementDecision", new List<SelectListItem>
+                                {
+                                    new SelectListItem()
+                                    {
+                                        Value = "Yes",Text = "Allow Reorder"
+                                    },
+                                    new SelectListItem()
+                                    {
+                                        Value = "No",Text = "Don't Allow Reorder",Selected = true
+                                    }
+                                }, new { @class = "form-control manDecision" })
+                                        }
+
+                                    </td>
+                                    <td>
+                                        <input type="button" class="btn btn-success btnSave" value="Save" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            var tblNegativeFeedBacks = $('#tblNegativeFeedBacks').DataTable({
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false
+                    }
+                ]
+            });
+            
+            var tblDecisionDone = $('#tblDecisionDone').DataTable({
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false
+                    }
+                ]
+            });
+
+            $('#tblNegativeFeedBacks tbody').on('click', '.btnSave', function () {
+                var rowToTransfer = tblNegativeFeedBacks.row($(this).closest('tr'));
+                var data = rowToTransfer.data();
+                console.log(data);
+                var url = '@Url.Action("SaveManagementDecision","Management")';
+                var id = data[0];
+                var manCom = $(this).closest('tr').find('.manCom').val();
+                var manDec = $(this).closest('tr').find('.manDecision option:selected').val();
+                console.log(id + '>>' + manCom + '>>' + manDec);
+                $.post(url, { id: id, manCom: manCom, manDec: manDec }, function (response) {
+                    if (response == 'Success') {
+                        alertify.success('Comment Saved');
+                        rowToTransfer.remove().draw();
+                        if (manDec == 'No') {
+                            data[13] = '<select class="form-control manDecision" id="ManagementDecision" name="ManagementDecision"><option  value="Yes">Allow Reorder</option><option selected="selected" value="No">Don' + '\'' + 't Allow Reorder</option></select>';
+                        }
+                        data[12] = '<textarea class="form-control manCom" cols="20" id="ManagementComment" name="ManagementComment" rows="2">' + manCom + '</textarea>';
+                        tblDecisionDone.row.add(data).draw();
+                    } else {
+                        alertify.error(data);
+                    }
+                });
+            });
+            
+            $('#tblDecisionDone tbody').on('click', '.btnSave', function () {
+                var data = tblDecisionDone.row($(this).closest('tr')).data();
+                console.log(data);
+                var url = '@Url.Action("SaveManagementDecision","Management")';
+                var id = data[0];
+                var manCom = $(this).closest('tr').find('.manCom').val();
+                var manDec = $(this).closest('tr').find('.manDecision option:selected').val();
+                console.log(id + '>>' + manCom + '>>' + manDec);
+                $.post(url, { id: id, manCom: manCom, manDec: manDec }, function (response) {
+                    if (response == 'Success') {
+                        alertify.success('Comment Saved');
+                    } else {
+                        alertify.error(data);
+                    }
+                });
+            });
+        });
+    </script>
+

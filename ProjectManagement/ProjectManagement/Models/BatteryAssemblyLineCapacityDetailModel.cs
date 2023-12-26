@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace ProjectManagement.Models
+{
+    public class BatteryAssemblyLineCapacityDetailModel
+    {
+        public bool? IsActive { get; set; }
+        public long Id { get; set; }
+        public Nullable<long> PlanId { get; set; }
+        public long? BatteryAssemblyId { get; set; }
+        public DateTime? WorkingDate { get; set; }
+        public long? PerDayCapacity { get; set; }
+        public long? LineCapacity { get; set; }
+        public long? LineAvailableCapacity { get; set; }
+        public long? Production { get; set; }
+        public long? TotalQuantityBAssembly { get; set; }
+        public long? LineInformation_Id { get; set; }
+        public string LineNumber { get; set; }
+        public DateTime? AddedDate { get; set; }
+        public long? Added { get; set; }
+        public string ProjectType { get; set; }
+    }
+}

@@ -1,0 +1,1752 @@
+﻿@using System.Drawing
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+@{
+    ViewBag.Title = "SwQcFieldTestPrint";
+}
+
+<script src="~/Scripts/moment.js"></script>
+
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<link media="screen" href="~/Content/New_2019/main.css" rel="stylesheet" />
+<link media="print" href="~/Content/New_2019/print.css" rel="stylesheet" />
+<style>
+
+
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+
+            <div class="portlet box">
+
+                <div class="portlet-body" id="receiveMemo">
+
+                    @if (ViewBag.GetDataForFieldTestPrint != null)
+                    {
+
+                        foreach (var items in ViewBag.GetDataForFieldTestPrint)
+                        {
+                            if (@items.Route != null && @items.Region != null)
+                            {
+                                <div class="col-lg-12" style="text-align: center;color:white;font-weight: bold;font-size: 12px; background-color: #00B050;"><u>Field Test Report</u></div>
+                                <div class="col-lg-12" style="text-align: center; color: white; font-weight: bold; font-size: 12px; background-color: #92D050;">Model: @items.ProjectName</div>
+
+                                <div class="col-lg-12">
+                                    <table class="level1">
+                                        <tr>
+                                            <td>
+                                                <table id="tbl1" class="tbl1" style="border: 1px solid black; font-size: 10px; width: 220px;color:black;text-align: left">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black;">Date:</th>
+                                                            <td style="border: 1px solid black;">@items.AddedDate</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Model:</th>
+                                                            <td style="border: 1px solid black;">@items.ProjectName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Benchmark Phone:</th>
+                                                            <td style="border: 1px solid black;">
+                                                                @if (@items.BenchmarkPhone != null)
+                                                                {
+                                                                    @items.BenchmarkPhone
+                                                                }
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Route:</th>
+                                                            <td style="border: 1px solid black;">@items.Route</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Region:</th>
+                                                            <td style="border: 1px solid black;">@items.Region</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Frequency Band:</th>
+                                                            <td style="border: 1px solid black;">@items.FrequencyBand </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; border: 1px solid black">Operator:</th>
+                                                            <td style="border: 1px solid black;"> ALL Operators (5)</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table id="tbl2" class="tbl2" style="border: 1px solid black; font-size: 10px; width: 210px;color:black;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: left; border: 1px solid black">Field test result:</th>
+                                                            <td style="border: 1px solid black;">@items.FieldTestResult</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align: left; border: 1px solid black">Remarks:</th>
+                                                            <td style="border: 1px solid black;">
+                                                                @items.Remarks
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align: left; border: 1px solid black">Version/Shipment:</th>
+                                                            <td style="border: 1px solid black;">@items.SoftwareVersionName</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align: left; border: 1px solid black">Tester:</th>
+                                                            <td style="border: 1px solid black;">@items.AssignedPerson</td>
+                                                        </tr>
+                                                        @*<tr>
+                                                                <th style="color:white">dd</th>
+                                                                <td style="color:white">dd</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="color:white">dd</th>
+                                                                <td style="color:white">dd</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="color:white">dd</th>
+                                                                <td style="color:white">dd</td>
+                                                            </tr>*@
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table id="tbl3" class="tbl3" style="font-size: 10px; border: 1px solid black; width: 230px; color: black;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black">Test Name:</th>
+                                                            <td style="text-align: center; border: 1px solid black">Field test[Short Call & Long call]</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black">Test Category:</th>
+                                                            <td style="text-align: center; border: 1px solid black">MO+MT</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black">Test Duration:</th>
+                                                            <td style="text-align: center; border: 1px solid black">10 Sec to 15 MIN</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black">Test Focus:</th>
+                                                            <td style="text-align: center; border: 1px solid black">1. Tx/Rx Speech Quality</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black"></th>
+                                                            <td style="text-align: center; border: 1px solid black">2. Call Drop Detection</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black"></th>
+                                                            <td style="text-align: center; border: 1px solid black">3. Radio Signal Strength (RSSI Bars)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="background-color: #92D050; text-align: left; border: 1px solid black">Number of Calls:</th>
+                                                            <td style="text-align: center; border: 1px solid black">Long: 10 Calls, Short: 80 Calls</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                                @*<br/>
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-4"></div>
+                                            <div class="col-lg-4">
+                                                <div class="col-lg-6">
+                                                    <div class="col-lg-6" ><input style="background-color: green" />PASS</div>
+                                                    <div class="col-lg-6"></div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="col-lg-6"><input style="background-color: red" />FAIL</div>
+                                                    <div class="col-lg-6"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4"></div>
+                                        </div>
+                                    </div>*@
+                                <br />
+
+                                <table id="tbl4" class="tbl4" style="font-size: 10px; border: 1px solid black; color: black;">
+                                    <thead>
+                                        <tr>
+                                            <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                            <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                            <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <table style="font-size: 10px; border: 1px solid black;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="background-color: white;border: 1px solid black">Weak & Strong signal Area Static and Dynamic</td>
+                                                            <td style="background-color: white; border: 1px solid black">45-70 Kmph & Halt</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table style="font-size: 10px; border: 1px solid black;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="background-color: white;border: 1px solid black">Up & Down</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table style="font-size: 10px; border: 1px solid black;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                            <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="background-color: white;border: 1px solid black">Up & Down</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                            <td style="background-color: white; border: 1px solid black">Nil</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            }
+                            <table>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "AIRTEL-MT")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "AIRTEL-MO")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "TELETALK-MT")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "TELETALK-MO")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "ROBI-MT")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "ROBI-MO")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "BANGLALINK-MT")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "BANGLALINK-MO")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "GRAMEENPHONE-MT")
+                                        {
+                                            <div class="" style="font-size: 10px; margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @if (@items.OperatorName == "GRAMEENPHONE-MO")
+                                        {
+                                            <div class="" style="font-size: 10px;margin-left: 30px">Operator Name: @items.OperatorName</div>
+
+
+                                            <table id="tbl5" class="tbl5" style="font-size: 10px; border: 1px solid black;">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold">Test Environment</th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Tested Mobile Performance </th>
+                                                        <th style="background-color: #538DD5;text-align: center;color: white;font-weight: bold"> Benchmark Performance</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Location & type</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Speed Limit (40-70) Kmph</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="Location">@items.Location</td>
+                                                                        <td style="background-color: white; border: 1px solid black" id="SpeedLimit">@items.SpeedLimit</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="TRssiBars">@items.TRssiBars</td>
+
+                                                                        @if (@items.TCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+
+                                                                        @if (@items.TNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                        @if (@items.TLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black; "></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td>
+                                                            <table class="" style="font-size: 10px; border: 1px solid black;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">RSSI bars</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Call Drop</th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Noise Interference </th>
+                                                                        <th style="background-color: #C4D79B;border: 1px solid black">Long mute</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="background-color: white;border: 1px solid black" id="BRssiBars">@items.BRssiBars</td>
+                                                                        @if (@items.BCallDrop == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+
+                                                                        @if (@items.BNoiseInterference == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                        @if (@items.BLongMute == "PASS")
+                                                                        {
+                                                                            <td style="color: white;background-color: green; border: 1px solid black;"></td>
+
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td style="color: white; background-color: red; border: 1px solid black;"></td>
+                                                                        }
+
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        }
+                                    </td>
+                                </tr>
+                            </table>
+
+                        }
+
+                    }
+                    <br />
+                    @*<div style="clear:both!important;page-break-after:always"></div>*@
+                    @if (ViewBag.GetDataForFieldTestPrint != null)
+                    {
+                        foreach (var items in ViewBag.GetDataForFieldTestPrint)
+                        {
+                            if (@items.Attachment != null)
+                            {
+
+                                <div class="file-preview-thumbnails col-lg-12">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-12 file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                            <div class="col-lg-12">
+
+                                                <input value="@items.UploadedFile" style="display:none" />
+                                                @for (int m = 0; m < @items.FilesDetails.Count; m++)
+                                                {
+                                                    if (@items.FilesDetails[m].Extention == ".jpg" || @items.FilesDetails[m].Extention == ".png" || @items.FilesDetails[m].Extention == ".pdf")
+                                                    {
+                                                        <div class="col-lg-4" style="float: left"></div>
+                                                        <div class="col-lg-4" style="">
+
+                                                            <embed class="" src="@items.FilesDetails[m].FilePath" style="width:300px;height:400px" />
+
+                                                        </div>
+                                                        <div class="col-lg-4" style="float: right"></div>
+                                                    }
+
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                    }
+
+                    <br>
+
+                    <div class="col-lg-12">
+                        <table style="font-size: 10px; border: 1px solid black;" width="300px">
+                            <thead>
+                                <tr style="font-size: 10px; border: 1px solid black;">
+                                    <th style="font-size: 10px; border: 1px solid black;">Issue</th>
+                                    <th style="font-size: 10px; border: 1px solid black;">Expected Outcome</th>
+                                    <th style="font-size: 10px; border: 1px solid black;">Issue Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetDataForFieldTestPrint != null)
+                                {
+                                    foreach (var items in ViewBag.GetDataForFieldTestPrint)
+                                    {
+                                        if (@items.Issue != null && @items.IssueType == "CRITICAL")
+                                        {
+                                            <tr>
+                                                <td style="font-size: 10px; border: 1px solid black;width:100px">@items.Issue</td>
+                                                <td style="font-size: 10px; border: 1px solid black;">@items.ExpectedOutcome</td>
+                                                <td style="font-size: 10px; border: 1px solid black;">@items.IssueType</td>
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+                @*<div style="clear:both!important;page-break-after:always"></div>*@
+
+            </div>
+        </div>
+
+
+    </div>
+    <div style="clear:both!important;page-break-after:always"></div>
+
+    <input type="button" value="Print Report" onclick="PrintPanel();" />
+</div>
+
+<script type="text/javascript">
+    //////////////////running one////////////////
+    function PrintPanel() {
+        //1
+        //var panel = document.getElementById("receiveMemo");
+        ////var printWindow = window.open('', 'receiveMemo', 'height=2000,width=3000');
+        //var printWindow = window.open('', "receiveMemo", "width=3000,height=2000,top=0,left=0,toolbars=no,scrollbars=no,status=no,resizable=yes");
+        //printWindow.document.write(panel.innerHTML);
+
+        //printWindow.document.close();
+        //setTimeout(function () {
+        //    printWindow.print();
+        //}, 500);
+
+
+        // return true;
+
+
+
+        var sOption = "toolbar=yes,location=no,directories=yes,menubar=yes,scrollbars=yes,width=2000,height=3000,left=0,top=0";
+        var sWinHTML = document.getElementById('receiveMemo').innerHTML;
+        var winprint = window.open("", "", sOption);
+        winprint.document.open();
+        winprint.document.write('<html><head><style type="text/css">');
+        winprint.document.write('body,td,th{font-family:Arial, Helvetica, sans-serif;font-size:10px;color:#000000;margin:0;top:0;padding:0}');
+
+        winprint.document.write('</style></head><body style="margin:0px" onload="window.print();">');
+        winprint.document.write(sWinHTML);
+        winprint.document.write('</body></html>');
+        winprint.document.close();
+        winprint.focus();
+    }
+
+
+</script>

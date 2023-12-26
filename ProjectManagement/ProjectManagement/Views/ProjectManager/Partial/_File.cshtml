@@ -1,0 +1,27 @@
+﻿
+@model ProjectManagement.ViewModels.ProjectManager.VmPmToBtrcNocRequest
+
+<tr>
+    @using (Html.BeginCollectionItem("attachments"))//Name of ListName to bind
+    {
+        <td>
+            @Html.HiddenFor(model=>model.ProjectMasterId)
+            @Html.HiddenFor(model=>model.ProjectBtrcNocModel.FinalSampleImei)
+            @Html.HiddenFor(model=>model.ProjectBtrcNocModel.ProjectBrtcNocId)
+            @Html.HiddenFor(model=>model.ProjectBtrcNocModel.ProjectPurchaseOrderFormId)
+            @Html.TextBoxFor(m => m.ProjectBtrcNocDocuments.btrcFiles, new { type = "file" })
+            @Html.ValidationMessageFor(x=>x.ProjectBtrcNocDocuments.btrcFiles)
+          
+        </td>
+        <td>
+            
+            
+        
+            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow(this)">
+                <span><i class="fa fa-times" aria-hidden="true"></i></span>
+
+            </button>
+        </td>
+        <br>
+    }
+</tr>

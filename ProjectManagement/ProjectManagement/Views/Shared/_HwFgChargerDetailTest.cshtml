@@ -1,0 +1,180 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+@using (Html.BeginForm("PostHwFgChargerDetailTest", "Hardware", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.HwFgChargerTestModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwFgChargerTestModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwFgChargerDetailModel.HwFgChargerTestId, new { @Value = @ViewBag.HwFgChargerTestId })
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-plug"></i>Charger Detail Test
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <div class="col-md-12">
+                            <div class="table-scrollable">
+                                <table class="table table-bordered" id="tblTestConditionCycle">
+                                    <thead>
+                                        <tr>
+
+                                            <th class="text-center" rowspan="2"> Floating Voltage <br /> at 220V AC(5.0-5.4V) </th>
+                                            <th class="text-center" colspan="3"> Set Load as 1A, Output Voltage Should <br /> be 4.75-5.25V , Test Time 5 Minutes </th>
+                                            <th class="text-center" colspan="3"> Set load as 4.75V, Output current should <br /> be over 1A, Test Time 5 Minutes </th>
+                                            <th class="text-center" rowspan="2"> Current Leakage <br/> while 3KV Test <br /> ≦ 2.5mA, Test <br/> Time 60s  </th>
+                                            <th class="text-center" rowspan="2"> Short Protection</th>
+                                            <th class="text-center" rowspan="2"> Load Ripple </th>
+                                            
+
+
+                                        </tr>
+                                        <tr>
+                                            
+                                            <th class="text-center"> AC:180V </th>
+                                            <th class="text-center"> AC:220V </th>
+                                            <th class="text-center"> AC:240V </th>
+                                            <th class="text-center"> AC:180V </th>
+                                            <th class="text-center"> AC:220V </th>
+                                            <th class="text-center"> AC:240V </th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.FloatingVoltage, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutVoltage_Ac180v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutVoltage_Ac220v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutVoltage_Ac240v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutCurrent_Ac180v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutCurrent_Ac220v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.SetLoadOutPutCurrent_Ac240v, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.CurrentLeakage, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.ShortProtection, new { @Class = "form-control" }) </td>
+                                            <td class="text-center"> @Html.TextBoxFor(model => model.HwFgChargerDetailModel.LoadRipple, new { @Class = "form-control" }) </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div>
+                                            <input type="submit" value="Save" class="btn btn-default" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-scrollable">
+                            <table class="table table-bordered" id="tblTestConditionCycle">
+                                <thead>
+                                    <tr>
+
+                                        <th class="text-center" rowspan="2"> Floating Voltage <br /> at 220V AC(5.0-5.4V) </th>
+                                        <th class="text-center" colspan="3"> Set Load as 1A, Output Voltage Should <br /> be 4.75-5.25V , Test Time 5 Minutes </th>
+                                        <th class="text-center" colspan="3"> Set load as 4.75V, Output current should <br /> be over 1A, Test Time 5 Minutes </th>
+                                        <th class="text-center" class="text-center" rowspan="2"> Current Leakage <br /> while 3KV Test <br /> ≦ 2.5mA, Test <br /> Time 60s  </th>
+                                        <th class="text-center" rowspan="2"> Short Protection</th>
+                                        <th class="text-center" rowspan="2"> Load Ripple </th>
+
+
+
+                                    </tr>
+                                    <tr>
+
+                                        <th class="text-center"> AC:180V </th>
+                                        <th class="text-center"> AC:220V </th>
+                                        <th class="text-center"> AC:240V </th>
+                                        <th class="text-center"> AC:180V </th>
+                                        <th class="text-center"> AC:220V </th>
+                                        <th class="text-center"> AC:240V </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.HwFgChargerDetail)
+                                    {
+                                        <tr>
+
+                                            <td class="text-center"> @item.FloatingVoltage </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac180v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac220v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac240v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac180v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac220v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac240v </td>
+                                            <td class="text-center"> @item.CurrentLeakage </td>
+                                            <td class="text-center"> @item.ShortProtection </td>
+                                            <td class="text-center"> @item.LoadRipple </td>
+                                    </tr>
+                                    }
+                                    
+
+                                </tbody>
+                            </table>
+                        </div>
+                        @*<div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Sample Name", new {@class = "control-label col-md-4"})
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.ProjectMasterModel.ProjectName, new {@Class = "form-control", @readonly = "true"})
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Sample Number", new {@class = "control-label col-md-4"})
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.ProjectMasterModel.NumberOfSample, new {@Class = "form-control", @readonly = "true"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Sample Supplier", new {@class = "control-label col-md-4"})
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierName, new {@Class = "form-control", @readonly = "true"})
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Receive Date", new {@class = "control-label col-md-4"})
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwQcAssignCustomMasterModel.HwQcAssignDate, new {@Class = "form-control", @readonly = "true"})
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

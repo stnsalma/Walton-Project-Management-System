@@ -1,0 +1,210 @@
+﻿@using System.Drawing
+@using System.Web.UI.WebControls
+@model ProjectManagement.Models.SupplierRatingModel
+@{
+    ViewBag.Title = "SupplierRating";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/Content/star-rating.min.css" rel="stylesheet" />
+<link href="~/Content/theme.min.css" rel="stylesheet" />
+<script src="~/Scripts/star-rating.min.js"></script>
+<script src="~/Scripts/theme.min.js"></script>
+<script src="~/Scripts/LANG.js"></script>
+<style type="text/css">
+    .loadingModal {
+        display:    none;
+        position:   fixed;
+        z-index:    1000;
+        top:        0;
+        left:       0;
+        height:     100%;
+        width:      100%;
+        background: rgba( 255, 255, 255, .8 ) 
+                    url('../../Content/images/ajax-loader.gif') 
+                    50% 50% 
+                    no-repeat;
+    }
+    body.loading {
+        overflow: hidden;   
+    }
+
+    /* Anytime the body has the loading class, our
+   modal element will be visible */
+    body.loading .loadingModal {
+        display: block;
+    }
+</style>
+<div class="note note-danger note-bordered">
+   <b style="">Please give the rating carefully. Once you save the rating, you can't edit it anymore. </b>
+</div>
+@using (Html.BeginForm("SupplierRating", "Common", FormMethod.Post, new { @class = "form-horizontal portlet-body" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="col-lg-2">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase">Supplier Rating</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+
+                        @{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Congratulations!!! </strong> @msg
+                </div>
+        }
+        else if ((int)msgType == 2)
+        {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Sorry !!! </strong> @msg
+                </div>
+        }
+        else if ((int)msgType == 3)
+        {
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+        }
+    }
+                        }
+                    </div>
+                    @Html.HiddenFor(model => model.SupplierRatingId)
+                    @Html.HiddenFor(model => model.Added)
+                    @Html.HiddenFor(model => model.Updated)
+                    @Html.HiddenFor(model => model.AddedDate)
+                    @Html.HiddenFor(model => model.UpdatedDate)
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Supplier : </label>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(model => model.SupplierId, new SelectList(ViewBag.Suppliers, "SupplierId", "SupplierName"), "--Select--", new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.SupplierId, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Project/ Model : </label>
+                        <div class="col-md-3">
+                            @*@Html.DropDownListFor(m => m.ProjectMasterId, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control" })*@
+                            @Html.DropDownListFor(m => m.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "--Select--", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.SupplierId, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Shipment Delivery Performance : </label>
+                        <div class="col-md-6">
+                            @*<input id="@Model.ShipmentDeliveryPerformance" value="@Model.ShipmentDeliveryPerformance" type="text" class="rating" data-size="xs" required="required">*@
+                            @Html.TextBoxFor(model => model.ShipmentDeliveryPerformance, new { @class = "rating rating-sm"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">After Sales Return : </label>
+                        <div class="col-md-6">
+                            @*<input id="@Model.AfterSalesReturn" value="@Model.AfterSalesReturn" type="text" class="rating" data-size="xs">*@
+                            @Html.TextBoxFor(model=>model.AfterSalesReturn, new{@class="rating", @Size="xs"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">After Sales Support : </label>
+                        <div class="col-md-6">
+                            @*<input id="@Model.AfterSalesSupport" value="@Model.AfterSalesSupport" type="text" class="rating" data-size="xs">*@
+                            @Html.TextBoxFor(model => model.AfterSalesSupport, new { @class = "rating" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Customization Support : </label>
+                        <div class="col-md-6">
+                            @*<input id="@Model.CustomizationSupport" value="@Model.CustomizationSupport" type="text" class="rating" data-size="xs">*@
+                            @Html.TextBoxFor(model => model.CustomizationSupport, new { @class = "rating" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Remarks : </label>
+                        <div class="col-md-3">
+                            @Html.TextAreaFor(model => model.Remarks,10,0, new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.Remarks, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-9">
+                            <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+
+}
+
+
+<div class="loadingModal"><!-- Place at bottom of page --></div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $body = $("body");
+
+        $(document).on({
+            ajaxStart: function () { $body.addClass("loading"); },
+            ajaxStop: function () { $body.removeClass("loading"); }
+        });
+        
+        $("#AfterSalesReturn").rating();
+        $("#AfterSalesReturn").rating({ 'size': 'xs' });
+
+        //$("form").submit(function (event) {
+        //    event.preventDefault(); // cancel submit
+        //    var supplierId = parseInt($('#SupplierId').val());
+        //    var projectId = parseInt($('#ProjectMasterId').val());
+        //    var remark = parseInt($('#Remarks').val());
+        //    if (!isNaN(supplierId) && !isNaN(projectId) && remark.length > 0) {
+        //        alertify.confirm("Are you sure, you want to commit your supplier rating?", function (e) {
+        //            if (e) {
+        //                $("form")[0].submit();
+        //            }
+        //        }).set('labels', { ok: 'Confirm!', cancel: 'Cancel!' });
+        //    }
+            
+        //});
+        
+
+        $('#SupplierId').on('change', function () {
+            var supplierId = $(this).val();
+            $.post('@Url.Action("GetSupplierProject", "Common")', { supplierId: supplierId }, function (data) {
+                //var projectMasterList = $.parseJSON(data);
+                //console.log(data);
+                var mySelect = $('#ProjectMasterId');
+                mySelect.empty();
+                mySelect.append($('<option></option>').val("").html("--Select--"));
+
+                for (var i in data) {
+                    mySelect.append($('<option></option>').val(data[i].ProjectMasterId).html(data[i].ProjectName));
+                }
+
+            });
+        });
+    });
+</script>

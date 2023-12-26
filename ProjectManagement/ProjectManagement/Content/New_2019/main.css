@@ -1,0 +1,14 @@
+﻿/* main.css */
+body {
+  margin: 2em;
+ 
+
+}
+
+/* override styles when printing */
+@media print {
+  body {
+    margin: 0;
+    
+  }
+}

@@ -1,0 +1,610 @@
+﻿@{
+    ViewBag.Title = "GeneralIncidentDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-head">
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-title">
+        <h1>
+            Welcome!@ViewBag.UserInfo.UserFullName
+
+            @if (ViewBag.UserInfo.RoleName == "PMHEAD")
+            {
+                <small>Head of Project Management</small>
+
+            }
+        </h1>
+    </div>
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-body">
+                <input id="hdnIncidentId" class="hidden" value="@ViewBag.incident.GeneralIncidentId" />
+                @*@Html.Raw(@ViewBag.incident.GeneralIncidentDetails)*@
+                <div class="col-lg-12">
+                    <div class="blog-post-lg bordered blog-container">
+                        <div class="blog-post-content">
+                            <i class="fa fa-list-alt"></i>
+                            <span class="bold" style="color: dimgrey">@ViewBag.incident.GeneralIncidentTitle</span>
+                            @*@if (@ViewBag.solution == null && User.Identity.Name != Convert.ToString(@ViewBag.incident.AddedBy))*@
+                            @if (@ViewBag.solution == null && User.IsInRole(@ViewBag.incident.RefferedRole) || @ViewBag.incident.Status == "ASSIGNED")
+                            {
+                                <button id='newIssue' class="btn btn-sm btn-circle btn-success pull-right btnSolve">Solve</button>
+                                if (@ViewBag.incident.Status != "ASSIGNED")
+                                {
+                                    <button id='newIssue' class="btn btn-sm btn-circle btn-warning pull-right btnAssign">Assign</button>
+                                    <button id='newIssue' class="btn btn-sm btn-circle btn-primary pull-right btnforward">Forward</button>
+                                }
+
+                                <button id='newIssue' class="btn btn-sm btn-circle btn-danger pull-right btnDeny">Deny</button>
+                            }
+                            @if (@ViewBag.solution != null && (User.IsInRole("MM") || User.IsInRole("PS")) && @ViewBag.incident.DiscloseDate == null)
+                            {
+                                <button class="btn btn-success pull-right" id="btnDisclose">Disclose</button>
+                                <button class="btn btn-danger pull-right" id="btnReassign">Reassign</button>
+                            }
+                            @if (@ViewBag.incident.Status == "PARTIALSUBMIT")
+                            {
+                                <button class="btn btn-sm sbold uppercase btn-outline red-haze pull-right btnSubmit">Submit</button>
+                            }
+                            <hr />
+                            <div>
+                                @Html.Raw(@ViewBag.incident.GeneralIncidentDetails)
+                            </div>
+                            <br />
+                            <div class="blog-post-foot">
+                                @*@{
+                                        string s = ViewBag.incident.GeneralIncidentCategories;
+                                        string[] st=s.Split(',');
+                                    }
+                                    @for (int i = 0; i < st.Length; i++)
+                                    {
+                                        <span class="badge badge-info badge-roundless"> @st[i] </span>
+                                    }*@
+                                <span class="font-sm">Created By -</span>
+                                <span class="badge badge-info badge-roundless"> @ViewBag.incident.AddedByName </span>
+                                <span class="font-sm">Assigned To -</span>
+                                <span class="badge badge-danger badge-roundless"><label id="assignedrole"></label></span>
+                                @if (@ViewBag.incident.GeneralIncidentCategories != null)
+                                {
+                                    <span class="font-sm">Category -</span>
+                                    <span class="badge badge-warning badge-roundless"><label id="">@ViewBag.incident.GeneralIncidentCategories</label></span>
+                                }
+                                @if (@ViewBag.incident.ModelName != null)
+                                {
+                                    <span class="font-sm">Model -</span>
+                                    <span class="badge badge-default badge-roundless"><label id="">@ViewBag.incident.ModelName</label></span>
+                                }
+                                @if (@ViewBag.incident.Issues != null)
+                                {
+                                    <span class="font-sm">Issues -</span>
+                                    <span class="badge badge-primary badge-roundless"><label id="">@ViewBag.incident.Issues</label></span>
+                                }
+                                <div class="blog-post-meta">
+                                    <i class="icon-calendar font-blue"></i>
+                                    <label href="javascript:;">@ViewBag.incident.AddedDate</label>
+                                </div>
+                                @*<div class="blog-post-meta">
+                                        <i class="icon-bubble font-blue"></i>
+                                        <a href="javascript:;">14 Comments</a>
+                                    </div>*@
+                            </div>
+                            @if (ViewBag.incident.FileUploadPath != null && ViewBag.incident.FileUploadPath != "failed")
+                            {
+                                <br />
+                                <div class="form-group">
+                                    <div class="">
+                                        <i class="fa fa-download"></i>
+                                        @{string a = Path.GetFileNameWithoutExtension(ViewBag.incident.FileUploadPath);}
+                                        @Html.ActionLink(a, "DownloadFile", "GeneralIncident", new { incidentid = @ViewBag.incident.GeneralIncidentId }, null)
+                                        @*<a onclick="getdoc()">@Path.GetFileNameWithoutExtension(ViewBag.incident.FileUploadPath)</a>*@
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @*=============Solution Part================*@
+                        @if (ViewBag.solution != null)
+                        {
+                            if (ViewBag.solution.DenyDate != null)
+                            {
+                                <h2>Incident Denied</h2>
+                            }
+                            else
+                            {
+                                <h2>Suggested Solution</h2>
+                            }
+
+                            @ViewBag.solution.Solution
+                            <div class="blog-post-foot">
+                                <span class="badge badge-info badge-roundless"> @ViewBag.solution.AddedByName </span>
+                                <div class="blog-post-meta">
+                                    <i class="icon-calendar font-blue"></i>
+                                    <a href="javascript:;">@ViewBag.solution.AddedDate</a>
+                                </div>
+                            </div>
+                        }
+                        @*=============Submit Part================*@
+                        @if (ViewBag.incident.SubmittedDate != null)
+                        {
+                            <h2>Submit Remarks</h2>
+                            @ViewBag.incident.SubmitRemark
+                            <div class="blog-post-foot">
+                                <span class="badge badge-info badge-roundless"> @ViewBag.incident.SubmittedByName </span>
+                                <div class="blog-post-meta">
+                                    <i class="icon-calendar font-blue"></i>
+                                    <a href="javascript:;">@ViewBag.incident.SubmittedDate</a>
+                                </div>
+                            </div>
+                        }
+                        @*=============Disclose Part================*@
+                        @if (ViewBag.incident.DiscloseDate != null)
+                        {
+                            <h2>Disclose Remarks</h2>
+                            @ViewBag.incident.DiscloseRemark
+                            <div class="blog-post-foot">
+                                <span class="badge badge-info badge-roundless"> @ViewBag.incident.DisclosedByName </span>
+                                <div class="blog-post-meta">
+                                    <i class="icon-calendar font-blue"></i>
+                                    <a href="javascript:;">@ViewBag.incident.DiscloseDate</a>
+                                </div>
+                            </div>
+                            <br />
+                        }
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <span class="bold">Forward Table</span>
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblforward">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Forwarded By</th>
+                            <th class="text-center">Forwarded To</th>
+                            <th class="text-center">Forward Remarks</th>
+                            @*<th class="text-center">Forward By Role</th>*@
+                            <th class="text-center">Forward Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in ViewBag.incidentlog)
+                        {
+                            v.ForwardByName = v.ForwardByName ?? "-";
+                            <tr>
+                                <td class="text-center">@v.ForwardByName</td>
+                                <td class="text-center">@v.RefferedRole</td>
+                                <td class="text-center">@v.ForwardRemark</td>
+                                @*<td class="text-center">@v.ForwardByRole</td>*@
+                                <td class="text-center">@v.ForwardedDate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+            <span class="bold">Assign Table</span>
+            <div class="table-scrollable">
+                <table class="table table-bordered" id="tblforward">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Assigned By</th>
+                            <th class="text-center">Assigned To</th>
+
+                            <th class="text-center">Assign Remarks</th>
+                            @*<th class="text-center">Forward By Role</th>*@
+                            <th class="text-center">Assign Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in ViewBag.assigned)
+                        {
+                            <tr>
+                                <td class="text-center">@v.AssignedByName</td>
+                                <td class="text-center">@v.AssignedToName</td>
+
+                                <td class="text-center">@v.AssignRemarks</td>
+                                @*<td class="text-center">@v.ForwardByRole</td>*@
+                                <td class="text-center">@v.AssignDate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ solve/deny =======================================================================*@
+    <div id="solveModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Suggest Solution or Deny Incident</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="modalincidentId" />
+                                <input type="hidden" id="solutionOrDeny" />
+                                <p>
+                                    Remark:
+                                    @*<input type="text" class="form-control" id="modalSolution" />*@
+                                    <textarea id="modalSolution" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success submitSolution">Submit</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*============================================================================ forward =======================================================================*@
+    <div id="forwardModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Forward</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="modalincidentId" />
+                                <p>
+                                    Select Department:
+
+                                    <select class="form-control" id="department">
+                                        @if (ViewBag.Roles != null)
+                                        {
+                                            foreach (var i in ViewBag.Roles)
+                                            {
+                                                <option value="@i.RoleName">@i.RoleDescription</option>
+                                            }
+                                        }
+                                    </select>
+                                </p>
+                                <p>
+                                    Remark:
+                                    <textarea id="modalForwardRemark" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success forward">Forward</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*============================================================================ REASSIGN =======================================================================*@
+    <div id="reassignModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Reassign</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Select Department:
+
+                                    <select class="form-control" id="departmentReassign">
+                                        @if (ViewBag.Roles != null)
+                                        {
+                                            foreach (var i in ViewBag.Roles)
+                                            {
+                                                <option value="@i.RoleName">@i.RoleDescription</option>
+                                            }
+                                        }
+                                    </select>
+                                </p>
+                                <p>
+                                    Remark:
+                                    <textarea id="modalReassignRemark" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success reassign">Reassign</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*============================================================================ ASSIGN =======================================================================*@
+    <div id="assignModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Reassign</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Assign To:
+
+                                    <select class="form-control" id="personAssign">
+                                        @if (ViewBag.users != null)
+                                        {
+                                            foreach (var i in ViewBag.users)
+                                            {
+                                                <option value="@i.CmnUserId">@i.UserFullName</option>
+                                            }
+                                        }
+                                    </select>
+                                </p>
+                                <p>
+                                    Remark:
+                                    <textarea id="modalAssignRemark" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success assign">Assign</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*============================================================================ DISCLOSE =======================================================================*@
+<div id="discloseModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title bold">Disclose Incident</h4>
+            </div>
+            <div class="modal-body">
+                <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <p>
+                                Remarks:
+                                <textarea id="modalDiscloseRemark" class="col-md-12 form-control"></textarea>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success disclose">Disclose</button>
+                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                @*<button type="button" class="btn green">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@*============================================================================ SUBMIT =======================================================================*@
+<div id="submitModal" class="modal fade" tabindex="-1" aria-hidden="true">
+    @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title bold">Submit</h4>
+            </div>
+            <div class="modal-body">
+                <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="hidden" id="modalincidentId" />
+                            <p>
+                                Remarks:
+                                <textarea id="modalSubmitRemark" class="col-md-12 form-control"></textarea>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success submit">Submit</button>
+                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                @*<button type="button" class="btn green">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function getdoc() {
+        var url = '../GeneralIncident/DownloadFile';
+        var incidentid = $('#hdnIncidentId').val();
+        console.log(incidentid);
+        $.post(url, { incidentid: incidentid }, function (data) {
+
+
+        });
+    }
+
+    $(function () {
+        var $rows = $("#tblforward tr");
+        $rows.eq(1).hide();
+        var assignedrole = $rows.eq(1).find('td:eq(1)').text();
+        //alert(assignedrole);
+        $('#assignedrole').text(assignedrole);
+
+        $('.btnSolve').on('click', function () {
+            var incidentid = $('#hdnIncidentId').val();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('solution');
+            //alert($('#modalincidentId').val());
+            $('#solveModal').modal('show');
+        });
+
+        $('.btnDeny').on('click', function () {
+            var incidentid = $('#hdnIncidentId').val();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('deny');
+            //alert($('#modalincidentId').val());
+            $('#solveModal').modal('show');
+        });
+
+        $('.submitSolution').on('click', function () {
+            var solution = $('#modalSolution').val();
+            var incidentid = $('#modalincidentId').val();
+            var type = $('#solutionOrDeny').val();
+            var url = '../GeneralIncident/PostSolution';
+            if (solution == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { solution: solution, type: type, incidentid: incidentid }, function (data) {
+                    $('#modalSolution').empty();
+                    alertify.success('Saved');
+                    $('#solveModal').modal('hide');
+                    var url2 = '@Url.Action("GeneralInciedntForAssign", "GeneralIncident")';
+                    window.location.replace(url2);
+                });
+            }
+        });
+
+        $('.btnforward').on('click', function () {
+            var incidentid = $('#hdnIncidentId').val();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('deny');
+            //alert($('#modalincidentId').val());
+            $('#forwardModal').modal('show');
+        });
+
+        $('.forward').on('click', function () {
+            var remark = $('#modalForwardRemark').val();
+            var incidentid = $('#modalincidentId').val();
+            var role = $('#department :selected').val();
+            var url = '../GeneralIncident/ForwardIncident';
+            if (remark == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { remark: remark, forwardrole: role, incidentid: incidentid }, function (data) {
+                    $('#modalSolution').empty();
+                    alertify.success('Saved');
+                    $('#forwardModal').modal('hide');
+                    var url2 = '@Url.Action("GeneralInciedntForAssign", "GeneralIncident")';
+                    window.location.replace(url2);
+                });
+            }
+
+        });
+
+        $('#btnDisclose').on('click', function () {
+            $('#discloseModal').modal('show');
+        });
+
+        $('.disclose').on('click', function () {
+            var url = '../GeneralIncident/DiscloseIncident';
+            var incidentid = $('#hdnIncidentId').val();
+            var remark = $('#modalDiscloseRemark').val();
+            $.post(url, { incidentid: incidentid, remark: remark }, function (data) {
+                alertify.success('Disclosed');
+                var url2 = '@Url.Action("GeneralIncidentDisclose", "GeneralIncident")';
+                window.location.href = url2;
+            });
+        });
+
+
+        $('#btnReassign').on('click', function () {
+            $('#reassignModal').modal('show');
+        });
+
+        $('.reassign').on('click', function () {
+            var url = '../GeneralIncident/ReassignIncident';
+            var incidentid = $('#hdnIncidentId').val();
+            var remark = $('#modalReassignRemark').val();
+            var role = $('#departmentReassign :selected').val();
+            $.post(url, { remark: remark, reassigndrole: role, incidentid: incidentid }, function (data) {
+                alertify.success('Reassigned');
+                var url2 = '@Url.Action("GeneralIncidentDisclose", "GeneralIncident")';
+                window.location.href = url2;
+            });
+        });
+
+        $('.btnAssign').on('click', function () {
+            $('#assignModal').modal('show');
+        });
+
+        $('.assign').on('click', function () {
+            var url = '../GeneralIncident/AssignIncident';
+            var incidentid = $('#hdnIncidentId').val();
+            var remark = $('#modalAssignRemark').val();
+            var id = $('#personAssign :selected').val();
+            $.post(url, { remark: remark, incidentid: incidentid, id: id }, function (data) {
+                alertify.success('Reassigned');
+                var url2 = '@Url.Action("GeneralInciedntForAssign", "GeneralIncident")';
+                window.location.href = url2;
+            });
+        });
+
+        $('.btnSubmit').on('click', function () {
+            $('#submitModal').modal('show');
+        });
+
+        $('.submit').on('click', function () {
+            var remark = $('#modalSubmitRemark').val();
+            var incidentid = $('#hdnIncidentId').val();
+            var url = '../GeneralIncident/SubmitIncident';
+            if (remark == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { remark: remark, incidentid: incidentid }, function (data) {
+                    $('#modalSubmitRemark').empty();
+                    alertify.success('Saved');
+                    $('#submitModal').modal('hide');
+                    var url2 = '@Url.Action("GeneralInciedntForAssign", "GeneralIncident")';
+                    window.location.href = url2;
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
+

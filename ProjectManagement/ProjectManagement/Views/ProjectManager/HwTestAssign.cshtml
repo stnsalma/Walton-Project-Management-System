@@ -1,0 +1,375 @@
+﻿@model IEnumerable<ProjectManagement.ViewModels.Hardware.VmHwTestDetail>
+
+    @{
+        ViewBag.Title = "HwTestAssign";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="col-lg-3">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Assign HW Test</span>
+                </div>
+                <div class="tools"> </div>
+            </div>
+            <div class="col-lg-8"></div>
+            <div class="col-lg-1">
+                <button class="btn sbold uppercase btn-outline blue-chambray pull-right" onclick="hwTestAddModal();">Add Hw Test</button>
+            </div>
+
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Project Name", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Hardware Test", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownList("HwTestMasterId", new SelectList(ViewBag.hwTestMasers, "HwTestMasterId", "HwTestName"), "Select", new { @class = "form-control ddChosen" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            @Html.Label("File Upload", new { @class = "" })
+                        </div>
+                        <div class="col-md-11">
+                            <input type="file" id="fileInput" class="form-control" multiple="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            @Html.Label("Remarks", new { @class = "" })
+                        </div>
+                        <div class="col-md-11">
+                            @Html.TextArea("remarks", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-11">
+                            <input type="button" id="assign" onclick="assignSubmit();" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Assigned Projects
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="portlet-body flip-scroll">
+                                            <div class="table-scrollable">
+                                                <table class="table table-bordered table-striped table-condensed flip-content" id="tblAssignData">
+                                                    <thead class="flip-content">
+                                                        <tr>
+                                                            <th class="text-center"> Hw Incharge Id </th>
+                                                            <th class="text-center"> Project ID </th>
+                                                            <th class="text-center"> Project Name </th>
+                                                            <th class="text-center"> Hw Test Name </th>
+                                                            <th class="text-center"> PM Remarks </th>
+                                                            <th class="text-center"> Added By PM</th>
+                                                            <th class="text-center"> Added Date by PM</th>
+                                                            <th class="text-center"> Assigned To </th>
+                                                            <th class="text-center"> Assign Remarks </th>
+                                                            <th class="text-center"> Assign Date </th>
+                                                            <th class="text-center"> Submit Date </th>
+                                                            <th class="text-center"> Submit Remarks </th>
+                                                            <th class="text-center"> Forward Date </th>
+                                                            <th class="text-center"> Forward Remarks </th>
+                                                            <th class="text-center"> Result </th>
+                                                            <th class="text-center"> Status </th>
+                                                            <th> Action </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var v in Model)
+                                                        {
+                                                            <tr>
+                                                                <td>@v.HwTestInchargeAssignModel.HwTestInchargeAssignId</td>
+                                                                <td>@v.HwTestInchargeAssignModel.ProjectMasterId</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.ProjectName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.HwTestName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.Remarks</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.AddedByName</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.AddedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.HwEngineerNames</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.HwInchargeRemark</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.AddedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.SubmittedDate</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.Remark</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.ForwrdedDate</td>
+                                                                <td class="text-center">@v.HwTestInchargeAssignModel.ForwardRemarks</td>
+                                                                <td class="text-center">@v.HwEngineerAssignModel.Result</td>
+                                                                <td class="text-center">
+                                                                    @if (v.HwTestInchargeAssignModel.Status == "FORWARDED")
+                                                                    {
+                                                                        <span class="label label-sm label-danger"> @v.HwTestInchargeAssignModel.Status </span>
+                                                                    }
+                                                                    @if (v.HwTestInchargeAssignModel.Status == "NEW")
+                                                                    {
+                                                                        <span class="label label-sm label-default"> @v.HwTestInchargeAssignModel.Status </span>
+                                                                    }
+                                                                    @if (v.HwTestInchargeAssignModel.Status == "ASSIGNED")
+                                                                    {
+                                                                        <span class="label label-sm label-success"> @v.HwTestInchargeAssignModel.Status </span>
+                                                                    }
+                                                                    @if (v.HwTestInchargeAssignModel.Status == "FORWARDPENDING")
+                                                                    {
+                                                                        <span class="label label-sm label-warning"> @v.HwTestInchargeAssignModel.Status </span>
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                        <input type="button" class="btnViewFiles" value="View Uploaded files" />
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ ADD HWTEST =======================================================================*@
+        <div id="hwTestAddModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Add New Spare</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        Hardware Test Name:
+                                        <input type="text" class="form-control" id="modalHwTestName" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" onclick="saveHwTestName();">Save</button>
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="portlet-body">
+        <!-- /.modal -->
+        @*============================================================================ Document =======================================================================*@
+        <div id="documentModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title bold">Forward</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>
+                                        <table class="table table-bordered" id="tblFiles">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">File Name</th>
+                                                    <th class="text-center">Added By</th>
+                                                    <th class="text-center">Added Date</th>
+                                                    <th class="text-center">Remarks</th>
+                                                </tr>
+
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @*<button type="button" class="btn btn-success" onclick="downloadall();">Download All</button>*@
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        @*<button type="button" class="btn green">Save changes</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hwTestAddModal() {
+            $('#hwTestAddModal').modal('show');
+        }
+
+        var table = $('#tblAssignData').DataTable({
+            columnDefs: [
+                {
+                    targets: [0, 1],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        function assignSubmit() {
+            var hwtestname = $('#HwTestMasterId :selected').text();
+            var projectname = $('#ProjectMasterId :selected').text();
+            var hwtestid = $('#HwTestMasterId :selected').val();
+            var projectid = $('#ProjectMasterId :selected').val();
+            var remarks = $('#remarks').val();
+            console.log(hwtestid + hwtestname + remarks);
+            //================================
+            var files = $("#fileInput").get(0).files;
+            var formData = new FormData();
+            formData.append('hwTestName', hwtestname);
+            formData.append('hwTestMasterId', hwtestid);
+            formData.append('remarks', remarks);
+            formData.append('projectName', projectname);
+            formData.append('projectId', projectid);
+            for (var i = 0; i < files.length; i++) {
+                formData.append("fileInput", files[i]);
+            }
+            console.log('formdata = ' + formData.get('hwTestName') + '>>' + formData.get('fileInput'));
+            if (projectname != 'Select' && hwtestname != 'Select') {
+                $.ajax({
+                    type: "POST",
+                    url: "../ProjectManager/HwTestInchargeAssign",
+                    dataType: "json",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: formData,
+                    success: function (result, status, xhr) {
+                        var date = new Date(parseInt(result.AddedDate.substr(6)));
+                        var rowNode = table.row.add([result.HwTestInchargeAssignId, result.ProjectMasterId, result.ProjectName, result.HwTestName, result.Remarks, result.AddedByName, date, '-', '-', '-', '-', '-', '-', '-', '-', result.Status, '']).draw().node();
+                        $(rowNode).css('color', 'red').animate({ color: 'black' }).addClass('text-center');
+                        $('#HwTestMasterId :selected').text('Select');
+                        $('#ProjectMasterId :selected').text('Select');
+                        $('#HwTestMasterId :selected').val('');
+                        $('#ProjectMasterId :selected').val('');
+                        $("#HwTestMasterId").trigger("chosen:updated");
+                        $("#ProjectMasterId").trigger("chosen:updated");
+                        $('#remarks').val('');
+                        $("#fileInput").val('');
+                        alertify.success('Successfully assigned');
+                        //url = '@Url.Action("HwTestAssign", "ProjectManager")';
+                        //window.location.href = url.replace();
+                    },
+                    error: function (xhr, status, error) {
+                        alertify.error(status);
+                    }
+                });
+            }
+            else {
+                alertify.error('Select Project and Test');
+            }
+        }
+
+        function saveHwTestName() {
+            //alert();
+            var url = '@Url.Action("SaveHwTest", "Common")';//'../Common/SaveHwTest';
+            var hwtestname = $('#modalHwTestName').val();
+            $.post(url, { hwTestName: hwtestname }, function (json) {
+                console.log(json.HwTestMasterId + json.HwTestName);
+                $('#HwTestMasterId').append($('<option></option>').val(json.HwTestMasterId).html(json.HwTestName));
+                $("#HwTestMasterId").trigger("chosen:updated");
+                $('#modalHwTestName').val('');
+                $('#hwTestAddModal').modal('hide');
+                alertify.success('Hwtest ' + json.HwTestName + ' saved');
+            });
+        }
+
+        $('#tblAssignData').on('click', '.btnViewFiles', function () {
+            $('#tblFiles tbody').empty();
+            var url = '@Url.Action("GetUploadedFiles", "Hardware")';//'../Hardware/GetUploadedFiles';
+            var data = table.row($(this).parents('tr')).data();
+            hwinchargeassignId = data[0];
+            projectId = data[1];
+            console.log(hwinchargeassignId + '>>>' + projectId);
+            $.post(url, { hwinchargeassignId: hwinchargeassignId }, function (json) {
+                console.log(json);
+                for (var i = 0; i < json.length; i++) {
+                    var html = "<a href='../Hardware/DownloadHwTestFile?fileuploadId=" + json[i].HwTestFileUploadId + "'>" + json[i].FileUploadPath + "</a>";
+                    var date = new Date(parseInt(json[i].AddedDate.substr(6)));
+                    var row = "<tr>" +
+                                      "<td class='text-center hidden'>" + json[i].HwTestFileUploadId + "</td>" +
+                                      "<td class='text-center'>" + html + "</td>" +
+                                      "<td class='text-center'>" + json[i].AddedByName + "</td>" +
+                                      "<td class='text-center'>" + date + "</td>" +
+                                      "<td class='text-center'>" + (json[i].Remarks = (json[i].Remarks == null) ? "-" : json[i].Remarks) + "</td>" +
+                                  "</tr>";
+                    $('#tblFiles tbody').append(row);
+                }
+
+            });
+            $('#documentModal').modal('show');
+        });
+    </script>

@@ -1,0 +1,170 @@
+﻿@model ProjectManagement.Controllers.WastageFileUpload
+@{
+    ViewBag.Title = "EditWastageMaterialReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("CreateNew", "MaterialWastage", FormMethod.Post, new {enctype = "multipart/form-data", @id = "formId"}))
+{
+    <div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Material Wastage Basic Info</div>
+    </div>
+    <div class="portlet-body">
+        <div hidden class="row">
+            <div class="col-md-4">
+                <div class="col-md-4">Project Name</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.ProjectName, null, new { @class = "form-control", type = "text" })
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="col-md-4">Report Name</div>
+                <div class="col-md-8">
+                    @Html.HiddenFor(model => model.MaterialWastageMaster.Id)
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.ReportName, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-md-4">Month</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.MonthName, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="col-md-4">Year</div>
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.MaterialWastageMaster.YearNumber, null, new { @class = "form-control", type = "text" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Materal Wastage Details
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-striped table-bordered table-hover" id="tblMaterialDetails">
+                    <thead>
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Details</th>
+                            <th>BOM Unit</th>
+                            <th>Wastage %</th>
+                            <th>Rcv. Qty. WO Wastage</th>
+                            <th>Rcv. Qty. W. Wastage</th>
+                            <th>Total Lot</th>
+                            <th>Wastage WO BOM</th>
+                            <th>Wastage W. BOM</th>
+                            <th>Total Wastage</th>
+                            <th>Ass. Mat. Fault</th>
+                            <th>Ass. Proc. Fault</th>
+                            <th>Rep. Mat. Fault</th>
+                            <th>Rep. Proc. Fault</th>
+                            <th>Total Fault</th>
+                            <th>Till Now Mat. Fault Approved</th>
+                            <th>Till Now Proc. Fault Approved</th>
+                            <th>Till Now Total Fault Approved</th>
+                            <th>Till Now Actual Wastage Ass. Mat. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Ass. Proc. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Rep. Mat. Fault (Total)</th>
+                            <th>Till Now Actual Wastage Rep. Proc. Fault (Total)</th>
+                            <th>Till Now Total Wastage Received</th>
+                            <th>Actual Wastage Of Total Ass. Wastage %</th>
+                            <th>Actual Wastage Of Total Rep. Wastage %</th>
+                            <th>Actual Wastage Of Total Lot %</th>
+                            <th>Net Adjustment (Actual wastage-FOC) / Total lot</th>
+                            <th>Imported QTY with wastage</th>
+                            <th>Wastage in BOM</th>
+                            <th>Need to Declare</th>
+                            <th>Already Signed</th>
+                            <th>Need Sign</th>
+                            <th>Price</th>
+                            <th>Value</th>
+                            <th>Cross Check</th>
+                            @*<th>FOC Date</th>*@
+                            <th>FOC Qty</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.MaterialWastageDetails)
+                            {
+                                <tr>
+
+                                    <td> @Html.TextBoxFor(modelItem=>@item.ItemCode)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.ItemName)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.BOMUnit)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.WastagePercentage)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.RecQtyWOWastage)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.RecQtyWWastage)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalLot)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.WastageWOBom)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.WastageWBom)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalWastage)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.AssemMaterialFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.AssemProcessFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.RepMaterialFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.RepProcessFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalMaterialFaultApproved)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalProcessFaultApproved)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalFaultApproved)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TillNowAssemMaterialFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TillNowAssemProcessFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TillNowRepMaterialFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TillNowRepProcessFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TillNowTotalFault)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.ActualAssemblyWastage_TotalLot)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.ActualRepairWastage_TotalLot)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.ActualWastageOfTotalLot)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.NetAdjustment)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.ImportedQtyWithWastage)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.WastageQtyInBOM)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.NeedToDeclare)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.AlreadySined)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.NeedSign)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.UnitPrice)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.TotalPrice)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.CrossCheck)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.FOCQty)</td>
+                                    <td> @Html.TextBoxFor(modelItem => @item.Remarks)</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+<script type="text/javascript">
+    $(function() {
+        var table = $('#tblMaterialDetails').removeAttr('width').DataTable({
+            scrollY: "400px",
+            scrollX: true,
+            scrollCollapse: true,
+            paging: false,
+            columnDefs: [
+                { width: 200, targets: 0 }
+            ],
+            fixedColumns: true
+        });
+    })
+</script>
+

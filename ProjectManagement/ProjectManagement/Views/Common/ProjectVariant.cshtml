@@ -1,0 +1,418 @@
+﻿@{
+    ViewBag.Title = "ProjectVariant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light border-red-flamingo">
+    <div class="portlet-title">
+        <div class="caption"> Project Variant</div>
+        <div class="tools">
+            @*<button class="btn btn-default"><i class="fa fa-save" style="color: skyblue"></i> Save</button>*@
+        </div>
+    </div>
+    <div class="portlet-body">
+        @*<input type="hidden" id="lblOrderQuantity" />*@
+        <input type="hidden" id="hdnProductModel" />
+        <div class="row">
+            <div class="col-md-4">
+                @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-sm btn-primary hidden btnAddVariant" onclick="addRow();">Add Variant</button>
+                <button type="button" class="btn btn-sm btn-warning hidden btnAddProjectModel" onclick="addProjectModelToProjectMaster();">Add Project Model</button>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <span style="font-size: 12px; font-weight: bold">Order Quantity: <label id="lblOrderQuantity">0</label></span>
+                <br />
+                <span style="font-size: 12px; font-weight: bold">Unassigned    : <label id="unassigned">0</label></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table table-scrollable" id="divVariant">
+                    <table class="table table-bordered table-striped table-condensed flip-content" id="tblProjectVariant">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Project Model</th>
+                                <th class="text-center">Prefix</th>
+                                <th class="text-center">Variant By RAM/ROM(GB)</th>
+                                <th class="text-center">Suffix</th>
+                                <th class="text-center">Variant Quantity</th>
+                                <th class="text-center">Variant Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var projectModelFromName = '';
+    $('#ProjectMasterId').on('change', function () {
+        var projectId = $('#ProjectMasterId option:selected').val();
+        console.log(projectId);
+        if (projectId != '') { //when selected a valid project
+            $('.btnAddVariant').removeClass('hidden');
+            //$('.btnAddProjectModel').removeClass('hidden');
+            $('#tblProjectVariant tbody').empty();
+            var url = '@Url.Action("CheckExistingVariant","Common")';
+            $.post(url, { id: projectId }, function (data) {
+                console.log(data);
+                $('#lblOrderQuantity').html(data.Project.OrderQuantity);
+                $('#hdnProductModel').val(data.Project.ProjectModel);
+                var splitProjectName = (data.Project.ProjectName).split(" ");
+                jQuery.each(splitProjectName,function(index,item) {
+                    
+                    if (index == 0) {
+                        projectModelFromName = capitalizeFirstLetter(item.toLowerCase());
+                    }
+                    if (index == 1) {
+                        projectModelFromName = projectModelFromName+" "+ item;
+                        console.log(projectModelFromName);
+                    }
+                    if (index > 1) {
+                        projectModelFromName = projectModelFromName + " " + capitalizeFirstLetter(item.toLowerCase());
+                        console.log(projectModelFromName);
+                    }
+                });
+                var row;
+                if (data.Variant.length == 0) { //when there is no data in variant table
+                    if (data.Project.ProjectModel == null) {
+                        $('.btnAddProjectModel').removeClass('hidden');
+                    }
+                    var projectModelParts = (data.Project.ProjectModel).split(" ");
+                    if (projectModelParts.length >= 2) {
+                        var defaultVariantName = projectModelParts[0] + ' ' + projectModelParts[1];
+                    }
+                    row = '<tr>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control variantId"/></td>' +
+                        '<td class="text-center"><input type="text" readonly=""  value="' + data.Project.ProjectModel + '" class="form-control text-center projectModel"/></td>' +
+                        '<td class="text-center"><input type="text" class="form-control text-center prefix"/></td>' +
+                        '<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                        '<td class="text-center"><input type="text" class="form-control text-center suffix"/></td>' +
+                        '<td class="text-center"><input type="number" min="0" value="' + data.Project.OrderQuantity + '" class="form-control text-center variantQuantity"/></td>' +
+                        '<td class="text-center"><input type="text" readonly=""  value="' + defaultVariantName + '" class="form-control text-center projectVariantName"/></td>' +
+                        '<td class="text-center"><span class="badge badge-warning">NEW</span></td>' +
+                        '<td class="text-center" style="width:120px">' +
+                        '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm btnLock"><i class="fa fa-lock"></i></button>' +
+                        '</td>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control addedBy"/></td>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control addedDate"/></td>' +
+                        '</tr>';
+                    $('#tblProjectVariant tbody').append(row);
+                    $('#unassigned').html(0);
+                } else {  //when there is data in Variant table
+                    for (var i = 0; i < data.Variant.length; i++) {
+                        if (!data.Variant[i].IsLocked) { //when the row for a Variant is UnLocked
+                            row = '<tr>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.Variant[i].Id + '" class="form-control variantId"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + data.Variant[i].ProjectModel + '" class="form-control text-center projectModel"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + data.Variant[i].Prefix + '" class="form-control text-center prefix"/></td>' +
+                                '<td class="text-center"><input type="number" min="1" value="' + data.Variant[i].VariantByRamRom + '" class="form-control text-center ramRomVariant"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + data.Variant[i].Suffix + '" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="number" min="0" value="' + data.Variant[i].ProjectVariantQuantity + '" class="form-control text-center variantQuantity"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + data.Variant[i].ProjectVariantName + '" class="form-control text-center projectVariantName"/></td>' +
+                                '<td class="text-center"><span class="badge badge-success">SAVED</span></td>' +
+                                '<td class="text-center" style="width:120px">' +
+                                '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                                '<button type="button" class="btn btn-danger btn-sm btnLock"><i class="fa fa-lock"></i></button>' +
+                                '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' +
+                                '</td>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.Variant[i].AddedBy + '" class="form-control addedBy"/></td>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.Variant[i].AddedDate + '" class="form-control addedDate"/></td>' +
+                                '</tr>';
+                            $('#tblProjectVariant tbody').append(row);
+                        } else {  //when variant is in database and locked
+                            row = '<tr>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.Variant[i].Id + '" class="form-control variantId"/></td>' +
+                                '<td class="text-center"><input type="text" readonly="" value="' + data.Variant[i].ProjectModel + '" class="form-control text-center projectModel"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + data.Variant[i].Prefix + '" class="form-control text-center prefix"/></td>' +
+                                '<td class="text-center"><input type="number" min="1" value="' + data.Variant[i].VariantByRamRom + '" class="form-control text-center ramRomVariant"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + data.Variant[i].Suffix + '" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="number" min="0" value="' + data.Variant[i].ProjectVariantQuantity + '" class="form-control text-center variantQuantity"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + data.Variant[i].ProjectVariantName + '" class="form-control text-center projectVariantName"/></td>' +
+                                '<td class="text-center"><span class="badge badge-danger">LOCKED</span></td>' +
+                                '<td class="text-center" style="width:120px"></td>' +
+                                '</tr>';
+                            $('#tblProjectVariant tbody').append(row);
+                        }
+                    }
+                    //--Unassigned calculation
+                    var assigned = 0;
+                    var totalOrderQuantity = parseInt(data.Project.OrderQuantity);
+                    var unAssigned = 0;
+                    $('#tblProjectVariant > tbody > tr').each(function () {
+                        assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+                    });
+                    console.log('Assigned: ' + assigned);
+                    unAssigned = totalOrderQuantity - assigned;
+                    $('#unassigned').html(unAssigned);
+                }
+            });
+        } else { //invalid project selected
+            $('.btnAddVariant').addClass('hidden');
+            $('.btnAddProjectModel').addClass('hidden');
+            $('#tblProjectVariant tbody').empty();
+        }
+    });
+
+    function addProjectModelToProjectMaster() {
+        var url = '@Url.Action("UpdateProjectModelInProjectMaster","Common")';
+        var projectId = $('#ProjectMasterId option:selected').val();
+        $.post(url, { projectModel: projectModelFromName, projectId: projectId }, function (data) {
+            if (data == 'updated') {
+                alertify.success(projectModelFromName);
+            } else {
+                alertify.success(data);
+            }
+        });
+    }
+
+    //--Add variant button function
+    function addRow() {
+        var assigned = 0;
+        var totalOrderQuantity = parseInt($('#lblOrderQuantity').html());
+        var unAssigned = 0;
+        $('#tblProjectVariant > tbody > tr').each(function () {
+            assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+        });
+        console.log('Assigned: ' + assigned);
+        unAssigned = totalOrderQuantity - assigned;
+        $('#unassigned').html(0);
+        if (unAssigned <= 0) {
+            alertify.success('There is no unassigned quantity for new variant');
+        } else {
+            var defaultVariantName = '';
+            var projectModel = $('#hdnProductModel').val();
+            var projectModelParts = projectModel.split(" ");
+            if (projectModelParts.length >= 2) {
+                defaultVariantName = projectModelParts[0] + ' ' + projectModelParts[1];
+            }
+            var row = '<tr>' +
+                '<td class="text-center hidden"><input type="text" class="form-control variantId"/></td>' +
+                '<td class="text-center"><input type="text" readonly="" value="' + projectModel + '" class="form-control text-center projectModel"/></td>' +
+                '<td class="text-center"><input type="text" class="form-control text-center prefix"/></td>' +
+                '<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                '<td class="text-center"><input type="text" class="form-control text-center suffix"/></td>' +
+                '<td class="text-center"><input type="number" min="0" value="' + unAssigned + '" class="form-control text-center variantQuantity"/></td>' +
+                '<td class="text-center"><input type="text" readonly=""  value="' + defaultVariantName + '" class="form-control text-center projectVariantName"/></td>' +
+                '<td class="text-center"><span class="badge badge-warning">NEW</span></td>' +
+                '<td class="text-center" style="width:120px">' +
+                '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                '<button type="button" class="btn btn-danger btn-sm btnLock"><i class="fa fa-lock"></i></button>' +
+                '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' +
+                '</td>' +
+                '<td class="text-center hidden"><input type="text" class="form-control addedBy"/></td>' +
+                '<td class="text-center hidden"><input type="text" class="form-control addedDate"/></td>' +
+                '</tr>';
+            $('#tblProjectVariant tbody').append(row);
+        }
+    }
+
+    //---Remove row---
+    $(document).on('click', '.btnRemove', function () {
+        var row = $(this).closest('tr');
+        var variantId = row.find('.variantId').val();
+        var unAssigned = parseInt($('#unassigned').html());
+        var variantQuantity = parseInt(row.find('.variantQuantity').val());
+        if (variantId == '') {
+            row.remove();
+            $('#unassigned').html(unAssigned + variantQuantity);
+        } else {
+            var url = '@Url.Action("RemoveProjectVariant","Common")';
+            $.post(url, { variantId: variantId }, function (success) {
+                if (success) {
+                    alertify.success('Row removed from database.');
+                    row.remove();
+                    $('#unassigned').html(unAssigned + variantQuantity);
+                } else {
+                    console.log(success);
+                    alertify.error('Something went wrong!!');
+                }
+            });
+        }
+    });
+
+
+    //--variant quantity change events ----
+    $(document).on('input', '.variantQuantity', function () {
+        //alert();
+        var assigned = 0;
+        var totalOrderQuantity = parseInt($('#lblOrderQuantity').html());
+        var unAssigned = 0;
+        $('#tblProjectVariant > tbody > tr').each(function () {
+            assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+        });
+        console.log('Assigned(live change): ' + assigned);
+        unAssigned = totalOrderQuantity - assigned;
+        console.log('Unassigned:' + unAssigned);
+        $('#unassigned').html(unAssigned);
+        if (unAssigned <= 0) {
+            var selectedCellValue = parseInt($(document.activeElement).val());
+            $(document.activeElement).val(selectedCellValue + unAssigned);
+            alertify.error("You've reached MAX assign quantity");
+            $('#unassigned').html(0);
+        }
+    });
+
+    //--prefix change events ----
+    $(document).on('input', '.prefix', function () {
+        var projectModel = $('#hdnProductModel').val();
+        var projectModelParts = projectModel.split(" ");
+        if (projectModelParts.length >= 2) {
+            projectModel = projectModelParts[0] + ' ' + projectModelParts[1];
+        }
+        var row = $(document.activeElement).parent().parent();
+        var prefix = $(document.activeElement).val();
+        var variant = row.find('.ramRomVariant').val();
+        var suffix = row.find('.suffix').val();
+        if (variant != '') {
+            if (prefix == '') {
+                variant = '(' + variant + 'GB) ';
+            } else {
+                variant = ' (' + variant + 'GB) ';
+            }
+        } else {
+            variant = '';
+        }
+        if (prefix != '' && variant == '' && suffix != '') {
+            variant = ' ';
+        }
+        console.log(projectModel + ' ' + prefix + variant + suffix);
+        row.find('.projectVariantName').val(projectModel + ' ' + capitalizeFirstLetter(prefix.trim()) + variant + capitalizeFirstLetter(suffix.trim()));
+    });
+
+    //--variant change events ----
+    $(document).on('input', '.ramRomVariant', function () {
+        var projectModel = $('#hdnProductModel').val();
+        var projectModelParts = projectModel.split(" ");
+        if (projectModelParts.length >= 2) {
+            projectModel = projectModelParts[0] + ' ' + projectModelParts[1];
+        }
+        var row = $(document.activeElement).parent().parent();
+        var prefix = row.find('.prefix').val();
+        var variant = $(document.activeElement).val();
+        var suffix = row.find('.suffix').val();
+        if (variant != '') {
+            if (prefix == '') {
+                variant = '(' + variant + 'GB) ';
+            } else {
+                variant = ' (' + variant + 'GB) ';
+            }
+        } else {
+            variant = '';
+        }
+        if (prefix != '' && variant == '' && suffix != '') {
+            variant = ' ';
+        }
+        console.log(projectModel + ' ' + prefix + variant + suffix);
+        row.find('.projectVariantName').val(projectModel + ' ' + capitalizeFirstLetter(prefix.trim()) + variant + capitalizeFirstLetter(suffix.trim()));
+    });
+
+    //--suffix change events ----
+    $(document).on('input', '.suffix', function () {
+        var projectModel = $('#hdnProductModel').val();
+        var projectModelParts = projectModel.split(" ");
+        if (projectModelParts.length >= 2) {
+            projectModel = projectModelParts[0] + ' ' + projectModelParts[1];
+        }
+        var row = $(document.activeElement).parent().parent();
+        var prefix = row.find('.prefix').val();
+        var variant = row.find('.ramRomVariant').val();
+        var suffix = $(document.activeElement).val();
+        if (variant != '') {
+            if (prefix == '') {
+                variant = '(' + variant + 'GB) ';
+            } else {
+                variant = ' (' + variant + 'GB) ';
+            }
+        } else {
+            variant = '';
+        }
+        if (prefix != '' && variant == '' && suffix != '') {
+            variant = ' ';
+        }
+        console.log(projectModel + ' ' + prefix + variant + suffix);
+        row.find('.projectVariantName').val(projectModel + ' ' + capitalizeFirstLetter(prefix.trim()) + variant + capitalizeFirstLetter(suffix.trim()));
+    });
+
+    //---Save Variants in variant table---
+    $(document).on('click', '.btnSave', function () {
+        var row = $(this).closest('tr');
+        var url = '@Url.Action("SaveUpdateProjectVariant","Common")';
+        var projectId = $('#ProjectMasterId option:selected').val();
+        var projectName = $('#ProjectMasterId option:selected').text();
+        var productModel = row.find('.projectModel').val();
+        var variantId = row.find('.variantId').val();
+        var prefix = row.find('.prefix').val();
+        var ramRomVariant = row.find('.ramRomVariant').val();
+        var suffix = row.find('.suffix').val();
+        var variantQuantity = row.find('.variantQuantity').val();
+        var variantName = row.find('.projectVariantName').val();
+        var addedBy;
+        var addedDate;
+        var date;
+        if (variantId != '') {
+            addedBy = row.find('.addedBy').val();
+            addedDate = row.find('.addedDate').val(); //---format date---
+            var dateString = addedDate == null ? '' : addedDate;
+            var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+            date = new Date(seconds);
+            date = formatDate(date) == 'NaN-NaN-NaN' ? '-' : formatDate(date);
+            //-----
+        } else {
+            addedBy = 0;
+            date = '01-01-0001';
+        }
+
+        console.log(variantId);
+        $.post(url, { variantId: variantId, projectId: projectId, projectName: projectName, productModel: productModel, prefix: prefix, ramRomVariant: ramRomVariant, suffix: suffix, variantQuantity: variantQuantity, variantName: variantName.trim(), addedBy: addedBy, addedByDate: date }, function (data) {
+            alertify.success("updated");
+            row.find('.variantId').val(data.Id);
+            row.find('.addedBy').val(data.AddedBy);
+            row.find('.addedDate').val(data.AddedDate);
+            row.find('td:eq(7)').html('<span class="badge badge-success">SAVED</span>');
+        });
+    });
+
+    //--Lock button function--
+    $(document).on('click', '.btnLock', function () {
+        var url = '@Url.Action("LockVariant","Common")';
+        var row = $(this).closest('tr');
+        var variantId = row.find('.variantId').val();
+        console.log(variantId);
+        if (variantId == '') {
+            alertify.error('Please save the variant first');
+        } else {
+            $.post(url, { variantId: variantId }, function (data) {
+                console.log(data);
+                row.find('td:eq(7)').html('<span class="badge badge-danger">LOCKED</span>');
+                row.find('td:eq(8)').html('');
+                alertify.success('Locked project variant');
+            });
+        }
+    });
+    //--format json date--
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [day, month, year].join('-');
+    }
+
+    //--capitalize first letter of a string--
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+</script>
+

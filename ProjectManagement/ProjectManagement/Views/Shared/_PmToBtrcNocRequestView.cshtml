@@ -1,0 +1,193 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.VmPmToBtrcNocRequest
+@{
+    ViewBag.Title = "_pmToBtrcNocRequestView";
+}
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Project Info
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+
+            <a href="javascript:;" class="reload"> </a>
+
+        </div>
+    </div>
+    <div class="portlet-body flip-scroll">
+
+
+        <script type="text/javascript">
+            $(function () {
+                $('#add-file').click(function () {
+                    //alert('Hi');
+
+                    // var data = commonJqueryAjax('/ProjectManager/GetFile', {});
+                    //console.log(data);
+                    var projectId = $('#ProjectMasterId').val();
+                    var imei = $('#ProjectBtrcNocModel_FinalSampleImei').val();
+                    var noc = $('#ProjectBtrcNocModel_ProjectBrtcNocId').val();
+                    var poNo = $('#ProjectBtrcNocModel_ProjectPurchaseOrderFormId').val();
+                    //alert(@Model.ProjectMasterId + "---" + imei + "---" + noc + "---" + poNo)
+                    $.ajax({
+                        url: '@Url.Action("GetFile", "ProjectManager")',
+                        type: 'POST',
+                        data: {projectId:@Model.ProjectMasterId, imei:imei, nocId:noc, poId:poNo},
+                        success: function (data) {
+                            console.log(data);
+                            $('#tbl > tbody:last').append(data);
+                            //$('.new-recipeingredients').append(data);
+                        }
+                    });
+                    return false;
+                });
+
+            });
+            function removeDetailRow(element) {
+                var detailRow = $(element).closest('tr');
+                $(detailRow).remove();
+            }
+        </script>
+
+        @using (Html.BeginForm("AttachFiles", "ProjectManager", FormMethod.Post, new { @id = "attachFiles", enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(true)
+            <div class="row">
+                @Html.HiddenFor(model => model.ProjectMasterId)
+                @Html.HiddenFor(model=>model.ProjectBtrcNocModel.ProjectBrtcNocId)
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">PO No. -- PO Date</label>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(model => model.ProjectBtrcNocModel.ProjectPurchaseOrderFormId, new SelectList(ViewBag.ProjectOrders, "Value", "Text"), new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Final Sample IMEI</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectBtrcNocModel.FinalSampleImei, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-lg-2">Final Sample IMEI</div>
+                        <div class="col-lg-4">@Html.TextBoxFor(model => model.ProjectBtrcNocModel.FinalSampleImei, new { @class = "form-control"})</div>
+                        <div class="col-lg-6"></div>*@
+                    </div>
+                </div>
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-2"></div>
+                    <div class=" col-lg-6">
+
+                        <a id="add-file" class="btn btn-group-circle btn-success" href="javascript:void(0);">Add A file </a>
+
+                        <div></div>
+
+                        <table id="tbl" class="table table-striped">
+                            <thead>
+                                <tr></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <input type="submit" id="attachBtn" class="btn btn-default" value="Submit" />
+
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+                <br />
+            </div>
+
+        }
+        <div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                        <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+                    </div>
+                    <div class="modal-body" id="modelBody">
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Project Info
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse"> </a>
+
+            <a href="javascript:;" class="reload"> </a>
+
+        </div>
+    </div>
+    <div class="portlet-body flip-scroll">
+        <div class="col-lg-12">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover">
+
+                    @if (Model.FilesWebServerPaths.Any())
+                    {
+                        foreach (var path in Model.FilesWebServerPaths)
+                        {
+                            <tr>
+                                <td>@path.FileName</td>
+                                <td><button type="button" class="btn btn-xs btn-success btn-circle btnFilePreview " title="View Details" id="btnFilePreviewBootImage" onclick="showFile('@path.Path')">Show&nbsp; <i class="glyphicon glyphicon-search "></i></button></td>
+                                <td>Remove</td>
+                            </tr>
+                            @*<div class="file-preview-thumbnails">
+                        <div class="col-md-offset-1">
+                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                <div class="">
+                                    <img src="@path" class="file-preview-image img-responsive center-block" title="" alt="" style="width: 330px; height: 160px;">
+
+                                </div>
+                                <div class="file-thumbnail-footer">
+
+                                    <div class="file-actions">
+                                        <div class="file-footer-buttons">
+                                            <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewBootImage" onclick="showFile('@path')"><i class="glyphicon glyphicon-search "></i></button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                        }
+                    }
+                </table>
+            </div>
+                
+            </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function() {
+    });
+
+    function showFile(url) {
+        var modalData = "";
+        modalData += '<embed src="' + url+'" style="width:500px; height:375px;" frameborder="0"></embed>';
+        document.getElementById("modelBody").innerHTML = modalData;
+        $('#filePreviewModal').modal();
+        
+    }
+</script>
+

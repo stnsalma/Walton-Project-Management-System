@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewBag.Title = "ProjectPoFeedbacks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue-ebonyclay">
+    <div class="portlet-title">
+        <div class="caption">Po Feedback List</div>
+        <div class="tools">
+            <input type="button" class="btn btn-sm btn-warning" value="Create" onclick="location.href='@Url.Action("ProjectPoFeedback","Common")'" />
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="tblFeedback">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Project</th>
+                        <th>Order No</th>
+                        <th>Feedback</th>
+                        <th>Reorder</th>
+                        <th>Date</th>
+                        <th>Download<br/>Links</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in ViewBag.Feedbacks)
+                    {
+                        <tr>
+                            <td>@v.Id</td>
+                            <td>@v.ProjectId</td>
+                            <td>@v.ProjectModel</td>
+                            <td>@v.OrderNumber</td>
+                            <td>@v.FeedBack</td>
+                            <td>@v.AllowReorder</td>
+                            <td>@v.AddedDate</td>
+                            <td>
+                                
+                                @{string a = Path.GetFileNameWithoutExtension(v.FileUploadPath);}
+                                @if (a != null && a!="failed")
+                                {
+                                    <i class="fa fa-download"></i>
+                                    @Html.ActionLink(a, "DownloadPoFeedbackFile", "Common", new { id = @v.Id },null)
+                                }
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-success btnUpdate" value="Update" onclick="location.href='@Url.Action("ProjectPoFeedback","Common",new{@v.Id})'"/>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var mytable = $('#tblFeedback').DataTable({
+            "ordering": false,
+            "columnDefs": [
+                //{ className: "text-center", "targets": [2, 3, 4, 5] },
+                {
+                    "targets": [0, 1],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+        $('#tblFeedback tbody').on('click', '.btnUpdate', function() {
+            var data = mytable.row($(this).parents('tr')).data();
+            console.log('Id>' + data[0] + ', ProjectId>' + data[1]);
+            var url = '@Url.Action("PoFeedBackDetails","Common")';
+            //$.post(url, { id: data[0] }, function(data) {
+
+            //});
+        });
+    });
+</script>
+

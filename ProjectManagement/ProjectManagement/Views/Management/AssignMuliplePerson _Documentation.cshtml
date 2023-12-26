@@ -1,0 +1,275 @@
+﻿@model ProjectManagement.ViewModels.Software.AssignMuliplePersonViewModel
+
+@{
+    ViewBag.Title = "AssignMuliplePerson";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<h2>AssignMuliplePerson</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="tbl" class="table" >
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].ProjectMasterId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].TypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].AssignUserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].AssignUserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].AssignDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].ProjectManagerUserId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PmQcAssignModels[0].ProjectManagerUserName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.PmQcAssignModels)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectMasterId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignUserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignUserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectManagerUserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectManagerUserName)
+            </td>
+            <td>
+                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                <button type="button" class="btn btn-danger btnOpenModal">
+                    <span class="glyphicon glyphicon-plus"></span> Single
+                </button>
+                <button type="button" class="btn btn-success btnOpenModal">
+                    <span class="glyphicon glyphicon-menu-hamburger"></span> Multiple
+                </button>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<script>
+    function OnBeginRequest() {
+        console.log('On Begin');
+
+    }
+    function OnCompleteRequest() {
+        console.log('On Completed');
+        
+        $('#draggable').modal('hide');
+        $('#multiple option').prop('selected', false).trigger('chosen:updated');
+        //alertify.alert('Alert Title', 'Alert Message!', function () { alertify.success('Ok'); });
+        //alertify.dialog('confirm')
+        //             .set({
+        //                 'title': 'Alert',
+        //                 'transition': 'slide',
+        //                 'labels': { ok: 'Yes' },
+        //                 'message': "This bill already has been confirmed. Page Refresh required",
+        //                 'onok': function () {
+        //                     var rowNumber = document.getElementById("rowNumber").value;
+        //                     console.log(rowNumber);
+
+        //                     var table = document.getElementById("tbl");
+        //                     table.deleteRow(rowNumber);
+        //                     document.getElementById("rowNumber").value = 0;
+        //                 }
+        //             }).show();
+        //get the closable setting value.
+        //var closable = alertify.alert().setting('closable');
+        //grab the dialog instance using its parameter-less constructor then set multiple settings at once.
+        alertify.alert()
+          .setting({
+              'label': 'Ok',
+              'message': 'hiiii',
+              'onok': function () {
+                  var rowNumber = document.getElementById("rowNumber").value;
+                                       console.log(rowNumber);
+
+                                       var table = document.getElementById("tbl");
+                                       table.deleteRow(rowNumber);
+                                       document.getElementById("rowNumber").value = 0;
+                   alertify.success('Great');
+              }
+          }).show();
+        
+       
+
+    }
+    function OnSuccessRequest() {
+        console.log('On Success');
+        
+    }
+    function OnFailureRequest() {
+        console.log('On Failure');
+    }
+</script>
+
+@{
+    AjaxOptions options = new AjaxOptions();
+    options.HttpMethod = "POST";
+    options.OnBegin = "OnBeginRequest";
+    options.OnSuccess = "OnSuccessRequest";
+    options.OnComplete = "OnCompleteRequest";
+    options.OnFailure = "OnFailureRequest";
+    //  options.Confirm = "Do you want to Add Country ?";
+    options.UpdateTargetId = "divResponse";
+    options.InsertionMode = InsertionMode.Replace; 
+}
+
+@using (Ajax.BeginForm("AssignMuliplePerson", "Management", options))
+{
+    <div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Start Dragging Here</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row">
+                            <input name="rowNumber" id="rowNumber" type="text" class="form-control date-picker">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Disable Past Dates</label>
+                            <div class="col-md-3">
+                                <div class="input-group input-medium date date-picker" data-date-format="dd-mm-yyyy" data-date-start-date="+0d">
+                                    <input type="text" class="form-control" readonly="">
+                                    <span class="input-group-btn">
+                                        <button class="btn default" type="button">
+                                            <i class="fa fa-calendar"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <!-- /input-group -->
+                                <span class="help-block"> Select date </span>
+                            </div>
+                        </div>
+                        @*Modal body goes here
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="form-group">
+                                        <label>Street</label>
+                                        <input name="Street" id="Street" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="recipient-name" class="control-label">ProjectName</label>
+                                <input name="ProjectName" id="ProjectName" type="text" class="form-control" id="recipient-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="message-text" class="control-label">Comment:</label>
+                                <textarea name="Comment" id="Comment" class="form-control" id="message-text"></textarea>
+                            </div>*@
+                        <div class="form-group">
+                            <label for="multiple" class="control-label">Select2 multi select</label>
+                            <select name="multiple" id="multiple" class="form-control" multiple>
+
+                                <option value="AZ">Arizona</option>
+                                <option value="CO">Colorado</option>
+                                <option value="ID">Idaho</option>
+                                <option value="MT">Montana</option>
+                                <option value="NE">Nebraska</option>
+                                <option value="NM">New Mexico</option>
+                                <option value="ND">North Dakota</option>
+                                <option value="UT">Utah</option>
+                                <option value="WY">Wyoming</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="multiple" class="control-label">Single select</label>
+                           @Html.DropDownListFor(
+x => x.ddlAssignUserId, new SelectList(Model.ddlAssignUsersList), "-- Please select a category --", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ddlAssignUserId, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                    <input type="submit" class="btn green" value="Save changes" />
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+}
+<div id="divResponse">divResponse</div>
+<script>
+    $(function () {
+        //$('.table').dataTable();
+        $('#rowNumber').datepicker();
+        $('#multiple').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+        $('.btnOpenModal').on('click', function (e) {
+            e.preventDefault();
+
+            var buttonid = $(this).attr('id');
+            $('#draggable').modal({
+                show: true,
+                backdrop: 'static'
+            });
+
+        });
+        //$('input[type=submit]').on('click', function (e) {
+        //    e.preventDefault();
+        //    var ddlAssignUserId = $('#ddlAssignUserId').val();
+        //    console.log(ddlAssignUserId);
+
+        //    var multiple = $('#multiple').val();
+        //    console.log(multiple);
+            
+        //    if (multiple === '' || multiple === null) {
+        //        alert('DOEN');
+        //        return false;
+        //    } else {
+        //        $(this).trigger('submit');
+        //    }
+        //    alert('hi');
+           
+        //});
+    });
+</script>

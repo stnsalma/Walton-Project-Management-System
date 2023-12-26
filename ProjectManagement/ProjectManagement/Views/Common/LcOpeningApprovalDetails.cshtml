@@ -1,0 +1,973 @@
+﻿@using DocumentFormat.OpenXml.Wordprocessing
+@model ProjectManagement.ViewModels.Commercial.VmProjectLc
+@{
+    ViewBag.Title = "LcOpeningApprovalDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .thumbnail {
+        border: 1px solid #ddd; /* Gray border */
+        border-radius: 4px; /* Rounded border */
+        padding: 5px; /* Some padding */
+        width: 160px; /* Set a small width */
+        height: 100px; /* Set a small width */
+    }
+
+        /* Add a hover effect (blue shadow) */
+        .thumbnail:hover {
+            box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+</style>
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <div class="action">
+        @*<a class="btn green btn-outline  btn-sm pull-right jquery-word-export" href="javascript:void(0)">
+                <i class="fa fa-wordpress"></i>
+                Export as .doc
+            </a>
+            <a class="btn green btn-outline  btn-sm pull-right" id="PrintButton"><i class="fa fa-print"></i> Print</a>*@
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">LC Opening Approval</div>
+            </div>
+            <div class="portlet-body">
+                @*=====GENERAL INFO======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold"> GENERAL INFO </h3>
+                    </div>
+                    <div class="col-md-12">
+
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"> Project Name : </td>
+                                    <td class="text-center"><span class="bold">@Model.LcOpeningPermissionModel.Model</span>  </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Total Order Quantity : </td>
+                                    <td class="text-center"> @ViewBag.TotalOrderQuantity </td>
+                                </tr>
+                                @*<tr>
+                                        <td class="text-center"> Order Quantity : </td>
+                                        <td class="text-center"> @ViewBag.Po.Quantity </td>
+
+                                    </tr>*@
+                                @*<tr>
+                                        <td class="text-center"> Order No : </td>
+                                        <td class="text-center"> @ViewBag.Master.OrderNuber </td>
+                                    </tr>*@
+                                <tr>
+                                    <td class="text-center">
+                                        Project Age :
+                                        <br />
+                                        <span style="font-size: 10px;color: red">(calculated from market clearance date of 1st order)</span>
+                                    </td>
+                                    <td class="text-center"> @ViewBag.ProjectAge </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Project Type : </td>
+                                    <td class="text-center"> @ViewBag.Master.ProjectType </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                @*=======Project Spec======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold"> SPECIFICATION </h3>
+                    </div>
+                    <div class="col-md-12">
+                        @{
+                            var simSlotNumber = @ViewBag.Master.SimSlotNumber ?? "no data";
+                            var slotType = @ViewBag.Master.SlotType ?? "no data";
+                            var displaySize = @ViewBag.Master.DisplaySize ?? "no data";
+                            var resolution = @ViewBag.Master.DisplayResulution ?? "no data";
+                            var displayType = @ViewBag.Master.DisplaySpeciality ?? "no data";
+                            var frontCam = @ViewBag.Master.FrontCam ?? "no data";
+                            var backCam = @ViewBag.Master.BackCam ?? "no data";
+                            var ram = @ViewBag.Master.Ram ?? "no data";
+                            var rom = @ViewBag.Master.Rom ?? "no data";
+                            var osName = @ViewBag.Master.OsName ?? "no data";
+                            var osVersion = @ViewBag.Master.OsVersion ?? "no data";
+                            var chipsetName = @ViewBag.Master.ChipsetName ?? "no data";
+                            var cpuName = @ViewBag.Master.CpuName ?? "no data";
+                            var chipsetFrequency = @ViewBag.Master.ChipsetFrequency ?? "no data";
+                            var chipsetCore = @ViewBag.Master.ChipsetCore ?? "no data";
+                            var batteryRating = @ViewBag.Master.BatteryRating ?? "no data";
+                            var batteryType = @ViewBag.Master.BatteryType ?? "no data";
+
+                        }
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                @*<tr>
+                                        <td class="text-center bold" style="color:firebrick"> Sim  </td>
+                                        <td class="text-center">Sim Slot: @simSlotNumber, Slot Type: @slotType</td>
+                                    </tr>*@
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> Display & Resolution </td>
+                                    <td class="text-center"> Size: @displaySize, Resolution: @resolution, Display Type: @displayType </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> Camera </td>
+                                    <td class="text-center"> Front Camera: @frontCam, Back Camera: @backCam </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> Memory </td>
+                                    <td class="text-center"> RAM: @ram, ROM: @rom </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> OS </td>
+                                    <td class="text-center"> OS: @osName, Version: @osVersion </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> Processor </td>
+                                    <td class="text-center"> Chipset: @chipsetName, CPU: @cpuName, Frequency: @chipsetFrequency, Core: @chipsetCore </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold" style="color:firebrick"> Battery </td>
+                                    <td class="text-center"> Capacity: @batteryRating, Type: @batteryType </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                @*=======Accessories Price======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold"> ACCESSORIES PRICE </h3>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Accessory Name</th>
+                                    <th class="text-center">Vendor</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Currency</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Duty</th>
+                                    <th class="text-center">Total Price<br /><span style="font-size: xx-small">(Price+Duty)</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ decimal totalAccPrice = 0;}
+                                @foreach (var price in ViewBag.AccPrice)
+                                {
+                                    totalAccPrice = totalAccPrice + Convert.ToDecimal(price.TotalPrice);
+                                    <tr>
+                                        <td class="text-center">@price.AccessoryName</td>
+                                        <td class="text-center">@price.Vendor</td>
+                                        <td class="text-center">@price.Price</td>
+                                        <td class="text-center">@price.Currency</td>
+                                        <td class="text-center">@price.Type</td>
+                                        <td class="text-center">@price.Duty</td>
+                                        <td class="text-center">@price.TotalPrice</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6"></td>
+                                    <td class="text-center">
+                                        @{
+                                            var handsetPrice = @ViewBag.Master.FinalPrice??0;
+                                            var jigsPrice = Convert.ToDecimal(@ViewBag.JigsPrice??0);
+                                            var totalHandsetPrice = totalAccPrice + handsetPrice + jigsPrice;
+                                            var finalPrice = @ViewBag.Master.FinalPrice??0;
+                                        }
+                                        <span style="font-size: smaller">Total Accessories:@string.Format("{0:0.0000}", @totalAccPrice)<br />
+                                            Handset Price:@string.Format("{0:0.0000}", @finalPrice)<br />
+                                            Jigs Price:@string.Format("{0:0.0000}", @jigsPrice)<br/>
+                                            Handset Total Price:@string.Format("{0:0.0000}", @totalHandsetPrice)</span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                @*Project Images*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            Project Images
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed" id="tblOrderDetails">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Image</th>
+                                    <th class="text-center">Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.ProjectImages)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                <a target="_blank" href="@v.ImagePath">
+                                                    <img class="thumbnail" src="@v.ImagePath" alt="image">
+                                                </a>
+                                            </td>
+                                            <td class="text-center">@v.Remarks</td>
+                                        </tr>
+                                    }
+                                }
+                                @*<tr>
+                            <td colspan="3" class="text-right"><span class="bold">Total</span></td>
+                            <td class="text-center" id="tdSumTotalActivation"></td>
+                            <td class="text-center" id="tdSumRemainingQuantity"></td>
+                        </tr>*@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*=====LC Permission INFO======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold"> LC Permission Info </h3>
+                    </div>
+                    <div class="col-md-12">
+
+                        <table class="table table-bordered table-striped table-condensed">
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"> Product : </td>
+                                    <td class="text-center"><span class="bold">@Model.LcOpeningPermissionModel.Product</span>  </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Supplier Name : </td>
+                                    <td class="text-center">@Model.LcOpeningPermissionModel.SupplierName </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Supplier Grade : </td>
+                                    <td class="text-center">@Model.LcOpeningPermissionModel.SupplierGrade</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Opening Date : </td>
+                                    <td class="text-center"> @String.Format("{0:dd-MMM-yyyy}", @Model.LcOpeningPermissionModel.OpeningDate) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> LC Amount : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.LcAmount </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Lc Order No : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.OrderNo </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> LC Order Quantity : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.OrderQuantity </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Pipeline Quantity : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.PipelineQuantity </td>
+                                </tr>
+                                @if (!User.IsInRole("FIN") && !User.IsInRole("FINHEAD") && !User.IsInRole("ACCNT") && !User.IsInRole("ACCNTHEAD"))
+                                {
+                                    <tr>
+                                        <td class="text-center"> TTI : </td>
+                                        <td class="text-center"> @Model.LcOpeningPermissionModel.TtiPerLine </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="text-center"> Prepared by Remarks : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.Remarks </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Commercial Remarks : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.SourcingRemarks </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> CEO Remarks : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.CeoRemarks </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> Acknowledgement Remarks : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.AcknowledgeRemarks </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center"> BI Analyst Remarks : </td>
+                                    <td class="text-center"> @Model.LcOpeningPermissionModel.BiRemarks </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                @*Order Quantity Details*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            Order Quantity Details
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed" id="tblOrderDetails">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Project Name</th>
+                                    <th class="text-center">Sourcing Type</th>
+                                    <th class="text-center">PO No</th>
+                                    <th class="text-center">PO Date</th>
+                                    <th class="text-center">PO Quantity</th>
+                                    <th class="text-center">Variant Name</th>
+                                    <th class="text-center">Variant Quantity</th>
+                                    <th class="text-center">Produced</th>
+                                    <th class="text-center">Unproduced</th>
+                                    <th class="text-center">Unproduced(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.MasterPoVariant)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@v.ProjectName</td>
+                                            <td class="text-center">@v.SourcingType</td>
+                                            <td class="text-center">@v.OrderNumber</td>
+                                            <td class="text-center">@String.Format("{0:dd-MMM-yyyy}", @v.PoDate)</td>
+                                            <td class="text-center">@v.PoQuantity</td>
+                                            <td class="text-center">@v.VariantName</td>
+                                            <td class="text-center">@v.VariantQuantity</td>
+                                            <td class="text-center">@v.Produced</td>
+                                            <td class="text-center">@v.UnProduced</td>
+                                            <td class="text-center">@v.UnproducedPercentage%</td>
+                                        </tr>
+                                    }
+                                }
+                                @*<tr>
+                                        <td colspan="3" class="text-right"><span class="bold">Total</span></td>
+                                        <td class="text-center" id="tdSumTotalActivation"></td>
+                                        <td class="text-center" id="tdSumRemainingQuantity"></td>
+                                    </tr>*@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*=====Sales Forecast Report======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            @{
+                                var foreCastLastUpdated = "no data";
+                                foreach (var v in ViewBag.VariantWiseForeCast)
+                                {
+                                    if (v != null)
+                                    {
+                                        foreCastLastUpdated = String.Format("{0:dd-MMM-yyyy}", v.AddedDate);
+                                        break;
+                                    }
+                                }
+                            }
+                            Variant Wise Sales Forecast Report (last updated @foreCastLastUpdated)
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed" id="tblForecast">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Variant Name</th>
+                                    <th class="text-center">Activation Trend (Last 30 Days)</th>
+                                    <th class="text-center">Total Produced Quantity</th>
+                                    <th class="text-center">Current Warehouse Stock</th>
+                                    <th class="text-center">
+                                        Remaining Market Stock
+                                        <br />
+                                        <span style="font-size: 8px">(Activation Remaining-Current Warehouse Stock)</span>
+                                    </th>
+                                    <th class="text-center">
+                                        Total Pipeline Quantity
+                                        <br />
+                                        <span style="font-size: 8px">(Total Order Quantity-Total Produced Quantity)</span>
+                                    </th>
+                                    <th class="text-center">Total Activation</th>
+                                    <th class="text-center">
+                                        Activation Remaining
+                                        <br />
+                                        <span style="font-size: 8px">(Total Produced Quantity-Total Activaiton)</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.VariantWiseForeCast)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@v.Model</td>
+                                            <td class="text-center">@v.TotalActivatedInThirtyDays</td>
+                                            <td class="text-center">@v.TotalStock</td>
+                                            <td class="text-center">@v.CurrentWarehouseStock</td>
+                                            <td class="text-center">@v.RemainingMarketStock</td>
+                                            <td class="text-center tdTotalPipeline">@v.TotalPipeLineQuantity</td>
+                                            <td class="text-center tdTotalActivation">@v.TotalActivation</td>
+                                            <td class="text-center tdRemainingQuantity">@v.RemainingQuantity</td>
+                                        </tr>
+                                    }
+                                }
+                                <tr>
+                                    <td colspan="5" class="text-right"><span class="bold">Total</span></td>
+                                    <td class="text-center" id="tdSumTotalPipeline"></td>
+                                    <td class="text-center" id="tdSumTotalActivation"></td>
+                                    <td class="text-center" id="tdSumRemainingQuantity"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*=====Relevant Model Sales Forecast Report======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            @{
+                                foreCastLastUpdated = "no data";
+                                var startingRange = "no data";
+                                var finishingRange = "no data";
+                                if (ViewBag.RelevantModelForecast != null)
+                                {
+                                    foreach (var v in ViewBag.RelevantModelForecast)
+                                    {
+                                        if (v != null)
+                                        {
+                                            foreCastLastUpdated = String.Format("{0:dd-MMM-yyyy}", v.AddedDate);
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (ViewBag.PriceRange != null)
+                                {
+                                    startingRange = Convert.ToString(ViewBag.PriceRange.StartingRange);
+                                    finishingRange = Convert.ToString(ViewBag.PriceRange.FinishingRange);
+                                }
+                            }
+                            Relevant Model Sales Forecast Report (Price Range @startingRange-@finishingRange) (last updated @foreCastLastUpdated)
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed" id="tblRelevantModelForecast">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Variant Name</th>
+                                    <th class="text-center">Activation Trend (Last 30 Days)</th>
+                                    <th class="text-center">Total Produced Quantity</th>
+                                    <th class="text-center">Current Warehouse Stock</th>
+                                    <th class="text-center">
+                                        Remaining Market Stock
+                                        <br />
+                                        <span style="font-size: 8px">(Activation Remaining-Current Warehouse Stock)</span>
+                                    </th>
+                                    <th class="text-center">
+                                        Total Pipeline Quantity
+                                        <br />
+                                        <span style="font-size: 8px">(Total Order Quantity-Total Produced Quantity)</span>
+                                    </th>
+                                    <th class="text-center">Total Activation</th>
+                                    <th class="text-center">
+                                        Activation Remaining
+                                        <br />
+                                        <span style="font-size: 8px">(Total Produced Quantity-Total Activaiton)</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.RelevantModelForecast != null)
+                                {
+                                    foreach (var v in ViewBag.RelevantModelForecast)
+                                    {
+                                        if (v != null)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@v.Model</td>
+                                                <td class="text-center">@v.TotalActivatedInThirtyDays</td>
+                                                <td class="text-center">@v.TotalStock</td>
+                                                <td class="text-center">@v.CurrentWarehouseStock</td>
+                                                <td class="text-center">@v.RemainingMarketStock</td>
+                                                <td class="text-center tdTotalPipeline">@v.TotalPipeLineQuantity</td>
+                                                <td class="text-center tdTotalActivation">@v.TotalActivation</td>
+                                                <td class="text-center tdRemainingQuantity">@v.RemainingQuantity</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                @*=====LC Graphs======*@
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="note note-success text-center">
+                            <h3 class="bold">
+                                Previous order vs (handset unit) price comparison (in USD)
+                            </h3>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="chartdiv" style="height: 500px"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="note note-success text-center">
+                            <h3 class="bold">
+                                Month Wise Overall LC Value (USD)
+                            </h3>
+                        </div>
+                        <div class="col-md-12">
+                            <div id="chartdiv2" style="height: 500px"></div>
+                        </div>
+                    </div>
+                </div>
+                @*=====File Attachments======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            Attachments
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed" id="tblFiles">
+                            <thead>
+                                <tr>
+                                    <th>Download Files</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.LcOpeningPermissionFileModels.Count > 0)
+                                {
+                                    foreach (var file in Model.LcOpeningPermissionFileModels)
+                                    {
+                                        Html.RenderPartial("~/Views/Shared/_AddFiles.cshtml", file);
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*=====Relevant Models======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            Relevant Model Info
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Project Name</th>
+                                    <th class="text-center">PO No</th>
+                                    <th class="text-center">PO Date</th>
+                                    <th class="text-center">PO Quantity</th>
+                                    <th class="text-center">Variant Name</th>
+                                    <th class="text-center">Variant Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.RelevantModel)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@v.ProjectName</td>
+                                            <td class="text-center">@v.OrderNumber</td>
+                                            <td class="text-center">@String.Format("{0:dd-MMM-yyyy}", @v.PoDate)</td>
+                                            <td class="text-center">@v.PoQuantity</td>
+                                            <td class="text-center">@v.VariantName</td>
+                                            <td class="text-center">@v.VariantQuantity</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br />
+                @*=====PROJECT PERFORMANCE======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            PROJECT PERFORMANCE IN 60 DAYS
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Project Name</th>
+                                    <th class="text-center">Order No</th>
+                                    <th class="text-center">Launch Date</th>
+                                    <th class="text-center">Total Activation</th>
+                                    <th class="text-center">Total Service Receive</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.ProjectOrderPerformance)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@v.Model</td>
+                                            <td class="text-center">@v.Orders</td>
+                                            <td class="text-center">@String.Format("{0:dd-MMM-yyyy}", @v.LaunchDate)</td>
+                                            <td class="text-center">@v.OrderWiseTotalActivation</td>
+                                            <td class="text-center">@v.TotalServiceReceive</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br/>
+                @*=====SUPPLIER PERFORMANCE FOR PREVIOUS PROJECTS======*@
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            SUPPLIER PERFORMANCE FOR PREVIOUS PROJECTS
+                        </h3>
+                    </div>
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Model</th>
+                                    <th class="text-center">Supplier Name</th>
+                                    <th class="text-center">TotalReceive</th>
+                                    <th class="text-center">Total Unique Service Receive</th>
+                                    <th class="text-center">TotalActivation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var v in ViewBag.SupplierPerformance)
+                                {
+                                    if (v != null)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@v.Model</td>
+                                            <td class="text-center">@v.SupplierName</td>
+                                            <td class="text-center">@v.TotalReceive</td>
+                                            <td class="text-center">@v.TotalUniqueServiceReceive</td>
+                                            <td class="text-center">@v.TotalActivation</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @*=====Approver remarks======*@
+                <hr />
+                <div class="row">
+                    <div class="note note-success text-center">
+                        <h3 class="bold">
+                            Remarks
+                        </h3>
+                    </div>
+                    <div class="col-md-12">
+                        <textarea class="form-control" id="txtApproverRemarks" placeholder="Remarks" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn red btn-danger btn-lg" id="btnApprove"><i class="fa fa-check fa-lg"></i> Approve</button>
+<button id="btnDecoy" class="btn btn-warning hidden"><i class="fa fa-refresh fa-spin fa-lg"></i> PLEASE WAIT....</button>
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<script>
+    $(function () {
+        $('#btnApprove').on('click', function () {
+            $('#btnApprove').addClass('hidden');
+            $('#btnDecoy').removeClass('hidden');
+            var lcId = '@Model.LcOpeningPermissionModel.Id';
+            var remarks = $('#txtApproverRemarks').val();
+            console.log(lcId + '>>' + remarks);
+            var url = '@Url.Action("ApproveLc","Common")';
+            $.post(url, { id: lcId, remarks: remarks }, function (data) {
+                if (data == 'success') {
+                    alertify.success("Approved successfully");
+                    window.location.replace('@Url.Action("LcOpeningApproval", "Common")');
+                }
+            });
+        });
+        //====sales forecast=====
+        var tdSumTotalActivation = 0;
+        var tdSumRemainingQuantity = 0;
+        var tdTotalPipeline = 0;
+        $("#tblForecast tr").not(':first').not(':last').each(function () {
+            tdSumTotalActivation += getnum($(this).find(".tdTotalActivation").text());
+            tdSumRemainingQuantity += getnum($(this).find(".tdRemainingQuantity").text());
+            tdTotalPipeline += getnum($(this).find(".tdTotalPipeline").text());
+            function getnum(t) {
+                if (isNumeric(t)) {
+                    return parseInt(t, 10);
+                }
+                return 0;
+                function isNumeric(n) {
+                    return !isNaN(parseFloat(n)) && isFinite(n);
+                }
+            }
+        });
+        $("#tdSumTotalActivation").text(tdSumTotalActivation);
+        $("#tdSumRemainingQuantity").text(tdSumRemainingQuantity);
+        $("#tdSumTotalPipeline").text(tdTotalPipeline);
+    });
+
+    $(window).on('load', function () {
+        // code here
+        var model = '@Model.LcOpeningPermissionModel.Model';
+        var url = '@Url.Action("GetLcGraph","Common")';
+        $.post(url, { projectName: model }, function (data) {
+            console.log(data);
+            //=====this projects previous LC's graph=====
+            if (data.lc.length > 0) {
+                var obj = [];
+                for (var i = 0; i < data.lc.length; i++) {
+                    var newData = {};
+                    newData.value = data.lc[i].LcValue;
+                    newData.date = data.lc[i].StrLcOpeningDate;
+                    newData.projectname = data.lc[i].ProjectName;
+                    obj.push(newData);
+                }
+                console.log(obj);
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                var chart = am4core.create("chartdiv3", am4charts.XYChart);// chartdiv3 which doesn't exist placed intentionally for future use and this variable required to be declared here
+
+                // Add data
+                chart.data = obj;
+
+                // Set input format for the dates
+                chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+                // Create axes
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.numberFormatter = new am4core.NumberFormatter();
+                valueAxis.numberFormatter.numberFormat = '#.##';
+
+                // Create series
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "value";
+                series.dataFields.dateX = "date";
+                series.tooltipText = "{projectname}";
+                series.strokeWidth = 2;
+                series.minBulletDistance = 15;
+
+                // Drop-shaped tooltips
+                series.tooltip.background.cornerRadius = 20;
+                series.tooltip.background.strokeOpacity = 0;
+                series.tooltip.pointerOrientation = "vertical";
+                series.tooltip.label.minWidth = 40;
+                series.tooltip.label.minHeight = 40;
+                series.tooltip.label.textAlign = "middle";
+                series.tooltip.label.textValign = "middle";
+
+                // Make bullets grow on hover
+                var bullet = series.bullets.push(new am4charts.CircleBullet());
+                bullet.circle.strokeWidth = 2;
+                bullet.circle.radius = 4;
+                bullet.circle.fill = am4core.color("#fff");
+
+                var bullethover = bullet.states.create("hover");
+                bullethover.properties.scale = 1.3;
+
+                // Make a panning cursor
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.behavior = "panXY";
+                chart.cursor.xAxis = dateAxis;
+                chart.cursor.snapToSeries = series;
+
+                // Create vertical scrollbar and place it before the value axis
+                chart.scrollbarY = new am4core.Scrollbar();
+                chart.scrollbarY.parent = chart.leftAxesContainer;
+                chart.scrollbarY.toBack();
+
+                // Create a horizontal scrollbar with previe and place it underneath the date axis
+                chart.scrollbarX = new am4charts.XYChartScrollbar();
+                chart.scrollbarX.series.push(series);
+                chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+                dateAxis.start = 0.79;
+                dateAxis.keepSelection = true;
+            }
+            //=====Month wise all project total LC's graph=====
+            if (data.totalLc.length > 0) {
+                obj = [];
+                for (i = 0; i < data.totalLc.length; i++) {
+                    newData = {};
+                    newData.value = data.totalLc[i].LcValue.toFixed(2);
+                    newData.date = data.totalLc[i].StrLcOpeningDate;
+                    newData.projectname = data.totalLc[i].ProjectName;
+                    for (var m = 0; m < data.approvedLc.length; m++) {
+                        if (data.approvedLc[m].StrLcOpeningDate == data.totalLc[i].StrLcOpeningDate) {
+                            newData.value2 = data.approvedLc[m].LcValue.toFixed(2);
+                        }
+                    }
+                    obj.push(newData);
+                }
+                console.log(obj);
+                // Themes begin
+                am4core.useTheme(am4themes_animated);
+                // Themes end
+
+                // Create chart instance
+                chart = am4core.create("chartdiv2", am4charts.XYChart);
+
+                // Add data
+                chart.data = obj;
+
+                // Set input format for the dates
+                chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+                // Create axes
+                dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.numberFormatter = new am4core.NumberFormatter();
+                valueAxis.numberFormatter.numberFormat = '#.##';
+
+                // Create series
+                series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "value";
+                series.dataFields.dateX = "date";
+                //series.tooltipText = "{value}";
+                series.tooltipText = "[bold]Total LC:[/] {value}\n[bold]Approved LC:[/] {value2}";
+                series.strokeWidth = 2;
+                series.minBulletDistance = 15;
+
+                // Create series (Approve LC)
+                var series2 = chart.series.push(new am4charts.LineSeries());
+                series2.dataFields.valueY = "value2";
+                series2.dataFields.dateX = "date";
+                //series2.tooltipText = "{value2}";
+                series2.strokeWidth = 2;
+                series2.strokeDasharray = "3,4";
+                series2.minBulletDistance = 15;
+
+                // Drop-shaped tooltips
+                series.tooltip.background.cornerRadius = 20;
+                series.tooltip.background.strokeOpacity = 0;
+                series.tooltip.pointerOrientation = "vertical";
+                series.tooltip.label.minWidth = 40;
+                series.tooltip.label.minHeight = 40;
+                series.tooltip.label.textAlign = "middle";
+                series.tooltip.label.textValign = "middle";
+
+                // Make bullets grow on hover
+                bullet = series.bullets.push(new am4charts.CircleBullet());
+                bullet.circle.strokeWidth = 2;
+                bullet.circle.radius = 4;
+                bullet.circle.fill = am4core.color("#fff");
+
+                var bullethover = bullet.states.create("hover");
+                bullethover.properties.scale = 1.3;
+
+                // Make a panning cursor
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.behavior = "panXY";
+                chart.cursor.xAxis = dateAxis;
+                chart.cursor.snapToSeries = series;
+
+                // Create vertical scrollbar and place it before the value axis
+                chart.scrollbarY = new am4core.Scrollbar();
+                chart.scrollbarY.parent = chart.leftAxesContainer;
+                chart.scrollbarY.toBack();
+
+                // Create a horizontal scrollbar with previe and place it underneath the date axis
+                chart.scrollbarX = new am4charts.XYChartScrollbar();
+                chart.scrollbarX.series.push(series);
+                chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+                dateAxis.start = 0.79;
+                dateAxis.keepSelection = true;
+            }
+            //=====this projects previous order vs handset unit price graph=====
+            if (data.dataForPriceGraph.length > 0) {
+                obj = [];
+                for (i = 0; i < data.dataForPriceGraph.length; i++) {
+                    newData = {};
+                    newData.price = data.dataForPriceGraph[i].FinalPrice;
+                    newData.order = 'Order no ' + data.dataForPriceGraph[i].OrderNuber;
+                    //newData.tool = data.dataForPriceGraph[i].ProjectName;
+                    obj.push(newData);
+                }
+                console.log(obj);
+                // Create chart instance
+                var chart = am4core.create("chartdiv", am4charts.XYChart3D);
+                //Add data
+                chart.data = obj;
+
+                // Create axes
+                var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+                categoryAxis.dataFields.category = "order";
+                categoryAxis.renderer.labels.template.rotation = 270;
+                categoryAxis.renderer.labels.template.hideOversized = false;
+                categoryAxis.renderer.minGridDistance = 20;
+                categoryAxis.renderer.labels.template.horizontalCenter = "right";
+                categoryAxis.renderer.labels.template.verticalCenter = "middle";
+                categoryAxis.tooltip.label.rotation = 270;
+                categoryAxis.tooltip.label.horizontalCenter = "right";
+                categoryAxis.tooltip.label.verticalCenter = "middle";
+
+                valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.title.text = "Prices";
+                valueAxis.title.fontWeight = "bold";
+
+                // Create series
+                series = chart.series.push(new am4charts.ColumnSeries3D());
+                series.dataFields.valueY = "price";
+                series.dataFields.categoryX = "order";
+                series.name = "Visits";
+                series.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+                series.columns.template.fillOpacity = .8;
+
+                var columnTemplate = series.columns.template;
+                columnTemplate.strokeWidth = 2;
+                columnTemplate.strokeOpacity = 1;
+                columnTemplate.stroke = am4core.color("#FFFFFF");
+
+                columnTemplate.adapter.add("fill", function (fill, target) {
+                    return chart.colors.getIndex(target.dataItem.index);
+                });
+
+                columnTemplate.adapter.add("stroke", function (stroke, target) {
+                    return chart.colors.getIndex(target.dataItem.index);
+                });
+
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.lineX.strokeOpacity = 0;
+                chart.cursor.lineY.strokeOpacity = 0;
+            }
+        });
+    });
+</script>

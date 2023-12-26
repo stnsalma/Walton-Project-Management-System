@@ -1,0 +1,297 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Commercial.VmIncentivePolicy
+@*<h2>CmOthersIncentive</h2>*@
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Others</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-1">******</div><div class="col-lg-4">
+                        Others<br />
+                        -------------------
+                    </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                </div>
+                <br /><br /><br />
+
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;"> Others Type </div>
+                        <div class="col-lg-8">
+                            @*@Html.TextAreaFor(model => model.OthersType, new { @class = "form-control" })*@
+                            <select class="form-control" id="insType" onchange="othersTypeChange(this)">
+                                <option value=0>--Select--</option>
+                                <option value="Housing,PCBA(SMT) And Charger Prod. in BD">Housing,PCBA(SMT) And Charger Prod. in BD</option>
+                                <option value="Technology Introduce">Technology Introduce</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;">Added Amount</div>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.AddedAmount, new { @class = "form-control", @id = "addedAmount", @type = "number" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;"> Remarks</label>
+                        <div class="col-lg-8" style="text-align: left">
+                            @Html.TextAreaFor(model => model.Remarks, new { @class = "form-control", @id = "remarks" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;">Deduct Amount</div>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.TotalDeduction, new { @class = "form-control", @id = "deductAmount", @type = "number" })
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;">Deduct Remarks</label>
+                        <div class="col-lg-8" style="text-align: left">
+                            @Html.TextAreaFor(model => model.DeductionRemarks, new { @class = "form-control", @id = "deductRemarks" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;"> Effective Month</label>
+                        <div class="col-lg-8" style="text-align: left">
+                            @Html.TextBoxFor(model => model.EffectiveMonth, new { @class = "form-control", @id = "effectiveMonth", PlaceHolder = "yyyy-MM-dd" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button id="btnAddForOthers" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                    </div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+            <br /><br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet box green-haze">
+                            <div class="portlet-body">
+                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                    <table class="table table-bordered table-striped table-condensed flip-content tblOthers" id="tblOthers" style="overflow-y: auto;overflow-x: auto">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px;">Others Type</th>
+                                                <th>Added <br />Amount </th>
+                                                <th>Remarks </th>
+                                                <th>Deduct <br/>Amount</th>
+                                                <th>Deduct<br/> Remarks </th>
+                                                <th>Effective<br /> Month</th>
+                                                <th>Final<br/>Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tBodyOthers" class="tBodyOthers" style="overflow-y: auto;overflow-x: auto">
+                                            @foreach (var swQcOthers in Model.CmIncentiveModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Commercial/CmPartials/_CmOthersIncentiveList.cshtml", swQcOthers);
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="form-actions">
+    <div class="row">
+        <div class="col-md-6">
+            @*<input class="btn sbold uppercase btn-outline red-flamingo btnFinalSubmit" type="submit" id="btnFinalSubmit" value="Final Submit" onchange="winLoads()" />*@
+            <button id="btnFinalSubmit" type="submit" class="btn sbold uppercase btn-outline red-flamingo btnFinalSubmit">Final Submit</button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+  
+    //function removeDetailRow(element) {
+    //    $(element).remove();
+
+    //}
+    function removeDetailRow(element) {
+        var detailRow = $(element).closest('tr');
+        $(detailRow).remove();
+    }
+    function othersTypeChange() {
+        var insOtherTypes = $('#insType :selected').text().trim();
+        
+        if (insOtherTypes == "Housing,PCBA(SMT) And Charger Prod. in BD") {
+            $('#addedAmount').val(7000);
+            $('#addedAmount').prop('disabled', true);
+        }
+        else if (insOtherTypes == "Technology Introduce") {
+            $('#addedAmount').val(14000);
+            $('#addedAmount').prop('disabled', true);
+        }
+        else {
+            $('#addedAmount').val(0);
+            $('#addedAmount').prop('disabled', false);
+        }
+    }
+    $(document).ready(function() {
+        $('#effectiveMonth').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        $("#btnAddForOthers").on('click', function (e) {
+            e.preventDefault();
+            //var othersType = $('#OthersType').val();
+            //console.log("OthersType :" + othersType);
+
+            var insOtherTypes = $('#insType :selected').text().trim();
+
+            if (insOtherTypes == "--Select--") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Others Type",
+                }).show();
+                return false;
+            }
+            var addedAmount = $('#addedAmount').val();
+            console.log(addedAmount);
+            if (addedAmount == "") {
+                addedAmount = "0";
+            }
+            var remarks = $('#remarks').val();
+            console.log(remarks);
+
+            var deductAmount = $('#deductAmount').val();
+            if (deductAmount == "") {
+                deductAmount = "0";
+            }
+            var deductRemarks = $('#deductRemarks').val();
+
+            if ((deductAmount != "0") && deductRemarks == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Deduct Remarks",
+                }).show();
+                return false;
+            }
+            if (deductAmount == "0" && addedAmount == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Added Amount Or Deduct Amount",
+                }).show();
+                return false;
+            }
+
+            
+            var effectiveMonth = $('#effectiveMonth').val();
+            var finalAmount = addedAmount - deductAmount;
+            console.log("finalAmount :" + finalAmount);
+            
+            $.post('@Url.Action("AddProjectsForOthers", "Commercial")', {
+                insOtherTypes: insOtherTypes,
+                addedAmount: addedAmount,
+                remarks: remarks,
+                deductAmount: deductAmount,
+                deductRemarks: deductRemarks,
+                effectiveMonth: effectiveMonth,
+                finalAmount: addedAmount - deductAmount
+            }, function (data) {
+                console.log(data);
+                $('#tBodyOthers').append(data);
+            });
+           
+            $('#remarks').val("");
+            $('#deductAmount').val("");
+            $('#deductRemarks').val("");
+            $('#effectiveMonth').val("");
+
+        });
+
+        $("#btnFinalSubmit").on('click', function (e) {
+            e.preventDefault();
+           
+            var objOthers = {};
+            var objOthersArr = [];
+
+            var othersType;
+            var addAmount;
+            var addAmountRemarks;
+            var deductionAmount;
+            var deductionRemarks;
+            var effectiveMonth;
+            var finalAmount;
+
+            $("#tblOthers tr.tableTrCls").each(function () {
+                objOthers = new Object();
+
+                //others
+                othersType = $.trim($(this).find('td:eq(0)').text());
+                addAmount = $.trim($(this).find('td:eq(1)').text());
+                addAmountRemarks = $.trim($(this).find('td:eq(2)').text());
+                deductionAmount = $.trim($(this).find('td:eq(3)').text());
+                deductionRemarks = $.trim($(this).find('td:eq(4)').text());
+                effectiveMonth = $.trim($(this).find('td:eq(5)').text());
+                finalAmount = $.trim($(this).find('td:eq(6)').text());
+
+                //objOthers
+                objOthers.OthersType = othersType;
+                objOthers.Amount = addAmount;
+                objOthers.Remarks = addAmountRemarks;
+                objOthers.DeductAmount = deductionAmount;
+                objOthers.DeductRemarks = deductionRemarks;
+                objOthers.EffectiveMonth = effectiveMonth;
+                objOthers.FinalAmount = finalAmount;
+               
+                //objField
+                objOthersArr.push(objOthers);
+                console.log("objOthersArr---->" + objOthersArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveCmOthersIncentive", "Commercial")',
+                data: "{objOthersArr:'" + JSON.stringify(objOthersArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    //othersVal = "yes";
+
+                    location.reload();
+                }
+            });//end Ajax others
+        });
+    });
+</script>

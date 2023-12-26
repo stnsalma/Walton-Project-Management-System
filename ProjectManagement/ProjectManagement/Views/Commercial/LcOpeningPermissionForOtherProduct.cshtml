@@ -1,0 +1,459 @@
+﻿@model ProjectManagement.Models.LcOpeningOtherProductViewModel
+@{
+    ViewBag.Title = "LcOpeningPermissionForOtherProduct";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm("LcOpeningPermissionForOtherProduct", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.Id)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AddedBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AddedDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.IsActive)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.CheckedBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.CheckedDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.VerifiedBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.VerifyDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.SourcingApprovalBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.SourcingApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.SourcingRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.CeoApprovalBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.CeoApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.CeoRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.ApprovedBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.ApprovedDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.ApprovedByRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.IsApproved)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.FinanceApprovalBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.FinanceApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.FinanceRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AccountsApprovalBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AccountsApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AccountsRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AcknowledgedBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AcknowledgeDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.AcknowledgeRemarks)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.Rate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.BdtLcValue)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.BiApprovalBy)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.BiApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.BiApprovalDate)
+    @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.BiRemarks)
+    <div class="portlet blue box">
+        <div class="portlet-title">
+            <div class="caption">LC Opening Permission For Other Products</div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Product Type</div>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.LcOpeningPermissionOtherProductModel.ProductType, new List<SelectListItem>
+                                {
+                                    new SelectListItem () { Text ="Select" , Value = ""},
+                                    new SelectListItem () { Text ="Accessories" , Value = "Accessories"},
+                                    new SelectListItem () { Text ="SFG" , Value = "SFG"},
+                                    new SelectListItem () { Text ="Tools" , Value = "Tools"},
+                                    new SelectListItem () { Text ="Common Item" , Value = "Common Item"},
+                                    new SelectListItem () { Text ="After Sales Service Spares" , Value = "After Sales Service Spares"},
+                                    new SelectListItem () { Text ="Project Closing (Re-order) Material" , Value = "Project Closing (Re-order) Material"},
+                                    new SelectListItem () { Text ="Battery" , Value = "Battery"},
+                                    new SelectListItem () { Text ="Charger" , Value = "Charger"},
+                                    new SelectListItem () { Text ="Machine" , Value = "Machine"},
+                                    new SelectListItem () { Text ="Machine Spare Parts" , Value = "Machine Spare Parts"},
+                                    new SelectListItem () { Text ="Consumable Item" , Value = "Consumable Item"},
+                                    new SelectListItem () { Text ="Earphone" , Value = "Earphone"},
+                                    new SelectListItem () { Text ="Poly Bag" , Value = "Poly Bag"},
+                                    new SelectListItem () { Text ="Flash IC" , Value = "Flash IC"},
+                                    new SelectListItem () { Text ="USB Cable" , Value = "USB Cable"},
+                                    new SelectListItem () { Text ="JIG" , Value = "JIG"},
+                                    new SelectListItem () { Text ="Raw Materials" , Value = "Raw Materials"},
+                                    new SelectListItem () { Text ="Raw Materials Spare Parts" , Value = "Raw Materials Spare Parts"},
+                                    new SelectListItem () { Text ="MOLD" , Value = "MOLD"},
+                                    new SelectListItem () { Text ="Resin" , Value = "Resin"},
+                                }, new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Product Name</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.Product, new { @class = "form-control", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Opening Date</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.OpeningDate, new { @class = "form-control date_picker", required = "" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Company Name</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.CompanyName, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Supplier Name</div>
+                            <div class="col-md-10">
+                                @*@Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.SupplierName, new { @class = "form-control" })*@
+                                @Html.DropDownListFor(m => m.LcOpeningPermissionOtherProductModel.SupplierName, new SelectList(ViewBag.Suppliers, "SupplierName", "SupplierName"), "Select", new { @class = "form-control ddChosen", required = "required" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Supplier Grade</div>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.LcOpeningPermissionOtherProductModel.SupplierGrade, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="A" , Value = "A"},
+                                                            new SelectListItem () { Text ="A+" , Value = "A+"},
+                                                            new SelectListItem () { Text ="B" , Value = "B"},
+                                                            new SelectListItem () { Text ="B+" , Value = "B+"}
+                                                        }, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Model of Other Product</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.Model, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Order No</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.OrderNo, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">LC For Model</div>
+                            <div class="col-md-10">
+                                @*@Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.PreviousOrderQunatity, new { @class = "form-control" ,type="number"})*@
+                                @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.OtherProductLcForTheProject)
+                                <select name="" id="ddlLcForModels" class="form-control" multiple>
+                                    <option value="Select">Select</option>
+                                    @if (ViewBag.ProductModels != null)
+                                    {
+                                        foreach (var i in ViewBag.ProductModels)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Stock Quantity</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.StockQuantity, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Pipeline Quantity</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.PipeLineQuantity, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Order Quantity</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.OrderQuantity, new { @class = "form-control", type = "number", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">LC Amount</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.LcAmount, new { @class = "form-control", type = "number", required = "" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Currency</div>
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(m => m.LcOpeningPermissionOtherProductModel.Currency, new List<SelectListItem>
+                                                        {
+                                                            new SelectListItem () { Text ="Select" , Value = ""},
+                                                            new SelectListItem () { Text ="USD" , Value = "USD"},
+                                                            new SelectListItem () { Text ="EUR" , Value = "EUR"},
+                                                            new SelectListItem () { Text ="CNY" , Value = "CNY"}
+                                                        }, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">TTI</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.TtiPerLine, new { @class = "form-control", type = "number", required = "" })
+                            </div>
+                        </div> 
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Free Of Cost Claim Value</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.FreeOfCostClaimValue, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Previous Order Qunatity</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.PreviousOrderQunatity, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Approx. Shipment Date</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.ApproxDateOfShipment, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Total Amount</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.TotalAmount, new { @class = "form-control", type = "number", step = ".01", required = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Shipment Confirm Date</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.ShipmentConfirmDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Oracle PO No</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.OraclePoNo, new { @class = "form-control",required="" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Warehouse Receive Date</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.WarehouseReceiveDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2"><span style="color:red">Relevant Walton Models</span></div>
+                            <div class="col-md-10">
+                                @Html.HiddenFor(m => m.LcOpeningPermissionOtherProductModel.RelevantWaltonProjects)
+                                <select name="multiple" id="multipleModels" class="form-control" multiple>
+                                    <option value="All">All</option>
+                                    <option value="None">None</option>
+                                    @if (ViewBag.ProductModels != null)
+                                    {
+                                        foreach (var i in ViewBag.ProductModels)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">Product Profile</div>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(m => m.LcOpeningPermissionOtherProductModel.ProductProfile, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">Remarks</div>
+                            <div class="col-md-10">
+                                @Html.TextAreaFor(m => m.LcOpeningPermissionOtherProductModel.Remarks, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <h3>TT data</h3>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">TT Date</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.TtDate, new { @class = "form-control date_picker" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-2">TT No</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.TtNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-2">TT Value</div>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(m => m.LcOpeningPermissionOtherProductModel.TtValue, new { @class = "form-control", type = "number" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br />
+                    <h3>Upload Files</h3>
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="table-responsive">
+                                    @if (User.IsInRole("CM"))
+                                    {
+                                        <button type="button" class="btn btn-warning btn-sm" id="btnAddFiles">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                        <span style="font-weight: bold">Add Files</span>
+                                    </button>
+                                    }
+                                    
+                                    <br />
+                                    <br />
+                                    <table class="table table-bordered" id="tblFiles">
+                                        <thead>
+                                            <tr>
+                                                <th>File Path</th>
+                                                <th>Remarks</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model != null && Model.LcOpeningPermissionOtherFileModels.Count > 0)
+                                            {
+                                                foreach (var file in Model.LcOpeningPermissionOtherFileModels)
+                                                {
+                                                    Html.RenderPartial("~/Views/Shared/_LcOpeningPermissionOtherFile.cshtml", file);
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            @if (User.IsInRole("CM"))
+                            {
+                                if (Model != null && (Model.LcOpeningPermissionOtherProductModel != null && Model.LcOpeningPermissionOtherProductModel.Id > 0))
+                                {
+                                    <button type="submit" class="btn btn-warning">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-success">Save</button>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $('select').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+
+    //populate saved relevant models in the multi select
+    if ($('#LcOpeningPermissionOtherProductModel_RelevantWaltonProjects').val() != null) {
+        console.log($('#LcOpeningPermissionOtherProductModel_RelevantWaltonProjects').val());
+        var strRelevantModel = $('#LcOpeningPermissionOtherProductModel_RelevantWaltonProjects').val();
+        var arrRelMod = strRelevantModel.split(',');
+        console.log(arrRelMod);
+        $('#multipleModels').val(arrRelMod).trigger('chosen:updated');
+    }
+    $('#multipleModels').val();
+    //relevant model on change event
+    $('#multipleModels').on('change', function () {
+        var relevantModel = $('#multipleModels').val();
+        var strRelevantModel = '';
+        console.log(relevantModel);
+        if (relevantModel != null) {
+            for (var i = 0; i < relevantModel.length; i++) {
+                if (i == relevantModel.length - 1) {
+                    strRelevantModel = strRelevantModel + relevantModel[i];
+                } else {
+                    strRelevantModel = strRelevantModel + relevantModel[i] + ',';
+                }
+            }
+            console.log(strRelevantModel);
+            $('#LcOpeningPermissionOtherProductModel_RelevantWaltonProjects').val(strRelevantModel);
+        } else {
+            $('#LcOpeningPermissionOtherProductModel_RelevantWaltonProjects').val('');
+        }
+    });
+    //load saved LC for model
+    if ($('#LcOpeningPermissionOtherProductModel_OtherProductLcForTheProject').val() != null) {
+        var strLcForModel = $('#LcOpeningPermissionOtherProductModel_OtherProductLcForTheProject').val();
+        console.log(strLcForModel);
+        var arrLcForModel = strLcForModel.split(',');
+        console.log(arrLcForModel);
+        $('#ddlLcForModels').val(arrLcForModel).trigger('chosen:updated');
+    }
+    //Lc for model on change event
+    $('#ddlLcForModels').on('change', function () {
+        var lcForModel = $('#ddlLcForModels').val();
+        var strLcForModel = '';
+        console.log(lcForModel);
+        if (lcForModel != null) {
+            for (var i = 0; i < lcForModel.length; i++) {
+                if (i == lcForModel.length - 1) {
+                    strLcForModel = strLcForModel + lcForModel[i];
+                } else {
+                    strLcForModel = strLcForModel + lcForModel[i] + ',';
+                }
+            }
+            console.log(strLcForModel);
+            $('#LcOpeningPermissionOtherProductModel_OtherProductLcForTheProject').val(strLcForModel);
+        }
+    });
+
+    //---Append Partial View----
+    $("#btnAddFiles").on('click', function () {
+        $('.fa-plus').attr('hidden', true);
+        $.post('@Url.Action("AddOtherFilesPartial", "Common")', {}, function (data) {
+            $('#tblFiles').append(data);
+            $('.fa-plus').attr('hidden', false);
+            $('.spinner-border').attr('hidden', true);
+        });
+    });
+</script>
+
+

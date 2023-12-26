@@ -1,0 +1,24 @@
+﻿@*<h2>_AddFinishGood</h2>*@
+
+@model ProjectManagement.Models.ProjectMasterModel
+
+<tr class="tableTrCls" id="tableTrCls">
+    @using (Html.BeginCollectionItem("VmProjectShipment.ProjectMasterModel"))
+    {
+        <td id="IsRemoved" class="IsRemoved" style="display:none">
+            <input id="IsRemoved" name="issueList1[@Model.IsRemoved].IsRemoved" class="form-control IsRemoved" value="@Model.IsRemoved" readonly/>
+        </td>
+        <td id="ProIds" class="ProIds" style="display:none">
+            <input id="ProIds1" name="issueList1[@Model.IsRemoved].ProjectMasterId" class="form-control ProIds1" value="@Model.ProjectMasterId" readonly />
+        </td>
+        <td id="ProTxts" class="ProTxts" style="width:300px;">
+            <input id="ProTxts1" name="issueList1[@Model.IsRemoved].FinishGoodModel" class="form-control ProTxts1" value="@Model.FinishGoodModel" readonly />
+        </td>
+        <td id="aproxValue" class="aproxValue" style="width:100px;">
+            <input id="aproxValue1" name="issueList1[@Model.IsRemoved].ApproxFinishGoodManufactureQty" class="form-control aproxValue1" value="@Model.ApproxFinishGoodManufactureQty" style="display:none" />
+           @Model.ApproxFinishGoodManufactureQty
+         </td>
+        <td style="width:100px;"><button type="button" id="removeProductRow1" class="btn btn-primary" onclick="removeDetailRow1($(this).closest('tr'))">Remove</button></td>
+    }
+</tr>
+

@@ -1,0 +1,278 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+
+<div class="page-head">
+    <div class="page-title col-md-12">
+     
+        <div class="col-md-12">
+
+            <p style="color:red;font-weight: bold" class="col-sm-1">Welcome<h1 style="color:darkgoldenrod;font-weight: bold">  &nbsp;&nbsp;@ViewBag.UserInfo.UserFullName !!</h1></p>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Software QC Incharge Dashboard</label>
+    <i class="icon-calendar pull-right"><label class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12" id="screening">
+        <a onclick="location.href='@Url.Action("AssignMuliplePerson", "Software")'" class="dashboard-stat dashboard-stat-v2 blue">
+            <div class="visual">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.SwQcTestCounterModel.NewProjectCounter)" data-counter="counterup"></span>
+                </div>
+                <div class="desc pmAssignedProject"> Assigned Projects from Project Manager </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("SwPauseOrRestartAssignedProject", "Software")'" class="dashboard-stat dashboard-stat-v2 red">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.SwQcTestCounterModel.AssignProjectCounter)" data-counter="counterup"></span>
+                </div>
+                <div class="desc assignedProject"> Assigned Projects To QC </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <a onclick="location.href='@Url.Action("SwPauseOrRestartQCCompletedProject", "Software")'" class="dashboard-stat dashboard-stat-v2 green">
+            <div class="visual">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.SwQcTestCounterModel.QcDoneProjectCounter)" data-counter="counterup"></span>
+                </div>
+                <div class="desc qcCompletedProject"> QC Completed Projects </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        @*<a href="#" class="dashboard-stat dashboard-stat-v2 purple">*@
+        <a onclick="location.href='@Url.Action("SwQcSpecification", "Software")'" class="dashboard-stat dashboard-stat-v2 purple">
+            <div class="visual">
+                <i class="fa fa-globe"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value="@Html.DisplayFor(model => model.SwQcTestCounterModel.MyProjectCounter)" data-counter="counterup"></span>
+                    @*<span data-value="0" data-counter="counterup"></span>*@
+                </div>
+                <div class="desc myProjects"> My Projects </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("ReportDashboard", "Software")'" class="dashboard-stat dashboard-stat-v2 purple-sharp">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+                   
+                </div>
+                <div class="desc reportDashboard"> Report Dashboard </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("SwQcsTotalIssueDetails", "Software")'" class="dashboard-stat dashboard-stat-v2 yellow">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+
+                </div>
+                <div class="desc moreIssues"> QC Issue Lists </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("SwQcHeadToPmProjectSubmit", "Software")'" class="dashboard-stat dashboard-stat-v2 blue-dark">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+
+                </div>
+                <div class="desc inchargeToPm"> QCHEAD to PM Submit </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+        <a onclick="location.href='@Url.Action("QcRecommendedProjectDetails", "Software")'" class="dashboard-stat dashboard-stat-v2 yellow-gold">
+            <div class="visual">
+                <i class="fa fa-adjust"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    <span data-value=" " data-counter="counterup"></span>
+
+                </div>
+                <div class="desc recommendPro"> Recommended Projects </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>My Projects
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblMyProjectstatus">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center">PoCategory</th>
+                            <th class="text-center">Software<br />Version<br/>Name</th>
+                            <th class="text-center">Software<br />VersionNo.</th>
+                            <th class="text-center">PmAssign<br />Time</th>
+                            <th class="text-center">QC Incharge<br /> Assign Time</th>
+                            <th class="text-center">QC Deadline</th>
+                            <th class="text-center"> Supplier Name </th>
+                            <th class="text-center"> Supplier <br />Model Name </th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetQcAssignedProjectStatus)
+                        {
+                            <tr>
+                                <td class="text-center"></td>
+                                <td class="text-center" style="display: none">@item.ProjectMasterId</td>
+                                <td class="text-center">@item.ProjectName</td>
+                                <td class="text-center">@item.SourcingType</td>
+                                <td class="text-center">@item.SoftwareVersionName</td>
+                                <td class="text-center">@item.SoftwareVersionNo</td>
+                                <td class="text-center">
+                                    @if (@item.PmToQcHeadAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.PmToQcHeadAssignTime)}
+                                </td>
+                                <td class="text-center">
+                                    @if (@item.SwQcHeadToQcAssignTime != null)
+                                    {@String.Format("{0:yyyy-MM-dd HH:mm:ss tt}", @item.SwQcHeadToQcAssignTime)}
+                                </td>
+                                <td class="text-center">
+                                    @if (@item.ApproxInchargeToQcDeliveryDate != null)
+                                    {@String.Format("{0:yyyy-MM-dd}", @item.ApproxInchargeToQcDeliveryDate)}
+                                </td>
+
+                                <td class="text-center">@item.SupplierName</td>
+                                <td class="text-center">@item.SupplierModelName</td>
+
+                                <td class="text-center">
+                                    @if (item.Status == "ASSIGNED")
+                                    {
+                                        <span class="label label-sm label-primary"> @item.Status </span>
+
+                                    }
+
+                                    else if (item.Status == "QCCOMPLETED")
+                                    {
+                                        <span class="label label-sm label-info"> @item.Status </span>
+
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/Shared/_UserOpinion.cshtml")
+    </div>
+
+</div>
+
+
+<script>
+    $(function () {
+        
+
+        $('#tblNewProjectstatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+        $('#tblAssignedProjectstatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+        //get Automatic Serial number column in the HTML Table
+        $('#tblQcCompletedStatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+        $('#tblMyProjectstatus tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+
+
+        $('[class*="pmAssignedProject"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("AssignMuliplePerson", "Software")';
+            window.location.href = url;
+        });
+        $('[class*="assignedProject"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("SwPauseOrRestartAssignedProject", "Software")';
+            window.location.href = url;
+        });
+
+        $('[class*="qcCompletedProject"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("SwPauseOrRestartQCCompletedProject", "Software")';
+            window.location.href = url;
+        });
+        
+        $('[class*="myProjects"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("SwQcSpecification", "Software")';
+            window.location.href = url;
+        });
+        $('[class*="reportDashboard"]').click(function () {
+            //alert('vdv');
+            var url = '@Url.Action("ReportDashboard", "Software")';
+            window.location.href = url;
+        });
+        //recommendPro
+        $('[class*="recommendPro"]').click(function() {
+            var url = '@Url.Action("QcRecommendedProjectDetails", "Software")';
+            window.location.href = url;
+        });
+    });
+</script>
+
+
+

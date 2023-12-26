@@ -1,0 +1,399 @@
+﻿@*<h2>UpdateCapacityPlanning</h2>*@
+@using System.Web.Mvc.Html
+@using ProjectManagement.DAL.DbModel
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+
+            <div class="portlet box">
+                <div class="portlet-title">
+                    <div class="caption" style="color:brown;">
+                        <div class="form-actions col-lg-4">
+                            <input type="button" id="btnBack" class="btn sbold uppercase btn-outline green" value="BACK" onclick="goBack()" />
+                        </div>
+                    </div>
+
+                    <div class="tools" style="background-color:green;">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table id="tblData" class="table table-bordered table-striped table-condensed flip-content tblData" style="display: block; width: 600px;">
+                            <tbody style="border: 2px solid black">
+
+                                <tr style="border: 2px solid black">
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td>__________</td>
+                                    <td>_____________</td>
+                                    @if (ViewBag.GetPercentage != null)
+                                    {
+                                        foreach (var items1 in ViewBag.GetPercentage)
+                                        {
+                                            <td style="font-weight: bold;color:red"><input type="number" min="0" style="color: red;font-weight: bold" value="@items1.Percentage" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                        }
+                                    }
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                    <td><input type="number" min="0" style="color: red;font-weight: bold" value="" onchange="percentageChange(this)" placeholder="Percentage(%)" /></td>
+                                </tr>
+                                <tr style="border: 2px solid black;color: blue;font-weight: bold">
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="display: none"></td>
+                                    <td style="width: 20%">Team</td>
+                                    <td class="col-md-4">Category</td>
+
+                                    @if (ViewBag.GetQuantityRange != null)
+                                    {
+                                        foreach (var items1 in ViewBag.GetQuantityRange)
+                                        {
+                                            <td>
+
+                                                <input type="number" min="0" style="color: blue;font-weight: bold" value="@items1.QuantityRange" placeholder="Quantity Range" />
+                                            </td>
+                                        }
+                                    }
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                    <td><input type="number" min="0" style="color: blue;font-weight: bold" value="" placeholder="Quantity Range" /></td>
+                                </tr>
+
+                                @if (ViewBag.GetAll != null)
+                                {
+                                    foreach (var items1 in ViewBag.GetAll)
+                                    {
+                                        <tr style="border: 1px solid black">
+                                            <td style="display: none">@items1.MonNum</td>
+                                            <td style="display: none">@items1.Month</td>
+                                            <td style="display: none">@items1.Year</td>
+                                            <td style="display: none">@items1.ProductName</td>
+                                            <td style="display: none">@items1.ProductionType</td>
+                                            <td>@items1.Team</td>
+                                            <td>@items1.CategoryName</td>
+                                            @if (@items1.TotalCap1 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap1" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap2 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap2" placeholder="Capacity" />
+
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap3 != null)
+                                            {
+                                                <td>
+
+                                                    <input type="number" min="0" value="@items1.TotalCap3" placeholder="Capacity" />
+
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap4 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap4" placeholder="Capacity" />
+                                                </td>
+                                            }
+                                            @if (@items1.TotalCap5 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap5" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap6 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap6" placeholder="Capacity" />
+                                                </td>
+                                            }
+                                            @if (@items1.TotalCap7 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap7" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap8 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap8" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap9 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap9" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            @if (@items1.TotalCap10 != null)
+                                            {
+                                                <td>
+                                                    <input type="number" min="0" value="@items1.TotalCap10" placeholder="Capacity" />
+                                                </td>
+
+                                            }
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                            <td><input type="number" min="0" value="" placeholder="Capacity" /></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <div class="form-actions col-lg-4">
+                        <input type="button" id="btnUpdateChange" class="btn sbold uppercase btn-outline red" value="Update" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+    function percentageChange(element) {
+        var num = element.value;
+        var table = document.getElementById("tblData");
+        var rows = table.getElementsByTagName("tr");
+
+        var fstRows21;
+        
+        if (fstRows21==null) {
+            fstRows21 = "";
+        }
+
+        for (var i = 2; i < rows.length; i++) { //for row from 2
+
+            for (var j = 8; j < rows[i].cells.length; j++) { //cells values from 3
+                var dd1 = null;
+                dd1 = rows[i].cells[7].getElementsByTagName('input')[0].value;
+
+                if (rows[0].cells[j]) {
+                    if (!rows[i].cells[j + 1]) {
+                        break;
+                    } else if (rows[i].cells[j + 1]) {
+                        fstRows21 = rows[0].cells[j].getElementsByTagName('input')[0].value;
+                        if (fstRows21 != "") {
+                            var nmPercent1 = dd1 * (fstRows21 / 100);
+                            rows[i].cells[j].getElementsByTagName('input')[0].value = parseInt(nmPercent1);
+                        }
+                    }
+                }
+                // }//end category
+
+            } //end category
+
+        } //end for row from 2
+    }
+
+    $(function () {
+
+        // btnUpdateChange
+        $('#btnUpdateChange').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var arrSub = [];
+            var objPercent = new Object();
+            var objRange = new Object();
+            var obj3T = new Object();
+            var obj3C = new Object();
+            var obj3Tc = new Object();
+
+            var objYear = new Object();
+            var objMonth = new Object();
+            var objMonNum = new Object();
+            var objPhoneType = new Object();
+            var objProType = new Object();
+
+
+            var table = document.getElementById("tblData");
+            var rows = table.getElementsByTagName("tr");
+
+
+            //for rows
+            for (var rr1 = 2; rr1 < rows.length; rr1++) {
+
+                //MonNum
+                var MonNum = rows[rr1].cells[0].innerText;
+                objMonNum.MonNum = MonNum;
+                console.log("MonNum:" + objMonNum.MonNum);
+
+                //Month
+                var Month = rows[rr1].cells[1].innerText;
+                objMonth.Month = Month;
+                console.log("Month:" + objMonth.Month);
+
+                //Year
+                var Year = rows[rr1].cells[2].innerText;
+                objYear.Year = Year;
+                console.log("Year:" + objYear.Year);
+
+                //Year
+                var PhoneType = rows[rr1].cells[3].innerText;
+                objPhoneType.PhoneType = PhoneType;
+                console.log("PhoneType:" + objPhoneType.PhoneType);
+
+                //Year
+                var ProType = rows[rr1].cells[4].innerText;
+                objProType.ProType = ProType;
+                console.log("ProType:" + objProType.ProType);
+
+                //Team
+                var Team = rows[rr1].cells[5].innerText;
+                obj3T.Team = Team;
+                console.log("Team:" + obj3T.Team);
+
+                //Category
+                var Category = rows[rr1].cells[6].innerText;
+                obj3C.Category = Category;
+                console.log("Category:" + obj3C.Category);
+                //for rest of the cell from ii2=4
+                var pi = 7;
+                for (var ii2 = 7; ii2 < rows[rr1].cells.length; ii2++) {
+                    var prnct = "";
+                    var cats = "";
+                    
+                    if (pi != 0)
+                    {
+                        prnct = rows[0].cells[pi].getElementsByTagName('input');
+                        if (prnct.length == ii2) {
+                            break;
+                        } else if (prnct.length > 0) {
+                            prnct = rows[0].cells[pi].getElementsByTagName('input')[0].value;
+
+                        }
+                        objPercent.Percentage2 = prnct;
+
+                        cats = rows[1].cells[pi].getElementsByTagName('input');
+                        if (cats.length == ii2) {
+                            break;
+                        } else if (cats.length > 0) {
+                            cats = rows[1].cells[pi].getElementsByTagName('input')[0].value;
+                        }
+                        objRange.QuantityRange = cats;
+
+                        pi++;
+                    }
+                    if (prnct=="") {
+                        prnct = "0";
+                    }
+                    if (cats == "") {
+                        cats = "0";
+                    }
+                    if (prnct != "0" && cats != "0")
+                    {
+                        var TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input');
+                        if (TotalCapacities.length == ii2) {
+                            break;
+                        } else if (TotalCapacities.length > 0) {
+                            TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input')[0].value;
+                            obj3Tc.TotalCapacities = TotalCapacities;
+                        }
+
+                        var obj3Final = new Object();
+                        obj3Final.AllShift = objPercent.Percentage2 + "," + objRange.QuantityRange + "," + obj3T.Team + "," + obj3C.Category + "," + obj3Tc.TotalCapacities
+                                    + "," + objYear.Year + "," + objMonNum.MonNum + "," + objMonth.Month + "," + objPhoneType.PhoneType + "," + objProType.ProType;
+                        arrSub.push(obj3Final);
+                    }
+                }
+            }
+
+            console.log("arrSub:" + arrSub);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateCapacityPlanning", "Production")',
+                // data: { arrMain: arrSub },
+                data: "{arrMain:'" + JSON.stringify(arrSub) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "ok") {
+                        $('#loading').hide();
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Planning Updated Successfully.",
+                        }).show();
+                        window.location.reload();
+                    }
+                }
+            });
+
+        });
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

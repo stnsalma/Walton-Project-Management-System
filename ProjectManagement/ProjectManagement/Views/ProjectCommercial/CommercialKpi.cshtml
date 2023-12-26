@@ -1,0 +1,1530 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectCommercial.VmCommercialKpi
+@*<h2>CommercialKpi</h2>*@
+
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+    /*.scc {
+        border-style: solid;
+        border-width: 5px;
+    }*/
+
+    .datepicker {
+        /*top: 8px;
+        left: 243.375px;*/
+        /*display: block;*/
+        z-index: 9999;
+    }
+
+    .caption1 {
+        text-align: center;
+    }
+
+    .circle1 {
+        background-color: #F3FFFF;
+        border: 2px solid #F3FFFF;
+        height: 150px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        /*width: 100px;*/
+    }
+
+    .circle2 {
+        background-color: #F3FFFF;
+        border: 2px solid #F3FFFF;
+        height: 50px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        width: 70px;
+    }
+
+    .flip-scroll table, .table td .img-responsive {
+        width: 20%;
+    }
+    .container {
+        background: #0d0c2d;
+    }
+</style>
+<script src="~/Scripts/Chart.bundle.min.js"></script>
+<link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+<script src="~/Scripts/ProgressPieJs.js"></script>
+<link href="~/Content/ProgressPieCss.css" rel="stylesheet" />
+
+@using (@Html.BeginForm("CommercialKpi", "ProjectCommercial", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box  blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">
+                Employee Performance Report
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: black; font-weight: bold; text-align: right">
+                            Select Month
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+
+                            @if (ViewBag.ddlMonths != null)
+                            {
+                                @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: black; font-weight: bold; text-align: right">
+                            Select Year
+                        </div>
+                        <div class="col-lg-8" style="text-align: left">
+
+                            @if (ViewBag.ddlYears != null)
+                            {
+                                @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-2"></div>
+                </div>
+                <br />
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: black; font-weight: bold;text-align: right">Select Person</div>
+                        <div class="col-lg-8" style="text-align: left">
+                            @if (ViewBag.GetCommercialUsers != null)
+                            {
+                                @Html.DropDownListFor(model => model.UserFullName, new SelectList(ViewBag.GetCommercialUsers, "Value", "Text"), new { @class = "ComUsersCls1 form-control", @id = "ComUsers" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-4"> </div>
+                        <div class="form-actions col-lg-4">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href = '@Url.Action("CommercialKpi", "ProjectCommercial")?persons=' + $('option:selected', $('#ComUsers')).val()+ '&MonNum=' + $('option:selected', $('#DDDMonth')).val()+ '&Year=' + $('option:selected', $('#DDDYear')).val()" />
+                            @*<input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="PROCESS" />*@
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box  blue-chambray">
+        <div class="portlet-title" style="background-color: #DA9492; text-align: center">
+            <div class="caption1" style="text-align: center;color:black;font-weight: bold;margin-top: 5px">
+                Performance Dashboard
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-7" style="border:2px solid black;height: 200px">
+                        <div class="col-lg-6">
+                            <div class="container22">
+                                <div class="box2">
+                                    @if (ViewBag.GetCmKpi != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCmKpi)
+                                        {
+                                            if (@items.KpiName == "Total :")
+                                            {
+                                                if (@items.TotalAverageScorePercent <= 59)
+                                                {
+                                                    <div class="chart22" data-percent="@items.TotalAverageScorePercent" data-scale-color="#ffb400" style="barColor: red;margin-left: 70px">
+                                                        <p style="color: black;margin-top: 15px">@items.TotalAverageScorePercent%</p>
+                                                    </div>
+                                                }
+                                                else if (@items.TotalAverageScorePercent >= 60 && @items.TotalAverageScorePercent <= 79)
+                                                {
+                                                    <div class="chart22" data-percent="@items.TotalAverageScorePercent" data-scale-color="#ffb400" style="barColor: yellow; margin-left: 70px">
+                                                        <p style="color: black; margin-top: 15px">@items.TotalAverageScorePercent%</p>
+                                                    </div>
+                                                }
+                                                else if (@items.TotalAverageScorePercent >= 80 && @items.TotalAverageScorePercent <= 100)
+                                                {
+                                                    <div class="chart22" data-percent="@items.TotalAverageScorePercent" data-scale-color="#ffb400" style="barColor: green; margin-left: 70px">
+                                                        <p style="color: black; margin-top: 15px">@items.TotalAverageScorePercent%</p>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4">
+                            <div class="col-lg-6"></div>
+                            <div class="table-scrollable col-lg-7" style="border-color:white">
+
+                                @if (ViewBag.GetCommercialUsersDetailsCM != null)
+                                {
+                                    var ittms = "";
+                                    foreach (var items in ViewBag.GetCommercialUsersDetailsCM)
+                                    {
+                                        ittms = "hii";
+                                        @*if (items.EmployeeCode == "ALL")
+                                        {
+                                            <img alt="" class="img-responsive img-circle col-lg-7 circle1" style="margin: 10px;"
+                                             src="~/assets/layouts/layout4/img/av.png" />
+
+                                        }*@
+
+                                        if (@items.FilesDetails.Count > 0)
+                                        {
+
+                                            if (@items.FilesDetails[0].Extention == ".jpg" || @items.FilesDetails[0].Extention == ".png" || @items.FilesDetails[0].Extention == ".jpeg")
+                                            {
+
+                                                <embed class="img-responsive img-circle col-lg-7 circle1" style="margin: 10px;" src="@items.FilesDetails[0].FilePath" />
+
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            <img alt="" class="img-responsive img-circle col-lg-7 circle1" style="margin: 10px;"
+                                                 src="~/assets/layouts/layout4/img/av.png" />
+
+                                        }
+                                    }
+
+                                    if (ittms == "")
+                                    {
+                                        <img alt="" class="img-responsive img-circle col-lg-7 circle1" style="margin: 10px;"
+                                             src="~/assets/layouts/layout4/img/av.png" />
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5" style="border: 2px solid black; height: 200px;"><p style="background-color: #BEBEBE">Job Description</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-12">
+                <div class="portlet light bordered">
+                    <div class="portlet box">
+                        <div class="portlet-body">
+                            <div class="table-scrollable">
+
+                                @if (ViewBag.GetCommercialUsersDetailsInformation != null)
+                                {
+                                    foreach (var items in ViewBag.GetCommercialUsersDetailsInformation)
+                                    {
+                                        <table id="tbl34" class="table table-striped table-bordered table-hover tbl34" style="border: 2px solid black">
+                                            <tr style="border: 1px solid black;text-align: left">
+                                                <th style="border: 1px solid black; padding: 4px; background-color: #C3D598; font-weight: bold; ">Name</th>
+                                                <td style="border: 1px solid black;padding: 4px;">@items.UserFullName</td>
+                                                <th style="border: 1px solid black; padding: 4px; background-color: #C3D598; font-weight: bold; ">ID</th>
+                                                <td style="border: 1px solid black;padding: 4px;">@items.EmployeeCode</td>
+                                                <th style="border: 1px solid black; padding: 4px; background-color: #C3D598; font-weight: bold; ">DOJ</th>
+                                                <td style="border: 1px solid black;padding: 4px;">
+                                                    @if (@items.DateOfJoining != null)
+                                                    {
+                                                        @String.Format("{0:yyyy-MM-dd}", @items.DateOfJoining)
+                                                    }
+                                                </td>
+                                            </tr>
+                                            <tr style="border: 1px solid black; text-align: left">
+                                                <th style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Designation</th>
+                                                <td style="border: 1px solid black;padding: 4px">@items.Designation</td>
+                                                <th style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Department</th>
+                                                <td style="border: 1px solid black;padding: 4px">@items.Department</td>
+                                                <th style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Status</th>
+                                                <td style="border: 1px solid black;padding: 4px">@items.Status</td>
+                                            </tr>
+                                            <tr style="border: 1px solid black; text-align: left">
+                                                <td style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Line Manager's ID, <br />Name & Designation</td>
+                                                <td style="border: 1px solid black;padding: 4px">@items.LineManager</td>
+                                                <td style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Section</td>
+                                                <td style="border: 1px solid black;padding: 4px">@items.Section</td>
+                                                <td style="border: 1px solid black; padding: 6px; background-color: #C3D598; font-weight: bold">Service<br />Length</td>
+                                                <td style="border: 1px solid black;padding: 4px">@items.ServiceLength1 Years</td>
+                                            </tr>
+                                        </table>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+
+    @*<div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="portlet light bordered">
+                        <div class="portlet box">
+                            <div class="portlet-body">
+                                <div class="col-lg-12" style="text-align: center;color: red;font-weight: bold">Profile Photo</div>
+                                <div class="table-scrollable col-lg-12">
+
+                                    @if (ViewBag.GetCommercialUsersDetailsCM != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCommercialUsersDetailsCM)
+                                        {
+                                            if (@items.FilesDetails.Count > 0)
+                                            {
+
+                                                if (@items.FilesDetails[0].Extention == ".jpg" || @items.FilesDetails[0].Extention == ".png" || @items.FilesDetails[0].Extention == ".jpeg")
+                                                {
+                                                    <embed class="col-lg-12" src="@items.FilesDetails[0].FilePath" />
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <img alt="" class="img-responsive img-rounded col-lg-12" src="~/assets/layouts/layout4/img/av.png" />
+                                            }
+                                        }
+                                    }
+
+                                </div>
+                                <div class="col-lg-12" style="text-align: center; color: green; font-weight: bold; ">
+                                    <div class="col-lg-4" style="float: left"> Score:</div>
+                                    <div class="col-lg-8" style="float: left">
+                                        <input type="text" id="scoreIds1" class="form-control scoreIds1" value="" disabled="disabled"
+                                               style="text-align: center;color: red;font-weight: bold" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="portlet light bordered">
+                        <div class="portlet box">
+                            <div class="portlet-body">
+                                <div class="table-scrollable">
+
+                                    @if (ViewBag.GetCommercialUsersDetailsCM != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCommercialUsersDetailsCM)
+                                        {
+                                            <div class="col-lg-12" style="float: left">
+                                                <p>Name :  @items.UserFullName</p>
+                                                <p>ID : @items.EmployeeCode</p>
+                                                <p>Designation : @items.Designation</p>
+                                                <p>Email : @items.Email</p>
+                                                <p>Mobile : @items.MobileNumber</p>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="portlet light bordered">
+                        <div class="portlet box">
+                            <div class="portlet-body">
+                                <div class="table-scrollable">
+                                    @if (ViewBag.GetCommercialUsersDetailsCMHEAD != null)
+                                    {
+                                        foreach (var items1 in ViewBag.GetCommercialUsersDetailsCMHEAD)
+                                        {
+                                            <div class="col-lg-12" style="float: right">
+                                                <p>HOD :  @items1.UserFullName</p>
+                                                <p>ID : @items1.EmployeeCode</p>
+                                                <p>Designation : @items1.Designation</p>
+                                                <p>Email : @items1.Email</p>
+                                                <p>Mobile : @items1.MobileNumber</p>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4"></div>
+            </div>
+            <br />
+        </div>*@
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            This Month KPI
+                        </div>
+
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl3" class="tbl3" style="width:900px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="text-align: center; padding: 6px;color: black">#</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">KPI</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Weight</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Target</th>
+                                        <th style="border: 1px solid black;text-align:center; padding: 6px">Total<br />Model</th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Achievement(%) </th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Score<br />[Weight * <br />Achievement%] </th>
+                                        <th style="text-align: center; border: 1px solid black; padding: 6px">Details </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetCmKpi != null)
+                                    {
+                                        foreach (var items in ViewBag.GetCmKpi)
+                                        {
+                                            <tr class="trClsforSize" style="border: 1px solid black">
+                                                <td style="text-align: center; padding: 6px"></td>
+                                                <td style="border: 1px solid black; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.KpiName</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.KpiName
+                                                    }
+
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.Weight</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.Weight
+                                                    }
+
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.Target1</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.Target1
+                                                    }
+
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.TotalList</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.TotalList
+                                                    }
+
+                                                </td>
+                                                <td style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p style="color: red; font-weight: bold">@items.TotalAverageAchievement</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.TotalAverageAchievement
+                                                    }
+
+                                                </td>
+                                                <td id="TlAvScore" class="TlAvScore" style="border: 1px solid black;text-align:center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        @*<p style="color: red; font-weight: bold">@items.TotalAverageScore</p>*@
+                                                        <input type="text" id="TlAvScore_Id" class="form-control TlAvScore_Id" value="@items.TotalAverageScore" disabled="disabled" style="text-align: center;color: red;font-weight: bold" />
+
+                                                    }
+                                                    else
+                                                    {
+                                                        @items.TotalAverageScore
+                                                    }
+
+                                                </td>
+
+                                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                                    @if (@items.KpiName == "Total :")
+                                                    {
+                                                        <p>---</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn btn-success btnOpenDetails" id="btnOpenDetails">
+                                                            <span class="glyphicon glyphicon-expand"></span>
+                                                        </button>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="portlet light bordered">
+                <div class="portlet light portlet-fit bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <span class="caption-subject font-dark sbold uppercase">KPI Achievement Percentage(%) Chart</span>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@using (@Html.BeginForm("CommercialKpiChart", "ProjectCommercial", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
+{
+    <div class="portlet box  blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">
+                Employee Performance Chart
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green; font-weight: bold; ">Start Month & Year</div>
+                        <div class="col-lg-12">
+                            <input class="form-control myDatepicker1" id="myDatepicker1" value="@Model.StartDate" style="" type="text" readonly="true" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green;font-weight: bold">End Month & Year</div>
+                        <div class="col-lg-12">
+                            <input class="form-control myDatepicker2" id="myDatepicker2" value="@Model.EndDate" style="" type="text" readonly="true" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3"></div>
+                </div>
+                <br />
+                <br /><br />
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green; font-weight: bold; ">Select Person</div>
+                        <div class="col-lg-12">
+                            @if (ViewBag.GetCommercialUsers != null)
+                            {
+                                @Html.DropDownListFor(model => model.UserFullName, new SelectList(ViewBag.GetCommercialUsers, "Value", "Text"), new { @class = "ComUsersCls2 form-control", @id = "ComUsers2" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">--------------</div>
+                            <div class="col-lg-12">
+                                <input type="button" id="btnSearch1" class="btn sbold uppercase btn-outline blue" value="PROCESS" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="portlet light portlet-fit bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-dark sbold uppercase">KPI Achievement Percentage(%) For Specific Time Range</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <canvas id="barChart1"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="portlet light portlet-fit bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-dark sbold uppercase">Team Performance</span>
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-scrollable">
+                        <table id="tblTeam" class="table table-striped table-bordered table-hover tblTeam" style="border: 2px solid black">
+                            <thead class="flip-content">
+                                <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                    <th style="border: 1px solid black">#</th>
+                                    <th style="border: 1px solid black;text-align:center; padding: 6px">ID</th>
+                                    <th style="border: 1px solid black;text-align:center; padding: 6px">Photo</th>
+                                    <th style="border: 1px solid black;text-align:center; padding: 6px">Name</th>
+                                    <th style="border: 1px solid black;text-align:center; padding: 6px">Designation</th>
+                                    <th style="border: 1px solid black;text-align:center; padding: 6px">Score</th>
+                                </tr>
+                            </thead>
+                            <tbody style="border: 1px solid black">
+
+                                @if (ViewBag.GetCmUsersUnderHead != null)
+                                {
+                                    foreach (var items in ViewBag.GetCmUsersUnderHead)
+                                    {
+                                        <tr style="border: 1px solid black">
+                                            <td style="border: 1px solid black"></td>
+                                            <td class="text-center linkColorForID" id="linkColorForID1">
+                                                <a class="linkColorForID2" onclick="location.href='@Url.Action("CommercialKpi", "ProjectCommercial")?persons=' + @items.EmployeeCode + '&MonNum=' +$('.DDDMonthCls1').val() +'&Year=' +$('.DDDYearCls1').val() + ''">
+                                                    @items.EmployeeCode
+                                                </a>
+                                            </td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                                @if (@items.FilesDetails.Count > 0)
+                                                {
+                                                    if (@items.FilesDetails[0].Extention == ".jpg" || @items.FilesDetails[0].Extention == ".png" || @items.FilesDetails[0].Extention == ".jpeg")
+                                                    {
+                                                        <embed class="img-circle circle2" src="@items.FilesDetails[0].FilePath" />
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <img alt="" class="img-circle circle2" src="~/assets/layouts/layout4/img/av.png" />
+                                                }
+                                            </td>
+                                            <td style="border: 1px solid black;text-align:center; padding: 4px">@items.UserFullName</td>
+                                            <td style="border: 1px solid black;text-align:center; padding: 4px">@items.Designation</td>
+                                            <td style="border: 1px solid black;text-align:center; padding: 4px">@items.TotalAverageScorePercent</td>
+                                        </tr>
+                                    }
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+}
+
+<script>
+
+    $('#myDatepicker1').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $('#myDatepicker2').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+
+        $('#btnSearch1').on('click', function () {
+            $('#loading').show();
+            var obj = {};
+
+            var userType = document.getElementById('ComUsers2');
+            var userText = userType.options[userType.selectedIndex].text;
+            var userValue = userType.options[userType.selectedIndex].value;
+
+            if (userText == "SELECT PERSON") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            var sDate = $("#myDatepicker1").val();
+            if (sDate == "") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Current Month & Year",
+                }).show();
+
+                return false;
+            }
+            var endDate = $("#myDatepicker2").val();
+            if (endDate == "") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Forwarded Month & Year",
+                }).show();
+
+                return false;
+            }
+
+
+            obj.userValue = userValue;
+            obj.sDate = sDate;
+            obj.endDate = endDate;
+
+            $.ajax({
+                url: '@Url.Action("CommercialKpiLineChart", "ProjectCommercial")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    //debugger;
+
+                    console.log("data :" + data);
+
+                    var master = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    var traverse1 = [];
+                    traverse1[0] = 0;
+                    traverse1[1] = 0;
+                    traverse1[2] = 0;
+                    traverse1[3] = 0;
+                    traverse1[4] = 0;
+                    traverse1[5] = 0;
+                    traverse1[6] = 0;
+                    traverse1[7] = 0;
+                    traverse1[8] = 0;
+                    traverse1[9] = 0;
+                    traverse1[10] = 0;
+                    traverse1[11] = 0;
+                    var traverse2 = new Array();
+                    traverse2[0] = 0;
+                    traverse2[1] = 0;
+                    traverse2[2] = 0;
+                    traverse2[3] = 0;
+                    traverse2[4] = 0;
+                    traverse2[5] = 0;
+                    traverse2[6] = 0;
+                    traverse2[7] = 0;
+                    traverse2[8] = 0;
+                    traverse2[9] = 0;
+                    traverse2[10] = 0;
+                    traverse2[11] = 0;
+                    var traverse3 = new Array();
+                    traverse3[0] = 0;
+                    traverse3[1] = 0;
+                    traverse3[2] = 0;
+                    traverse3[3] = 0;
+                    traverse3[4] = 0;
+                    traverse3[5] = 0;
+                    traverse3[6] = 0;
+                    traverse3[7] = 0;
+                    traverse3[8] = 0;
+                    traverse3[9] = 0;
+                    traverse3[10] = 0;
+                    traverse3[11] = 0;
+                    var traverse4 = new Array();
+                    traverse4[0] = 0;
+                    traverse4[1] = 0;
+                    traverse4[2] = 0;
+                    traverse4[3] = 0;
+                    traverse4[4] = 0;
+                    traverse4[5] = 0;
+                    traverse4[6] = 0;
+                    traverse4[7] = 0;
+                    traverse4[8] = 0;
+                    traverse4[9] = 0;
+                    traverse4[10] = 0;
+                    traverse4[11] = 0;
+
+                    for (var j = 0; j < data.length; j++) {
+
+                        if (data[j].KpiName == "Materials Arriving (Smart Phone)") {
+                            for (var k1 = 0; k1 < master.length; k1++) {
+                                //master.indexOf(data[j].Month) > -1
+                                if (master[k1] == data[j].Month) {
+
+                                    if (data[j].Month == "January") {
+                                        // traverse1[0] = parseFloat(data[j].TotalAverageScore);
+                                        traverse1[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //traverse1[0] = 'Year : ' + data[j].Year;
+                                        //master[0] = 'January (' + data[j].Year+')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse1[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse1[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse1[3] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse1[4] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse1[5] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse1[6] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse1[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse1[8] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse1[9] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse1[10] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse1[11] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                    // traverse1.push(parseFloat(data[j].TotalAverageScore));
+                                }
+
+                            }
+                        }
+                        if (data[j].KpiName == "Materials Arriving (Feature Phone)") {
+                            for (var k2 = 0; k2 < master.length; k2++) {
+
+                                if (master[k2] == data[j].Month) {
+                                    //  traverse2.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse2[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse2[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse2[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse2[3] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse2[4] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse2[5] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse2[6] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse2[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse2[8] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse2[9] = parseFloat(data[j].TotalAverageAchievement);
+                                        //  master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse2[10] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse2[11] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        if (data[j].KpiName == "Repeat Order") {
+                            for (var k3 = 0; k3 < master.length; k3++) {
+
+                                if (master[k3] == data[j].Month) {
+                                    // traverse3.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse3[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse3[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse3[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse3[3] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse3[4] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse3[5] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse3[6] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse3[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse3[8] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse3[9] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse3[10] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse3[11] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        if (data[j].KpiName == "Material Pass on CHN IQC") {
+                            for (var k4 = 0; k4 < master.length; k4++) {
+
+                                if (master[k4] == data[j].Month) {
+                                    // traverse4.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse4[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse4[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse4[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse4[3] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse4[4] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse4[5] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse4[6] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse4[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse4[8] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse4[9] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse4[10] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse4[11] = parseFloat(data[j].TotalAverageAchievement);
+                                        // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        chartCall1(master, traverse1, traverse2, traverse3, traverse4);
+
+                    }
+                }
+            });//end line chart
+            //window.location = '@Url.Action("CommercialKpiChart", "ProjectCommercial")';
+            // window.location.reload(true);
+        });//btn1
+    });
+    function chartCall1(master, traverse1, traverse2, traverse3, traverse4) {
+        var canvas = document.getElementById("barChart1");
+        var ctx = canvas.getContext('2d');
+
+        // Global Options:
+        Chart.defaults.global.defaultFontColor = 'black';
+        Chart.defaults.global.defaultFontSize = 16;
+
+        var dataFirst = {
+            label: "Materials Arriving (Smart Phone)",
+            data: traverse1,
+            //borderColor: "rgb(151,187,205)",
+            borderColor: "red",
+        };
+
+        var dataSecond = {
+            label: "Materials Arriving (Feature Phone)",
+            data: traverse2,
+            //borderColor: "rgb(220,220,220)",
+            borderColor: "blue",
+        };
+
+        var dataThird = {
+            label: "Repeat Order",
+            data: traverse3,
+            borderColor: "green",
+            //borderColor: "rgb(247,70,74)",
+        };
+
+        var dataFourth = {
+            label: "Material Pass on CHN IQC",
+            data: traverse4,
+            borderColor: "yellow",
+            //borderColor: "rgb(70,191,189)",
+        };
+
+        var speedData = {
+            labels: master,
+            datasets: [dataFirst, dataSecond, dataThird, dataFourth]
+        };
+
+        // Chart declaration:
+        var myBarChart = new Chart(ctx, {
+            type: 'line',
+            //type: 'bar',
+            data: speedData,
+            //options: {}
+            options: {
+                scales: {
+
+                    yAxes: [{
+                        ticks: {
+
+                            // min: 0,
+                            // max: 900,
+                            callback: function (value) { return value + "%" },
+                        },
+                        scaleLabel: {
+                            display: true,
+                            //labelString: "Percentage"
+                        }
+                    }]
+                }
+            }
+        });
+
+        $('#loading').hide();
+    }
+
+    //function getRandomValues(length) {
+    //    var values = [];
+    //    for (var i = 0; i < length; i++) {
+    //        values.push(Math.random() * 10);
+    //    }
+    //    return values;
+    //}
+
+</script>
+<script>
+
+    var currentRow;
+    var AllFinalAmount = 0;
+
+    var obj = {};
+    //debugger;
+    var userType12 = document.getElementById('ComUsers');
+    var userTypeText12 = userType12.options[userType12.selectedIndex].text;
+    var userTypeValue12 = userType12.options[userType12.selectedIndex].value;
+
+
+    //month
+    var mon1 = document.getElementById('DDDMonth');
+    var monText1 = mon1.options[mon1.selectedIndex].text;
+    var monValue1 = mon1.options[mon1.selectedIndex].value;
+
+    //year
+    var years1 = document.getElementById('DDDYear');
+    var yearsText1 = years1.options[years1.selectedIndex].text;
+    var yearsValue1 = years1.options[years1.selectedIndex].value;
+
+    obj.persons = userTypeValue12;
+    obj.MonNum = monValue1;
+    obj.Year = yearsValue1;
+    $(document).ready(function () {
+
+        var t = $('#tbl3').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "paging": false,
+            "order": [[3, 'desc']]
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+
+        $("#tbl3 tr.trClsforSize").each(function () {
+            //var final_Am_Id1 = $.trim($(this).find('#final_Am_Id').val($.trim($(this).find('#ParticularPersonIncentive').val())));
+            var final_Am_Id1 = $.trim($(this).find('#TlAvScore_Id').val());
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +$.trim($(this).find('#TlAvScore_Id').val());
+        });
+        $('#scoreIds').val(AllFinalAmount);
+        $('#scoreIds1').val(AllFinalAmount);
+        //alert(AllFinalAmount);
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+
+
+    $(function () {
+        var index = 0;
+
+        $('.btnOpenDetails').on('click', function (e) {
+            e.preventDefault();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl3');
+
+            var kpiName = $.trim(table.rows[rowIndex].cells[1].innerHTML).trim();
+
+            if (kpiName == "Materials Arriving (Smart Phone)") {
+                kpiName = 'Smart';
+            }
+            else if (kpiName == "Materials Arriving (Feature Phone)") {
+                kpiName = 'Feature';
+            }
+            else if (kpiName == "Repeat Order") {
+                kpiName = 'Repeat';
+            }
+            else if (kpiName == "Material Pass on CHN IQC") {
+                kpiName = 'Iqc';
+            }
+            var userType = document.getElementById('ComUsers');
+            var userTypeText = userType.options[userType.selectedIndex].text;
+            var userTypeValue = userType.options[userType.selectedIndex].value;
+
+            if (userTypeText == "SELECT PERSON") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            //month
+            var mon = document.getElementById('DDDMonth');
+            var monText = mon.options[mon.selectedIndex].text;
+            var monValue = mon.options[mon.selectedIndex].value;
+
+            if (monText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+            //year
+            var years = document.getElementById('DDDYear');
+            var yearsText = years.options[years.selectedIndex].text;
+            var yearsValue = years.options[years.selectedIndex].value;
+
+            if (yearsText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+
+            window.open('@Url.Action("CommercialKpiDetails", "ProjectCommercial")' + '?persons=' + userTypeValue +
+                '&MonNum=' + monValue + '&Year=' + yearsValue + '&kpiName=' + kpiName);
+
+        });
+
+        //Bar Chart//
+        $.ajax({
+            url: '@Url.Action("CommercialKpiSingleBarChart", "ProjectCommercial")',
+            type: 'POST',
+            data: JSON.stringify(obj),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                //debugger;
+
+                console.log("data :" + data);
+
+                // var master = ['Materials Arriving (Smart Phone)', 'Materials Arriving (Feature Phone)', 'Repeat Order', 'Material Pass on CHN IQC'];
+                var master = ['Smart', 'Feature', 'Repeat', 'IQC'];
+                var traverse1 = new Array();
+                traverse1[0] = 0;
+                traverse1[1] = 0;
+                traverse1[2] = 0;
+                traverse1[3] = 0;
+                var traverse2 = new Array();
+                traverse2[0] = 0;
+                traverse2[1] = 0;
+                traverse2[2] = 0;
+                traverse2[3] = 0;
+                var traverse3 = new Array();
+                traverse3[0] = 0;
+                traverse3[1] = 0;
+                traverse3[2] = 0;
+                traverse3[3] = 0;
+                var traverse4 = new Array();
+                traverse4[0] = 0;
+                traverse4[1] = 0;
+                traverse4[2] = 0;
+                traverse4[3] = 0;
+
+                for (var j = 0; j < data.length; j++) {
+
+                    if (data[j].KpiName == "Materials Arriving (Smart Phone)") {
+
+                        for (var k1 = 0; k1 < master.length; k1++) {
+                            if (master[k1] == "Smart") {
+                                traverse1[0] = parseFloat(data[j].TotalAverageAchievement);
+                            }
+                        }
+                    }
+
+                    if (data[j].KpiName == "Materials Arriving (Feature Phone)") {
+                        for (var k2 = 0; k2 < master.length; k2++) {
+                            if (master[k2] == "Feature") {
+                                traverse2[1] = parseFloat(data[j].TotalAverageAchievement);
+                            }
+                        }
+                    }
+                    if (data[j].KpiName == "Repeat Order") {
+                        for (var k3 = 0; k3 < master.length; k3++) {
+                            if (master[k3] == "Repeat") {
+                                traverse3[2] = parseFloat(data[j].TotalAverageAchievement);
+                            }
+
+                        }
+                    }
+                    if (data[j].KpiName == "Material Pass on CHN IQC") {
+                        for (var k4 = 0; k4 < master.length; k4++) {
+                            if (master[k4] == "IQC") {
+                                traverse4[3] = parseFloat(data[j].TotalAverageAchievement);
+                            }
+
+                        }
+                    }
+                    //
+                    chartCall(master, traverse1, traverse2, traverse3, traverse4);
+
+                }
+            }
+        });//end line chart
+    });
+    function chartCall(master, traverse1, traverse2, traverse3, traverse4) {
+        var canvas = document.getElementById("barChart");
+        var ctx = canvas.getContext('2d');
+
+        // Global Options:
+        Chart.defaults.global.defaultFontColor = 'black';
+        Chart.defaults.global.defaultFontSize = 16;
+
+        var dataFirst = {
+            label: "Materials Arriving (Smart Phone)",
+            data: traverse1,
+            //borderColor: "rgb(151,187,205)",
+            // borderColor: "red",
+            backgroundColor: "red",
+
+        };
+
+        var dataSecond = {
+            label: "Materials Arriving (Feature Phone)",
+            data: traverse2,
+            //borderColor: "rgb(220,220,220)",
+            backgroundColor: "blue",
+        };
+
+        var dataThird = {
+            label: "Repeat Order",
+            data: traverse3,
+            //borderColor: "green",
+            //borderColor: "rgb(247,70,74)",
+            backgroundColor: "green",
+        };
+
+        var dataFourth = {
+            label: "Material Pass on CHN IQC",
+            data: traverse4,
+            // borderColor: "yellow",
+            //borderColor: "rgb(70,191,189)",
+            backgroundColor: "yellow",
+        };
+
+        var speedData = {
+            labels: master,
+            datasets: [dataFirst, dataSecond, dataThird, dataFourth],
+
+        };
+
+        // Chart declaration:
+        var myBarChart = new Chart(ctx, {
+            // type: 'line',
+            type: 'bar',
+            data: speedData,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            callback: function (value) { return value + "%" },
+                        }
+                    }]
+                },
+            },
+            showTooltips: false,
+            onAnimationComplete: function () {
+                var ctx = this.chart.ctx;
+                ctx.font = this.scale.font;
+                ctx.fillStyle = this.scale.textColor;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "bottom";
+
+                this.datasets.forEach(function (dataset) {
+                    dataset.bars.forEach(function (bar) {
+                        ctx.fillText(bar.value, bar.x, bar.y - 5);
+                    });
+                });
+            }
+        });
+        //var myBar = new Chart(ctx).Bar(speedData, {
+        //    showTooltips: false,
+        //    onAnimationComplete: function () {
+
+        //        var ctx = this.chart.ctx;
+        //        ctx.font = this.scale.font;
+        //        ctx.fillStyle = this.scale.textColor
+        //        ctx.textAlign = "center";
+        //        ctx.textBaseline = "bottom";
+
+        //        this.datasets.forEach(function (dataset) {
+        //            dataset.bars.forEach(function (bar) {
+        //                ctx.fillText(bar.value, bar.x, bar.y - 5);
+        //            });
+        //        })
+        //    }
+        //});
+        //var myBarChart = new Chart(ctx).Bar(speedData, {
+        //    showTooltips: true,
+        //    onAnimationComplete: function () {
+
+        //        var ctx = this.chart.ctx;
+        //        ctx.font = this.scale.font;
+        //        ctx.fillStyle = this.scale.textColor
+        //        ctx.textAlign = "center";
+        //        ctx.textBaseline = "bottom";
+
+        //        this.datasets.forEach(function (dataset) {
+        //            dataset.bars.forEach(function (bar) {
+        //                ctx.fillText(bar.value, bar.x, bar.y - 5);
+        //            });
+        //        })
+        //    }
+        //});
+    }
+    //function getRandomValues(length) {
+    //    var values = [];
+    //    for (var i = 0; i < length; i++) {
+    //        values.push(Math.random() * 10);
+    //    }
+    //    return values;
+    //}
+
+    $('#btnSearch').on('click', function (e) {
+        e.preventDefault();
+        var userType1 = document.getElementById('ComUsers');
+        var userTypeText1 = userType1.options[userType1.selectedIndex].text;
+        var userTypeValue1 = userType1.options[userType1.selectedIndex].value;
+
+        //debugger;
+        if (userTypeText1 == "SELECT PERSON") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Person must",
+            }).show();
+            return false;
+        }
+
+
+        if (monText1 == "SELECT MONTH") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Month must",
+            }).show();
+            return false;
+        }
+
+        if (yearsText1 == "SELECT YEAR") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Year must",
+            }).show();
+            return false;
+        }
+
+    });//btn1
+    $(document).ready(function () {
+        var t = $('#tblTeam').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            //"lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+
+        var persons = getParameterByName("persons");
+        console.log("pp" + persons);
+        var liss;
+        $("#tblQcList tr td.linkColorForID").click(function () {
+            liss = $(this).find('.linkColorForID2').text().trim();
+            if (liss == persons) {
+                $(this).css('background', '#337AB7');
+                $(this).children('.linkColorForID2').css('color', 'white');
+                console.log(liss);
+            }
+
+        });
+
+
+        $("#tblQcList tr td.linkColorForID").each(function () {
+            liss = $(this).find('.linkColorForID2').text().trim();
+            if (liss == persons) {
+                $(this).css('background', '#337AB7');
+                $(this).children('.linkColorForID2').css('color', 'white');
+
+                console.log(liss);
+            }
+
+        });
+
+        console.log(liss);
+    });
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+</script>

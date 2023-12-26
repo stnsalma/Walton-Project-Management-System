@@ -1,0 +1,127 @@
+﻿@model IEnumerable<ProjectManagement.Models.MkProjectSpecModel>
+    @{
+        ViewBag.Title = "AllModelList";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">Models</div>
+            <div class="actions">
+                <input type="button" value="Create" class="btn btn-circle blue-madison btn-outline sbold uppercase" onclick="location.href = '@Url.Action("Spec", "Marketing")'" />
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-scrollable">
+                        <table id="tblSpecs" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="">Id</th>
+                                    <th class="text-center bold">Brand</th>
+                                    <th class="text-center bold">Model</th>
+                                    <th class="text-center bold">Display</th>
+                                    <th class="text-center bold">Sim Card</th>
+                                    <th class="text-center bold">OS</th>
+                                    <th class="text-center bold">Processor</th>
+                                    <th class="text-center bold">Camera</th>
+                                    <th class="text-center bold">Memory</th>
+                                    <th class="text-center bold">Battery</th>
+                                    <th class="text-center bold">MRP Price</th>
+                                    <th class="text-center bold">Upcoming Price($)</th>
+                                    <th class="text-center bold">Release Date</th>
+                                    <th class="text-center bold">Added By</th>
+                                    <th class="text-center bold">Added Date</th>
+                                    <th class="text-center bold">Updated By</th>
+                                    <th class="text-center bold">Updated Date</th>
+                                    @if (User.IsInRole("CM") || User.IsInRole("CMHEAD"))
+                                    {
+                                        <th class="text-center bold">Import Price</th>
+                                    }
+                                    <th class="text-center bold">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var m in Model)
+                                {
+                                    <tr>
+                                        <td class="">@m.Id</td>
+                                        <td class="text-center">@m.Brand</td>
+                                        <td class="text-center">@m.ModelName</td>
+                                        <td class="text-center">@m.DisplaySize,@m.DisplayType,@m.Resolution</td>
+                                        <td class="text-center">@m.SimSlotNumber,@m.SimSlotType</td>
+                                        <td class="text-center">@m.OperatingSystem @m.OsVersion</td>
+                                        <td class="text-center">@m.Chipset,@m.CPU,@m.CPUFrequency,@m.GPU</td>
+                                        <td class="text-center"><span class="bold">Front Camera:</span> @m.FrontCamera <br /> <span class="bold">Back Camera:</span> @m.BackCamera</td>
+                                        <td class="text-center"><span class="bold">RAM:</span> @m.RAM <br /> <span class="bold">ROM:</span> @m.ROM</td>
+                                        <td class="text-center">@m.BatteryType, @m.BatteryCapacity</td>
+                                        <td class="text-center">@m.Price</td>
+                                        <td class="text-center">@m.UpcomingPrice</td>
+                                        <td class="text-center">
+                                            @if (m.ReleaseDate != null)
+                                                  {
+                                                      @m.ReleaseDate.Value.ToShortDateString()
+                                                  }
+                                        </td>
+                                        <td class="text-center">@m.AddedByName</td>
+                                        <td class="text-center">@m.AddedDate</td>
+                                        <td class="text-center">@m.UpdatedByName</td>
+                                        <td class="text-center">@m.UpdatedDate</td>
+                                        @if (User.IsInRole("CM") || User.IsInRole("CMHEAD"))
+                                        {
+                                            <td class="text-center">@Html.TextBox("ImportPrice",@m.CommercialImportPrice, new { @class = "txtImportPrice form-control",type="number",Styles="width:50px;height:30px" })</td>
+                                        }
+                                        <td class="text-center">
+                                            @if (User.IsInRole("MKT") || User.IsInRole("MKTHEAD") || User.IsInRole("PS"))
+                                            {
+                                                <input type="button" value="Edit" class="btn btn-circle btn-danger btnEdit" />
+                                            }
+                                            @if (User.IsInRole("CM") || User.IsInRole("CMHEAD"))
+                                            {
+                                                <input type="button" value="Save" class="btn btn-circle btn-danger btnPrice" />
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var table = $('#tblSpecs').DataTable({
+            columnDefs: [
+                {
+                    targets: [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        $('#tblSpecs').on('click', '.btnEdit', function () {
+            var row = table.row($(this).parents('tr')).data();
+            console.log(row[0]);
+            var url = '@Url.Action("Spec","Marketing")' + '/' + row[0];
+            window.location.href = url;
+        });
+
+        $('#tblSpecs').on('click', '.btnPrice', function () {
+            var row = table.row($(this).parents('tr')).data();
+            console.log(row[0]);
+            var importPrice = $(this).closest('tr').find('td:eq(10)').find('.txtImportPrice').val();
+            console.log(importPrice);
+            var url = '@Url.Action("CommImportPrice","Marketing")';
+            //window.location.href = url;
+            $.post(url, { id: row[0], commercialImportPrice: importPrice }, function (data) {
+                alertify.success('Saved');
+            });
+        });
+    </script>
+

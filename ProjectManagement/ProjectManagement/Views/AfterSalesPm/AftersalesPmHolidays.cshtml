@@ -1,0 +1,406 @@
+﻿@{
+
+    ////Layout = "";
+}
+<h2 style="color: red">Aftersales PM Holidays</h2>
+
+
+<link href="~/Scripts/fullcalendar-3.9.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="~/Scripts/fullcalendar-3.9.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+<script src="~/Scripts/fullcalendar-3.9.0/fullcalendar.min.js"></script>
+<script src="~/Scripts/fullcalendar-3.9.0/lib/moment.min.js"></script>
+<style>
+    #calendarMine {
+        background-color: white;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .closon {
+        position: absolute;
+        /*top: -2px;*/
+        right: 0;
+        cursor: pointer;
+        background-color: black;
+    }
+
+    .closeon {
+        position: relative;
+        margin-top: -18px;
+        float: right;
+        cursor: pointer;
+        z-index: 999;
+        background-color: black;
+    }
+</style>
+<div class="portlet box " style="background: #5D7181">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Factory Holiday Entry
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div id='calendarMine' style="text-align: left">
+
+            </div>
+        </div>
+    </div>
+</div>
+@*----------------------modal1------------------------------*@
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" style="display:none">
+                        <label class="control-label">ID :</label>
+                        <input name="holidayId" id="holidayId" type="text" value="" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Holiday Type :</label>
+                        @*<input name="holidayType" id="holidayType" type="text" value="" class="form-control">*@
+                        <select name="holidayType" id="holidayType" class="form-control input-large">
+                            <option value="">Select Holiday</option>
+                            <option value="Holiday">Holiday</option>
+                            <option value="Weekend">Weekend</option>
+                            @*<option>Production Halt</option>*@
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Holiday Start Date</label>
+                        <input class="form-control" name="holidayDate1" id="holidayDate1" type="text" placeholder="yyyy-mm-dd">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Holiday End Date</label>
+                        <input class="form-control" name="holidayDate2" id="holidayDate2" type="text" placeholder="yyyy-mm-dd">
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="buttonSave" class="btn btn-warning buttonSave" id="buttonSave" data-dismiss="modal">Save</button>
+                <button type="buttonClose" class="btn btn-danger buttonClose" id="buttonClose" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#holidayDate1').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+
+        });
+        $('#holidayDate2').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+
+        });
+    });
+    $(document).ready(function () {
+
+        var events = [];
+        var itemsLists = [];
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("GetHoliday", "AfterSalesPm")',
+            success: function (data) {
+
+                console.log(data);
+
+                var dataList = [];
+                for (var x in data) {
+                    dataList = data[x];
+                }
+                var items = $.parseJSON(dataList);
+                itemsLists = items;
+                $.each(itemsLists, function (i, v) {
+                    events.push({
+                        title: v.HolidayName,
+                        start: moment(v.Holiday_SDate).format("YYYY-MM-DD"),
+                        //end: moment(v.HolidayEndDate).format("YYYY-MM-DD"),
+                        //end: moment(v.Holiday_EDate).add(1, 'days').format("YYYY-MM-DD"),
+                        description: v,
+                        allDay: true
+
+                    });
+                });
+
+                generateCalender(events);
+            },
+            error: function (error) {
+                alert('failed');
+            }
+        });
+
+
+    });
+    var startDate = "";
+    var endDate = "";
+    function generateCalender(events) {
+
+        $('#calendarMine').fullCalendar('destroy');
+
+        $('#calendarMine').fullCalendar({
+            contentHeight: 500,
+            defaultDate: new Date(),
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month, basicWeek,basicDay,agenda'
+            },
+            eventColor: '#835881',
+            eventHeight:180,
+            editable: true,
+            selectable: true,
+            select: function (start, end, allDay) {
+                $('#myModal').modal('show');
+            },
+            events: events,
+            eventClick: function (calEvent, jsEvent, view) {
+
+                $(".closon").click(function () {
+                    $('#calendarMine').fullCalendar('removeEvents', event._id);
+                });
+
+            },
+            eventDrop: function (event, delta, revertFunc) {
+                alertify.confirm("Confirmation Message", "Are you sure about this change?",
+                    function () {
+                        alertify.success('Ok');
+                       // window.location.reload(true);
+                        var obj = {};
+                        obj.Id = event.description.Id;
+                        obj.GovernmentHoliday = event.title;
+                        obj.HolidayStartDate = event.start.format("YYYY-MM-DD");
+
+                        var eDate = event.end;
+
+                        if (eDate == null) {
+                            obj.HolidayEndDate = event.start.format("YYYY-MM-DD");
+                        } else {
+                            obj.HolidayEndDate = moment(event.end.toISOString()).add(-1, 'days').format("YYYY-MM-DD");
+                            //obj.HolidayEndDate = moment(event.description.HolidayEndDate).format("YYYY-MM-DD");
+                        }
+                        $.ajax({
+                            url: '@Url.Action("SaveHolidayDropData", "AfterSalesPm")',
+                            type: 'POST',
+                            data: JSON.stringify(obj),
+                            dataType: "json",
+                            contentType: 'application/json; charset=utf-8',
+                            success: function (data) {
+                                console.log("data :" + data);
+
+                                if (data.data == "ok") {
+                                    alertify.dialog('alert').set({
+                                        'title': '   ',
+                                        'transition': 'zoom',
+                                        'message': "Date is successfully changed.",
+                                    }).show();
+                                }
+                            }
+                        });
+
+                    }, function () {
+                        revertFunc();
+                        alertify.error('Cancelled');
+
+                    });
+            },//
+            eventResize: function (event, delta, revertFunc) {
+
+                alertify.confirm(event.title + " from " + event.start.toISOString() + " to " + moment(event.end.toISOString()).add(-1, 'days').format("YYYY-MM-DD"), "Are you sure about this change?",
+                   function () {
+                       alertify.success('Ok');
+                       //window.location.reload(true);
+                       var obj = {};
+                       obj.Id = event.description.Id;
+                       obj.GovernmentHoliday = event.title;
+                       obj.HolidayStartDate = event.start.format("YYYY-MM-DD");
+                       var eDate = event.end;
+
+                       if (eDate == null) {
+                           obj.HolidayEndDate = event.start.format("YYYY-MM-DD");
+                       } else {
+                           obj.HolidayEndDate = moment(event.end.toISOString()).add(-1, 'days').format("YYYY-MM-DD");
+                           // obj.HolidayEndDate = moment(event.description.HolidayEndDate).format("YYYY-MM-DD");
+                       }
+
+                       $.ajax({
+                           url: '@Url.Action("SaveHolidayResizeData", "AfterSalesPm")',
+                           type: 'POST',
+                           data: JSON.stringify(obj),
+                           dataType: "json",
+                           contentType: 'application/json; charset=utf-8',
+                           success: function (data) {
+                               console.log("data :" + data);
+
+                               if (data.data == "ok") {
+                                   alertify.dialog('alert').set({
+                                       'title': '   ',
+                                       'transition': 'zoom',
+                                       'message': "Holiday range is successfully modified.",
+                                   }).show();
+                               }
+                           }
+                       });
+
+                   }, function () {
+                       revertFunc();
+                       alertify.error('Cancelled');
+
+                   });
+            },//resize
+            //eventRender: function (event, element) {
+            //    $(element).tooltip({ title: "Factory Holiday" });
+            //}
+
+            eventRender: function (event, element) {
+                element.css("font-size", ".9em");
+                element.css("padding", "2px");
+                element.append("<span class='closeon'>X</span>");
+                element.find(".closeon").click(function () {
+
+                    alertify.confirm("Confirmation Message", "Do you want to remove this history?",
+                   function () {
+
+                       //delete an event
+                       var obj = {};
+                       obj.Id = event.description.Id;
+
+                       $.ajax({
+                           url: '@Url.Action("DeleteHolidayData", "AfterSalesPm")',
+                           type: 'POST',
+                           data: JSON.stringify(obj),
+                           dataType: "json",
+                           contentType: 'application/json; charset=utf-8',
+                           success: function (data) {
+                               console.log("data :" + data);
+
+                               if (data.data == "ok") {
+                                   alertify.dialog('alert').set({
+                                       'title': '   ',
+                                       'transition': 'zoom',
+                                       'message': "Holiday Data is successfully deleted.",
+                                   }).show();
+                               }
+                           }
+                       });
+
+                       alertify.success('Ok');
+                       $('#calendarMine').fullCalendar('removeEvents', event._id);
+
+
+                   }, function () {
+
+                       alertify.error('Cancelled');
+
+                   });
+
+                });
+            }
+        });
+
+        //add event
+        $('#buttonSave').on('click', function (e) {
+            // We don't want this to act as a link so cancel the link action
+            e.preventDefault();
+            doSubmit();
+
+            //save event
+            var obj1 = {};
+            obj1.GovernmentHoliday = $('#holidayType').val();
+            obj1.HolidayStartDate = moment($('#holidayDate1').val()).format("YYYY-MM-DD");
+            obj1.HolidayEndDate = moment($('#holidayDate2').val()).format("YYYY-MM-DD");
+            
+            if (obj1.GovernmentHoliday == "")
+            {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Holiday Type",
+                }).show();
+                
+                return false;
+            }
+            if (obj1.HolidayStartDate == "Invalid date") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Holiday Start Date",
+                }).show();
+
+                return false;
+            }
+            if (obj1.HolidayEndDate == "Invalid date") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Holiday End Date",
+                }).show();
+
+                return false;
+            }
+            $.ajax({
+                url: '@Url.Action("SaveHolidayNewData", "AfterSalesPm")',
+                type: 'POST',
+                data: JSON.stringify(obj1),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+
+                    if (data.data == "ok") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Holiday is created successfully.",
+                        }).show();
+                    }
+                }
+            });
+
+        });
+
+        function doSubmit() {
+            $("#myModal").modal('hide');
+            $("#calendarMine").fullCalendar('renderEvent',
+                {
+                    title: $('#holidayType').val(),
+                    start: new Date(moment($('#holidayDate1').val()).format("YYYY-MM-DD")),
+                    end: new Date(moment($('#holidayDate2').val()).add(1, 'days').format("YYYY-MM-DD")),
+                    allDay: true
+                }, true);
+        }
+
+    }
+
+    $('#myModal').on('hidden.bs.modal', function (e) {
+        $(this)
+            .find("input,textarea,select")
+            .val('')
+            .end()
+            .find("input[type=checkbox], input[type=radio]")
+            .prop("checked", "")
+            .end();
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

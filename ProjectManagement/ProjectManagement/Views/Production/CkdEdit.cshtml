@@ -1,0 +1,1480 @@
+﻿@*@model IEnumerable<ProjectManagement.Models.CustomBatteryProduction>*@
+@model IEnumerable<ProjectManagement.Models.CustomBatteryProduction>
+    <link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+    <script src="~/Content/icheck/icheck.min.js"></script>
+    <script src="~/Scripts/moment.js"></script>
+
+    <script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+    @*datatable *@
+    <link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/loadingText.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery.table2excel.js"></script>
+    <style>
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="color: brown;">
+                        <span class="caption-subject #569450 sbold uppercase"> Edit</span>
+                    </div>
+                </div>
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:brown;">
+                            <i class="fa fa-cogs"></i>Edit PLAN
+                        </div>
+                        <div class="tools" style="background-color:#75AE42;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable divSearchedvalue" id="divSearchedvalue" style="overflow: auto;">
+                            <table id="batteryPlanTableEdit" class="table table-bordered table-striped table-scrollable table-bordered table-hover tbl">
+                                <thead class="flip-content" style="background-color:  #75AE42;color: white">
+                                    <tr>
+                                        <th style="text-align: center;">Type Of Work</th>
+                                        <th style="text-align: center;">Start Date</th>
+                                        <th style="text-align: center;">End Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tBodyForCharger" class="tBodyForCharger">
+                                    @foreach (var asemblyModel in Model)
+                                    {
+                                        <tr style="text-align: center;" class="tr1" id="tr1">
+
+                                            <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+
+                                                <div class="col-lg-2">
+                                                    @*<input type="checkbox" id="smtChkId" class="smtChkId" name="smt" value="smt_CheckBx">*@
+                                                </div>
+                                                <div class="col-lg-8">
+                                                    <input id="smtProName" class="form-control" value="@asemblyModel.AsmProjectName" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+
+                                                </div>
+                                                <div class="col-lg-2">PROCESS : SMT</div>
+
+                                                <br />
+                                            </th>
+                                        </tr>
+                                        <tr class="tr2" id="tr2">
+                                            <td style="display:none">
+                                                <input type="text" id="AsmProjectId" class="form-control AsmProjectId" value="@asemblyModel.AsmProjectId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="AsmProjectName" class="form-control AsmProjectName" value="@asemblyModel.AsmProjectName" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="AsmPlanId" class="form-control AsmPlanId" value="@asemblyModel.AsmPlanId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="BbPlanId" class="form-control BbPlanId" value="@asemblyModel.BbPlanId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="BhPlanId" class="form-control BhPlanId" value="@asemblyModel.BhPlanId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="SmtPlanId" class="form-control SmtPlanId" value="@asemblyModel.SmtPlanId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="SmtId" class="form-control SmtId" value="@asemblyModel.SmtId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="AsmId" class="form-control AsmId" value="@asemblyModel.AsmId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="BbId" class="form-control BbId" value="@asemblyModel.BbId" />
+                                            </td>
+                                            <td style="display:none">
+                                                <input type="text" id="BhId" class="form-control BhId" value="@asemblyModel.BhId" />
+                                            </td>
+                                            <td>Material Receiving in Inventory</td>
+                                            <td>
+                                                @if (@asemblyModel.MaterialReceiveStartDateBSmt != null)
+                                                {<input type="text" id="materialReceiveSDateBSmt22" class="form-control datepicker MaterialReceiveStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="materialReceiveSDateBSmt22" value="@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveStartDateBSmt)" />}
+                                                else
+                                                {<input type="text" id="materialReceiveSDateBSmt22" class="form-control datepicker MaterialReceiveStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveSDateBSmt22" value="" />}
+
+                                                <p id="smtMaterialStartPara" style="display:none;color:red">One Project is waiting for SMT Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.MaterialReceiveEndDateBSmt != null)
+                                                {<input type="text" id="materialReceiveEDateBSmt22" class="form-control datepicker MaterialReceiveEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="materialReceiveEDateBSmt22" value="@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveEndDateBSmt)" />}
+                                                else
+                                                {<input type="text" id="materialReceiveEDateBSmt22" class="form-control datepicker MaterialReceiveEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEDateBSmt22" value="" />}
+                                            </td>
+
+                                        </tr>
+                                        <tr class="tr3" id="tr3">
+                                            <td>IQC Confirmation</td>
+                                            <td>
+                                                @if (@asemblyModel.IqcCompleteStartDateBSmt != null)
+                                                {<input type="text" id="iqcCompleteSDateBSmt22" class="form-control datepicker IqcCompleteStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteSDateBSmt22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteStartDateBSmt) />}
+                                                else
+                                                { <input type="text" id="iqcCompleteSDateBSmt22" class="form-control datepicker IqcCompleteStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteSDateBSmt22" value="" />}
+
+                                                <p id="smtIqcStartPara" style="display:none;color:red">One Project is waiting for SMT IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.IqcCompleteEndDateBSmt != null)
+                                                {<input type="text" id="iqcCompleteEDateBSmt22" class="form-control datepicker IqcCompleteEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEDateBSmt22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteEndDateBSmt) />}
+                                                else
+                                                {<input type="text" id="iqcCompleteEDateBSmt22" class="form-control datepicker IqcCompleteEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEDateBSmt22" value="" />}
+
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>Trial Production</td>
+                                            <td>
+                                                @if (@asemblyModel.TrialProductionStartDateBSmt != null)
+                                                {<input type="text" id="trialProductionSDateBSmt22" class="form-control datepicker TrialProductionStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionSDateBSmt22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionStartDateBSmt) />}
+                                                else
+                                                {<input type="text" id="trialProductionSDateBSmt22" class="form-control datepicker TrialProductionStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionSDateBSmt22" value="" />}
+                                                <p id="smtTrialStartPara" style="display:none;color:red">One Project is waiting for SMT Trial Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.TrialProductionEndDateBSmt != null)
+                                                {<input type="text" id="trialProductionEDateBSmt22" class="form-control datepicker TrialProductionEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEDateBSmt22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionEndDateBSmt) />}
+                                                else
+                                                { <input type="text" id="trialProductionEDateBSmt22" class="form-control datepicker TrialProductionEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEDateBSmt22" value="" />}
+
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+                                                @if (@asemblyModel.SmtTrialLine != null)
+                                                {<input type="text" id="trialLinesBSmt22" class="form-control TrialLineNumber" value="@asemblyModel.SmtTrialLine" />}
+                                                else
+                                                { <input type="text" id="trialLinesBSmt22" class="form-control TrialLineNumber" value="" />}
+
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>SMT Mass Production</td>
+                                            <td>
+                                                @if (@asemblyModel.SmtMassProductionStartDateBSmt != null)
+                                                {
+                                                    <input type="text" id="smtMassProductionSDateBSmt22" onchange="smtLineInfoEditFunc()" class="form-control datepicker SmtMassProductionStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="smtMassProductionSDateBSmt22" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SmtMassProductionStartDateBSmt) />}
+                                                else
+                                                {<input type="text" id="smtMassProductionSDateBSmt22" class="form-control datepicker SmtMassProductionStartDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="smtMassProductionSDateBSmt22" value="" />}
+
+                                                <p id="smtMassProStartPara" style="display:none;color:red">One Project is waiting for SMT Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.SmtMassProductionEndDateBSmt != null)
+                                                {<input type="text" id="smtMassProductionEDateBSmt22" class="form-control datepicker SmtMassProductionEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="smtMassProductionEDateBSmt22" disabled="disabled" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SmtMassProductionEndDateBSmt) />}
+                                                else
+                                                {  <input type="text" id="smtMassProductionEDateBSmt22" class="form-control datepicker SmtMassProductionEndDateBSmt" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="smtMassProductionEDateBSmt22" disabled="disabled" value="" />}
+
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px;"></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Line Capacity</div>
+                                                @if (@asemblyModel.SmtAllLineCapacity != null)
+                                                { <input type="number" id="lineCapacityBSmt22" class="form-control SmtAllLineCapacity" min="1" disabled="disabled" value="@asemblyModel.SmtAllLineCapacity" />}
+                                                else
+                                                {<input type="number" id="lineCapacityBSmt22" class="form-control SmtAllLineCapacity" min="1" value="" /> }
+                                                <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                                @if (@asemblyModel.TotalQuantityBSmt != null)
+                                                { <input type="number" id="totalQuantityBSmt22" onchange="smtLineInfoEditFunc()" class="form-control TotalQuantityBSmt" min="1" value="@asemblyModel.TotalQuantityBSmt" />}
+                                                else
+                                                {<input type="number" id="totalQuantityBSmt22" class="form-control TotalQuantityBSmt" min="1" value="" /> }
+                                                <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                                @if (@asemblyModel.BatterySmtPerDayCapacity != 0)
+                                                {<input type="number" id="smtPerDayCapacity22" onchange="smtLineInfoEditFunc()" class="form-control BatterySmtPerDayCapacity" min="1" value="@asemblyModel.BatterySmtPerDayCapacity" />}
+                                                else
+                                                {<input type="number" id="smtPerDayCapacity22" class="form-control BatterySmtPerDayCapacity" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+
+                                                @if (@asemblyModel.SmtAllLineNumber != null)
+                                                { <input type="text" id="smtAllLineNumber22" onchange="smtLineInfoEditFunc()" class="form-control SmtAllLineNumber" value="@asemblyModel.SmtAllLineNumber" />}
+                                                else
+                                                { <input type="text" id="smtAllLineNumber22" class="form-control SmtAllLineNumber" value="" />}
+                                            </td>
+                                        </tr>
+                                        
+                                         <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                      
+                                        <div class="col-lg-2">
+                                            @*<input type="checkbox" id="housingChkId" class="housingChkId" name="housing" value="housing_CheckBx">*@
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="housingProName" class="form-control" type="text" value="@asemblyModel.AsmProjectName" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : HOUSING</div>
+
+                                        <br />
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                         @if (@asemblyModel.MaterialReceiveStartDateBHousing != null)
+                                        {<input type="text" id="materialReceiveStartDateBHousing" class="form-control datepicker MaterialReceiveStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveStartDateBHousing) />}
+                                        else
+                                        {<input type="text" id="materialReceiveStartDateBHousing" class="form-control datepicker MaterialReceiveStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBHousing" value="" />}
+                                         <p id="housingMaterialStartPara" style="display:none;color:red">One Project is waiting for Housing Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.MaterialReceiveEndDateBHousing != null)
+                                        {<input type="text" id="materialReceiveEndDateBHousing" class="form-control datepicker MaterialReceiveEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveEndDateBHousing) />}
+                                        else
+                                        {<input type="text" id="materialReceiveEndDateBHousing" class="form-control datepicker MaterialReceiveEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBHousing" value="" />}
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @if (@asemblyModel.IqcCompleteStartDateBHousing != null)
+                                        {<input type="text" id="iqcCompleteStartDateBHousing" class="form-control datepicker IqcCompleteStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteStartDateBHousing) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteStartDateBHousing" class="form-control datepicker IqcCompleteStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBHousing" value="" />}
+                                        
+                                        <p id="housingIqcStartPara" style="display:none;color:red">One Project is waiting for Housing IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.IqcCompleteEndDateBHousing != null)
+                                        {<input type="text" id="iqcCompleteEndDateBHousing" class="form-control datepicker IqcCompleteEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteEndDateBHousing) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteEndDateBHousing" class="form-control datepicker IqcCompleteEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBHousing" value="" />}
+                                        
+                                    </td>
+                                </tr>
+                                        <tr>
+                                            <td>Trial Production</td>
+                                            <td>
+                                                @if (@asemblyModel.TrialProductionStartDateBHousing != null)
+                                                {<input type="text" id="trialProductionStartDateBHousing" class="form-control datepicker TrialProductionStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionStartDateBHousing) />}
+                                                else
+                                                {<input type="text" id="trialProductionStartDateBHousing" class="form-control datepicker TrialProductionStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBHousing" value="" />}
+                                                <p id="housingTrialStartPara" style="display:none;color:red">One Project is waiting for Housing Trial Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.TrialProductionEndDateBHousing != null)
+                                                {<input type="text" id="trialProductionEndDateBHousing" class="form-control datepicker TrialProductionEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionEndDateBHousing) />}
+                                                else
+                                                {<input type="text" id="trialProductionEndDateBHousing" class="form-control datepicker TrialProductionEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBHousing" value="" />}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+                                                @if (@asemblyModel.HousingTrialLine != null)
+                                                {<input type="text" id="housingTrialLine" class="form-control HousingTrialLine" value="@asemblyModel.HousingTrialLine" />}
+                                                else
+                                                { <input type="text" id="housingTrialLine" class="form-control HousingTrialLine" value="" />}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                    <td>Housing Reliability Test</td>
+                                    <td>
+                                       @if (@asemblyModel.HousingReliabilityTestStartDateBHousing != null)
+                                       {<input type="text" id="housingReliabilityTestStartDateBHousing" class="form-control datepicker HousingReliabilityTestStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingReliabilityTestStartDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.HousingReliabilityTestStartDateBHousing) />}
+                                       else
+                                       {<input type="text" id="housingReliabilityTestStartDateBHousing" class="form-control datepicker HousingReliabilityTestStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingReliabilityTestStartDateBHousing" value="" />}
+
+                                    </td>
+                                    <td>
+                                       @if (@asemblyModel.HousingReliabilityTestEndDateBHousing != null)
+                                        {<input type="text" id="housingReliabilityTestEndDateBHousing" class="form-control datepicker HousingReliabilityTestEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingMassProductionEndDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.HousingReliabilityTestEndDateBHousing) />}
+                                       else
+                                       {<input type="text" id="housingReliabilityTestEndDateBHousing" class="form-control datepicker HousingReliabilityTestEndDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingReliabilityTestEndDateBHousing" value="" />}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Housing Mass Production</td>
+                                    <td>
+                                        @if (@asemblyModel.HousingMassProductionStartDateBHousing != null)
+                                        {<input type="text" id="housingMassProductionStartDateBHousing" onchange="housingLineInfoEditFunc()" class="form-control datepicker HousingMassProductionStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingMassProductionStartDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.HousingMassProductionStartDateBHousing) />}
+                                        else
+                                        {<input type="text" id="housingMassProductionStartDateBHousing" class="form-control datepicker HousingMassProductionStartDateBHousing" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingMassProductionStartDateBHousing" value="" />}
+                                        <p id="housingMassProStartPara" style="display:none;color:red">One Project is waiting for Housing Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.HousingMassProductionEndDateBHousing != null)
+                                        {<input type="text" id="housingMassProductionEndDateBHousing" class="form-control datepicker HousingMassProductionEndDateBHousing" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingMassProductionEndDateBHousing" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.HousingMassProductionEndDateBHousing) />}
+                                        else
+                                        {<input type="text" id="housingMassProductionEndDateBHousing" class="form-control datepicker HousingMassProductionEndDateBHousing" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="housingMassProductionEndDateBHousing" value="" />}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Line Capacity</div>
+                                        @if (@asemblyModel.HousingAllLineCapacity != null)
+                                        { <input type="number" id="housingAllLineCapacity" class="form-control HousingAllLineCapacity" min="1" disabled="disabled" value="@asemblyModel.HousingAllLineCapacity" />}
+                                        else
+                                        {<input type="number" id="housingAllLineCapacity" class="form-control HousingAllLineCapacity" min="1" value="" /> }
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        @if (@asemblyModel.TotalQuantity != null)
+                                        { <input type="number" id="totalQuantity" onchange="housingLineInfoEditFunc()" class="form-control TotalQuantity" min="1" value="@asemblyModel.TotalQuantity" />}
+                                        else
+                                        {<input type="number" id="totalQuantity" class="form-control TotalQuantity" min="1" value="" /> }
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        @if (@asemblyModel.BatteryHousingPerDayCapacity != 0)
+                                        {<input type="number" id="batteryHousingPerDayCapacity" onchange="housingLineInfoEditFunc()" class="form-control BatteryHousingPerDayCapacity" min="1" value="@asemblyModel.BatteryHousingPerDayCapacity" />}
+                                        else
+                                        {<input type="number" id="batteryHousingPerDayCapacity" class="form-control BatteryHousingPerDayCapacity" min="1" value="" />}
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        @if (@asemblyModel.HousingAllLineNumber != null)
+                                        { <input type="text" id="housingAllLineNumber" onchange="housingLineInfoEditFunc()" class="form-control HousingAllLineNumber" value="@asemblyModel.HousingAllLineNumber" />}
+                                        else
+                                        { <input type="text" id="housingAllLineNumber" class="form-control HousingAllLineNumber" value="" />}
+                                    </td>
+                                </tr>
+                                        
+                                  <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        <div class="col-lg-2">
+
+                                            @*<input type="checkbox" id="batteryChkId" class="batteryChkId" name="housing" value="battery_CheckBx">*@
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="batteryProName" class="form-control" value="@asemblyModel.AsmProjectName" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : BATTERY</div>
+                                        <br />
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                        @if (@asemblyModel.MaterialReceiveStartDateBattery != null)
+                                        {<input type="text" id="materialReceiveStartDateBattery" class="form-control datepicker MaterialReceiveStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBattery" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveStartDateBattery) />}
+                                        else
+                                        {<input type="text" id="materialReceiveStartDateBattery" class="form-control datepicker MaterialReceiveStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBattery" value="" />}
+
+                                        <p id="batteryMaterialStartPara" style="display:none;color:red">One Project is waiting for Battery Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.MaterialReceiveEndDateBattery != null)
+                                        {<input type="text" id="materialReceiveEndDateBattery" class="form-control datepicker MaterialReceiveEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBattery" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveEndDateBattery) />}
+                                        else
+                                        {<input type="text" id="materialReceiveEndDateBattery" class="form-control datepicker MaterialReceiveEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBattery" value="" />}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                       
+                                        @if (@asemblyModel.IqcCompleteStartDateBattery != null)
+                                        {<input type="text" id="iqcCompleteStartDateBattery" class="form-control datepicker IqcCompleteStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBattery" value=@String.Format("{0:yyyy-MM-dd}",@asemblyModel.IqcCompleteStartDateBattery) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteStartDateBattery" class="form-control datepicker IqcCompleteStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBattery" value="" />}
+
+                                        <p id="batteryIqcStartPara" style="display:none;color:red">One Project is waiting for Battery IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.IqcCompleteEndDateBattery != null)
+                                        {<input type="text" id="iqcCompleteEndDateBattery" class="form-control datepicker IqcCompleteEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBattery" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteEndDateBattery) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteEndDateBattery" class="form-control datepicker IqcCompleteEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBattery" value="" />}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @if (@asemblyModel.TrialProductionStartDateBattery != null)
+                                        {<input type="text" id="trialProductionStartDateBattery" class="form-control datepicker TrialProductionStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBattery" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionStartDateBattery) />}
+                                        else
+                                        {<input type="text" id="trialProductionStartDateBattery" class="form-control datepicker TrialProductionStartDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBattery" value="" />}
+                                        
+                                        <p id="batteryTrialStartPara" style="display:none;color:red">One Project is waiting for Battery IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.TrialProductionEndDateBattery != null)
+                                        {<input type="text" id="trialProductionEndDateBattery" class="form-control datepicker TrialProductionEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBattery" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.TrialProductionEndDateBattery) />}
+                                        else
+                                        {<input type="text" id="trialProductionEndDateBattery" class="form-control datepicker TrialProductionEndDateBattery" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBattery" value="" />}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        @if (@asemblyModel.BatteryTrialLine != null)
+                                        {<input type="text" id="batteryTrialLine" class="form-control BatteryTrialLine" value="@asemblyModel.BatteryTrialLine" />}
+                                        else
+                                        { <input type="text" id="batteryTrialLine" class="form-control BatteryTrialLine" value="" />}
+                                    </td>
+                                    <td></td>
+                                 </tr>
+                                <tr>
+                                    <td>Battery Reliability Test</td>
+                                    <td>
+                                        @if (@asemblyModel.BatteryReliabilityTestStartDate != null)
+                                        {<input type="text" id="batteryReliabilityTestStartDate" class="form-control datepicker BatteryReliabilityTestStartDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryReliabilityTestStartDate" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.BatteryReliabilityTestStartDate) />}
+                                        else
+                                        {<input type="text" id="batteryReliabilityTestStartDate" class="form-control datepicker BatteryReliabilityTestStartDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryReliabilityTestStartDate" value="" />}
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.BatteryReliabilityTestEndDate != null)
+                                        {<input type="text" id="batteryReliabilityTestEndDate" class="form-control datepicker BatteryReliabilityTestEndDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryReliabilityTestEndDate" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.BatteryReliabilityTestEndDate) />}
+                                        else
+                                        {<input type="text" id="batteryReliabilityTestEndDate" class="form-control datepicker BatteryReliabilityTestEndDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryReliabilityTestEndDate" value="" />}
+
+                                    </td>
+                                </tr>
+                                        <tr>
+                                            <td>Battery Mass Production</td>
+                                            <td>
+                                                @if (@asemblyModel.BatteryMassProductionStartDate != null)
+                                                {<input type="text" id="batteryMassProductionStartDate" onchange="batteryLineInfoEditFunc()" class="form-control datepicker BatteryMassProductionStartDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryMassProductionStartDate" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.BatteryMassProductionStartDate) />}
+                                                else
+                                                {<input type="text" id="batteryMassProductionStartDate" class="form-control datepicker BatteryMassProductionStartDate" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryMassProductionStartDate" value="" />}
+
+                                                <p id="batteryMassProStartPara" style="display:none;color:red">One Project is waiting for Battery Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.BatteryMassProductionEndDate != null)
+                                                {<input type="text" id="batteryMassProductionEndDate" class="form-control datepicker BatteryMassProductionEndDate" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryMassProductionEndDate" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.BatteryMassProductionEndDate) />}
+                                                else
+                                                {<input type="text" id="batteryMassProductionEndDate" class="form-control datepicker BatteryMassProductionEndDate" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="batteryMassProductionEndDate" value="" />}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px;"></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Line Capacity</div>
+                                                @if (@asemblyModel.BatteryAllLineCapacity != null)
+                                                { <input type="number" id="batteryAllLineCapacity" class="form-control BatteryAllLineCapacity" min="1" disabled="disabled" value="@asemblyModel.BatteryAllLineCapacity" />}
+                                                else
+                                                {<input type="number" id="batteryAllLineCapacity" disabled="disabled" class="form-control BatteryAllLineCapacity" min="1" value="" /> }
+                                                <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                                @if (@asemblyModel.BatteryTotalQuantity != null)
+                                                {<input type="number" id="totalQuantityBattery" onchange="batteryLineInfoEditFunc()" class="form-control TotalQuantityBattery" min="1" value="@asemblyModel.TotalQuantityBattery" />}
+                                                else
+                                                {<input type="number" id="totalQuantityBattery" class="form-control TotalQuantityBattery" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                                @if (@asemblyModel.BatteryPerDayCapacity != 0)
+                                                {<input type="number" id="batteryPerDayCapacity" onchange="batteryLineInfoEditFunc()" class="form-control BatteryPerDayCapacity" min="1" value="@asemblyModel.BatteryPerDayCapacity" />}
+                                                else
+                                                {<input type="number" id="batteryPerDayCapacity" class="form-control BatteryPerDayCapacity" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+                                                @if (@asemblyModel.BatteryAllLineNumber != null)
+                                                { <input type="text" id="batteryAllLineNumber" onchange="batteryLineInfoEditFunc()" class="form-control BatteryAllLineNumber" value="@asemblyModel.BatteryAllLineNumber" />}
+                                                else
+                                                { <input type="text" id="batteryAllLineNumber" class="form-control BatteryAllLineNumber" value="" />}
+                                            </td>
+                                        </tr>
+                                        
+                                   <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        <div class="col-lg-2">
+                                            @*<input type="checkbox" id="assemblyChkId" class="assemblyChkId" name="assembly" value="assembly_CheckBx">*@
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="assemblyProName" class="form-control" type="text" value="@asemblyModel.AsmProjectName" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : ASSEMBLY & PACKING</div>
+
+                                        <br />
+
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                        @if (@asemblyModel.MaterialReceiveStartDateBAssembly != null)
+                                        {<input type="text" id="materialReceiveStartDateBAssembly" class="form-control datepicker MaterialReceiveStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="materialReceiveStartDateBAssembly" class="form-control datepicker MaterialReceiveStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveStartDateBAssembly" value="" />}
+
+                                        <p id="materialAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.MaterialReceiveEndDateBAssembly != null)
+                                        {<input type="text" id="materialReceiveEndDateBAssembly" class="form-control datepicker MaterialReceiveEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.MaterialReceiveEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="materialReceiveEndDateBAssembly" class="form-control datepicker MaterialReceiveEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="materialReceiveEndDateBAssembly" value="" />}
+
+                                     </td>
+                                </tr>
+
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @if (@asemblyModel.IqcCompleteStartDateBAssembly != null)
+                                        {<input type="text" id="iqcCompleteStartDateBAssembly" class="form-control datepicker IqcCompleteStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteStartDateBAssembly" class="form-control datepicker IqcCompleteStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteStartDateBAssembly" value="" />}
+
+                                        <p id="iqcAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                       @if (@asemblyModel.IqcCompleteEndDateBAssembly != null)
+                                        {<input type="text" id="iqcCompleteEndDateBAssembly" class="form-control datepicker IqcCompleteEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.IqcCompleteEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="iqcCompleteEndDateBAssembly" class="form-control datepicker IqcCompleteEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="iqcCompleteEndDateBAssembly" value="" />}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @if (@asemblyModel.TrialProductionStartDateBAssembly != null)
+                                        {<input type="text" id="trialProductionStartDateBAssembly" class="form-control datepicker TrialProductionStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}",@asemblyModel.TrialProductionStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="trialProductionStartDateBAssembly" class="form-control datepicker TrialProductionStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionStartDateBAssembly" value="" />}
+                                        <p id="trialAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.TrialProductionEndDateBAssembly != null)
+                                        {<input type="text" id="trialProductionEndDateBAssembly" class="form-control datepicker TrialProductionEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}",@asemblyModel.TrialProductionEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="trialProductionEndDateBAssembly" class="form-control datepicker TrialProductionEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="trialProductionEndDateBAssembly" value="" />}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        @if (@asemblyModel.AssemblyTrialLine != null)
+                                        {<input type="text" id="assemblyTrialLine" class="form-control AssemblyTrialLine" value="@asemblyModel.AssemblyTrialLine" />}
+                                        else
+                                        { <input type="text" id="assemblyTrialLine" class="form-control AssemblyTrialLine" value="" />}
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Software Confirmation</td>
+                                    <td>
+                                         @if (@asemblyModel.SoftwareConfirmationStartDateBAssembly != null)
+                                        {<input type="text" id="softwareConfirmationStartDateBAssembly" class="form-control datepicker SoftwareConfirmationStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="softwareConfirmationStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SoftwareConfirmationStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="softwareConfirmationStartDateBAssembly" class="form-control datepicker SoftwareConfirmationStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="softwareConfirmationStartDateBAssembly" value="" />}
+
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.SoftwareConfirmationEndDateBAssembly != null)
+                                        {<input type="text" id="softwareConfirmationEndDateBAssembly" class="form-control datepicker SoftwareConfirmationEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="softwareConfirmationEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.SoftwareConfirmationEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="softwareConfirmationEndDateBAssembly" class="form-control datepicker SoftwareConfirmationEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="softwareConfirmationEndDateBAssembly" value="" />}
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>R&D Confirmation</td>
+                                    <td>
+                                        @if (@asemblyModel.SoftwareConfirmationStartDateBAssembly != null)
+                                        {<input type="text" id="randDConfirmationStartDateBAssembly" class="form-control datepicker RandDConfirmationStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="randDConfirmationStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.RandDConfirmationStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="randDConfirmationStartDateBAssembly" class="form-control datepicker RandDConfirmationStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="randDConfirmationStartDateBAssembly" value="" />}
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.RandDConfirmationEndDateBAssembly != null)
+                                        {<input type="text" id="randDConfirmationEndDateBAssembly" class="form-control datepicker RandDConfirmationEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="randDConfirmationEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.RandDConfirmationEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="randDConfirmationEndDateBAssembly" class="form-control datepicker RandDConfirmationEndDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="randDConfirmationEndDateBAssembly" value="" />}
+
+                                    </td>
+                                </tr>
+                                        <tr>
+                                            <td>Assembly Mass Production</td>
+                                            <td>
+                                      
+                                                @if (@asemblyModel.AssemblyMassProductionStartDateBAssembly != null)
+                                                {<input type="text" id="assemblyMassProductionStartDateBAssembly" onchange="assemblyLineInfoEditFunc()" class="form-control datepicker AssemblyMassProductionStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyMassProductionStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyMassProductionStartDateBAssembly) />}
+                                                else
+                                                {<input type="text" id="assemblyMassProductionStartDateBAssembly" class="form-control datepicker AssemblyMassProductionStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyMassProductionStartDateBAssembly" value="" />}
+
+                                                <p id="assemblyMassProStartPara" style="display:none;color:red">One Project is waiting for Assembly Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                            </td>
+                                            <td>
+                                                @if (@asemblyModel.AssemblyMassProductionEndDateBAssembly != null)
+                                                {<input type="text" id="assemblyMassProductionEndDateBAssembly" class="form-control datepicker AssemblyMassProductionEndDateBAssembly" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyMassProductionEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.AssemblyMassProductionEndDateBAssembly) />}
+                                                else
+                                                {<input type="text" id="assemblyMassProductionEndDateBAssembly" class="form-control datepicker AssemblyMassProductionEndDateBAssembly" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="assemblyMassProductionEndDateBAssembly" value="" />}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width: 100px;"></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Line Capacity</div>
+                                                @if (@asemblyModel.AssemblyAllLineCapacity != null)
+                                                { <input type="number" id="assemblyAllLineCapacity" class="form-control AssemblyAllLineCapacity" min="1" disabled="disabled" value="@asemblyModel.AssemblyAllLineCapacity" />}
+                                                else
+                                                {<input type="number" id="assemblyAllLineCapacity" disabled="disabled" class="form-control AssemblyAllLineCapacity" min="1" value="" /> }
+                                                <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                                @if (@asemblyModel.TotalQuantityBAssembly != null)
+                                                {<input type="number" id="totalQuantityBAssembly" onchange="assemblyLineInfoEditFunc()" class="form-control TotalQuantityBAssembly" min="1" value="@asemblyModel.TotalQuantityBAssembly" />}
+                                                else
+                                                {<input type="number" id="totalQuantityBAssembly" class="form-control TotalQuantityBAssembly" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                                @if (@asemblyModel.BatteryAssemblyPerDayCapacity != 0)
+                                                {<input type="number" id="batteryAssemblyPerDayCapacity" onchange="assemblyLineInfoEditFunc()" class="form-control BatteryAssemblyPerDayCapacity" min="1" value="@asemblyModel.BatteryAssemblyPerDayCapacity" />}
+                                                else
+                                                {<input type="number" id="batteryAssemblyPerDayCapacity" class="form-control BatteryAssemblyPerDayCapacity" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+                                                @if (@asemblyModel.AssemblyAllLineNumber != null)
+                                                { <input type="text" id="assemblyAllLineNumber" onchange="assemblyLineInfoEditFunc()" class="form-control AssemblyAllLineNumber" value="@asemblyModel.AssemblyAllLineNumber" />}
+                                                else
+                                                { <input type="text" id="assemblyAllLineNumber" class="form-control AssemblyAllLineNumber" value="" />}
+                                            </td>
+                                        </tr>
+                                       <tr>
+                                    <td>Packing Mass Production</td>
+                                    <td>
+                                        @if (@asemblyModel.PackingMassProductionStartDateBAssembly != null)
+                                        {<input type="text" id="packingMassProductionStartDateBAssembly" class="form-control datepicker PackingMassProductionStartDateBAssembly" onchange="packingLineInfoEditFunc()" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingMassProductionStartDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingMassProductionStartDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="packingMassProductionStartDateBAssembly" class="form-control datepicker PackingMassProductionStartDateBAssembly" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingMassProductionStartDateBAssembly" value="" />}
+
+                                        <p id="packingMassProStartPara" style="display:none;color:red">One Project is waiting for Packing Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @if (@asemblyModel.PackingMassProductionEndDateBAssembly != null)
+                                        {<input type="text" id="packingMassProductionEndDateBAssembly" class="form-control datepicker PackingMassProductionEndDateBAssembly" disabled="disabled" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingMassProductionEndDateBAssembly" value=@String.Format("{0:yyyy-MM-dd}", @asemblyModel.PackingMassProductionEndDateBAssembly) />}
+                                        else
+                                        {<input type="text" id="packingMassProductionEndDateBAssembly" class="form-control datepicker PackingMassProductionEndDateBAssembly" data-date="" disabled="disabled" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="packingMassProductionEndDateBAssembly" value="" />}
+
+                                    </td>
+                                 </tr> 
+                                           <tr>
+                                            <td style="width: 100px;"></td>
+                                            <td>
+                                                <div style="color:blue;font-weight: bold;">Line Capacity</div>
+                                                @if (@asemblyModel.PackingAllLineCapacity != null)
+                                                { <input type="number" id="packingAllLineCapacity" class="form-control PackingAllLineCapacity" min="1" disabled="disabled" value="@asemblyModel.PackingAllLineCapacity" />}
+                                                else
+                                                {<input type="number" id="packingAllLineCapacity" disabled="disabled" class="form-control PackingAllLineCapacity" min="1" value="" /> }
+                                                <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                                @if (@asemblyModel.TotalQuantityBPacking != null)
+                                                {<input type="number" id="totalQuantityBPacking" onchange="packingLineInfoEditFunc()" class="form-control TotalQuantityBPacking" min="1" value="@asemblyModel.TotalQuantityBPacking" />}
+                                                else
+                                                {<input type="number" id="totalQuantityBPacking" class="form-control TotalQuantityBPacking" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                                @if (@asemblyModel.BatteryPackingPerDayCapacity != 0)
+                                                {<input type="number" id="batteryPackingPerDayCapacity" onchange="packingLineInfoEditFunc()" class="form-control BatteryPackingPerDayCapacity" min="1" value="@asemblyModel.BatteryPackingPerDayCapacity" />}
+                                                else
+                                                {<input type="number" id="batteryPackingPerDayCapacity" class="form-control BatteryPackingPerDayCapacity" min="1" value="" />}
+                                                <div style="color:blue;font-weight: bold;">Select Line</div>
+                                                @if (@asemblyModel.PackingAllLineNumber != null)
+                                                { <input type="text" id="packingAllLineNumber" onchange="packingLineInfoEditFunc()" class="form-control PackingAllLineNumber" value="@asemblyModel.PackingAllLineNumber" />}
+                                                else
+                                                { <input type="text" id="packingAllLineNumber" class="form-control PackingAllLineNumber" value="" />}
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-4" style="text-align: center;">
+                                <input class="btn sbold uppercase btn-outline blue" onclick="goBack()" type="submit" id="btnBack" value="Go Back" />
+                            </div>
+
+                            <div class="col-md-4" style="text-align: center;">
+                                <input class="btn sbold uppercase btn-outline red btnUpdate" type="submit" id="btnUpdate" value="Update" />
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>    
+    window.onload = init2;
+    window.onload = init3;
+    window.onload = init4;
+    window.onload = init1;
+   
+    function init1() {
+        assemblyLineInfoEditFunc();
+        packingLineInfoEditFunc();
+    }
+    function init2() {
+        smtLineInfoEditFunc();
+    }
+    function init3() {
+        housingLineInfoEditFunc();
+    }
+    function init4() {
+        batteryLineInfoEditFunc();
+    }
+    var smtChk = false;
+    var houseChk = false;
+    var batteryChk = false;
+    var assemblyChk = false;
+    var arrList = [];
+    var arrList1 = [];
+    var arrList2 = [];
+    var arrListForBatterySmt = [];
+    var arrListForBatteryHousing = [];
+    var arrListForBattery = [];
+    var arrListForBatteryAssembly = [];
+    var arrListForBatteryPacking = [];
+   
+
+        $.ajax({
+            url: '@Url.Action("GetHolidayDataList", "Production")',
+            type: "GET",
+            dataType: "JSON",
+            success: function(data) {
+                console.log(data);
+
+                var dataList = [];
+                for (var x in data) {
+                    dataList = data[x];
+                }
+
+                var items = $.parseJSON(dataList);
+                arrList = items;
+
+                if (arrList.length != 0) {
+
+                    var massProductionStartDateBSmt = $('massProductionStartDateBSmt').val();
+                    if (massProductionStartDateBSmt != undefined) {
+                        smtLineInfoEditFunc();
+                    }
+                    var housingMassProStartDateHousing = $('housingMassProStartDateHousing').val();
+                    if (housingMassProStartDateHousing != undefined) {
+                        housingLineInfoEditFunc();
+                    }
+                    var batteryMassProductionStartDate = $('batteryMassProductionStartDate').val();
+                    if (batteryMassProductionStartDate != undefined) {
+                        batteryLineInfoEditFunc();
+                    }
+                    var assembStartDateBAssembly = $('assembStartDateBAssembly').val();
+                    if (assembStartDateBAssembly != undefined) {
+                        assemblyLineInfoEditFunc();
+
+                    }
+                    var packingMassProductionStartDateBAssembly = $('packingMassProductionStartDateBAssembly').val();
+                    if (packingMassProductionStartDateBAssembly != undefined) {
+                        packingLineInfoEditFunc();
+                    }
+
+                }
+
+                return items;
+            }
+        });
+   
+  
+    function goBack() {
+        /// window.open('@Url.Action("BatteryPlan", "Production")');
+        window.location = '@Url.Action("BatteryPlan", "Production")';
+    }
+
+    function isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
+    }
+
+    function isHoliday(materialReceiveDate) {
+        var holidayDate = null;
+        var arrLists = [];
+        var l = arrList.length;
+        for (var ii = 0; ii < l; ii++) {
+            holidayDate = moment(arrList[ii].HolidayDate).format('YYYY-MM-DD');
+            arrLists.push(holidayDate);
+        }
+
+        if (l > 0) {
+            var selectedDate = arrLists.find(function (element) {
+                return element === materialReceiveDate;
+            });
+            while (typeof selectedDate !== "undefined") {
+                materialReceiveDate = moment(materialReceiveDate).add(1, 'days').format("YYYY-MM-DD");
+                selectedDate = arrLists.find(function (element) {
+                    return element === materialReceiveDate;
+                });
+                if (typeof selectedDate !== "undefined") {
+                    materialReceiveDate = selectedDate;
+                }
+                continue;
+            }
+        }
+        return materialReceiveDate;
+
+    }
+
+    function isHolidayCheck(materialReceiveDate) {
+        var holidayDate = null;
+        var arrLists = arrList;
+        var l = arrLists.length;
+        var res = false;
+        for (var ii = 0; ii < l; ii++) {
+            holidayDate = moment(arrLists[ii].HolidayDate).format('YYYY-MM-DD');
+
+            if (materialReceiveDate == holidayDate) {
+                res = true;
+                break;
+            } else
+                continue;
+        }
+        return res;
+
+    }
+    
+    function getHolidayCount(startDate, endDate) {
+        var holidayDate = null;
+        var formattedHolidayList = [];
+        var l = arrList.length;
+        var cnt = 0;
+        for (var ii = 0; ii < l; ii++) {
+            holidayDate = moment(arrList[ii].HolidayDate).format('YYYY-MM-DD');
+            formattedHolidayList.push(holidayDate);
+        }
+        for (var day = startDate; day <= endDate; day = (moment(day).add(1, 'days').format('YYYY-MM-DD'))) {
+            for (var indx = 0; indx < formattedHolidayList.length; indx++) {
+                if (day === formattedHolidayList[indx]) {
+                    cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+    
+
+    
+    function assemblyLineInfoEditFunc() {
+     
+        var batterySmtTotalQuantity = $('#totalQuantityBAssembly').val();
+        var batterySmtPerDayCapacity = $('#batteryAssemblyPerDayCapacity').val();
+
+        if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "" && +batterySmtTotalQuantity < +batterySmtPerDayCapacity) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Assembly Total Quantity must be greater than Assembly PerDayCapacity ",
+            }).show();
+
+            // $('#totalQuantityBSmt22').val("");
+            $('#batteryAssemblyPerDayCapacity').val("");
+            $('#totalQuantityBAssembly').val("");
+            return false;
+        }
+
+        var smtMassLineInfo = $('#assemblyAllLineNumber').val();
+        var smtAllLineCapacity22 = $('#assemblyAllLineNumber').val();
+
+        console.log("smtMassLineInfo:" + smtMassLineInfo);
+
+        var arr = smtMassLineInfo.split(",");
+
+        ////////////
+        var perDayCapacitySum = 0;
+
+        for (var xi = 0; xi < arr.length; xi++) {
+
+            perDayCapacitySum += +batterySmtPerDayCapacity;
+        }
+
+        console.log("perDayCapacitySum :" + perDayCapacitySum);
+        ////////////
+
+        var assemblyMassProductionStartDateBAssembly = $.trim($('#assemblyMassProductionStartDateBAssembly').val());
+        var assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+
+        if (batterySmtTotalQuantity != null && perDayCapacitySum != null && smtMassLineInfo != null) {
+
+            var assemblyDivision = (batterySmtTotalQuantity / perDayCapacitySum);
+
+            if (isFloat((batterySmtTotalQuantity / perDayCapacitySum))) {
+                var aa = (batterySmtTotalQuantity / perDayCapacitySum);
+                var n = (aa + "").split(".")[0];
+                var nn = +n;
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(moment(assemblyMassProductionStartDateBAssembly).add(nn, 'days').format("YYYY-MM-DD")));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+
+                ////////holiday count///////
+                var startDate = moment(assemblyMassProductionStartDateBAssembly).format("YYYY-MM-DD");
+                var endDDate = assemblyMassProductionEndDateBAssembly;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount = getHolidayCount(startDate, endDDate);
+
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(moment(assemblyMassProductionEndDateBAssembly).add(dCount, 'days').format("YYYY-MM-DD")));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+                /////////////////////////////
+
+                //holiday check//
+                var mass11 = isHoliday(assemblyMassProductionEndDateBAssembly);
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(mass11));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+                /////////////////
+            } else {
+                var bb = batterySmtTotalQuantity / perDayCapacitySum;
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(moment(assemblyMassProductionStartDateBAssembly).add(bb - 1, 'days').format("YYYY-MM-DD")));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+
+                ////////holiday count///////
+                var startDate1 = moment(assemblyMassProductionStartDateBAssembly).format("YYYY-MM-DD");
+                var endDDate1 = assemblyMassProductionEndDateBAssembly;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount1 = getHolidayCount(startDate1, endDDate1);
+
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(moment(assemblyMassProductionEndDateBAssembly).add(dCount1, 'days').format("YYYY-MM-DD")));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+                /////////////////////////////
+
+                //holiday check//
+                var iqcAssembly12 = isHoliday(assemblyMassProductionEndDateBAssembly);
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(iqcAssembly12));
+                assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+                /////////////////
+            }
+        }
+
+        if (smtMassLineInfo == null) {
+            assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val(""));
+        }
+        assemblyMassProductionEndDateBAssembly = $.trim($('#assemblyMassProductionEndDateBAssembly').val());
+    }//end
+    
+    function packingLineInfoEditFunc() {
+        var batterySmtTotalQuantity = $('#totalQuantityBPacking').val();
+        var batterySmtPerDayCapacity = $('#batteryPackingPerDayCapacity').val();
+
+        if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "" && +batterySmtTotalQuantity < +batterySmtPerDayCapacity) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Packing Total Quantity must be greater than Packing PerDayCapacity ",
+            }).show();
+
+            // $('#totalQuantityBSmt22').val("");
+            $('#batteryPackingPerDayCapacity').val("");
+
+            return false;
+        }
+
+        var smtMassLineInfo = $('#packingAllLineNumber').val();
+        var smtAllLineCapacity22 = $('#packingAllLineNumber').val();
+
+        console.log("smtMassLineInfo:" + smtMassLineInfo);
+
+        var arr = smtMassLineInfo.split(",");
+
+        ////////////
+        var perDayCapacitySum = 0;
+
+        for (var xi = 0; xi < arr.length; xi++) {
+
+            perDayCapacitySum += +batterySmtPerDayCapacity;
+        }
+
+        console.log("perDayCapacitySum :" + perDayCapacitySum);
+        ////////////
+
+        var packingMassProductionStartDateBAssembly = $.trim($('#packingMassProductionStartDateBAssembly').val());
+        var packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+
+        if (batterySmtTotalQuantity != null && perDayCapacitySum != null && smtMassLineInfo != null) {
+
+            var assemblyDivision = (batterySmtTotalQuantity / perDayCapacitySum);
+
+            if (isFloat((batterySmtTotalQuantity / perDayCapacitySum))) {
+                var aa = (batterySmtTotalQuantity / perDayCapacitySum);
+                var n = (aa + "").split(".")[0];
+                var nn = +n;
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(moment(packingMassProductionStartDateBAssembly).add(nn, 'days').format("YYYY-MM-DD")));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+
+                ////////holiday count///////
+                var startDate = moment(packingMassProductionStartDateBAssembly).format("YYYY-MM-DD");
+                var endDDate = packingMassProductionEndDateBAssembly;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount = getHolidayCount(startDate, endDDate);
+
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(moment(packingMassProductionEndDateBAssembly).add(dCount, 'days').format("YYYY-MM-DD")));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+                /////////////////////////////
+
+                //holiday check//
+                var mass11 = isHoliday(packingMassProductionEndDateBAssembly);
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(mass11));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+                /////////////////
+            } else {
+                var bb = batterySmtTotalQuantity / perDayCapacitySum;
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(moment(packingMassProductionStartDateBAssembly).add(bb - 1, 'days').format("YYYY-MM-DD")));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+
+                ////////holiday count///////
+                var startDate1 = moment(packingMassProductionStartDateBAssembly).format("YYYY-MM-DD");
+                var endDDate1 = packingMassProductionEndDateBAssembly;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount1 = getHolidayCount(startDate1, endDDate1);
+
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(moment(packingMassProductionEndDateBAssembly).add(dCount1, 'days').format("YYYY-MM-DD")));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+                /////////////////////////////
+
+                //holiday check//
+                var iqcAssembly12 = isHoliday(packingMassProductionEndDateBAssembly);
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(iqcAssembly12));
+                packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+                /////////////////
+            }
+        }
+
+        if (smtMassLineInfo == null) {
+            packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val(""));
+        }
+        packingMassProductionEndDateBAssembly = $.trim($('#packingMassProductionEndDateBAssembly').val());
+    }//end
+    
+    function smtLineInfoEditFunc() {
+        var batterySmtTotalQuantity = $('#totalQuantityBSmt22').val();
+        var batterySmtPerDayCapacity = $('#smtPerDayCapacity22').val();
+
+        //if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "") {
+        //    return false;
+        //}
+
+        if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "" && +batterySmtTotalQuantity < +batterySmtPerDayCapacity) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "SMT Total Quantity must be greater than SMT PerDayCapacity ",
+            }).show();
+
+             $('#totalQuantityBSmt22').val("");
+            $('#smtPerDayCapacity22').val("");
+
+            return false;
+        }
+
+        var smtMassLineInfo = $('#smtAllLineNumber22').val();
+        var smtAllLineCapacity22 = $('#smtAllLineCapacity22').val();
+
+        console.log("smtMassLineInfo:" + smtMassLineInfo);
+
+        var arr = smtMassLineInfo.split(",");
+
+        ////////////
+        var perDayCapacitySum = 0;
+
+        for (var xi = 0; xi < arr.length; xi++) {
+
+            perDayCapacitySum += +batterySmtPerDayCapacity;
+        }
+
+        console.log("perDayCapacitySum :" + perDayCapacitySum);
+        ////////////
+
+        var massProductionStartDateBSmt = $.trim($('#smtMassProductionSDateBSmt22').val());
+        var massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+
+        if (batterySmtTotalQuantity != null && perDayCapacitySum != null && smtMassLineInfo != null) {
+
+            var assemblyDivision = (batterySmtTotalQuantity / perDayCapacitySum);
+
+            if (isFloat((batterySmtTotalQuantity / perDayCapacitySum))) {
+                var aa = (batterySmtTotalQuantity / perDayCapacitySum);
+                var n = (aa + "").split(".")[0];
+                var nn = +n;
+                massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(moment(massProductionStartDateBSmt).add(nn, 'days').format("YYYY-MM-DD")));
+                massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+
+                ////////holiday count///////
+                var startDate = moment(massProductionStartDateBSmt).format("YYYY-MM-DD");
+                var endDDate = massProductionEndDateBSmt;
+
+                // getHolidayCount(startDate, endDDate);
+                //var dCount = getHolidayCount(startDate, endDDate);
+
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(moment(massProductionEndDateBSmt).add(dCount, 'days').format("YYYY-MM-DD")));
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+                ///////////////////////////////
+
+                ////holiday check//
+                //var mass11 = isHoliday(massProductionEndDateBSmt);
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(mass11));
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+                /////////////////
+            } else {
+                var bb = batterySmtTotalQuantity / perDayCapacitySum;
+                massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(moment(massProductionStartDateBSmt).add(bb - 1, 'days').format("YYYY-MM-DD")));
+                massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+
+                ////////holiday count///////
+                var startDate1 = moment(massProductionStartDateBSmt).format("YYYY-MM-DD");
+                var endDDate1 = massProductionEndDateBSmt;
+
+                // getHolidayCount(startDate, endDDate);
+                //var dCount1 = getHolidayCount(startDate1, endDDate1);
+
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(moment(massProductionEndDateBSmt).add(dCount1, 'days').format("YYYY-MM-DD")));
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+                ///////////////////////////////
+
+                ////holiday check//
+                //var iqcAssembly12 = isHoliday(massProductionEndDateBSmt);
+                //massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(iqcAssembly12));
+                massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+                /////////////////
+            }
+        }
+
+        if (smtMassLineInfo == null) {
+            massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(""));
+        }
+        massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+        
+        if (massProductionEndDateBSmt == "Invalid date") {
+            massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val(""));
+        }
+        massProductionEndDateBSmt = $.trim($('#smtMassProductionEDateBSmt22').val());
+    }//end
+
+    function housingLineInfoEditFunc() {
+        var batterySmtTotalQuantity = $('#totalQuantity').val();
+        var batterySmtPerDayCapacity = $('#batteryHousingPerDayCapacity').val();
+
+        if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "" && +batterySmtTotalQuantity < +batterySmtPerDayCapacity) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Housing Total Quantity must be greater than Housing PerDayCapacity ",
+            }).show();
+
+            // $('#totalQuantityBSmt22').val("");
+            $('#batteryHousingPerDayCapacity').val("");
+
+            return false;
+        }
+
+        var smtMassLineInfo = $('#housingAllLineNumber').val();
+        var smtAllLineCapacity22 = $('#housingAllLineNumber').val();
+
+        console.log("smtMassLineInfo:" + smtMassLineInfo);
+
+        var arr = smtMassLineInfo.split(",");
+
+        ////////////
+        var perDayCapacitySum = 0;
+
+        for (var xi = 0; xi < arr.length; xi++) {
+
+            perDayCapacitySum += +batterySmtPerDayCapacity;
+        }
+
+        console.log("perDayCapacitySum :" + perDayCapacitySum);
+        ////////////
+
+        var housingMassProductionStartDateBHousing = $.trim($('#housingMassProductionStartDateBHousing').val());
+        var housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+
+        if (batterySmtTotalQuantity != null && perDayCapacitySum != null && smtMassLineInfo != null) {
+
+            var assemblyDivision = (batterySmtTotalQuantity / perDayCapacitySum);
+
+            if (isFloat((batterySmtTotalQuantity / perDayCapacitySum))) {
+                var aa = (batterySmtTotalQuantity / perDayCapacitySum);
+                var n = (aa + "").split(".")[0];
+                var nn = +n;
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(moment(housingMassProductionStartDateBHousing).add(nn, 'days').format("YYYY-MM-DD")));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+
+                ////////holiday count///////
+                var startDate = moment(housingMassProductionStartDateBHousing).format("YYYY-MM-DD");
+                var endDDate = housingMassProductionEndDateBHousing;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount = getHolidayCount(startDate, endDDate);
+
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(moment(housingMassProductionEndDateBHousing).add(dCount, 'days').format("YYYY-MM-DD")));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+                /////////////////////////////
+
+                //holiday check//
+                var mass11 = isHoliday(housingMassProductionEndDateBHousing);
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(mass11));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+                /////////////////
+            } else {
+                var bb = batterySmtTotalQuantity / perDayCapacitySum;
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(moment(housingMassProductionStartDateBHousing).add(bb - 1, 'days').format("YYYY-MM-DD")));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+
+                ////////holiday count///////
+                var startDate1 = moment(housingMassProductionStartDateBHousing).format("YYYY-MM-DD");
+                var endDDate1 = housingMassProductionEndDateBHousing;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount1 = getHolidayCount(startDate1, endDDate1);
+
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(moment(housingMassProductionEndDateBHousing).add(dCount1, 'days').format("YYYY-MM-DD")));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+                /////////////////////////////
+
+                //holiday check//
+                var iqcAssembly12 = isHoliday(housingMassProductionEndDateBHousing);
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(iqcAssembly12));
+                housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+                /////////////////
+            }
+        }
+
+        if (smtMassLineInfo == null) {
+            housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val(""));
+        }
+        housingMassProductionEndDateBHousing = $.trim($('#housingMassProductionEndDateBHousing').val());
+    }//end
+
+    function batteryLineInfoEditFunc() {
+        var batterySmtTotalQuantity = $('#totalQuantityBattery').val();
+        var batterySmtPerDayCapacity = $('#batteryPerDayCapacity').val();
+
+        if (batterySmtTotalQuantity != "" && batterySmtPerDayCapacity != "" && +batterySmtTotalQuantity < +batterySmtPerDayCapacity) {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Battery Total Quantity must be greater than Battery PerDayCapacity ",
+            }).show();
+
+            // $('#totalQuantityBSmt22').val("");
+            $('#batteryPerDayCapacity').val("");
+
+            return false;
+        }
+
+        var smtMassLineInfo = $('#batteryAllLineNumber').val();
+        var smtAllLineCapacity22 = $('#batteryAllLineNumber').val();
+
+        console.log("smtMassLineInfo:" + smtMassLineInfo);
+
+        var arr = smtMassLineInfo.split(",");
+
+        ////////////
+        var perDayCapacitySum = 0;
+
+        for (var xi = 0; xi < arr.length; xi++) {
+
+            perDayCapacitySum += +batterySmtPerDayCapacity;
+        }
+
+        console.log("perDayCapacitySum :" + perDayCapacitySum);
+        ////////////
+
+        var batteryMassProductionStartDate = $.trim($('#batteryMassProductionStartDate').val());
+        var batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+
+        if (batterySmtTotalQuantity != null && perDayCapacitySum != null && smtMassLineInfo != null) {
+
+            var assemblyDivision = (batterySmtTotalQuantity / perDayCapacitySum);
+
+            if (isFloat((batterySmtTotalQuantity / perDayCapacitySum))) {
+                var aa = (batterySmtTotalQuantity / perDayCapacitySum);
+                var n = (aa + "").split(".")[0];
+                var nn = +n;
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(moment(batteryMassProductionStartDate).add(nn, 'days').format("YYYY-MM-DD")));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+
+                ////////holiday count///////
+                var startDate = moment(batteryMassProductionStartDate).format("YYYY-MM-DD");
+                var endDDate = batteryMassProductionEndDate;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount = getHolidayCount(startDate, endDDate);
+
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(moment(batteryMassProductionEndDate).add(dCount, 'days').format("YYYY-MM-DD")));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+                /////////////////////////////
+
+                //holiday check//
+                var mass11 = isHoliday(batteryMassProductionEndDate);
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(mass11));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+                /////////////////
+            } else {
+                var bb = batterySmtTotalQuantity / perDayCapacitySum;
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(moment(batteryMassProductionStartDate).add(bb - 1, 'days').format("YYYY-MM-DD")));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+
+                ////////holiday count///////
+                var startDate1 = moment(batteryMassProductionStartDate).format("YYYY-MM-DD");
+                var endDDate1 = batteryMassProductionEndDate;
+
+                // getHolidayCount(startDate, endDDate);
+                var dCount1 = getHolidayCount(startDate1, endDDate1);
+
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(moment(batteryMassProductionEndDate).add(dCount1, 'days').format("YYYY-MM-DD")));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+                /////////////////////////////
+
+                //holiday check//
+                var iqcAssembly12 = isHoliday(batteryMassProductionEndDate);
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(iqcAssembly12));
+                batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+                /////////////////
+            }
+        }
+
+        if (smtMassLineInfo == null) {
+            batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val(""));
+        }
+        batteryMassProductionEndDate = $.trim($('#batteryMassProductionEndDate').val());
+    }//end
+
+    $('#btnUpdate').on('click', function () {
+        var allInfo = {};
+        allInfo.AsmProjectId = $.trim($('.AsmProjectId').val());
+        allInfo.AsmProjectName = $.trim($('.AsmProjectName').val());
+
+        allInfo.AsmPlanId = $.trim($('.AsmPlanId').val());
+        allInfo.BbPlanId = $.trim($('.BbPlanId').val());
+        allInfo.BhPlanId = $.trim($('.BhPlanId').val());
+        allInfo.SmtPlanId = $.trim($('.SmtPlanId').val());
+
+        allInfo.SmtId = $.trim($('.SmtId').val());
+        allInfo.AsmId = $.trim($('.AsmId').val());
+        allInfo.BbId = $.trim($('.BbId').val());
+        allInfo.BhId = $.trim($('.BhId').val());
+
+        ///SMT//
+        allInfo.MaterialReceiveStartDateBSmt = $.trim($('.MaterialReceiveStartDateBSmt').val());
+        allInfo.MaterialReceiveEndDateBSmt = $.trim($('.MaterialReceiveEndDateBSmt').val());
+        allInfo.IqcCompleteStartDateBSmt = $.trim($('.IqcCompleteStartDateBSmt').val());
+        allInfo.IqcCompleteEndDateBSmt = $.trim($('.IqcCompleteEndDateBSmt').val());
+        allInfo.TrialProductionStartDateBSmt = $.trim($('.TrialProductionStartDateBSmt').val());
+        allInfo.SmtTrialLine = $.trim($('.TrialLineNumber').val());
+        allInfo.TrialProductionEndDateBSmt = $.trim($('.TrialProductionEndDateBSmt').val());
+        allInfo.SmtMassProductionStartDateBSmt = $.trim($('.SmtMassProductionStartDateBSmt').val());
+        allInfo.TotalQuantityBSmt = $.trim($('.TotalQuantityBSmt').val());
+        allInfo.BatterySmtPerDayCapacity = $.trim($('.BatterySmtPerDayCapacity').val());
+        allInfo.SmtAllLineNumber = $.trim($('.SmtAllLineNumber').val());
+        allInfo.SmtMassProductionEndDateBSmt = $.trim($('.SmtMassProductionEndDateBSmt').val());
+
+        //Housing//
+        allInfo.MaterialReceiveStartDateBHousing = $.trim($('.MaterialReceiveStartDateBHousing').val());
+        allInfo.MaterialReceiveEndDateBHousing  = $.trim($('.MaterialReceiveEndDateBHousing').val());
+        allInfo.IqcCompleteStartDateBHousing = $.trim($('.IqcCompleteStartDateBHousing').val());
+        allInfo.IqcCompleteEndDateBHousing  = $.trim($('.IqcCompleteEndDateBHousing').val());
+        allInfo.TrialProductionStartDateBHousing = $.trim($('.TrialProductionStartDateBHousing').val());
+        allInfo.HousingTrialLine = $.trim($('.HousingTrialLine').val());
+        allInfo.TrialProductionEndDateBHousing = $.trim($('.TrialProductionEndDateBHousing').val());
+        allInfo.HousingReliabilityTestStartDateBHousing = $.trim($('.HousingReliabilityTestStartDateBHousing').val());
+        allInfo.HousingReliabilityTestEndDateBHousing = $.trim($('.HousingReliabilityTestEndDateBHousing').val());
+        allInfo.HousingMassProductionStartDateBHousing = $.trim($('.HousingMassProductionStartDateBHousing').val());
+        allInfo.HousingMassProductionEndDateBHousing = $.trim($('.HousingMassProductionEndDateBHousing').val());
+        allInfo.TotalQuantity = $.trim($('.TotalQuantity').val());
+        allInfo.HousingAllLineNumber = $.trim($('.HousingAllLineNumber').val());
+        allInfo.BatteryHousingPerDayCapacity = $.trim($('.BatteryHousingPerDayCapacity').val());
+
+        //Battery//
+        allInfo.MaterialReceiveStartDateBattery = $.trim($('.MaterialReceiveStartDateBattery').val());
+        allInfo.MaterialReceiveEndDateBattery = $.trim($('.MaterialReceiveEndDateBattery').val());
+        allInfo.IqcCompleteStartDateBattery = $.trim($('.IqcCompleteStartDateBattery').val());
+        allInfo.IqcCompleteEndDateBattery = $.trim($('.IqcCompleteEndDateBattery').val());
+        allInfo.TrialProductionStartDateBattery = $.trim($('.TrialProductionStartDateBattery').val());
+        allInfo.TrialProductionEndDateBattery = $.trim($('.TrialProductionEndDateBattery').val());
+        allInfo.BatteryReliabilityTestStartDate = $.trim($('.BatteryReliabilityTestStartDate').val());
+        allInfo.BatteryReliabilityTestEndDate = $.trim($('.BatteryReliabilityTestEndDate').val());
+        allInfo.BatteryMassProductionStartDate = $.trim($('.BatteryMassProductionStartDate').val());
+        allInfo.BatteryMassProductionEndDate = $.trim($('.BatteryMassProductionEndDate').val());
+        allInfo.TotalQuantityBattery = $.trim($('.TotalQuantityBattery').val());
+        allInfo.BatteryAllLineNumber = $.trim($('.BatteryAllLineNumber').val());
+        allInfo.BatteryPerDayCapacity = $.trim($('.BatteryPerDayCapacity').val());
+        allInfo.BatteryAllLineCapacity = $.trim($('.BatteryAllLineCapacity').val());
+        allInfo.BatteryTrialLine = $.trim($('.BatteryTrialLine').val());
+        
+        ///Assembly///
+        allInfo.MaterialReceiveStartDateBAssembly = $.trim($('.MaterialReceiveStartDateBAssembly').val());
+        allInfo.MaterialReceiveEndDateBAssembly = $.trim($('.MaterialReceiveEndDateBAssembly').val());
+        allInfo.IqcCompleteStartDateBAssembly = $.trim($('.IqcCompleteStartDateBAssembly').val());
+        allInfo.IqcCompleteEndDateBAssembly = $.trim($('.IqcCompleteEndDateBAssembly').val());
+        allInfo.TrialProductionStartDateBAssembly = $.trim($('.TrialProductionStartDateBAssembly').val());
+        allInfo.AssemblyTrialLine = $.trim($('.AssemblyTrialLine').val());
+        allInfo.TrialProductionEndDateBAssembly = $.trim($('.TrialProductionEndDateBAssembly').val());
+        allInfo.SoftwareConfirmationStartDateBAssembly = $.trim($('.SoftwareConfirmationStartDateBAssembly').val());
+        allInfo.SoftwareConfirmationEndDateBAssembly = $.trim($('.SoftwareConfirmationEndDateBAssembly').val());
+        allInfo.RandDConfirmationStartDateBAssembly = $.trim($('.RandDConfirmationStartDateBAssembly').val());
+        allInfo.RandDConfirmationEndDateBAssembly = $.trim($('.RandDConfirmationEndDateBAssembly').val());
+        allInfo.AssemblyMassProductionStartDateBAssembly = $.trim($('.AssemblyMassProductionStartDateBAssembly').val());
+        allInfo.AssemblyMassProductionEndDateBAssembly = $.trim($('.AssemblyMassProductionEndDateBAssembly').val());
+        allInfo.TotalQuantityBAssembly = $.trim($('.TotalQuantityBAssembly').val());
+        allInfo.AssemblyAllLineNumber = $.trim($('.AssemblyAllLineNumber').val());
+        allInfo.BatteryAssemblyPerDayCapacity = $.trim($('.BatteryAssemblyPerDayCapacity').val());
+        allInfo.AssemblyAllLineCapacity = $.trim($('.AssemblyAllLineCapacity').val());
+        allInfo.PackingMassProductionStartDateBAssembly = $.trim($('.PackingMassProductionStartDateBAssembly').val());
+        allInfo.PackingMassProductionEndDateBAssembly = $.trim($('.PackingMassProductionEndDateBAssembly').val());
+        allInfo.TotalQuantityBPacking = $.trim($('.TotalQuantityBPacking').val());
+        allInfo.PackingAllLineNumber = $.trim($('.PackingAllLineNumber').val());
+        allInfo.BatteryPackingPerDayCapacity = $.trim($('.BatteryPackingPerDayCapacity').val());
+        allInfo.PackingAllLineCapacity = $.trim($('.PackingAllLineCapacity').val());
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateChdPlanning", "Production")',
+            data: '{allInfo:' + JSON.stringify(allInfo) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Updated Successfully",
+                }).show();
+            }
+        });
+    });
+    
+    $('.datepicker').datepicker({
+        defaultDate: 'now',
+        format: 'yyyy-mm-dd',
+        autoclose: 1,
+        //  todayHighlight: true,
+    });
+</script>
+
+

@@ -1,0 +1,1293 @@
+﻿@*DetailsOfSwQcsAllWork*@
+@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@using ProjectManagement.Models
+@using ProjectManagement.ViewModels.Software
+@model ProjectManagement.ViewModels.Software.VmSwQcHeadViewModel
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+<script src="~/Content/icheck/icheck.min.js"></script>
+<link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script src="~/Scripts/FileSaver/FileSaver.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+     #myBtn {
+         display: none;
+         position: fixed;
+         bottom: 20px;
+         right: 30px;
+         z-index: 99;
+         font-size: 18px;
+         border: none;
+         outline: none;
+         background-color: red;
+         color: white;
+         cursor: pointer;
+         padding: 15px;
+         border-radius: 4px;
+     }
+
+    #myBtn:hover {
+        background-color: #555;
+    }
+
+
+    #myBtnBottom {
+        display: block;
+        position: fixed;
+        top: 150px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;
+        border: none;
+        outline: none;
+        background-color: blue;
+        color: white;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    #myBtnBottom:hover {
+        background-color: #555;
+    }
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+</style>
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+        </h1>
+        <br />
+        <div class="rvmCls">
+            <button onclick="goBack()" class="btn blue-ebonyclay"> <span class="fa fa-backward">Go Back</span></button>
+        </div>
+        <br />
+        <div class="col-lg-12">
+            
+            <button onclick="bottomFunction()" id="myBtnBottom" title="Go to Bottom">Bottom</button>
+        </div>
+        <br/>
+    </div>
+    <div class="action">
+        @*<div class="col-md-2">
+                <a class="btn btn-outline btn-default" onclick="location.href='@Url.Action("GetAllSwFiles", "Software")?projectId='+'@Request.QueryString["projectId"]'+'&swqcInchargeId='+'@Request.QueryString["swqcInchargeId"]'+'&projectName='+'@Request.QueryString["ProjectName"] '"><i class="fa fa-paperclip"></i> All Documents</a>
+            </div>*@
+        <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="export2Word(window.table2excel)">
+            <i class="fa fa-wordpress"></i>
+            Export as .doc
+        </button>
+        <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-excell-export">
+            <i class="fa fa-save"></i>
+            Export as Excell
+        </button>
+    </div>
+
+</div>
+
+<div class="portlet box blue-dark table2excel" id="table2excel">
+    <div class="portlet-title">
+
+        <div class="caption">
+            <i class="icon-arrow-right font-white"></i>
+            Details of
+            @Request.QueryString["ProjectName"]
+        </div>
+    </div>
+    <div class="portlet-body">
+        @using (Html.BeginForm("DetailsOfSwQcsAllWork", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form7" }))
+        {
+            <div class="table-toolbar">
+                <div class="row"></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>Module Name : Issue Details
+                            </div>
+                            <div class="tools">
+                                @*<a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                    <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="remove"> </a>*@
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable table-responsive">
+                                <table class="table table-striped table-bordered table-hover tblID13 table2excel" id="tblID13">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th style="text-align: center;">  Issue SL. </th>
+                                            <th style="text-align: center;">  FileOrIssue </th>
+                                            <th style="text-align: center;">  IsApproved<br />ForChina? </th>
+                                            <th style="text-align: center;">  Done By </th>
+                                            <th style="text-align: center;">  Sw.V.No. </th>
+                                            <th style="text-align: center;">  IssueScenario </th>
+                                            <th style="text-align: center;"> ExpectedOutcome </th>
+                                            <th style="text-align: center;"> IssueDetails </th>
+                                            <th style="text-align: center;"> RefernceModule </th>
+                                            <th style="text-align: center;"> Frequency </th>
+                                            <th style="text-align: center;"> Attachment </th>
+                                            <th style="text-align: center;">IssueType </th>
+                                            <th style="text-align: center;">Result </th>
+                                            <th style="text-align: center;">FilesUrl </th>
+                                            <th style="text-align: center;">FilesDetail </th>
+                                            <th style="text-align: center;">Upload </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center">
+
+                                        @if (Model != null && Model.SwQcIssueDetailModels.Any())
+                                        {
+                                            int i;
+                                            int c = Model.SwQcIssueDetailModels.Count;
+                                            for (i = 0; i < c; i++)
+                                            {
+                                                <tr>
+                                                    <td>@Model.SwQcIssueDetailModels[i].IssueSerial</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].FileOrIssue</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].IsApprovedForChinas</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].UserFullName</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].SoftwareVersionNo</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].IssueScenario</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].ExpectedOutcome</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].IssueDetails</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].RefernceModule</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].Frequency</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].Attachment</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].IssueType</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].Result</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].FilesUrl</td>
+                                                    <td>@Model.SwQcIssueDetailModels[i].FilesDetail</td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+                                                                        @Html.HiddenFor(model => model.SwQcIssueDetailModels[i].Upload, new { @class = "clsRmv" })
+                                                                        @Html.HiddenFor(model => model.SwQcIssueDetailModels[i].UploadedFile, new { @class = "clsRmv" })
+                                                                        @if (Model.SwQcIssueDetailModels[i].FilesDetails != null && Model.SwQcIssueDetailModels[i].FilesDetails.Any())
+                                                                        {
+                                                                            for (int m = 0; m < Model.SwQcIssueDetailModels[i].FilesDetails.Count; m++)
+                                                                            {
+                                                                                if (Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".jpg" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".png" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".mp4" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".jpeg" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".txt" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".xls" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-3">
+
+                                                                                        <embed class="" src="@Model.SwQcIssueDetailModels[i].FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.SwQcIssueDetailModels[i].FilesDetails[m].FilePath">Download</a>
+
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                }
+                                                                                if (Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".zip" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".pdf" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".docx" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".xlsx" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".rar" || Model.SwQcIssueDetailModels[i].FilesDetails[m].Extention == ".pptx")
+                                                                                {
+                                                                                    var urls = Model.SwQcIssueDetailModels[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.SwQcIssueDetailModels[i].FilesDetails[m].FilePath;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-3" style="width: 100px; height: 100px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.SwQcIssueDetailModels[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+
+                                                                                        </div>
+
+                                                                                        <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        }
+
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>Module Name : Personal Use Findings
+                            </div>
+                            <div class="tools">
+                                @*<a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                    <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="remove"> </a>*@
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable table-responsive">
+                                <table class="table table-striped table-bordered table-hover  tblId14 table2excel" id="tblId14">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th style="text-align: center;">  FileOrIssue </th>
+                                            <th style="text-align: center;">  IsApproved<br />ForIncentive? </th>
+                                            <th style="text-align: center;">  Done By </th>
+                                            <th style="text-align: center;">  IssueScenario </th>
+                                            <th style="text-align: center;"> ExpectedOutcome </th>
+                                            <th style="text-align: center;"> IssueDetails </th>
+                                            <th style="text-align: center;"> RefernceModule </th>
+                                            <th style="text-align: center;"> Frequency </th>
+                                            <th style="text-align: center;"> Attachment </th>
+                                            <th style="text-align: center;">IssueType </th>
+                                            <th style="text-align: center;">Result </th>
+                                            <th style="text-align: center;">FilesUrl </th>
+                                            <th style="text-align: center;">FilesDetail </th>
+                                            <th style="text-align: center;">Upload </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center">
+
+                                        @if (Model != null && Model.SwQcPersonalUseFindingsIssueDetailModels.Any())
+                                        {
+                                            int i;
+                                            int c = Model.SwQcPersonalUseFindingsIssueDetailModels.Count;
+                                            for (i = 0; i < c; i++)
+                                            {
+                                                <tr>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FileOrIssue</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].IsApprovedForIncentives</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].UserFullName</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].IssueScenario</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].ExpectedOutcome</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].IssueDetails</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].RefernceModule</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].Frequency</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].Attachment</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].IssueType</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].Result</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesUrl</td>
+                                                    <td>@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetail</td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+                                                                        @Html.HiddenFor(model => model.SwQcPersonalUseFindingsIssueDetailModels[i].Upload, new { @class = "clsRmv" })
+                                                                        @Html.HiddenFor(model => model.SwQcPersonalUseFindingsIssueDetailModels[i].UploadedFile, new { @class = "clsRmv" })
+                                                                        @if (Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails != null && Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails.Any())
+                                                                        {
+                                                                            for (int m = 0; m < Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails.Count; m++)
+                                                                            {
+                                                                                if (Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".jpg" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".png" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".mp4" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".jpeg" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".txt" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".xls" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-3">
+
+                                                                                        <embed class="" src="@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].FilePath">Download</a>
+
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                }
+                                                                                if (Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".zip" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".pdf" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".docx" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".xlsx" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".rar" || Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].Extention == ".pptx")
+                                                                                {
+                                                                                    var urls = Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].FilePath;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-3" style="width: 100px; height: 100px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.SwQcPersonalUseFindingsIssueDetailModels[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+
+                                                                                        </div>
+
+                                                                                        <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        }
+
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>Module Name : CTS Test/Monkey Test/Camera Automation
+                            </div>
+                            <div class="tools">
+                                @*<a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                    <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                    <a title="" data-original-title="" href="javascript:;" class="remove"> </a>*@
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable table-responsive">
+                                <table class="table table-striped table-bordered table-hover tblId15 table2excel" id="tblId15">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th style="text-align: center;">  Issue SL. </th>
+                                            <th style="text-align: center;">  FileOrIssue </th>
+                                            <th style="text-align: center;">  IsApproved<br />ForIncentive? </th>
+                                            <th style="text-align: center;">  Done By </th>
+                                            <th style="text-align: center;">  Sw.V.No. </th>
+                                            <th style="text-align: center;">  IssueScenario </th>
+                                            <th style="text-align: center;"> ExpectedOutcome </th>
+                                            <th style="text-align: center;"> IssueDetails </th>
+                                            <th style="text-align: center;"> RefernceModule </th>
+                                            <th style="text-align: center;"> Frequency </th>
+                                            <th style="text-align: center;"> Attachment </th>
+                                            <th style="text-align: center;">IssueType </th>
+                                            <th style="text-align: center;">Result </th>
+                                            <th style="text-align: center;">FilesUrl </th>
+                                            <th style="text-align: center;">FilesDetail </th>
+                                            <th style="text-align: center;">Upload </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center">
+
+                                        @if (Model != null && Model.SwQcIssueDetailModels1.Any())
+                                        {
+                                            int i;
+                                            int c = Model.SwQcIssueDetailModels1.Count;
+                                            for (i = 0; i < c; i++)
+                                            {
+                                                <tr>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].IssueSerial</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].FileOrIssue</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].IsApprovedForIncentives</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].UserFullName</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].SoftwareVersionNo</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].IssueScenario</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].ExpectedOutcome</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].IssueDetails</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].RefernceModule</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].Frequency</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].Attachment</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].IssueType</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].Result</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].FilesUrl</td>
+                                                    <td>@Model.SwQcIssueDetailModels1[i].FilesDetail</td>
+                                                    <td>
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="col-lg-12">
+                                                                        @Html.HiddenFor(model => model.SwQcIssueDetailModels1[i].Upload, new { @class = "clsRmv" })
+                                                                        @Html.HiddenFor(model => model.SwQcIssueDetailModels1[i].UploadedFile, new { @class = "clsRmv" })
+                                                                        @if (Model.SwQcIssueDetailModels1[i].FilesDetails != null && Model.SwQcIssueDetailModels1[i].FilesDetails.Any())
+                                                                        {
+                                                                            for (int m = 0; m < Model.SwQcIssueDetailModels1[i].FilesDetails.Count; m++)
+                                                                            {
+                                                                                if (Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".jpg" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".png" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".mp4" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".jpeg" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".txt" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".xls" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".wav")
+                                                                                {
+
+                                                                                    <div class="col-lg-3">
+
+                                                                                        <embed class="" src="@Model.SwQcIssueDetailModels1[i].FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                                        <br />
+                                                                                        <a target="_blank" href="@Model.SwQcIssueDetailModels1[i].FilesDetails[m].FilePath">Download</a>
+
+                                                                                    </div>
+
+                                                                                    <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                }
+                                                                                if (Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".zip" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".pdf" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".docx" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".xlsx" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".rar" || Model.SwQcIssueDetailModels1[i].FilesDetails[m].Extention == ".pptx")
+                                                                                {
+                                                                                    var urls = Model.SwQcIssueDetailModels1[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                    for (int k = 0; k < urls.Count; k++)
+                                                                                    {
+                                                                                        var last = urls[k].Split('-').Last();
+                                                                                        var lastNameForM = Model.SwQcIssueDetailModels1[i].FilesDetails[m].FilePath;
+
+                                                                                        lastNameForM = Path.GetFileName(last);
+
+                                                                                        <div class="col-lg-3" style="width: 100px; height: 100px;">
+
+                                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+
+                                                                                            <br />
+
+                                                                                            <a href="@Model.SwQcIssueDetailModels1[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+
+                                                                                        </div>
+
+                                                                                        <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                                    }
+                                                                                }
+
+                                                                            }
+                                                                        }
+
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>Module Name :Earphone
+                            </div>
+                            <div class="tools">
+
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable table-responsive">
+                                <table class="table table-striped table-bordered table-hover tblIdEarphone table2excel" id="tblIdEarphone">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th class="numeric" style="display: none"> AccessId </th>
+                                            <th style="text-align: center;">  Done By </th>
+                                            <th class="numeric"> Headphone<br /> Model </th>
+                                            <th class="numeric">Music Player<br /> Playback</th>
+                                            <th class="numeric"> Video Player<br /> Playback </th>
+                                            <th class="numeric">Voice Call </th>
+                                            <th class="numeric"> Voice Call <br />Controller</th>
+                                            <th class="numeric"> FM Playback </th>
+                                            <th class="numeric"> FM Controller </th>
+                                            <th class="numeric"> Controller </th>
+                                            <th class="numeric"> Remarks </th>
+                                            <th class="numeric"> Music Base</th>
+                                            <th class="numeric">Youtube<br /> Playback </th>
+                                            <th class="numeric">Youtube<br /> Controller </th>
+                                            <th class="numeric">Volume<br /> Controller </th>
+                                            <th class="numeric">High End <br /> Device </th>
+                                            <th class="numeric">Mid Range <br /> Device </th>
+                                            <th class="numeric">Lower Mid <br />Range Device </th>
+                                            <th class="numeric">Low <br />Range Device </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center">
+                                        @if (ViewBag.GetEarphoneDataForDetails != null)
+                                        {
+                                            foreach (var item in ViewBag.GetEarphoneDataForDetails)
+                                            {
+                                                <tr>
+                                                    <td style="display: none" class="AccessId">
+                                                        @item.AccessId
+                                                    </td>
+                                                    <td>@item.DoneBy</td>
+                                                    <td>@item.HeadphoneModel</td>
+                                                    <td>@item.MusicPlayerPlayback</td>
+                                                    <td>@item.VideoPlayerPlayback</td>
+                                                    <td>@item.VoiceCall</td>
+                                                    <td>@item.VoiceCallController</td>
+                                                    <td>@item.FmPlayback</td>
+                                                    <td>@item.FmController</td>
+                                                    <td>@item.Controller</td>
+                                                    <td>@item.Remarks</td>
+                                                    <td>@item.MusicBase</td>
+                                                    <td>@item.YoutubePlayback</td>
+                                                    <td>@item.YoutubeController</td>
+                                                    <td>@item.VolumeController</td>
+                                                    <td>@item.HighEndDevice</td>
+                                                    <td>@item.MidRangeDevice</td>
+                                                    <td>@item.LowerMidRangeDevice</td>
+                                                    <td>@item.LowRangeDevice</td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+              <br />
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="portlet box default">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-cogs"></i>Module Name :Battery
+                            </div>
+                            <div class="tools">
+
+                            </div>
+                        </div>
+                        <div class="portlet-body">
+                            <div class="table-scrollable table-responsive">
+                                <table class="table table-striped table-bordered table-hover tblForBatteryDetails table2excel" id="tblForBatteryDetails">
+                                    <thead class="flip-content">
+                                        <tr>
+                                            <th class="numeric" style="display: none"> BatteryId </th>
+                                            <th class="numeric"> Check points <br /> \Charging slots > </th>
+                                            <th class="numeric">Battery<br />(mAh)</th>
+                                            <th class="numeric">100-90%</th>
+                                            <th class="numeric">90-80%</th>
+                                            <th class="numeric">80-70%</th>
+                                            <th class="numeric">70-60%</th>
+                                            <th class="numeric">60-50%</th>
+                                            <th class="numeric">50-40%</th>
+                                            <th class="numeric">40-30%</th>
+                                            <th class="numeric">30-20%</th>
+                                            <th class="numeric">20-10%</th>
+                                            <th class="numeric">10-0%</th>
+                                            <th class="numeric">Average full Discharge</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align: center">
+                                        @if (ViewBag.GetSavedAccessoriesDataBattery != null)
+                                        {
+                                            foreach (var item in ViewBag.GetSavedAccessoriesDataBattery)
+                                            {
+                                                <tr>
+                                                    <td style="display: none" class="BatteryId">
+                                                        @item.BatteryId
+                                                    </td>
+                                                    <td>@item.CheckPoints</td>
+                                                    <td>@item.BatterymAh</td>
+                                                    <td>@item.HundredToNighty</td>
+                                                    <td>@item.NightyToEighty</td>
+                                                    <td>@item.EightyToSeventy</td>
+                                                    <td>@item.SeventyToSixty</td>
+                                                    <td>@item.SixtyToFifty</td>
+                                                    <td>@item.FiftyToFourty</td>
+                                                    <td>@item.FourtyToThirty</td>
+                                                    <td>@item.ThirtyToTwenty</td>
+                                                    <td>@item.TwentyToTen</td>
+                                                    <td>@item.TenToZero</td>
+                                                    <td>@item.AverageFullDischarge</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+        <br /><br /><br /><br /><br /><br />
+        <div class="row rvmCls">
+            <div class="col-lg-6">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-circle btn-sm blue btn-outline btnForwardToSoftWareQc" id="btnForwardToSoftWareQc">Forward To Pm</button>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-circle btn-sm red btn-outline btnReAssignToQc" id="btnReAssignToQc">Re-Assign To QC</button>
+                </div>
+            </div>
+        </div>
+        <div class="rvmCls">
+            <button onclick="goBack()" class="btn blue-ebonyclay"> <span class="fa fa-backward">  Go Back</span></button>
+        </div>
+        <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+    </div>
+
+</div>
+
+@*Modal for Forward to PM-*@
+<div id="SoftwareQcInchargeToPmModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;">Forward To Project Manager</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-4" style="text-align: right">
+                                        <input type="checkbox" id="isFinals" class="isFinals" name="finals" value="finals_CheckBx">
+                                    </div>
+                                    <label class="control-label col-md-4" style="font-weight: bold;text-align: left">
+                                        Is Final Version?
+
+                                    </label>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <div class="form-group" style="display: none">
+                                    <label class="control-label col-md-3" style="width: 33.666667%;">
+                                        Project id :
+
+                                    </label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="lblprojectId" value="@Request.QueryString["projectId"]" class="form-control" style="border: none" />
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">
+                                        Project Name :
+
+                                    </label>
+                                    <div class="col-md-9">
+                                        @*<input type="text" id="lblprojectName" value="@Request.QueryString["ProjectName"]" class="form-control" style="border: none" />*@
+                                        <input name="ProjectName" id="lblprojectName" disabled="disabled" type="text" class="form-control" value="@Request.QueryString["ProjectName"]">
+                                    </div>
+                                    <div class="col-md-6" style="display:none;">
+                                        <input type="text" id="lblswqcInchargeId" value="@Request.QueryString["swqcInchargeId"]" class="form-control" style="border: none" />
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="display:none;">
+                                    <input type="text" id="lblswQcHeadToQcAssignTime" value="@Request.QueryString["swQcHeadToQcAssignTime"]" class="form-control" style="border: none" />
+
+                                </div>
+                                <div class="col-md-12" style="display:none;">
+                                    <input type="text" id="lblpmDate" value="@Request.QueryString["PmToQcHeadAssignTime"]" class="form-control" style="border: none" />
+
+                                </div>
+                                <div class="col-md-12" style="display:none;">
+                                    <input type="text" id="lblSoftwareName" value="@Request.QueryString["SoftwareVersionName"]" class="form-control" style="border: none" />
+
+                                </div>
+                                <div class="col-md-12" style="display:none;">
+                                    <input type="text" id="lblSoftwareNo" value="@Request.QueryString["SoftwareVersionNo"]" class="form-control" style="border: none" />
+
+                                </div>
+                                <div class="col-md-12" style="display:none;">
+                                    <input type="text" id="lbltestPhaseId" value="@Request.QueryString["testPhaseId"]" class="form-control" style="border: none" />
+
+                                </div>
+                                <div class="form-group" style="display: none;">
+                                    <label class="control-label">ProjectPmAssignId</label>
+                                    <input type="text" id="lblProjectPmAssignId" value="@Request.QueryString["pmAssignId"]" class="form-control" style="border: none" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">
+                                        Qc Head Comment :
+
+                                    </label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control" name="txtProjectHeadRemarks" id="lblSwQcInchargeEndComment"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToPm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!----Modal for Qc Re Assign--->
+<div id="QcInchargeToQcReAssignModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Re-Assign project to single/multiple QC</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+
+                        <label for="recipient-name" class="control-label">Project Name :</label>
+
+                        <input name="ProjectName" id="ProjectName" disabled="disabled" type="text" class="form-control" value="@Request.QueryString["ProjectName"]">
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <label class="control-label">Project ID :</label>
+                        <input name="ProjectMasterId" id="lblprojectId" value="@Request.QueryString["projectId"]" type="text" class="form-control">
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <label class="control-label">SwQcInchargeAssignId</label>
+                        <input name="SwQcInchargeAssignId" id="lblswqcInchargeId" value="@Request.QueryString["swqcInchargeId"]" type="text" class="form-control">
+                    </div>
+                    <div class="col-md-12" style="display:none;">
+                        <input type="text" id="lblswQcHeadToQcAssignTime" value="@Request.QueryString["swQcHeadToQcAssignTime"]" class="form-control" style="border: none" />
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <label class="control-label">ProjectPmAssignId</label>
+                        <input type="text" id="lblProjectPmAssignId" value="@Request.QueryString["pmAssignId"]" class="form-control" style="border: none" />
+                    </div>
+                    <div class="col-md-12" style="display:none;">
+                        <input type="text" id="lblpmDate" value="@Request.QueryString["PmToQcHeadAssignTime"]" class="form-control" style="border: none" />
+
+                    </div>
+                    <div class="col-md-12" style="display:none;">
+                        <input type="text" id="lblSoftwareName" value="@Request.QueryString["SoftwareVersionName"]" class="form-control" style="border: none" />
+
+                    </div>
+                    <div class="col-md-12" style="display:none;">
+                        <input type="text" id="lblSoftwareNo" value="@Request.QueryString["SoftwareVersionNo"]" class="form-control" style="border: none" />
+
+                    </div>
+                    <div class="col-md-12" style="display:none;">
+                        <input type="text" id="lbltestPhaseId" value="@Request.QueryString["testPhaseId"]" class="form-control" style="border: none" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Comment :</label>
+                        <textarea name="SwInchargeAssignToQcComment" id="SwInchargeAssignToQcComment" class="form-control" id="message-text"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="multiple" class="control-label">Re-Assign Qcs :</label>
+                        <select name="multiple" id="multiple1" class="form-control" multiple>
+                            @foreach (CmnUserModel item in Model.ddlAssignUsersList)
+                            {
+                                <option value="@item.CmnUserId">
+                                    @item.UserFullName _ @item.EmployeeCode
+                                </option>
+                            }
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Approx. QC completion Time</label>
+
+                        <input class="form-control" name="ApproxInchargeToQcDeliveryDate" id="ApproxInchargeToQcDeliveryDate" type="text" placeholder="yyyy-mm-dd">
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnReAssignToQcConfirm">Confirm</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script type="text/javaScript">
+    window.onscroll = function () { scrollFunction() };
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("myBtn").style.display = "block";
+        } else {
+            document.getElementById("myBtn").style.display = "none";
+        }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
+    function bottomFunction() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    function goBack() {
+        window.history.back();
+    }
+    $(document).ready(function () {
+        $("#btnForwardToSoftWareQc").click(function () {
+            var currentRow;
+            var projectMasterId = document.getElementById('lblprojectId').value;
+            var projectName = document.getElementById('lblprojectName').value;
+            $('#SoftwareQcInchargeToPmModal').modal();
+        });
+        var isFinals = false;
+
+
+        $("#isFinals").on('change', function () {
+            if ($(this).is(':checked')) {
+                $(this).attr('value', 'true');
+            }
+            else {
+                $(this).attr('value', 'false');
+            }
+            isFinals = $('#isFinals').val();
+            console.log("isFinals :" + isFinals);
+        });
+        $('#btnForwardToPm').on('click', function () {
+            alertify.confirm('Confirm message', 'Do you want to finally submit this project to PM?', function () {
+                alertify.success('Ok');
+
+                var projectMasterId = document.getElementById('lblprojectId').value;
+                var projectName = document.getElementById('lblprojectName').value;
+                var proComment = $("#lblSwQcInchargeEndComment").val();
+                var swqcInchargeAId = document.getElementById('lblswqcInchargeId').value;
+                var projectPmAssignId = document.getElementById('lblProjectPmAssignId').value;
+                var pmDate = document.getElementById('lblpmDate').value;
+                var softwareName = document.getElementById('lblSoftwareName').value;
+                var softwareNo = document.getElementById('lblSoftwareNo').value;
+                var testPhaseId = document.getElementById('lbltestPhaseId').value;
+                var swQcHeadToQcAssignTime = document.getElementById('lblswQcHeadToQcAssignTime').value;
+                //var obj = {};
+
+
+
+
+                if ($("#isFinals").is(':checked')) {
+                    $("#isFinals").attr('value', 'true');
+                    $("#isFinals").prop("checked", true);
+                } else {
+                    $("#isFinals").attr('value', 'false');
+                    $("#isFinals").prop("checked", false);
+                }
+                isFinals = $('#isFinals').val();
+                console.log("isFinals :" + isFinals);
+
+                var obj = {};
+                obj.projectMasterId = projectMasterId;
+                obj.projectName = projectName;
+                obj.proComment = proComment;
+                obj.swqcInchargeAId = swqcInchargeAId;
+                obj.projectPmAssignId = projectPmAssignId;
+                obj.pmDate = pmDate;
+                obj.softwareName = softwareName;
+                obj.softwareNo = softwareNo;
+                obj.testPhaseId = testPhaseId;
+                obj.isFinals = isFinals;
+                obj.swQcHeadToQcAssignTime = swQcHeadToQcAssignTime;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("QcInchargeToPmProjectForward", "Software")',
+                    data: "{ projectMasterId: '" + obj.projectMasterId
+                        + "', projectName: '" + obj.projectName
+                        + "', proComment: '" + obj.proComment
+                        + "', swqcInchargeAId: '" + obj.swqcInchargeAId
+                        + "', projectPmAssignId: '" + obj.projectPmAssignId
+                        + "', pmDate: '" + obj.pmDate
+                        + "', softwareName: '" + obj.softwareName
+                        + "', softwareNo: '" + obj.softwareNo
+                        + "', testPhaseId: '" + obj.testPhaseId
+                        + "', isFinals: '" + obj.isFinals
+                        + "', swQcHeadToQcAssignTime: '" + obj.swQcHeadToQcAssignTime
+                        + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (!data.success) {
+                            if (data.errors.name) {
+                                //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                            }
+                        }
+                        else {
+                            //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+
+                window.location = '@Url.Action("SwQcHeadToPmProjectSubmit", "Software")';
+            }
+                , function () {
+                    alertify.error('Cancel');
+
+                });
+
+        });
+
+        //////////////////re assign////////
+        var date = new Date();
+        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        $('#ApproxInchargeToQcDeliveryDate').datepicker({
+            // format: 'dd/mm/yyyy',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            startDate: today,
+            endDate: 0
+        });
+
+        $('#multiple1').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "95%"
+        });
+
+
+        $("#btnReAssignToQc").click(function () {
+
+            var currentRow;
+
+            var projectMasterId = document.getElementById('lblprojectId').value;
+            var projectName = document.getElementById('lblprojectName').value;
+            var swqcInchargeAId = document.getElementById('lblswqcInchargeId').value;
+            var pmDate = document.getElementById('lblpmDate').value;
+            var softwareName = document.getElementById('lblSoftwareName').value;
+            var softwareNo = document.getElementById('lblSoftwareNo').value;
+
+            console.log(projectMasterId);
+            console.log(projectName);
+            console.log(swqcInchargeAId);
+            $('#QcInchargeToQcReAssignModal').modal();
+        });
+
+        $('#btnReAssignToQcConfirm').on('click', function () {
+            var swAssignPeople = $('#multiple1').val();
+
+            if (swAssignPeople == "" || swAssignPeople == null) {
+                $('#QcInchargeToQcReAssignModal').modal('hide');
+                // alert("Please must Load a Project which you want to submit to QcInchare..");
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Assign QCs.",
+                }).show();
+
+                return false;
+            }
+
+            //Approx. QC completion Time
+            var swAproDate = $('#ApproxInchargeToQcDeliveryDate').val();
+
+
+            if (swAproDate == "" || swAproDate == null) {
+                $('#QcInchargeToQcReAssignModal').modal('hide');
+                // alert("Please must Load a Project which you want to submit to QcInchare..");
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Approx. QC completion Time.",
+                }).show();
+
+                return false;
+            }
+
+            alertify.confirm('Confirm message', 'Do you want to Re-Assigned this project to QC?', function () {
+                $('#loading').show();
+                alertify.success('Ok');
+
+                var projectMasterId = document.getElementById('lblprojectId').value;
+                var projectName = document.getElementById('lblprojectName').value;
+                var proComment = $("#lblSwQcInchargeEndComment").val();
+                var swqcInchargeAId = document.getElementById('lblswqcInchargeId').value;
+                var ApproxInchargeToQcDeliveryDate = $('#ApproxInchargeToQcDeliveryDate').val();
+                var SwInchargeAssignToQcComment = $('#SwInchargeAssignToQcComment').val();
+                var projectPmAssignId = document.getElementById('lblProjectPmAssignId').value;
+                var pmDate = document.getElementById('lblpmDate').value;
+                var multiValuesOfQc = $('#multiple1').val();
+                var softwareName = document.getElementById('lblSoftwareName').value;
+                var softwareNo = document.getElementById('lblSoftwareNo').value;
+                var testPhaseId = document.getElementById('lbltestPhaseId').value;
+                var obj = {};
+
+                obj.projectMasterId = projectMasterId;
+                obj.projectName = projectName;
+                obj.proComment = proComment;
+                obj.swqcInchargeAId = swqcInchargeAId;
+                obj.multiple1 = multiValuesOfQc;
+                obj.ApproxInchargeToQcDeliveryDate = ApproxInchargeToQcDeliveryDate;
+                obj.SwInchargeAssignToQcComment = SwInchargeAssignToQcComment;
+                obj.projectPmAssignId = projectPmAssignId;
+                obj.pmDate = pmDate;
+                obj.softwareName = softwareName;
+                obj.softwareNo = softwareNo;
+                obj.testPhaseId = testPhaseId;
+
+                console.log(obj.multiple1);
+                console.log("swqcInchargeAId    :" + obj.swqcInchargeAId);
+                // var data = commonJqueryAjax('/Software/QcInchargeToQcReAssignProject', obj);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("QcInchargeToQcReAssignProject", "Software")',
+                    data: "{ projectMasterId: '" + obj.projectMasterId
+                        + "', projectName: '" + obj.projectName
+                        + "', proComment: '" + obj.proComment
+                        + "', swqcInchargeAId: '" + obj.swqcInchargeAId
+                        + "', multiple1: '" + obj.multiple1
+                        + "', ApproxInchargeToQcDeliveryDate: '" + obj.ApproxInchargeToQcDeliveryDate
+                        + "', SwInchargeAssignToQcComment: '" + obj.SwInchargeAssignToQcComment
+                        + "', projectPmAssignId: '" + obj.projectPmAssignId
+                        + "', pmDate: '" + obj.pmDate
+                        + "', softwareName: '" + obj.softwareName
+                        + "', softwareNo: '" + obj.softwareNo
+                        + "', testPhaseId: '" + obj.testPhaseId
+                        + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        console.log("data :" + data);
+                        if (data == "OK") {
+                            window.location = '@Url.Action("SwQcHeadToPmProjectSubmit", "Software")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                        //if (!data.success) {
+                        //    if (data.errors.name) {
+                        //        //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                        //    }
+                        //}
+                        //else {
+                        //    //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+
+                        //    console.log(data);
+
+                        //}
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+                window.location = '@Url.Action("SwQcHeadToPmProjectSubmit", "Software")';
+            }
+                , function () {
+                    alertify.error('Cancel');
+
+                });
+
+        });
+
+    });
+
+</script>
+
+<script>
+    function export2Word(element) {
+
+        var html, link, blob, url, css;
+        css = (
+            '<style>' +
+                '@Page table2excel{size: 841.95pt 595.35pt;mso-page-orientation: landscape;}' +
+                'div.table2excel {page: table2excel;}' +
+                '</style>'
+        );
+
+        html = element.innerHTML;
+        blob = new Blob(['\ufeff', css + html], {
+            type: 'application/msword'
+        });
+        url = URL.createObjectURL(blob);
+        link = document.createElement('A');
+        link.href = url;
+        link.download = 'QCReport';  // default name without extension
+        document.body.appendChild(link);
+        if (navigator.msSaveOrOpenBlob) navigator.msSaveOrOpenBlob(blob, 'QCReport.doc'); // IE10-11
+        else link.click();  // other browsers
+        document.body.removeChild(link);
+        //  $(".rvmCls").remove();
+    };
+    $('.jquery-excell-export').click(function () {
+        //$("#table2excel").table2excell({
+        //    // exclude CSS class
+        //    exclude: ".noExl",
+        //    name: "Worksheet Name",
+        //    filename: "SomeFile" //do not include extension
+        //});
+
+        var table = document.getElementById('table2excel');
+        var html = table.outerHTML;
+        // window.open('data:application/vnd.ms-excel,' + escape(html));
+        //window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+        //  window.open('data:application/vnd.ms-' + defaults.type + ';filename=exportData.excel;' + encodeURIComponent(html));
+        window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+    });
+    $(document).ready(function () {
+        var tdtblSam2 = $('#tblID13').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 6
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            //"scrollY": true,
+            //"scrollX": true,
+            // "scrollCollapse": true,
+            //"autoWidth": false,
+            //fixedColumns: {
+            //    leftColumns: 4
+            //    // rightColumns: 1
+            //},
+            //"order": [[0, 'asc']]
+        });
+        //tdtblSam2.on('order.dt search.dt', function () {
+        //    tdtblSam2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+        //
+        //$('#tblID13').DataTable({
+        //    scrollResize: true,
+        //    scrollY: 200,
+        //   // scrollX: true,
+        //    scrollCollapse: true,
+        //    paging: false
+        //});
+        var tblId14s = $('#tblId14').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 6
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            //"scrollY": true,
+            //"scrollX": true,
+            //"scrollCollapse": true,
+            //"autoWidth": false,
+            //fixedColumns: {
+            //    leftColumns: 4
+            //    // rightColumns: 1
+            //},
+            //"order": [[0, 'asc']]
+        });
+        //tblId14s.on('order.dt search.dt', function () {
+        //    tblId14s.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+
+        var tblId15s = $('#tblId15').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 6
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            //"scrollY": true,
+            //"scrollX": true,
+            //"scrollCollapse": true,
+            //"autoWidth": false,
+            //fixedColumns: {
+            //    leftColumns: 4
+            //    // rightColumns: 1
+            //},
+            //"order": [[0, 'asc']]
+        });
+        //tblId15s.on('order.dt search.dt', function () {
+        //    tblId15s.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //        cell.innerHTML = i + 1;
+        //    });
+        //}).draw();
+
+
+        var tblIdEarphone = $('#tblIdEarphone').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 6
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+        
+        var tblForBatteryDetails = $('#tblForBatteryDetails').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 6
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+    });
+</script>

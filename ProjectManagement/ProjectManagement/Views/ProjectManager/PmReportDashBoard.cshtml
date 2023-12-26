@@ -1,0 +1,402 @@
+﻿
+@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.ViewModels.ProjectManager.PmReportDashBoardViewModel
+<script src="~/Scripts/moment.js"></script>
+
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+<style>
+    /*.linkColorForID2 {
+        color:white
+    }*/
+</style>
+
+<div class="note note-success">
+    <i class="fa fa-tachometer"></i> <label class="bold">Report Dashboard</label>
+    <i class="icon-calendar pull-right"><label class="bold uppercase">&nbsp; @DateTime.Now.ToString("dd MMM yyyy")</label></i>
+</div>
+@using (Html.BeginForm("PmReportDashBoard", "ProjectManager", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="portlet box red">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-calendar-check-o"></i>Date Range
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable table-responsive col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2">
+                    <div class="col-lg-2"></div>
+                    <div class="form-control col-lg-8" style="text-align: right; color: black; font-weight: bold; font-size: 16px; border: transparent">Date Range</div>
+
+                </div>
+
+                <div class="col-lg-5">
+
+                    <div class="input-group date form_datetime default col-lg-4" id="StartTime" data-date=" " data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="StartTime">
+                        <input class="form-control col-lg-12 input-small srtclr ui-state-default" name="StartTime" id="StartTime" size="66" type="text" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove removebtn"></span></span>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
+                    <div class="col-lg-1" style="text-align: center; color: black; font-weight: bold;">to</div>
+
+                    <div class="input-group date form_datetime col-lg-4" id="EndTime" data-date=" " data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="EndTime">
+                        <input class="form-control col-lg-12 input-small endclr" name="issueList[0].EndTime" id="EndTime" size="66" type="text" value="">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-remove removebtn1"></span></span>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3">
+                    <button type="button" class="btn blue btn-circle col-lg-6 btnSearch" id="btnSearch" onclick="location.href='@Url.Action("PmReportDashBoard", "ProjectManager")?startValue=' + $('.srtclr').val() + '&endValue=' +$('.endclr').val() +'' ">
+                        <span class="glyphicon glyphicon-search">SEARCH</span>
+                    </button>
+                    <div class="col-lg-6"></div>
+                </div>
+                <input type="hidden" id="stTime" value='@Request.QueryString["startValue"]' />
+                <input type="hidden" id="enTime" value="@Request.QueryString["endValue"]" />
+            </div>
+        </div>
+    </div>
+}
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i> Report Data
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblAllProjectDetails">
+                    <thead>
+                        <tr>
+                            <th class="text-center"> # </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center">Purchase <br />Order Number</th>
+                            <th class="text-center">PO Date</th>
+                            <th class="text-center">All Assigned <br />Project Manager</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">PM Incharge<br />Assign Time</th>
+                            <th class="text-center">PM Head Remarks</th>
+                            
+                            <th class="text-center">Inactive Time</th>
+                            <th class="text-center">PM Inactive Reason</th>
+                            <th class="text-center">Test Phase Name</th>
+                            <th class="text-center">Project <br /> Details</th>
+                            <th class="text-center">PM Works History</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.GetAllProjectListDetailsForInchargeReport)
+                        {
+                          
+                            if (String.IsNullOrEmpty(@item.QcAssignedPersonID) || @item.QcAssignedPersonID.Trim().Length == 0)
+                            {
+                                string swqcInchargeAsngId = null;
+                                <tr class="tableTrCls1">
+                                    <td class="text-center"></td>
+                                    <td class="text-center" style="display: none">@item.ProjectMasterId</td>                                
+                                    <td class="text-center">@item.ProjectName</td>
+                                    <td class="text-center">@item.PurchaseOrderNumber</td>
+                                    <td class="text-center">
+                                        @if (@item.PoDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.PoDate)
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.AssignedPerson</td>
+                                    <td class="text-center">@item.AllAssignedPmProjectStatus</td>
+                                    <td class="text-center">
+                                        @if (@item.AssignDate1 != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.AssignDate1)
+                                        }
+                                    </td>
+                                    
+                                    <td class="text-center">@item.ProjectHeadRemarks</td>
+                                    <td class="text-center">
+                                        @if (@item.InactiveDate1 != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.InactiveDate1)
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.ProjectHeadInactiveRemarks</td>
+                                    <td class="text-center">@item.TestPhaseName</td>
+
+                                    <td class="text-center">
+                                        @item.OsName - @item.OsVersion
+
+
+                                        <br />
+                                        <a id="popoverOption" class="btn btn-circle popoverOption" style="font-weight: bolder;z-index: 100;" data-content="Display: @item.DisplaySize, Display Name: @item.DisplayName, Processor: @item.ProcessorName, Clock: @item.ProcessorClock, Chipset: @item.Chipset, Front_Camera: @item.FrontCamera, Back_Camera: @item.BackCamera, RAM: @item.Ram, ROM: @item.Rom, Battery: @item.Battery, Number Of Sample: @item.NumberOfSample" rel="popover" data-placement="bottom" data-original-title="@item.ProjectName">
+                                            <span class="glyphicon glyphicon-list-alt"></span> Details
+                                        </a>
+
+                                    </td>                                  
+                                    <td class="text-center">
+                                      
+                                        <a target="_blank" onclick="window.open('@Url.Action("DetailsOfPmWorkList", "ProjectManager", new { projectId = @item.ProjectMasterId, poNumber = @item.PONumber, projectName = @item.ProjectName, swqcInchargeAsngId = @item.SwQcInchargeAssignId })')">
+                                            Work Histories
+
+                                        </a>
+
+                                    </td>
+                                    <td class="text-center" style="display: none">@item.SwQcInchargeAssignId</td>  
+                            </tr>
+                            }
+                            else
+                            {
+                                <tr class="tableTrCls2">
+                                    
+                                    <td class="text-center"></td>
+                                    <td class="text-center" style="display: none">@item.ProjectMasterId</td>
+                                    <td class="text-center">@item.ProjectName</td>
+                                    <td class="text-center">@item.PurchaseOrderNumber</td>
+                                    <td class="text-center">
+                                        @if (@item.PoDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.PoDate)
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.UserFullName</td>
+                                    <td class="text-center">@item.Status</td>
+                                    <td class="text-center">
+                                        @if (@item.AssignDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.AssignDate)
+                                        }
+                                    </td>
+
+                                    <td class="text-center">@item.ProjectHeadRemarks</td>
+                                    <td class="text-center">
+                                        @if (@item.InactiveDate != null)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @item.InactiveDate)
+                                        }
+                                    </td>
+                                    <td class="text-center">@item.ProjectHeadInactiveRemarks</td>
+                                    <td class="text-center">@item.TestPhaseName</td>
+                                    <td class="text-center">
+                                        @item.OsName - @item.OsVersion
+
+
+                                        <br />
+                                        <a id="popoverOption" class="btn btn-circle popoverOption" style="font-weight: bolder;z-index: 100;" data-content="Display: @item.DisplaySize, Display Name: @item.DisplayName, Processor: @item.ProcessorName, Clock: @item.ProcessorClock, Chipset: @item.Chipset, Front_Camera: @item.FrontCamera, Back_Camera: @item.BackCamera, RAM: @item.Ram, ROM: @item.Rom, Battery: @item.Battery, Number Of Sample: @item.NumberOfSample" rel="popover" data-placement="bottom" data-original-title="@item.ProjectName">
+                                            <span class="glyphicon glyphicon-list-alt"></span> Details
+                                        </a>
+
+                                    </td>
+                                    <td class="text-center">
+                                        <a target="_blank" onclick="window.open('@Url.Action("DetailsOfPmWorkList", "ProjectManager", new { projectId = @item.ProjectMasterId, poNumber = @item.PONumber, projectName = @item.ProjectName, emplyCode = @item.QcAssignedPersonID, swqcInchargeAsngId = @item.SwQcInchargeAssignId })')">
+                                            Work Histories
+
+                                        </a>
+
+                                    </td>
+                                    <td class="text-center" style="display: none">@item.SwQcInchargeAssignId</td>  
+                                </tr>
+
+
+                           }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="sortable_portlets">
+    <div class="col-md-4 column sortable">
+        <div class="portlet portlet-sortable box blue-hoki">
+            <div class="portlet-title">
+                <div class="caption font-green-sharp">
+                    <i class="icon-speech font-white"></i>
+                    <span class="caption-subject bold uppercase font-white"> Users List</span>
+
+                </div>
+                <div class="tools">
+                    <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                    <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                    <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    <a class="btn-circle btn-icon-only fullscreen actions" href="javascript:;"></a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="scroller" style="height:200px" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+                    <div class="row">
+                        <div class="table-scrollable">
+
+                            <table class="table table-bordered table-hover" id="tblQcList">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"> # </th>
+                                        <th class="text-center"> Name </th>
+                                        <th class="text-center"> ID </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in ViewBag.GetActivePmList)
+                                    {
+                                        <tr class="tableTrCls1">
+                                            <td class="text-center"></td>
+                                            <td class="text-center" style="display: none">@item.CmnUserId</td>
+                                            <td class="text-center">@item.UserFullName </td>
+                                            <td class="text-center empCode" id="empCode" style="display: none">@item.EmployeeCode </td>
+                                            <td class="text-center linkColorForID" id="linkColorForID1">
+                                                <a class="linkColorForID2" onclick="location.href='@Url.Action("PmReportDashBoard", "ProjectManager")?startValue=' + $('.srtclr').val() + '&endValue=' +$('.endclr').val() +'&emplyCode=' +@item.EmployeeCode + ''">
+                                                    @item.EmployeeCode
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <input id="empCode1" type="hidden" value="@Request.QueryString["emplyCode"]" />
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+   
+</div>
+
+
+<style>
+    .hiddenColumn {
+        display: none;
+    }
+
+    .popover-title {
+        /*background: #428bca;*/
+        background: darkgrey;
+        color: white;
+    }
+</style>
+
+<script>
+    $(function () {
+
+        $('.popoverOption').popover({ trigger: "click" });
+
+    });
+    $(function () {
+
+        $('#tblAllProjectDetails tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+        $('#tblQcList tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+        $('#tblProjectsList tr').each(function (index) {
+            $(this).find('td:nth-child(1)').html(index++);
+        });
+        $(".removebtn").click(function (e) {
+            e.preventDefault();
+            $('.srtclr').val("");
+
+        });
+        $(".removebtn1").click(function (e) {
+            e.preventDefault();
+
+            $('.endclr').val("");
+        });
+        //Added Time picker
+        $(document).on('focus', '.form_datetime', function (e) {
+            $(this).datepicker({
+                language: 'fr',
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                autofocus: true,
+                todayHighlight: 1,
+                start: 1,
+
+            });
+
+        });
+
+        $('.form_datetime').on('changeTime', function () {
+            $('#EndTime').datepicker('option', 'minTime', $(this).val());
+        });
+
+    });
+
+
+    $(document).ready(function () {
+
+        var stTime = $('#stTime').val();
+        var enTime = $('#enTime').val();
+
+        var empCode1 = $('#empCode1').val();
+
+
+        $('#stTime').val(stTime);
+        $('#enTime').val(enTime);
+        $('#empCode1').val(empCode1);
+
+        console.log(stTime + "" + enTime);
+
+        $(".srtclr").val(stTime);
+        $(".endclr").val(enTime);
+
+        var emplyCode = getParameterByName("emplyCode");
+        console.log("pp" + emplyCode);
+        var liss;
+        var kkk;
+        $("#tblQcList tr td.linkColorForID").click(function () {
+            liss =  $(this).find('.linkColorForID2').text().trim();
+            if (liss==emplyCode) {
+                $(this).css('background', '#337AB7');
+                $(this).children('.linkColorForID2').css('color', 'white');
+                console.log(liss);
+            }
+
+        });
+
+
+        $("#tblQcList tr td.linkColorForID").each(function () {
+            liss = $(this).find('.linkColorForID2').text().trim();
+            if (liss == emplyCode) {
+                $(this).css('background', '#337AB7');
+                $(this).children('.linkColorForID2').css('color', 'white');
+
+                console.log(liss);
+            }
+
+        });
+
+        console.log(liss);
+    });
+
+
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+</script>

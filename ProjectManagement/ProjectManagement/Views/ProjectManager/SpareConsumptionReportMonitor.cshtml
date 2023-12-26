@@ -1,0 +1,127 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model IEnumerable<ProjectManagement.Models.SpareAnalysisReportMonitorModel>
+@{
+    ViewBag.Title = "SpareConsumptionReportMonitor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-3">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">List</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-2">
+            @*<button id='newIssue' class="btn sbold uppercase btn-outline red-haze" onclick="goToController('/Common/Create')">New Issue</button>*@
+        </div>
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover" id="tblViewSpareAnalysis" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="text-center">SpareAnalysisId</th>
+                        <th class="text-center">Model</th>
+                        <th class="text-center">WarningFor</th>
+                        <th class="text-center">ReportSubmitDate</th>
+                        <th class="text-center">Added Date</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.SpareAnalysisId</td>
+                        <td class="text-center">@item.ModelName</td>
+                        <td class="text-center">@item.WarningFor days</td>
+                        <td class="text-center">@item.ReportSubmitDate</td>
+                        <td class="text-center">@item.AddedDate</td>
+                        <td class="text-center">
+                            @if (@item.ReportSubmitDate == null)
+                            {
+                                <span class="label label-danger"> Pending </span>
+                            }
+                            @if (@item.ReportSubmitDate != null && @item.ReceiveDate == null)
+                            {
+                                <span class="label label-success"> Submitted </span>
+                            }
+                            @if (@item.ReceiveDate != null)
+                            {
+                                <span class="label label-warning"> Received </span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @if ((ViewContext.HttpContext.User.IsInRole("PM") || ViewContext.HttpContext.User.IsInRole("PMHEAD") || ViewContext.HttpContext.User.IsInRole("ASPM") || ViewContext.HttpContext.User.IsInRole("ASPMHEAD")) && @item.ReportSubmitDate != null)
+                            {
+                                if (@item.ReceiveDate != null)
+                                {
+                                    <button disabled="">Received</button>
+
+                                }
+                                else
+                                {
+                                    <button class="btnReceive">Receive</button>
+                                }
+                            }
+                            @if ((ViewContext.HttpContext.User.IsInRole("CPSD") || ViewContext.HttpContext.User.IsInRole("CPSDHEAD")) && @item.ReportSubmitDate==null)
+                            {
+                                <button class="btnSubmit">Submit</button>
+                            }
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function() {
+        var table = $('#tblViewSpareAnalysis').DataTable({
+            "ordering": false,
+            "columnDefs": [
+                //{ className: "text-center", "targets": [2, 3, 4, 5] },
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+        
+        $('#tblViewSpareAnalysis tbody').on('click', '.btnReceive', function () {
+            var url = '../ProjectManager/SpareReportConfirmation';
+            var rowindex = $(this).closest('tr').index();
+            console.log(rowindex);
+            var data = table.row($(this).parents('tr')).data();
+            console.log('RatioID:' + data[0] + ' ProductCode:' + data[1] + " Model:" + data[2]);
+            $.post(url, { id: data[0], flag: "receive" }, function (json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+            });
+        });
+        
+        $('#tblViewSpareAnalysis tbody').on('click', '.btnSubmit', function () {
+            var url = '../ProjectManager/SpareReportConfirmation';
+            var rowindex = $(this).closest('tr').index();
+            console.log(rowindex);
+            var data = table.row($(this).parents('tr')).data();
+            console.log('RatioID:' + data[0] + ' ProductCode:' + data[1] + " Model:" + data[2]);
+            $.post(url, { id: data[0], flag: "submit" }, function (json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+            });
+        });
+    });
+</script>

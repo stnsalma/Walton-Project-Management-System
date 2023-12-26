@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "User Opinion";
+}
+
+<h2>UserOpinion</h2>
+
+<div class="row">
+
+    <div class="col-lg-6">
+        @Html.DropDownList("ProjectName", new SelectList(ViewBag.ProjectNames, "ProjectName", "ProjectName"), "Select Project", new { @class = "form-control" })
+    </div>
+    
+
+    <div class="col-lg-6">
+        <select id="ProjectMasterId" class="form-control">
+            <option value="">Select Order</option>
+        </select>
+    </div>
+
+</div>
+<br/>
+<div class="row">
+    <div class="col-lg-12">
+        @Html.Partial("~/Views/Shared/_UserOpinion.cshtml")
+    </div>
+
+</div>
+

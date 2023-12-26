@@ -1,0 +1,748 @@
+﻿
+@using System.Diagnostics
+@using Microsoft.Ajax.Utilities
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Production.VmBatteryProduction
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<CustomBatteryProduction> plans = (List<CustomBatteryProduction>)ViewBag.GetPartialProject;
+}
+<link href="~/Content/icheck/skins/all.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Content/bootstrap-fileinput/bootstrap-fileinput.js"></script>
+<script src="~/Content/icheck/icheck.min.js"></script>
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/loadingText.css" rel="stylesheet" />
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+   
+</style>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="color: brown;">
+                    <span class="caption-subject #569450 sbold uppercase"> MOBILE PRODUCTION PLAN</span>
+                </div>
+            </div>
+            <div class="portlet box">
+                <div class="portlet-title">
+                    <div class="caption" style="color:brown;">
+                        <i class="fa fa-cogs"></i>ALL MOBILE PRODUCTION PLAN
+                    </div>
+                    <div class="tools" style="background-color:#75AE42;">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+                <div><button id="rfBtn" class="btn sbold uppercase btn-outline cbp-animation-unfold">Refresh If necessary</button></div>
+                <div class="portlet-body">
+                    <div class="table-scrollable divSearchedvalue" id="divSearchedvalue" style="overflow: auto; display: none;">
+                        <table id="batteryPlanTable" class="table table-bordered table-striped table-scrollable table-bordered table-hover tbl">
+                            <thead class="flip-content" style="background-color:  #75AE42;color: white">
+                                <tr>
+                                    <th style="text-align: center;">Type Of Work</th>
+                                    <th style="text-align: center;">Start Date</th>
+                                    <th style="text-align: center;">End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyForCharger" class="tBodyForCharger">
+                                <tr style="text-align: center;" class="tr1" id="tr1">
+
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        @*PROJECT NAME : @Request.QueryString["projectName"]<br /> PROCESS : SMT*@
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" id="smtChkId" class="smtChkId" name="smt" value="smt_CheckBx">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="smtProName" class="form-control" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : SMT</div>
+
+                                        <br />
+                                    </th>
+                                </tr>
+                                <tr class="tr2" id="tr2">
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.MaterialReceiveStartDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialStartDateBSmt", id = "materialReceiveStartDateBSmt", @disabled = "disabled", onchange = "materialReceiveStartDateSmtChange()", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                        <p id="smtMaterialStartPara" style="display:none;color:red">One Project is waiting for SMT Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.MaterialReceiveEndDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialEndDateBSmt", id = "materialReceiveEndDateBSmt", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                    </td>
+                                </tr>
+                                <tr class="tr3" id="tr3">
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.IqcCompleteStartDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcStartDateBSmt", style = "text-align: center;", id = "iqcCompleteStartDateBSmt", @disabled = "disabled", onchange = "iqcCompleteStartDateSmtChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="smtIqcStartPara" style="display:none;color:red">One Project is waiting for SMT IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.IqcCompleteEndDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcEndDateBSmt", style = "text-align: center;", @disabled = "disabled", id = "iqcCompleteEndDateBSmt", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.TrialProductionStartDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialStartDateBSmt", style = "text-align: center;", @disabled = "disabled", onchange = "trialProductionStartDateSmtChange()", id = "trialProductionStartDateBSmt", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="smtTrialStartPara" style="display:none;color:red">One Project is waiting for SMT Trial Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.TrialProductionEndDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialEndDateBSmt", style = "text-align: center;", @disabled = "disabled", id = "trialProductionEndDateBSmt", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="smtTrialLine" class="smtTrialLine chosen" multiple="multiple" style="width: 66%;" onchange="smtTrialLineFunc()">
+                                            <option value="0">SELECT LINE</option>
+                                            <option value="Line-1">Line-1</option>
+                                            <option value="Line-2">Line-2</option>
+                                            @*<option value="Line-3">Line-3</option>*@
+
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>SMT Mass Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.SmtMassProductionStartDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker massProStartDateBSmt", style = "text-align: center;", id = "massProductionStartDateBSmt", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="smtMassProStartPara" style="display:none;color:red">One Project is waiting for SMT Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatterySmtModel.SmtMassProductionEndDateBSmt, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker massProEndDateBSmt", @disabled = "disabled", style = "text-align: center;", id = "massProductionEndDateBSmt", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        <input id="batterySmt_TotalQuantity" class="form-control" type="number" min="1" style="width: 66%;" onchange="smtLineInfoFunc()" />
+                                        <p id="smtTotal" style="display:none;color:red">SMT Total Quantity must be greater than SMT PerDayCapacity.</p>
+
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        <input id="batterySmt_PerDayCapacity" class="form-control" type="number" min="1" style="width: 66%;" onchange="smtLineInfoFunc()" />
+                                        <p id="smtPerDay" style="display:none;color:red">SMT Per Day Production is Blank. Please fill up this.</p>
+
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="smtMassLineInfo" class="smtMassLineInfo chosen" multiple="multiple" style="width: 66%;" onchange="smtLineInfoFunc()">
+                                            <option value="0">SELECT LINE</option>
+
+                                        </select>
+                                        <div style="color:blue;font-weight: bold;">
+                                            <table id="smtAvailableLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content smtAvailableLineInformation">
+                                                <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                    <tr>
+                                                        <th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>
+                                                        <th style="text-align: center;">Warning</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="smAvailableLineTBody" id="smAvailableLineTBody"></tbody>
+                                            </table>
+
+                                        </div>
+                                    </td>
+
+                                    <td style="color:blue;font-weight: bold;">
+
+                                        <table id="smtAllLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content smtAllLineInformation">
+                                            <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                <tr>
+                                                    <th style="text-align: center;">Date_Booked</th>
+                                                    <th style="text-align: center;">Line<br />Number  </th>
+                                                    <th style="text-align: center;">Line<br />Capacity  </th>
+                                                    <th style="text-align: center;">Project <br />Type  </th>
+                                                    <th style="text-align: center;">Total <br />Booked<br />PerDay<br />Production  </th>
+                                                    <th style="text-align: center;">Available<br />Line<br />Capacity <br />For PerDay</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="smAllLineTBody" id="smAllLineTBody"></tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                                <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        @*PROJECT NAME : @Request.QueryString["projectName"]*@
+                                        <div class="col-lg-2">
+
+                                            <input type="checkbox" id="housingChkId" class="housingChkId" name="housing" value="housing_CheckBx">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="housingProName" class="form-control" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : HOUSING</div>
+
+                                        <br />
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.MaterialReceiveStartDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialStartDateHousing", id = "materialReceiveStartDateHousing", onchange = "materialReceiveStartDateHousingChange()", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                        <p id="housingMaterialStartPara" style="display:none;color:red">One Project is waiting for Housing Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.MaterialReceiveEndDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialEndDateHousing", id = "materialReceiveEndDateHousing", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.IqcCompleteStartDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcStartDateHousing", style = "text-align: center;", id = "iqcCompleteStartDateHousing", onchange = "iqcCompleteStartDateHousingChange()", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="housingIqcStartPara" style="display:none;color:red">One Project is waiting for Housing IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.IqcCompleteEndDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcEndDateHousing", style = "text-align: center;", id = "iqcCompleteEndDateHousing", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.TrialProductionStartDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialStartDateHousing", style = "text-align: center;", id = "trialProductionStartDateHousing", onchange = "trialProductionStartDateHousingChange()", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="housingTrialStartPara" style="display:none;color:red">One Project is waiting for Housing Trial Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.TrialProductionEndDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialEndDateHousing", style = "text-align: center;", id = "trialProductionEndDateHousing", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="housingTrialLine" class="housingTrialLine chosen" multiple="multiple" style="width: 66%;" onchange="housingTrialLineFunc()">
+                                            <option value="0">SELECT LINE</option>
+                                            <option value="Line-1">Line-1</option>
+                                            <option value="Line-2">Line-2</option>
+                                            <option value="Line-3">Line-3</option>
+                                            <option value="Line-4">Line-4</option>
+                                            <option value="Line-5">Line-5</option>
+                                            <option value="Line-6">Line-6</option>
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Housing Reliability Test</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.HousingReliabilityTestStartDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker housingStartDateHousing", style = "text-align: center;", @disabled = "disabled", id = "housingReliabilityStartDateHousing", onchange = "reliabilityStartDateHousingChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.HousingReliabilityTestEndDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker housingEndDateHousing", style = "text-align: center;", @disabled = "disabled", id = "housingReliabilityEndtDateHousing", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Housing Mass Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.HousingMassProductionStartDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker housingMassStartDateHousing", style = "text-align: center;", id = "housingMassProStartDateHousing", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="housingMassProStartPara" style="display:none;color:red">One Project is waiting for Housing Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryHousingModel.HousingMassProductionEndDateBHousing, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker housingMassEndDateHousing", @disabled = "disabled", style = "text-align: center;", id = "housingMassProEndtDateHousing", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        <input id="batteryHousing_TotalQuantity" class="form-control" type="number" min="1" style="width: 66%;" onchange="housingLineInfoFunc()" />
+                                        <p id="housingTotal" style="display:none;color:red">Housing Total Quantity must be greater than Housing PerDayCapacity.</p>
+
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        <input id="batteryHousing_PerDayCapacity" class="form-control" type="number" min="1" style="width: 66%;" onchange="housingLineInfoFunc()" />
+                                        <p id="housingPerDay" style="display:none;color:red">Housing Per Day Capacity is Blank. Please fill up this.</p>
+
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="housingMassLineInfo" class="housingMassLineInfo chosen" multiple="multiple" style="width: 66%;" onchange="housingLineInfoFunc()">
+                                            <option value="0">SELECT LINE</option>
+                                        </select>
+                                        <div style="color:blue;font-weight: bold;">
+
+                                            <table id="housingAvailableLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content housingAvailableLineInformation">
+                                                <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                    <tr>
+                                                        <th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        @*<th style="text-align: center;">Line<br />Capacity  </th>
+                                                            <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>*@
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>
+                                                        <th style="text-align: center;">Warning</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="housingAvailableLineTBody" id="housingAvailableLineTBody"></tbody>
+                                            </table>
+
+                                        </div>
+                                    </td>
+                                    <td style="color:blue;font-weight: bold;">
+
+                                        <table id="housingAllLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content housingAllLineInformation">
+                                            <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                <tr>
+                                                    @*<th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        <th style="text-align: center;">Line<br />Capacity  </th>
+                                                        <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>*@
+                                                    <th style="text-align: center;">Date_Booked</th>
+                                                    <th style="text-align: center;">Line<br />Number  </th>
+                                                    <th style="text-align: center;">Line<br />Capacity  </th>
+                                                    <th style="text-align: center;">Project <br />Type  </th>
+                                                    <th style="text-align: center;">Total <br />Booked<br />PerDay<br />Production  </th>
+                                                    <th style="text-align: center;">Available<br />Line<br />Capacity <br />For PerDay</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="housingAllLineTBody" id="housingAllLineTBody"></tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                @*------------------------------------------*@
+                                <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        <div class="col-lg-2">
+
+                                            <input type="checkbox" id="batteryChkId" class="batteryChkId" name="housing" value="battery_CheckBx">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="batteryProName" class="form-control" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : BATTERY</div>
+                                        <br />
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.MaterialReceiveStartDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialStartDateBattery", id = "materialReceiveStartDateBattery", onchange = "materialReceiveStartDateBatteryChange()", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                        <p id="batteryMaterialStartPara" style="display:none;color:red">One Project is waiting for Battery Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.MaterialReceiveEndDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialEndDateBattery", id = "materialReceiveEndDateBattery", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.IqcCompleteStartDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcStartDateBattery", style = "text-align: center;", id = "iqcCompleteStartDateBattery", onchange = "iqcCompleteStartDateBatteryChange()", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="batteryIqcStartPara" style="display:none;color:red">One Project is waiting for Battery IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.IqcCompleteEndDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcEndDateBattery", style = "text-align: center;", id = "iqcCompleteEndDateBattery", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.TrialProductionStartDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialStartDateBattery", style = "text-align: center;", id = "trialProductionStartDateBattery", onchange = "trialProductionStartDateBatteryChange()", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="batteryTrialStartPara" style="display:none;color:red">One Project is waiting for Battery Trial Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.TrialProductionEndDateBattery, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialEndDateBattery", style = "text-align: center;", id = "trialProductionEndDateBattery", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="batteryTrialLine" class="batteryTrialLine chosen" multiple="multiple" style="width: 66%;" onchange="batteryTrialLineFunc()">
+                                            <option value="0">SELECT LINE</option>
+                                            <option value="Line-1">Line-1</option>
+                                            <option value="Line-2">Line-2</option>
+                                            @*<option value="Line-3">Line-3</option>*@
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Battery Reliability Test</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryReliabilityTestStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryReliabilityTestStart", style = "text-align: center;", @disabled = "disabled", onchange = "reliabilityTestStartDateBatteryChange()", id = "batteryReliabilityTestStartDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryReliabilityTestEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryReliabilityTestEnd", style = "text-align: center;", @disabled = "disabled", id = "batteryReliabilityTestEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Battery Mass Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryMassProductionStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryMassProductionStart", style = "text-align: center;", id = "batteryMassProductionStartDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="batteryMassProStartPara" style="display:none;color:red">One Project is waiting for Battery Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryMassProductionEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryMassProductionEnd", @disabled = "disabled", style = "text-align: center;", id = "batteryMassProductionEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        <input id="battery_TotalQuantity" class="form-control" type="number" min="1" style="width: 66%;" onchange="batteryLineInfoFunc()" />
+                                        <p id="batteryTotal" style="display:none;color:red">Battery Total Quantity must be greater than Battery PerDayCapacity.</p>
+
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        <input id="battery_PerDayCapacity" class="form-control" type="number" min="1" style="width: 66%;" onchange="batteryLineInfoFunc()" />
+                                        <p id="batteryPerDay" style="display:none;color:red">Battery Per Day Capacity is Blank. Please fill up this.</p>
+
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="batteryMassLineInfo" class="batteryMassLineInfo chosen" multiple="multiple" style="width: 66%;" onchange="batteryLineInfoFunc()">
+                                            <option value="0">SELECT LINE</option>
+
+                                        </select>
+
+                                        <div style="color:blue;font-weight: bold;">
+
+                                            <table id="batteryAvailableLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content batteryAvailableLineInformation">
+                                                <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                    <tr>
+                                                        <th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        @*<th style="text-align: center;">Line<br />Capacity  </th>
+                                                            <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>*@
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>
+                                                        <th style="text-align: center;">Warning</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="batteryAvailableLineTBody" id="batteryAvailableLineTBody"></tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </td>
+                                    <td style="color:blue;font-weight: bold;">
+
+                                        <table id="batteryAllLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content batteryAllLineInformation">
+                                            <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                <tr>
+                                                    @*<th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        <th style="text-align: center;">Line<br />Capacity  </th>
+                                                        <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>*@
+                                                    <th style="text-align: center;">Date_Booked</th>
+                                                    <th style="text-align: center;">Line<br />Number  </th>
+                                                    <th style="text-align: center;">Line<br />Capacity  </th>
+                                                    <th style="text-align: center;">Project <br />Type  </th>
+                                                    <th style="text-align: center;">Total <br />Booked<br />PerDay<br />Production  </th>
+                                                    <th style="text-align: center;">Available<br />Line<br />Capacity <br />For PerDay</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="batteryAllLineTBody" id="batteryAllLineTBody"></tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Battery Aging Test</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryAgingTestStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryAgingTestStart", @disabled = "disabled", style = "text-align: center;", id = "batteryAgingTestStartDate", onchange = "agingTestStartDateBatteryChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryModel.BatteryAgingTestEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker batteryAgingTestEnd", @disabled = "disabled", style = "text-align: center;", id = "batteryAgingTestEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                @*--------------------------------------------*@
+                                <tr style="text-align: center;">
+                                    <th style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">
+                                        <div class="col-lg-2">
+                                            <input type="checkbox" id="assemblyChkId" class="assemblyChkId" name="assembly" value="assembly_CheckBx">
+                                        </div>
+                                        <div class="col-lg-8">
+                                            <input id="assemblyProName" class="form-control" type="text" disabled="disabled" style="text-align: center;font-weight: bold;color:brown" />
+                                        </div>
+                                        <div class="col-lg-2">PROCESS : ASSEMBLY</div>
+
+                                        <br />
+
+                                    </th>
+                                </tr>
+
+                                <tr>
+                                    <td>Material Receiving in Inventory</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.MaterialReceiveStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialStartBAssembly", id = "materialStartDateBAssembly", onchange = "materialReceiveAssemblyFunc()", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+
+                                        <p id="materialAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly Material Receiving.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.MaterialReceiveEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialEndBAssembly", id = "materialReceiveEndDateBAssembly", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })
+                                        @*@Html.TextBoxFor(model => model.MaterialReceiveEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker materialEndDateAssembly", id = "materialReceiveEndDateAssembly", onchange = "materialReceiveDateAssembly()", @disabled = "disabled", Type = "text", placeholder = "YYYY-MM-DD", style = "text-align: center;" })*@
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>IQC Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.IqcCompleteStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcStartDateBAssembly", style = "text-align: center;", id = "iqcCompleteStartDateBAssembly", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD", onchange = "iqcCompleteStartDateBAssemblyChange()" })
+                                        <p id="iqcAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly IQC Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @*@Html.TextBoxFor(model => model.IqcCompleteEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcEndDateAssembly", style = "text-align: center;", id = "iqcCompleteEndDateAssembly", onchange = "iqcCompleteDateAssembly()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })*@
+
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.IqcCompleteEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker iqcEndDateBAssembly", style = "text-align: center;", id = "iqcCompleteEndDateBAssembly", @disabled = "disabled", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Trial Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.TrialProductionStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialStartDateBAssembly", @disabled = "disabled", style = "text-align: center;", id = "trialProductionStartDateBAssembly", onchange = "trialProductionStartDateBAssemblyChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="trialAssemblyStartPara" style="display:none;color:red">One Project is waiting for Assembly Trial Confirmation.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @*@Html.TextBoxFor(model => model.TrialProductionEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialEndDateAssembly", style = "text-align: center;", id = "trialProductionEndDateAssembly", onchange = "trialProductionDateAssembly()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })*@
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.TrialProductionEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker trialEndDateBAssembly", @disabled = "disabled", style = "text-align: center;", id = "trialProductionEndDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="assemblyTrialLine" class="assemblyTrialLine chosen" multiple="multiple" style="width: 66%;" onchange="assemblyTrialLineFunc()">
+                                            <option value="0">SELECT LINE</option>
+                                            <option value="Line-1">Line-1</option>
+                                            <option value="Line-2">Line-2</option>
+                                            <option value="Line-3">Line-3</option>
+                                            <option value="Line-4">Line-4</option>
+                                            <option value="Line-5">Line-5</option>
+
+                                        </select>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Software Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.SoftwareConfirmationStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker softwareStartDate", @disabled = "disabled", style = "text-align: center;", id = "softwareConfirmationStartDate", onchange = "softwareConfirmationStartDateBAssemblyChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                    <td>
+                                        @*@Html.TextBoxFor(model => model.RandDConfirmationEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker rnDEndDateAssembly", @disabled = "disabled", style = "text-align: center;", id = "rnDConfirmEndDateAssembly", onchange = "rnDConfirmDateAssembly()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })*@
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.SoftwareConfirmationEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker softwareEndDate", @disabled = "disabled", style = "text-align: center;", id = "softwareConfirmationEndDate", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>R&D Confirmation</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.RandDConfirmationStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker rnDStartDateBAssembly", @disabled = "disabled", style = "text-align: center;", id = "rnDConfirmStartDateBAssembly", onchange = "rnDConfirmationStartDateBAssemblyChange()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                    <td>
+                                        @*@Html.TextBoxFor(model => model.RandDConfirmationEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker rnDEndDateAssembly", @disabled = "disabled", style = "text-align: center;", id = "rnDConfirmEndDateAssembly", onchange = "rnDConfirmDateAssembly()", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })*@
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.RandDConfirmationEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker rnDEndDateBAssembly", @disabled = "disabled", style = "text-align: center;", id = "rnDConfirmEndDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Assembly Mass Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.AssemblyMassProductionStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker assemStartBAssembly", style = "text-align: center;", id = "assembStartDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="assemblyMassProStartPara" style="display:none;color:red">One Project is waiting for Assembly Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.AssemblyMassProductionEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker assemEndBAssembly", @disabled = "disabled", style = "text-align: center;", id = "assembEndDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        <input id="batteryAssembly_TotalQuantity" class="form-control" type="number" min="1" style="width: 66%;" onchange="assebmlyLineInfoFunc()" />
+                                        <p id="assemblyTotal" style="display:none;color:red">Assembly Total Quantity must be greater than Assembly PerDayCapacity.</p>
+
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        <input id="batteryAssembly_PerDayCapacity" class="form-control" type="number" min="1" style="width: 66%;" onchange="assebmlyLineInfoFunc()" />
+                                        <p id="assemblyPerDay" style="display:none;color:red">Assembly Per Day Capacity is Blank. Please fill up this.</p>
+
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="assemblyMassLineInfo" class="assemblyMassLineInfo chosen" multiple="multiple" style="width: 66%;" onchange="assebmlyLineInfoFunc()">
+                                            <option value="0">SELECT LINE</option>
+
+                                        </select>
+
+                                        <div style="color:blue;font-weight: bold;">
+                                            <table id="assemblyAvailableLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content assemblyAvailableLineInformation">
+                                                <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                    <tr>
+                                                        <th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        @*<th style="text-align: center;">Line<br />Capacity  </th>
+                                                            <th style="text-align: center;">Booked<br />Capacity  </th>*@
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>
+                                                        @*<th style="text-align: center;">Production</th>*@
+                                                        <th style="text-align: center;">Warning</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="assemblyAvailableLineTBody" id="assemblyAvailableLineTBody"></tbody>
+                                            </table>
+
+                                        </div>
+                                    </td>
+                                    <td style="color:blue;font-weight: bold;">
+
+                                        <table id="assemblyAllLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content assemblyAllLineInformation">
+                                            <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                <tr>
+                                                    @*<th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        <th style="text-align: center;">Line<br />Capacity  </th>
+                                                        <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>*@
+                                                    <th style="text-align: center;">Date_Booked</th>
+                                                    <th style="text-align: center;">Line<br />Number  </th>
+                                                    <th style="text-align: center;">Line<br />Capacity  </th>
+                                                    <th style="text-align: center;">Total <br />Booked<br />PerDay<br />Production  </th>
+                                                    <th style="text-align: center;">Available<br />Line<br />Capacity <br />For PerDay</th>
+                                                    @*<th style="text-align: center;">Production</th>*@
+                                                </tr>
+                                            </thead>
+                                            <tbody class="assemblyAllLineTBody" id="assemblyAllLineTBody"></tbody>
+                                        </table>
+
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Packing Mass Production</td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.PackingMassProductionStartDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker packingMassProductionStartBAssembly", style = "text-align: center;", id = "packingMassProductionStartDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+                                        <p id="packingMassProStartPara" style="display:none;color:red">One Project is waiting for Packing Mass Production.<br /> **Note: If you want to continue, please continue according to your necessity or change the date.</p>
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.BatteryAssemblyAndPackingModel.PackingMassProductionEndDateBAssembly, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker packingMassProductionEndBAssembly", @disabled = "disabled", style = "text-align: center;", id = "packingMassProductionEndDateBAssembly", Size = "66", Type = "text", placeholder = "YYYY-MM-DD" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100px;"></td>
+                                    <td>
+                                        <div style="color:blue;font-weight: bold;">Total Quantity</div>
+                                        <input id="batteryPacking_TotalQuantity" class="form-control" type="number" min="1" style="width: 66%;" onchange="packingLineInfoFunc()" />
+                                        <p id="packingTotal" style="display:none;color:red">Packing Total Quantity must be greater than Packing PerDayCapacity.</p>
+
+                                        <div style="color:blue;font-weight: bold;">PerDayProduction</div>
+                                        <input id="batteryPacking_PerDayCapacity" class="form-control" type="number" min="1" style="width: 66%;" onchange="packingLineInfoFunc()" />
+                                        <p id="packingPerDay" style="display:none;color:red">Packing Per Day Capacity is Blank. Please fill up this.</p>
+
+                                        <div style="color:blue;font-weight: bold;">Select Line</div>
+                                        <select id="packingMassLineInfo" class="packingMassLineInfo chosen" multiple="multiple" style="width: 66%;" onchange="packingLineInfoFunc()">
+                                            <option value="0">SELECT LINE</option>
+
+                                        </select>
+                                        <div style="color:blue;font-weight: bold;">
+                                            <table id="packingAvailableLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content packingAvailableLineInformation">
+                                                <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                    <tr>
+                                                        <th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        @* <th style="text-align: center;">Line<br />Capacity  </th>
+                                                            <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>*@
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>
+                                                        <th style="text-align: center;">Warning</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="packingAvailableLineTBody" id="packingAvailableLineTBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                    <td style="color:blue;font-weight: bold;">
+
+                                        <table id="packingAllLineInformation" class="table table-bordered table-striped table-condensed table-scrollable flip-content packingAllLineInformation">
+                                            <thead class="flip-content" style="background-color:lightslategray;color: white">
+                                                <tr>
+                                                    @*<th style="text-align: center;">Date_Booked</th>
+                                                        <th style="text-align: center;">Line<br />Number  </th>
+                                                        <th style="text-align: center;">Line<br />Capacity  </th>
+                                                        <th style="text-align: center;">Booked<br />PerDay<br />Capacity  </th>
+                                                        <th style="text-align: center;">Available<br />Line<br />Capacity </th>*@
+                                                    <th style="text-align: center;">Date_Booked</th>
+                                                    <th style="text-align: center;">Line<br />Number  </th>
+                                                    <th style="text-align: center;">Line<br />Capacity  </th>
+                                                    <th style="text-align: center;">Project <br />Type  </th>
+                                                    <th style="text-align: center;">Total <br />Booked<br />PerDay<br />Production  </th>
+                                                    <th style="text-align: center;">Available<br />Line<br />Capacity <br />For PerDay</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="packingAllLineTBody" id="packingAllLineTBody"></tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4" style="text-align: center;">
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSave" value="Save" />
+                    </div>
+
+                    <div class="col-md-4" style="text-align: center;">
+                        <input class="btn sbold uppercase btn-outline red" type="submit" id="btnEdit" value="Edit" />
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>

@@ -1,0 +1,376 @@
+﻿@model IEnumerable<ProjectManagement.Models.HwEngineerAssignModel>
+    @{
+        ViewBag.Title = "HwSelfTest";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="portlet light border-red">
+        <div class="portlet-title">
+            <div class="col-lg-3">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Self HW Test</span>
+                </div>
+                <div class="tools"> </div>
+            </div>
+            <div class="col-lg-8"></div>
+            <div class="col-lg-1">
+                <button class="btn sbold uppercase btn-outline blue-chambray pull-right" onclick="hwTestAddModal();">Add Hw Test</button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Project Name", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Hardware Test", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownList("HwTestMasterId", new SelectList(ViewBag.hwTestMasters, "HwTestMasterId", "HwTestName"), "Select", new { @class = "form-control ddChosen" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-2">Select Engineer:</div>
+                        <div class="col-md-10">
+                            <select name="multiple" id="multiple" class="form-control" multiple>
+                                @if (ViewBag.CmnUser != null)
+                                {
+                                    foreach (var i in ViewBag.CmnUser)
+                                    {
+                                        <option value="@i.CmnUserId">@i.UserFullName</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            @Html.Label("File Upload", new { @class = "" })
+                        </div>
+                        <div class="col-md-11">
+                            <input type="file" id="fileInput" class="form-control" multiple="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+                            @Html.Label("Remarks", new { @class = "" })
+                        </div>
+                        <div class="col-md-11">
+                            @Html.TextArea("remarks", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-11">
+                            <input type="button" id="assign" onclick="btnSubmit();" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Assigned Projects
+            </div>
+        </div>
+        <div class="portlet-body form">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="portlet-body flip-scroll">
+                                            <div class="table-scrollable">
+                                                <table class="table table-bordered table-striped table-condensed flip-content" id="tblAssignData">
+                                                    <thead class="flip-content">
+                                                        <tr>
+                                                            <th class="hidden"> Project ID </th>
+                                                            <th class="hidden"> Hw Engineer Assign Id </th>
+                                                            <th class="text-center"> Project Name </th>
+                                                            <th class="text-center"> Order No </th>
+                                                            <th class="text-center"> Hw Test Name </th>
+                                                            <th class="text-center"> Assigned to </th>
+                                                            <th class="text-center"> Assign Remarks </th>
+                                                            <th class="text-center"> Engineer Remarks </th>
+                                                            <th class="text-center"> Assigned By </th>
+                                                            <th class="text-center"> Assign Date </th>
+                                                            <th class="text-center"> Status </th>
+                                                            <th> Download </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var v in Model)
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center">@v.ProjectMasterId</td>
+                                                                <td class="text-center">@v.HwEngineerAssignId</td>
+                                                                <td class="text-center">@v.ProjectName</td>
+                                                                <td class="text-center">@v.OrderNumber</td>
+                                                                <td class="text-center">@v.HwTestName</td>
+                                                                <td class="text-center">@v.HwEngineerNames</td>
+                                                                <td class="text-center">@v.HwInchargeRemark</td>
+                                                                <td class="text-center">@v.Remark</td>
+                                                                <td class="text-center">@v.AddedByName</td>
+                                                                <td class="text-center">@v.AddedDate</td>
+                                                                <td class="text-center">@v.Status</td>
+                                                                <td class="text-center">
+                                                                    <button class="btnViewFiles"><i class="fa fa-download"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                </div>
+                                <br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*=================================================================== Document =======================================================================*@
+    <div id="documentModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Forward</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    <table class="table table-bordered" id="tblFiles">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">File Name</th>
+                                                <th class="text-center">Added By</th>
+                                                <th class="text-center">Added Date</th>
+                                                @*<th class="text-center">Remarks</th>*@
+                                            </tr>
+
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @*<button type="button" class="btn btn-success" onclick="downloadall();">Download All</button>*@
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ ADD HWTEST =======================================================================*@
+    <div id="hwTestAddModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Add New Spare</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    Hardware Test Name:
+                                    <input type="text" class="form-control" id="modalHwTestName" />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="saveHwTestName();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#multiple').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "95%"
+    });
+    
+    function hwTestAddModal() {
+        $('#hwTestAddModal').modal('show');
+    }
+    
+    var table = $('#tblAssignData').DataTable({
+        columnDefs: [
+            {
+                targets: [0, 1],
+                "visible": false,
+                "searchable": false
+            }
+        ]
+    });
+    
+    function saveHwTestName() {
+        //alert();
+        var url = '@Url.Action("SaveHwTest", "Common")';//'../Common/SaveHwTest';
+        var hwtestname = $('#modalHwTestName').val();
+        $.post(url, { hwTestName: hwtestname }, function (json) {
+            console.log(json.HwTestMasterId + json.HwTestName);
+            $('#HwTestMasterId').append($('<option></option>').val(json.HwTestMasterId).html(json.HwTestName));
+            $("#HwTestMasterId").trigger("chosen:updated");
+            $('#modalHwTestName').val('');
+            $('#hwTestAddModal').modal('hide');
+            alertify.success('Hwtest ' + json.HwTestName + ' saved');
+        });
+    }
+
+    function btnSubmit() {
+        var engineerIds = $('#multiple').val();
+        //alert(engineerIds);
+        var hwtestname = $('#HwTestMasterId :selected').text();
+        var projectname = $('#ProjectMasterId :selected').text();
+        var hwtestid = $('#HwTestMasterId :selected').val();
+        var projectid = $('#ProjectMasterId :selected').val();
+        var remarks = $('#remarks').val();
+        console.log(hwtestid + hwtestname + remarks);
+        //================================
+        var files = $("#fileInput").get(0).files;
+        var formData = new FormData();
+        formData.append('hwTestName', hwtestname);
+        formData.append('hwTestMasterId', hwtestid);
+        formData.append('remarks', remarks);
+        formData.append('projectName', projectname);
+        formData.append('projectId', projectid);
+        formData.append('engIds', engineerIds);
+        for (var i = 0; i < files.length; i++) {
+            formData.append("fileInput", files[i]);
+        }
+        console.log('formdata = ' + formData.get('hwTestName') + '>>' + formData.get('fileInput'));
+        if (projectname != 'Select' && hwtestname != 'Select' && engineerIds!=null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveHwSelfTest","Hardware")',//"../ProjectManager/HwTestInchargeAssign",
+                dataType: "json",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: formData,
+                success: function (result, status, xhr) {
+                    var date = new Date(parseInt(result.AddedDate.substr(6)));
+                    result.Remarks = result.Remarks == null ? '-' : result.Remarks;
+                    var rowNode = table.row.add([result.ProjectMasterId, result.HwEngineerAssignId, result.ProjectName, result.OrderNumber, result.HwTestName, result.HwEngineerNames, result.HwInchargeRemark, result.Remarks, result.AddedByName, date, result.Status, '']).draw().node();
+                    $(rowNode).css('color', 'red').animate({ color: 'black' }).addClass('text-center');
+                    $('#HwTestMasterId :selected').text('Select');
+                    $('#ProjectMasterId :selected').text('Select');
+                    $('#HwTestMasterId :selected').val('');
+                    $('#ProjectMasterId :selected').val('');
+                    $("#HwTestMasterId").trigger("chosen:updated");
+                    $("#ProjectMasterId").trigger("chosen:updated");
+                    $('#remarks').val('');
+                    $("#fileInput").val('');
+                    $('#multiple').val(null).trigger('chosen:updated');
+                    alertify.success('Successfully assigned');
+                    //url = '@Url.Action("HwTestAssign", "ProjectManager")';
+                    //window.location.href = url.replace();
+                },
+                error: function (xhr, status, error) {
+                    alertify.error(status);
+                }
+            });
+        }
+        else {
+            alertify.error('Select Project and Test');
+        }
+    }
+
+    $('#tblAssignData').on('click', '.btnViewFiles', function () {
+        $('#tblFiles tbody').empty();
+        var url = '@Url.Action("GetFileByHwEngAssignId", "Hardware")';//'../Hardware/GetFileByHwSelfTestId';
+        var data = table.row($(this).parents('tr')).data();
+        var hwengineerassignid = data[1];
+        var projectId = data[0];
+        console.log(hwengineerassignid + '>>>' + projectId);
+        $.post(url, { id: hwengineerassignid }, function (json) {
+            console.log(json);
+            for (var i = 0; i < json.length; i++) {
+                var html = "<a href='/Hardware/DownloadHwTestFile?fileuploadId=" + json[i].HwTestFileUploadId + "'>" + json[i].FileUploadPath + "</a>";
+                var date = new Date(parseInt(json[i].AddedDate.substr(6)));
+                var row = "<tr>" +
+                    "<td class='text-center hidden'>" + json[i].HwTestFileUploadId + "</td>" +
+                    "<td class='text-center'>" + html + "</td>" +
+                    "<td class='text-center'>" + json[i].AddedByName + "</td>" +
+                    "<td class='text-center'>" + date + "</td>" +
+                    //"<td class='text-center'>" + (json[i].Remarks = (json[i].Remarks == null) ? "-" : json[i].Remarks) + "</td>" +
+                    "</tr>";
+                $('#tblFiles tbody').append(row);
+            }
+
+        });
+        $('#documentModal').modal('show');
+    });
+</script>
+

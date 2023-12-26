@@ -1,0 +1,714 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+
+@Html.HiddenFor(model => model.HwFgBatteryTestConditionModel.HwFgBatteryTestConditionId, new { @Value = @ViewBag.HwFgTestConditionId })
+
+@{
+    var condition1 = "";
+    var condition2 = "";
+    foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+    {
+        condition1 = item.TestCondition;
+        break;
+    }
+    foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+    {
+        if (item.TestCondition != condition1)
+        {
+            condition2 = item.TestCondition;
+            break;
+        }
+    }
+}
+
+
+@*====================================CONDITION 1 STARTS========================================*@
+<div class="portlet box light cycle" id="divCycle1">
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                            {
+                                if (item.CycleNo == 1)
+                                {
+                                    <h4 class="bold">Cycle No : @item.CycleNo for @condition1</h4>
+                                }
+                                break;
+                            }
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle1">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 1 && item.TestCondition==condition1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+
+
+                                                    </tr>
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light cycle" id="divCycle2">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 2 for @condition1</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle2">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 2 && item.TestCondition==condition1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle3">
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 3 for @condition1</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle3">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 3 && item.TestCondition==condition1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle4">
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 4 for @condition1</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle4">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 4 && item.TestCondition==condition1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle5">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 5 for @condition1</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle5">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 5 && item.TestCondition==condition1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*====================================CONDITION 1 ends========================================*@
+
+@*====================================CONDITION 2 STARTS========================================*@
+
+<div class="portlet box light cycle" id="divCycle6">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                        {
+                            if (item.CycleNo == 1)
+                            {
+                                <h4 class="bold">Cycle No : @item.CycleNo for @condition2</h4>
+                            }
+                            break;
+                        }
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle6">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 1 && item.TestCondition == condition2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+
+
+                                                    </tr>
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light cycle" id="divCycle7">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 2 for @condition2</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle7">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 2 && item.TestCondition == condition2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle8">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 3 for @condition2</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle8">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 3 && item.TestCondition == condition2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle9">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 4 for @condition2</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle9">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center"></th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 4 && item.TestCondition == condition2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box light" id="divCycle10">
+    
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <h4 class="bold">Cycle No : 5 for @condition2</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle10">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">  </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 5 && item.TestCondition == condition2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"> @item.ItemNo#@item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                              
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*====================================CONDITION 2 ends========================================*@
+
+<script>
+    if ($("#tblCycle1 > tbody > tr").length == 0) {
+        $("#divCycle1").css('display', 'none');
+    }
+
+    if ($("#tblCycle2 > tbody > tr").length == 0) {
+        $("#divCycle2").css('display', 'none');
+    }
+
+    if ($("#tblCycle3 > tbody > tr").length == 0) {
+        $("#divCycle3").css('display', 'none');
+    }
+
+    if ($("#tblCycle4 > tbody > tr").length == 0) {
+        $("#divCycle4").css('display', 'none');
+    }
+
+    if ($("#tblCycle5 > tbody > tr").length == 0) {
+        $("#divCycle5").css('display', 'none');
+    }
+    
+    if ($("#tblCycle6 > tbody > tr").length == 0) {
+        $("#divCycle6").css('display', 'none');
+    }
+
+    if ($("#tblCycle7 > tbody > tr").length == 0) {
+        $("#divCycle7").css('display', 'none');
+    }
+
+    if ($("#tblCycle8 > tbody > tr").length == 0) {
+        $("#divCycle8").css('display', 'none');
+    }
+
+    if ($("#tblCycle9 > tbody > tr").length == 0) {
+        $("#divCycle9").css('display', 'none');
+    }
+
+    if ($("#tblCycle10 > tbody > tr").length == 0) {
+        $("#divCycle10").css('display', 'none');
+    }
+
+   
+</script>
+

@@ -1,0 +1,1285 @@
+﻿@*<h2>CapacityPlanning</h2>*@
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.DAL.DbModel
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<link href="~/Content/New_2019/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/New_2019/dataTables.fixedHeader.min.js"></script>
+
+
+<style>
+    .trForAppend1 {
+        position: relative;
+        width: 100px !important;
+    }
+
+    .trForAppend2 {
+        position: relative;
+        width: 100px !important;
+    }
+
+    .tableTrCls1 {
+        position: relative;
+        width: 100px !important;
+    }
+
+    .tdrs3 {
+        position: relative;
+        width: 100px !important;
+    }
+
+    .newAppendBtn {
+        width: 100px !important;
+    }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #canvas {
+        align-content: center;
+        height: 1000px;
+    }
+
+    #tblSmart {
+        margin: 0 -2px -2px 0;
+        border: #FFF;
+        border: 1px solid rgb(72, 170, 230);
+        display: inline-block;
+    }
+
+    tr {
+        /*background: rgb(72, 170, 230);*/
+    }
+
+    td {
+        width: 150px;
+        height: 50px;
+    }
+
+    .add {
+        height: 52px;
+        width: 52px;
+        background: rgb(243, 165, 0);
+        cursor: pointer;
+        color: #FFF;
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        transition-property: background;
+        transition-duration: 1s;
+        transition-timing-function: linear;
+    }
+
+    #addColumn {
+        display: inline-block;
+        vertical-align: top;
+        margin: 2px 0 0 0;
+    }
+
+    .add:hover {
+        background: rgb(246, 192, 82);
+    }
+
+    #addColumnChild {
+        line-height: 50px;
+    }
+
+    #addRow {
+        vertical-align: bottom;
+        margin: 0 0 0 2px;
+    }
+
+    #addRowChild {
+        line-height: 50px;
+    }
+
+
+
+    .removeAdd {
+        height: 52px;
+        width: 52px;
+        background: red;
+        cursor: pointer;
+        color: #FFF;
+        text-align: center;
+        font-family: 'Open Sans', sans-serif;
+        transition-property: background;
+        transition-duration: 1s;
+        transition-timing-function: linear;
+    }
+
+    #removeColumn {
+        display: inline-block;
+        vertical-align: top;
+        margin: 2px 0 0 0;
+    }
+
+    .removeAdd:hover {
+        background: rgb(246, 192, 82);
+    }
+
+    #removeColumnChild {
+        line-height: 50px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+
+    .clmnIds3 {
+        height: 30px !important;
+        margin: 1px 0;
+    }
+
+    .clmnIds1 {
+        height: 30px !important;
+    }
+
+    .clmnIds2 {
+        height: 30px !important;
+    }
+
+    .tblData, td, th {
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .tblData {
+        border-collapse: collapse;
+        width: auto;
+    }
+
+        .tblData td {
+            height: 40px;
+            width: 100px;
+            text-align: center;
+        }
+</style>
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Capacity Planning</p>
+</div>
+@*@using (@Html.BeginForm("CapacityPlanning", "Production", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+    {*@
+<div class="portlet box green-seagreen">
+    <div class="portlet-title">
+        <div class="caption">
+            Plan
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-3" style="color: brown;">Unit</div>
+                    <div class="col-lg-9">
+                        @if (ViewBag.GetProductionType != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType", @onchange = "unitChange1()" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-5" style="color: brown;">Product</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.Products != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductName, new SelectList(ViewBag.Products, "Value", "Text"), "SELECT", new { @class = "dropForSpares form-control", @id = "DDDPhoneType", @onchange = "productChange1()", Value = @Model.ProductName })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-4" style="color: brown;">Category</div>
+                    <div class="col-lg-8">
+                        @if (ViewBag.Categories != null)
+                        {
+                            @Html.DropDownListFor(model => model.CategoryName, new SelectList(ViewBag.Categories, "Value", "Text"), "SELECT", new { @class = "dropForSpares form-control", @id = "DDDCats", Value = @Model.CategoryName })
+
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-2">
+                    @*<div class="col-lg-5" style="color: brown;">Month</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.ddlMonths != null)
+                            {
+                                @Html.DropDownListFor(model => model.MonNum1, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                            }
+                        </div>*@
+                </div>
+                <div class="col-lg-2">
+                    @*<div class="col-lg-5" style="color: brown;">Year</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.ddlYears != null)
+                            {
+                                @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                            }
+                        </div>*@
+
+                </div>
+                <div class="col-lg-1">
+
+                    @*<div class="form-actions col-lg-8">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("CapacityPlanning", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() + '&phoneType=' + $('option:selected', $('#DDDPhoneType')).val() " />
+                        </div>*@
+
+                </div>
+            </div>
+            <br><br />
+            <div class="col-lg-12">
+                <div class="col-lg-2">
+                    <div class="col-lg-3" style="color: brown;">Month</div>
+                    <div class="col-lg-9">
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.MonNum1, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-2">
+                    <div class="col-lg-5" style="color: brown;">Year</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+                    @*<div class="col-lg-4"> </div>*@
+
+                    <div class="form-actions col-lg-8">
+                        <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("CapacityPlanning", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() + '&phoneType=' + $('option:selected', $('#DDDPhoneType')).val()+ '&categories=' + $('option:selected', $('#DDDCats')).val() " />
+                    </div>
+
+                </div>
+                <div class="col-lg-2">
+                    @*<div class="col-lg-3" style="color: brown;">Unit</div>
+                        <div class="col-lg-9">
+                            @if (ViewBag.GetProductionType != null)
+                            {
+                                @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType" })
+
+                            }
+                        </div>*@
+                </div>
+                <div class="col-lg-2">
+                    @*<div class="col-lg-5" style="color: brown;">Product</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.ddlPhoneType != null)
+                            {
+                                @Html.DropDownListFor(model => model.PhoneType, new SelectList(ViewBag.ddlPhoneType, "Value", "Text"), new { @class = "DDDPhoneTypeCls1 form-control", @id = "DDDPhoneType" })
+
+                            }
+                        </div>*@
+
+                </div>
+                <div class="col-lg-1">
+                    @*<div class="col-lg-4" style="color: brown;">Category</div>
+                        <div class="col-lg-8">
+                            @if (ViewBag.ddlPhoneType != null)
+                            {
+                                @Html.DropDownListFor(model => model.PhoneType, new SelectList(ViewBag.ddlPhoneType, "Value", "Text"), new { @class = "DDDPhoneTypeCls1 form-control", @id = "DDDPhoneType" })
+
+                            }
+                        </div>*@
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+
+            <div class="portlet box">
+                <div class="portlet-title">
+                    <div class="caption col-lg-12" style="color:brown;">
+                        @*<i class="fa fa-cogs"></i>Saved Capacity Data*@
+                        <div class="form-actions col-lg-2">
+                            <input type="button" id="btnUpdate" class="btn sbold uppercase btn-outline blue" value="EDIT" onclick="location.href='@Url.Action("UpdateCapacityPlanning", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() + '&phoneType=' + $('option:selected', $('#DDDPhoneType')).val()+ '&categories=' + $('option:selected', $('#DDDCats')).val()" />
+                        </div>
+                        <div class="col-lg-2" style="background: red;color:white;font-weight: bold;text-align: center;margin-top: 2px;"><p style="margin-top: 10px">Percentage</p></div>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-2" style="background: blue; color: white; font-weight: bold; text-align: center; margin-top: 2px;"><p style="margin-top: 10px">Range</p></div>
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-4"></div>
+                    </div>
+
+                    <div class="tools" style="background-color:green;">
+                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                    </div>
+                </div>
+
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table id="tblData" class="table table-bordered table-striped table-condensed flip-content tblData" style="display: block; width: 600px;">
+                            <tbody style="border: 1px solid black">
+
+                                <tr style="border: 1px solid black">
+                                    <td></td>
+                                    <td></td>
+
+                                    @if (ViewBag.GetPercentage != null)
+                                    {
+                                        foreach (var items1 in ViewBag.GetPercentage)
+                                        {
+                                            <td style="font-weight: bold;color:red">@items1.Percentage</td>
+                                        }
+                                    }
+
+
+                                </tr>
+                                <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                    <td>Team</td>
+                                    <td>Category</td>
+
+                                    @if (ViewBag.GetQuantityRange != null)
+                                    {
+                                        foreach (var items1 in ViewBag.GetQuantityRange)
+                                        {
+                                            <td>@items1.QuantityRange</td>
+                                        }
+                                    }
+
+                                </tr>
+
+                                @if (ViewBag.GetAll1 != null)
+                                {
+                                    foreach (var items1 in ViewBag.GetAll1)
+                                    {
+                                        <tr style="border: 1px solid black">
+                                            <td>@items1.Team</td>
+                                            <td>@items1.CategoryName</td>
+                                            @if (@items1.TotalCap1 != null)
+                                            {
+                                                <td>@items1.TotalCap1</td>
+                                            }
+                                            @if (@items1.TotalCap2 != null)
+                                            {
+                                                <td>@items1.TotalCap2</td>
+                                            }
+                                            @if (@items1.TotalCap3 != null)
+                                            {
+                                                <td>@items1.TotalCap3</td>
+                                            }
+                                            @if (@items1.TotalCap4 != null)
+                                            {
+                                                <td>@items1.TotalCap4</td>
+                                            }
+                                            @if (@items1.TotalCap5 != null)
+                                            {
+                                                <td>@items1.TotalCap5</td>
+                                            }
+                                            @if (@items1.TotalCap6 != null)
+                                            {
+                                                <td>@items1.TotalCap6</td>
+                                            }
+                                            @if (@items1.TotalCap7 != null)
+                                            {
+                                                <td>@items1.TotalCap7</td>
+                                            }
+                                            @if (@items1.TotalCap8 != null)
+                                            {
+                                                <td>@items1.TotalCap8</td>
+                                            }
+                                            @if (@items1.TotalCap9 != null)
+                                            {
+                                                <td>@items1.TotalCap9</td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet light bordered">
+            <div class="portlet box">
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive">
+                        <table id="tblSmart" class="table table-bordered table-striped table-condensed flip-content tblSmart" style="display: block; ">
+
+                            <tbody>
+                                <tr style="font-size: 14px; border: 1px solid black;" id="trForAppend1" class="trForAppend1">
+                                    <td style="height: 50px"></td>
+                                    @*<td></td>*@
+                                </tr>
+                                <tr style="font-size: 14px; border: 1px solid black;" id="trForAppend2" class="trForAppend2">
+                                    <td style="font-weight: bold;color:blue">Team</td>
+                                    @*<td style="font-weight: bold;color:blue">Category</td>*@
+                                </tr>
+                                @if (ViewBag.GetShift != null)
+                                {
+                                    foreach (var item in ViewBag.GetShift)
+                                    {
+                                        <tr class="tableTrCls1" id="tableTrCls1" style="font-size: 14px; border: 1px solid black;">
+                                            <td style="display: none;">0</td>
+                                            <td style="display: none;"><input type="text" name="issueList[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                                            <td class="numeric">
+
+                                                <input value="@item.AllShift" name=issueList[0].AllShift1 id="AllShift1" class="AllShift1" disabled="disabled" />
+                                            </td>
+                                            @*<td class="numeric" style="width: 250px">
+                                                <div class="categorytbl1" id="categorytbl1">
+                                                    <div class="categorytbl" id="categorytbl">
+                                                        <div class="categoryDiv" id="categoryDiv">
+                                                          
+                                                            <select name="issueList[0].Shift_1" id="Category1" class="form-control input-sm Category1" style="font-size: 11px; margin-left: 1px"></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="col-md-2">
+                                                        <button type="button" id="upPlusBt" style="width: 10px;width: 10px;text-align: center" class="btn btn-group-circle btn-success center" onclick="javascript: addField('issueList[0].Category1', $(this).closest('tr')); ">
+                                                            <span>+</span>
+                                                        </button><br /><br />
+                                                    </div>
+
+                                                    <div class="col-md-6"></div>
+                                                </div>
+
+                                            </td>*@
+
+                                        </tr>
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+
+                        <div id="addColumn" class="add">
+                            <div id="addColumnChild"><b>+</b></div>
+                        </div>
+                        <button id="removeColumn" class="removeAdd">
+                            <div id="removeColumnChild"><b>-</b></div>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<div class="form-actions">
+    <button id="btnSubmit" type="submit" class="btn blue">SAVE</button>
+</div>
+
+<script>
+
+    var index = 0;
+
+    var obj11 = {};
+    obj11.productionType11 = $("select#ProType").val();
+    obj11.PhoneType = $("select#DDDPhoneType").val();
+
+    var data1;
+
+    //productChange1
+    function productChange1() {
+        var proUnitId = document.getElementById('ProType');
+        var proUnitName = proUnitId.options[proUnitId.selectedIndex].text;
+        var proUnitValue = proUnitId.options[proUnitId.selectedIndex].value;
+        
+        var proPhoneId = document.getElementById('DDDPhoneType');
+        var proPhoneName = proPhoneId.options[proPhoneId.selectedIndex].text;
+
+        $.ajax({
+            url: '@Url.Action("GetCategoryName", "Production")',//'/ProjectManager/GetPoProject',
+            type: "POST",
+            dataType: "JSON",
+            data: { productionType: proUnitName, proPhoneName: proPhoneName },
+            success: function (data) {
+                console.log(data);
+                $('#DDDCats').empty();
+                $('#DDDCats').append($('<option>', {
+                    value: '',
+                    text: 'SELECT'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    $('#DDDCats').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+    }
+    function unitChange1() {
+        var proUnitId = document.getElementById('ProType');
+        var proUnitName = proUnitId.options[proUnitId.selectedIndex].text;
+        var proUnitValue = proUnitId.options[proUnitId.selectedIndex].value;
+
+        $.ajax({
+            url: '@Url.Action("GetProductName", "Production")',//'/ProjectManager/GetPoProject',
+            type: "POST",
+            dataType: "JSON",
+            data: { productionType: proUnitName },
+            success: function (data) {
+                console.log(data);
+                $('#DDDPhoneType').empty();
+                $('#DDDPhoneType').append($('<option>', {
+                    value: '',
+                    text: 'SELECT'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    $('#DDDPhoneType').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });
+        $('#DDDCats').empty();
+        @*$.ajax({
+            url: '@Url.Action("GetCategoryName", "Production")',//'/ProjectManager/GetPoProject',
+            type: "POST",
+            dataType: "JSON",
+            data: { productionType: proUnitName },
+            success: function (data) {
+                console.log(data);
+                $('#DDDCats').empty();
+                $('#DDDCats').append($('<option>', {
+                    value: '',
+                    text: 'SELECT'
+                }));
+                var items = $.parseJSON(data);
+                $.each(items, function (i, item) {
+                    $('#DDDCats').append($('<option>', {
+                        value: item.Value,
+                        text: item.Text
+                    }));
+                });
+            }
+        });*@
+    }
+    @*function load1() {
+        if (obj11.PhoneType != "" && obj11.productionType11 != "") {
+
+            data1 = JSON.stringify(obj11);
+            console.log(data1);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetAllCategory", "Production")',
+                data: data1,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data1) {
+                    var category1 = data1;
+                    var  elem2 = $(".Category1");
+                     elem2.empty();
+                    $.each(category1.list, function (idx, obj) {
+
+                        elem2.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+
+                    });
+
+                    //$('#tblSmart >tbody').find('tr').find('.Category1').append(elem2);
+
+                }
+            });
+        }
+    }*@
+
+    $(function () {
+       
+        // load1();
+        // btnSubmit
+        $('#btnSubmit').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+
+            var arrSub = [];
+            var obj1 = new Object();
+            var obj2 = new Object();
+            var obj3T = new Object();
+            var obj3C = new Object();
+            var obj3Tc = new Object();
+
+            var objYear = new Object();
+            var objMonth = new Object();
+            var objMonNum = new Object();
+            var objPhoneType = new Object();
+            var objProType = new Object();
+
+
+            var table = document.getElementById("tblSmart");
+            var rows = table.getElementsByTagName("tr");
+
+            var monthName = $('#DDDMonth option:selected').text();
+            var monthNum = $('#DDDMonth option:selected').val();
+            var yearName = $('#DDDYear option:selected').text();
+            var phoneType = $('#DDDPhoneType option:selected').text();
+            var proType = $('#ProType option:selected').text();
+            var catss = $('#DDDCats option:selected').text();
+
+            objYear.Year = yearName;
+            objMonNum.MonNum = monthNum;
+            objMonth.Month = monthName;
+            objPhoneType.PhoneType = phoneType;
+            objProType.ProType = proType;
+            obj3C.Category = catss;
+
+            //Teams
+
+            //for rows
+            for (var rr1 = 2; rr1 < rows.length; rr1++) {
+
+                //Team
+                var Team = rows[rr1].cells[2].getElementsByTagName('input');
+
+                if (Team.length == rr1) {
+                    break;
+                } else if (Team.length > 0) {
+                    Team = rows[rr1].cells[2].getElementsByTagName('input')[0].value;
+                    obj3T.Team = Team;
+                    console.log("Team:" + obj3T.Team);
+                }
+
+
+                    //new
+                    var TotalCapacities = null;
+                    obj3Tc.TotalCapacities = null;
+
+                    //for rest of the cell from ii2=4
+                    var pi = 1;
+                    for (var ii2 = 3; ii2 < rows[rr1].cells.length; ii2++) {
+                        var prnct = "";
+                        var cats = "";
+                        if (pi != 0) {
+                            prnct = rows[0].cells[pi].getElementsByTagName('input');
+                            if (prnct.length == ii2) {
+                                break;
+                            } else if (prnct.length > 0) {
+                                prnct = rows[0].cells[pi].getElementsByTagName('input')[0].value;
+
+                            }
+                            obj1.Percentage2 = prnct;
+
+                            cats = rows[1].cells[pi].getElementsByTagName('input');
+                            if (cats.length == ii2) {
+                                break;
+                            } else if (cats.length > 0) {
+                                cats = rows[1].cells[pi].getElementsByTagName('input')[0].value;
+
+                            }
+                            obj2.QuantityRange = cats;
+
+                            pi++;
+                        }
+
+                        if (prnct == "") {
+                            prnct = "0";
+                        }
+                        if (cats == "") {
+                            cats = "0";
+                        }
+                        if (prnct != "0" && cats != "0") {
+                            //For Total Capacity
+                            for (var ci2 = 0; ci2 < 10; ci2++) {
+
+                                TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input');
+                                if (TotalCapacities.length == ci2) {
+                                    break;
+                                } else if (TotalCapacities.length > 0) {
+                                    TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input')[ci2].value;
+                                    var res4 = parseInt(TotalCapacities);
+
+                                    obj3Tc.TotalCapacities = res4;
+                                }
+
+                               // if (ci == ci2) {
+                                    obj3Tc.TotalCapacities = TotalCapacities;
+                                    //  arrSub.push(obj1.Percentage2 + "," + obj2.QuantityRange + "," + obj3T.Team + "," + obj3C.Category + "," + obj3Tc.TotalCapacities);
+                                    //obj1.Percentage2 = Percentage2 + "," + QuantityRange + "," + Team + "," + Category + "," + TotalCapacities;
+
+                                    var obj3Final = new Object();
+                                    obj3Final.AllShift = obj1.Percentage2 + "," + obj2.QuantityRange + "," + obj3T.Team + "," + obj3C.Category + "," + obj3Tc.TotalCapacities
+                                        + "," + objYear.Year + "," + objMonNum.MonNum + "," + objMonth.Month + "," + objPhoneType.PhoneType + "," + objProType.ProType;
+                                    arrSub.push(obj3Final);
+                               // }
+
+                            }
+                        }
+
+                    }
+                    //end new
+              
+
+                //start Category
+                //var Category = null;
+                //obj3C.Category = null;
+                //for (var ci = 0; ci < 10; ci++) {
+                //    var Categories = rows[rr1].cells[3].getElementsByTagName("select");
+                //    if (Categories.length == ci) {
+                //        break;
+                //    } else if (Categories.length > 0) {
+                //        Categories = rows[rr1].cells[3].getElementsByTagName("select")[ci];
+                //        if (Categories.selectedIndex != -1) {
+                //            Category = Categories.options[Categories.selectedIndex].value;
+                //        }
+
+
+                //    }
+                //    obj3C.Category = Category;
+
+                //    //new
+                //    var TotalCapacities = null;
+                //    obj3Tc.TotalCapacities = null;
+
+                //    //for rest of the cell from ii2=4
+                //    var pi = 2;
+                //    for (var ii2 = 4; ii2 < rows[rr1].cells.length; ii2++) {
+                //        var prnct = "";
+                //        var cats = "";
+                //        if (pi != 0) {
+                //            prnct = rows[0].cells[pi].getElementsByTagName('input');
+                //            if (prnct.length == ii2) {
+                //                break;
+                //            } else if (prnct.length > 0) {
+                //                prnct = rows[0].cells[pi].getElementsByTagName('input')[0].value;
+
+                //            }
+                //            obj1.Percentage2 = prnct;
+
+                //            cats = rows[1].cells[pi].getElementsByTagName('input');
+                //            if (cats.length == ii2) {
+                //                break;
+                //            } else if (cats.length > 0) {
+                //                cats = rows[1].cells[pi].getElementsByTagName('input')[0].value;
+
+                //            }
+                //            obj2.QuantityRange = cats;
+
+                //            pi++;
+                //        }
+
+                //        if (prnct == "") {
+                //            prnct = "0";
+                //        }
+                //        if (cats == "") {
+                //            cats = "0";
+                //        }
+                //        if (prnct != "0" && cats != "0") {
+                //            //For Total Capacity
+                //            for (var ci2 = ci; ci2 < 10; ci2++) {
+
+                //                TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input');
+                //                if (TotalCapacities.length == ci2) {
+                //                    break;
+                //                } else if (TotalCapacities.length > 0) {
+                //                    TotalCapacities = rows[rr1].cells[ii2].getElementsByTagName('input')[ci2].value;
+                //                    var res4 = parseInt(TotalCapacities);
+
+                //                    obj3Tc.TotalCapacities = res4;
+                //                }
+
+                //                if (ci == ci2) {
+                //                    obj3Tc.TotalCapacities = TotalCapacities;
+                //                    //  arrSub.push(obj1.Percentage2 + "," + obj2.QuantityRange + "," + obj3T.Team + "," + obj3C.Category + "," + obj3Tc.TotalCapacities);
+                //                    //obj1.Percentage2 = Percentage2 + "," + QuantityRange + "," + Team + "," + Category + "," + TotalCapacities;
+
+                //                    var obj3Final = new Object();
+                //                    obj3Final.AllShift = obj1.Percentage2 + "," + obj2.QuantityRange + "," + obj3T.Team + "," + obj3C.Category + "," + obj3Tc.TotalCapacities
+                //                        + "," + objYear.Year + "," + objMonNum.MonNum + "," + objMonth.Month + "," + objPhoneType.PhoneType + "," + objProType.ProType;
+                //                    arrSub.push(obj3Final);
+                //                }
+
+                //            }
+                //        }
+
+                //    }
+                //    //end new
+                //}//end category
+                //arrSub.push(obj1);
+            }
+
+            console.log("arrSub:" + arrSub);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CapacityPlanning", "Production")',
+                // data: { arrMain: arrSub },
+                data: "{arrMain:'" + JSON.stringify(arrSub) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "ok") {
+
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Planning Saved Successfully.",
+                        }).show();
+                        $('#loading').hide();
+                        window.location.reload();
+                    }
+                }
+            });
+
+        });
+
+
+        $('#addColumnChild').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr1;
+
+            var kk;
+            $("#tblSmart tr.trForAppend1").each(function () {
+
+                kk = $.trim($(this).find('td:eq(1)').text());
+            });
+
+            if (kk >= 1) {
+
+                tr1 = multiline(function () {
+
+                    /*
+
+                      <td class="tdrs1"><div style="display:none">$#</div><input type="number" min="0"  style="color: red;font-weight: bold" value="" name=issueList[0].Percentage1 id="clmnIds1" class="clmnIds1" placeholder="Percentage(%)" onchange="myFunction(this)"/></td>
+
+                  */
+                });
+                var rIndex1 = index.toString();
+                var replaceTr1 = tr1.toString();
+                replaceTr1 = replaceTr1.split("$#").join(rIndex1);
+
+
+                $('#tblSmart tr.trForAppend1:last').append(replaceTr1);
+            } else {
+
+                tr1 = multiline(function () {
+
+                    /*
+
+                      <td class="tdrs1"><div style="display:none">$#</div><input type="number" min="0" style="color: red;font-weight: bold" value="" name=issueList[0].Percentage1 id="clmnIds1" class="clmnIds1"  placeholder="Percentage(%)"/></td>
+
+                  */
+                });
+                var rIndex11 = index.toString();
+                var replaceTr11 = tr1.toString();
+                replaceTr11 = replaceTr11.split("$#").join(rIndex11);
+
+
+                $('#tblSmart tr.trForAppend1:last').append(replaceTr11);
+            }
+
+            var tr2 = multiline(function () {
+
+                /*
+
+
+               <td class="tdrs2"><div style="display:none">$#</div><input type="number" min="0" style="color: blue;font-weight: bold" value="" name=issueList[0].QuantityRange1 id="clmnIds2" class="clmnIds2" placeholder="Quantity Range"/></td>
+
+
+
+ */
+            });
+            var rIndex2 = index.toString();
+            var replaceTr2 = tr2.toString();
+            replaceTr2 = replaceTr2.split("$#").join(rIndex2);
+            //               /*
+
+            //              <td class="tdrs3">
+
+            //               <div class="newAppendBtn"  id="newAppendBtn">
+
+            //               <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3" style="width:100px"/>
+
+            //               </div><br />
+
+            //               <button type="button" id="upPlusBt2" class="btn btn-group-circle btn-success center" onclick="javascript: addField2('issueList[0].TotalCapacity1', $(this).closest('tr'));">
+            //               <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+            //               </button>
+            //              </td>
+
+            //*/
+
+            //  /*
+
+            //        <td class="tdrs3">
+
+            //        <div class="newAppendBtn"  id="newAppendBtn">
+
+            //        <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3" style="width:100px"/>
+
+            //        </div><br />
+
+
+            //        </td>
+
+            //*/
+            var tr3 = multiline(function () {
+
+
+                /*
+
+                      <td class="tdrs3">
+
+                      <div class="newAppendBtn"  id="newAppendBtn">
+                       <input type="number" min="0" value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3" style="width:120px" placeholder="Capacity"/>
+
+
+                      </div><br />
+
+
+                      </td>
+
+              */
+            });
+            var rIndex3 = index.toString();
+            var replaceTr3 = tr3.toString();
+            replaceTr3 = replaceTr3.split("$#").join(rIndex3);
+
+
+            $('#tblSmart tr.trForAppend2:last').append(replaceTr2);
+            $('#tblSmart tr.tableTrCls1').append(replaceTr3);
+
+
+
+            //////
+            //var table = document.getElementById("tblSmart");
+            //var rows = table.getElementsByTagName("tr");
+
+            ////var Categories = null;
+            //for (var rr1 = 2; rr1 < rows.length; rr1++) {
+            //    for (var j = 4; j < rows[rr1].cells.length; j++) {
+            //    //Category
+
+            //        var  Categories = rows[rr1].cells[3].getElementsByTagName("select");
+            //        for (var ci = 0; ci < 10; ci++) {
+            //        if (Categories.length == ci) {
+            //            break;
+            //        } else if (Categories.length !=ci) {
+
+            //            for (var kk1 = 0; kk1 < Categories.length; kk1++)
+            //            {
+            //                var tr4 = multiline(function () {
+            //                    /*
+            //                      <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3"  style="width:100px" /><br />
+            //                    */
+            //                });
+
+            //                var rIndex4 = index.toString();
+            //                var replaceTr4 = tr4.toString();
+            //                replaceTr4 = replaceTr4.split("$#").join(rIndex4);
+            //               // $('#tblSmart > tbody > tr.tableTrCls1> td.tdrs3').eq(j).append(replaceTr4);
+
+            //                //$("#tblSmart tr:eq("+rr1+") td:eq("+j+")").append(replaceTr4);
+
+            //               // rows[rr1].cells[j].innerHTML= replaceTr4;
+            //                rows[rr1].cells[j].innerHTML= replaceTr4;
+
+            //               // $('#tblSmart tr.tableTrCls1').find('.tdrs3').find('.newAppendBtn').append(replaceTr4);
+            //               // $('#tblSmart tr.tableTrCls1').closest('td').append(replaceTr4);
+            //               //$('#tblSmart tr.tableTrCls1 td:last-child').find('.newAppendBtn').append(replaceTr4);
+
+            //            }
+
+
+            //          }
+
+            //        }
+
+            //    }
+            //}//end column
+
+
+
+            //  //4
+            //  var tr4 = multiline(function () {
+            //      /*
+            //        <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3"  style="width:100px" /><br />
+            //      */
+            //  });
+            //  var rIndex4 = index.toString();
+            //  var replaceTr4 = tr4.toString();
+            //  replaceTr4 = replaceTr4.split("$#").join(rIndex4);
+
+            //  $('#tblSmart tr.tableTrCls1').find('.tdrs3').find('.newAppendBtn').append(replaceTr4);
+            ////  $('#tblSmart tr.tableTrCls1').append(replaceTr4);
+            //  //end 4
+
+        });
+
+    });
+
+    function myFunction(element) {
+        var num = element.value;
+        var table = document.getElementById("tblSmart");
+        var rows = table.getElementsByTagName("tr");
+
+        var fstRows21;
+
+        for (var i = 2; i < rows.length; i++) {//for row from 2
+
+            for (var j = 3; j < rows[i].cells.length; j++) {//cells values from 4
+                var dd1 = null;
+                for (var ii = 0; ii < 10; ii++) {//for category
+
+                    dd1 = rows[i].cells[3].getElementsByTagName('input');
+                    if (dd1.length == ii) {
+                        break;
+                    } else if (dd1.length > 0) {
+                        dd1 = rows[i].cells[3].getElementsByTagName('input')[ii].value;
+                    }
+                    if (rows[0].cells[j - 1]) {
+                        if (!rows[i].cells[j + 1]) {
+                            break;
+                        }
+                        else if (rows[i].cells[j + 1]) {
+                            fstRows21 = rows[0].cells[j - 1].getElementsByTagName('input')[0].value;
+                            if (fstRows21 != null) {
+                                var nmPercent1 = dd1 * (fstRows21 / 100);
+                                rows[i].cells[j + 1].getElementsByTagName('input')[ii].value = parseInt(nmPercent1);
+                            }
+                        }
+                    }
+                }
+
+            }//end category
+
+        }//end for row from 2
+
+    }
+    //function addField2(id, td) {
+
+    //    index++;
+
+    //    var tr3 = multiline(function () {
+
+    //        /*
+
+    //     <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3"  style="width:100px" /><br />
+
+    //         */
+    //    });
+    //    var rIndex3 = index.toString();
+    //    var replaceTr3 = tr3.toString();
+    //    replaceTr3 = replaceTr3.split("$#").join(rIndex3);
+
+    //    $(td).closest('tr').find('.tdrs3').find('.newAppendBtn').append(replaceTr3);
+    //}
+
+    // $(document).on('focus', '.Category1', function (e) {
+    $("body").on('focus', "#tblSmart .Category1", function () {
+        //  var elem1 = $(".Category1");
+
+        var row = $(this).closest("tr");
+
+        if ($(this).has('option').length > 0) {
+            return false;
+        } else {
+            var category1;
+            //
+            if (obj11.PhoneType != "" && obj11.productionType11 != "") {
+                data1 = JSON.stringify(obj11);
+                console.log(data1);
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetAllCategory", "Production")',
+                    data: data1,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data1) {
+                        category1 = data1;
+                        //var category1 = data1;
+                        //var elem2 = "";
+                        // elem2 = row.find(".Category1");
+                        ////elem1.empty();
+
+                        //for (var i = 0; i < category1.list.length; i++) {
+                        //    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+                        //   // $(elem2).append(option);
+                        //    $(this).append(option);
+                        //}
+
+                    }
+                });
+            }//end if
+            for (var i = 0; i < category1.list.length; i++) {
+                var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+                // $(elem2).append(option);
+                $(this).append(option);
+            }
+        }
+    });
+    function addField(id, td) {
+
+        //td.find('.categorytbl1').append($("<div class='categorytbl' id='categorytbl'>" +
+        //    "<div class='col-md-10 categoryDiv' id='categoryDiv'><input style='display:none' type='text' name='issueList[$#].IsRemoved' class='IsRemoved form-control input-small' value='0' />" +
+        //    " <select name='" + id + "' class='form-control input-sm' style='font-size: 11px'>" +
+        //    "<option value=''>SELECT</option>" +
+        //    "<option>Category 1</option>     " +
+        //    "<option>Category 2</option>     " +
+        //    "<option>Category 3</option>     " +
+        //    "<option>Category 4</option>     " +
+        //    "</select>                       " +
+        //    "</div> " +
+        //    "<div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' " +
+        //    "onclick=removeDetailRow(this)> <span><i class='fa fa-times' aria-hidden='true'></i>" +
+        //    "</span>" +
+        //    "</button>" +
+        //    "</div></div>"));
+        //----------------------
+        //td.find('.categorytbl1').append($("<div class='categorytbl' id='categorytbl'>" +
+        //   "<div class='categoryDiv' id='categoryDiv'><input style='display:none' type='text' name='issueList[$#].IsRemoved' class='IsRemoved form-control input-small' value='0' />" +
+        //   " <select name='" + id + "' class='form-control input-sm' style='font-size: 11px'>" +
+        //   "<option value=''>SELECT</option>" +
+        //   "<option>Category 1</option>     " +
+        //   "<option>Category 2</option>     " +
+        //   "<option>Category 3</option>     " +
+        //   "<option>Category 4</option>     " +
+        //   "</select>                       " +
+        //   "</div> " +
+        //   "</div>"));
+        //------------------
+
+        td.find('.categorytbl1').append($("<div class='categorytbl' id='categorytbl'>" +
+   "<div class='categoryDiv' id='categoryDiv'><input style='display:none' type='text' name='issueList[$#].IsRemoved' class='IsRemoved form-control input-small' value='0' />" +
+   "  <select name='" + id + "' id='Category1' class='form-control input-sm Category1' style='font-size: 11px; margin-left: 1px'></select>" +
+   "</div> " +
+   "</div>"));
+
+        //new input field//
+        index++;
+
+        var tr3 = multiline(function () {
+            /*
+              <input value="" name=issueList[0].TotalCapacity1 id="clmnIds3" class="clmnIds3"  style="width:120px" placeholder="Capacity"/><br />
+            */
+        });
+        var rIndex3 = index.toString();
+        var replaceTr3 = tr3.toString();
+        replaceTr3 = replaceTr3.split("$#").join(rIndex3);
+
+        $(td).closest('tr').find('.tdrs3').find('.newAppendBtn').append(replaceTr3);
+
+
+
+    }
+
+    function removeDetailRow(element) {
+
+
+        //  alert(element.id);
+
+        var row_num = parseInt($(this).parent().index());
+
+        var table = document.getElementById('tblSmart');
+        var rows = table.getElementsByTagName("tr");
+        var cells = table.getElementsByTagName('td');
+        var rowId = 0;
+        for (var i22 = 0; i22 < cells.length; i22++) {
+            // Take each cell
+            var cell = cells[i22];
+            // do something on onclick event for cell
+            cell.onclick = function () {
+                // Get the row id where the cell exists
+                rowId = this.parentNode.rowIndex;
+                var i = rowId;
+                for (var j = 4; j < rows[i].cells.length; j++) {//cells values from 4
+
+                    var dd1 = rows[i].cells[j].getElementsByTagName('input');
+                    dd1 = rows[i].cells[j].getElementsByTagName('input')[0];
+                    dd1.remove();
+
+                }//end category
+            }
+
+        }
+
+
+        ////
+        //var table = document.getElementById('tblSmart');
+        //var rows = table.getElementsByTagName("tr");
+        //var cells = table.getElementsByTagName('td');
+        //var rowId =0;
+        //for (var i22 = 0; i22 < cells.length; i22++) {
+        //    // Take each cell
+        //    var cell = cells[i22];
+        //    // do something on onclick event for cell
+        //    cell.onclick = function () {
+        //        // Get the row id where the cell exists
+        //    rowId = this.parentNode.rowIndex;
+        //        var i = rowId;
+        //        for (var j = 4; j < rows[i].cells.length; j++) {//cells values from 4
+
+        //            var dd1 = rows[i].cells[j].getElementsByTagName('input');
+        //            dd1 = rows[i].cells[j].getElementsByTagName('input')[0];
+        //            dd1.remove();
+
+        //        }//end category
+        //    }
+        //}
+
+        //// $('#tblSmart tr.tableTrCls1').find('.tdrs3').find('#clmnIds3').remove();
+        $(document).on('click', '#removeProductRow', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('.categorytbl').val(1);
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+    }
+
+    $('#removeColumn').on('click', function () {
+        $('#tblSmart tr').find('td:last-child').remove();
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+
+</script>

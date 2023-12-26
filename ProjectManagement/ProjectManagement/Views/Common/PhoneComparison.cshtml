@@ -1,0 +1,136 @@
+﻿@model ProjectManagement.Models.ProjectModel
+@{
+    ViewBag.Title = "PhoneComparison";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="~/assets/layouts/layout4/css/PhoneComparisonStyle/style.css" rel="stylesheet" />
+<link href="~/assets/layouts/layout4/css/PhoneComparisonStyle/test.css" rel="stylesheet" />
+<link href="~/assets/layouts/layout4/css/PhoneComparisonStyle/w3.css" rel="stylesheet" />
+<script src="~/Scripts/PhoneComparison/Compare.js"></script>
+
+
+
+<div class="w3-container w3-center">
+    <a href="http://localhost:37263/Commercial/Index"><h4>&larr;back to dashboard</h4></a>
+</div>
+<div class="w3-center">
+    <h1>Product Comparision</h1>
+</div>
+<div class="w3-container">
+    <div class="w3-row-padding">
+
+        <div class="w3-col l3 m6  relPos w3-center ">
+            <div class="selectProduct w3-padding" data-title="phonecompare1">
+                @Html.DropDownListFor(i => i.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+                @*<i class="icon-plus font-red addToCompare"></i>*@
+                <a class="w3-btn-floating w3-light-grey addButtonCircular addToCompare">+</a>
+                @*<img src="images/nexus5.jpg" class="imgFill productImg">*@
+                
+            </div>
+        </div>
+
+        <div class="w3-col l3 m6 relPos w3-center">
+            <div class="selectProduct w3-padding" data-title="phonecompare2">
+                @Html.DropDownListFor(i => i.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+                <a class="w3-btn-floating w3-light-grey addButtonCircular addToCompare">+</a>
+                @*<img src="images/nexus5x.jpg" class="imgFill productImg">*@
+
+            </div>
+        </div>
+
+        <div class="w3-col l3 m6 relPos  w3-center ">
+            <div class="selectProduct w3-padding" data-title="phonecompare3">
+                @Html.DropDownListFor(i => i.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+                <a class="w3-btn-floating w3-light-grey addButtonCircular addToCompare">+</a>
+                @*<img src="images/nexus6.jpg" class="imgFill productImg">*@
+
+            </div>
+        </div>
+
+        @*<div class="w3-col l3 m6 relPos  w3-center">
+            <div class="selectProduct w3-padding" data-title="Nexus6P"  data-size="5.7&quot;" data-weight="178 g" data-processor="1.55 GHz, Octa Core, Qualcomm Snapdragon 810 " data-battery="3450 mAH">
+                @Html.DropDownListFor(i => i.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", required = "required" })
+                <a class="w3-btn-floating w3-light-grey addButtonCircular addToCompare">+</a>
+                <img src="images/nexus6p.jpg" class="imgFill productImg">
+                
+            </div>
+        </div>*@
+    </div>
+</div>
+<!--preview panel-->
+<div class="w3-container  w3-center">
+    <div class="w3-row w3-card-4 w3-grey w3-round-large w3-border comparePanle w3-margin-top">
+        <div class="w3-row">
+            <div class="w3-col l9 m8 s6 w3-margin-top">
+                <h4>Added for comparison</h4>
+            </div>
+            <div class="w3-col l3 m4 s6 w3-margin-top">
+                &nbsp;
+                <button class="w3-btn w3-round-small w3-white w3-border notActive cmprBtn" disabled>Compare</button>
+            </div>
+        </div>
+        <div class=" titleMargin w3-container comparePan">
+        </div>
+    </div>
+</div>
+<!--end of preview panel-->
+<!-- comparision popup-->
+<div id="id01" class="w3-animate-zoom w3-white w3-modal modPos">
+    <br /><br /><br />
+    <div class="w3-container">
+        <a onclick="document.getElementById('id01').style.display = 'none'" class="whiteFont w3-padding w3-closebtn closeBtn">&times;</a>
+    </div>
+    <div class="w3-row contentPop w3-margin-top">
+    </div>
+
+</div>
+<!--end of comparision popup-->
+<!--  warning model  -->
+<div id="WarningModal" class="w3-modal">
+    <div class="w3-modal-content warningModal">
+        <header class="w3-container w3-teal">
+            <h3><span>&#x26a0;</span>Error</h3>
+        </header>
+        <div class="w3-container">
+            <h4>Maximum of Three products are allowed for comparision</h4>
+
+        </div>
+        <footer class="w3-container w3-right-align">
+            <button id="warningModalClose" onclick="document.getElementById('id01').style.display='none'" class="w3-btn w3-hexagonBlue w3-margin-bottom  ">Ok</button>
+        </footer>
+    </div>
+</div>
+<!--  end of warning model  -->
+
+<script>
+    $('.ddChosen').on('change',
+        function () {
+            var myDiv = $(this);
+            var projectid = $(this).val();
+            //$(this).parents('.selectProduct').attr('data-price', '$100');
+            console.log(projectid);
+            var url = '../Common/GetProjectInfoByProjectId';
+            $.get(url,
+                { projectId: projectid },
+                function(data) {
+                    console.log(data);
+                    console.log(data.ProjectName);
+                    data.ChipsetFrequency = data.ChipsetFrequency== null ? 'no data' : data.ChipsetFrequency;
+                    myDiv.parents('.selectProduct').attr('data-id', data.ProjectName);
+                    myDiv.parents('.selectProduct').attr('data-sim', data.SimSlotNumber+', Type: '+data.SlotType);
+                    myDiv.parents('.selectProduct').attr('data-size', data.DisplaySize + "&quot; , Resolution: " + (data.DisplayResulution = data.DisplayResulution == null ? 'no data' : data.DisplayResulution));
+                    myDiv.parents('.selectProduct').attr('data-camera', 'Front Camera: ' + (data.FrontCam = data.FrontCam == null ? 'no data' : data.FrontCam) + ", Back Camera: " + (data.BackCam = data.BackCam == null ? 'no data' : data.BackCam));
+                    myDiv.parents('.selectProduct').attr('data-memory', 'RAM: ' + (data.Ram = data.Ram == null ? 'no data' : data.Ram) + ', ROM: ' + (data.Rom = data.Rom == null ? 'no data' : data.Rom));
+                    myDiv.parents('.selectProduct').attr('data-os', 'OS: ' + (data.OsName = data.OsName == null ? 'no data' : data.OsName) + ', Version: ' + (data.OsVersion = data.OsVersion == null ? 'no data' : data.OsVersion));
+                    myDiv.parents('.selectProduct').attr('data-weight', '-');
+                    myDiv.parents('.selectProduct').attr('data-processor', (data.ChipsetFrequency = data.ChipsetFrequency == null ? 'no data' : data.ChipsetFrequency) + ', ' + (data.ChipsetCore = data.ChipsetCore == null ? 'no data' : data.ChipsetCore) + ', ' + (data.CpuName = data.CpuName == null ? 'no data' : data.CpuName) + ' ' + (data.ChipsetName = data.ChipsetName == null ? 'no data' : data.ChipsetName));
+                    myDiv.parents('.selectProduct').attr('data-battery', (data.BatteryRating = data.BatteryRating == null ? 'no data' : data.BatteryRating) + ', ' + (data.BatteryType = data.BatteryType == null ? 'no data' : data.BatteryType));
+                    myDiv.parents('.selectProduct').attr('data-price', (data.ApproximatePrice = data.ApproximatePrice == null ? 'no data' : data.ApproximatePrice));
+                });
+            //var projectname = $(this).text();
+            
+
+        });
+</script>

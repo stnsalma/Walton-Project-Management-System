@@ -1,0 +1,166 @@
+﻿@model IEnumerable<ProjectManagement.Models.FocClaimModel>
+@{
+    ViewBag.Title = "FocClaimReceive";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">FOC Receive</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tblFocClaimReceive">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Project Model</th>
+                            <th>Order No</th>
+                            <th>Spare Name</th>
+                            <th>Description</th>
+                            <th>Claim Quantity</th>
+                            <th>Claim Date</th>
+                            <th>Claimed By</th>
+                            <th>Receive Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var v in Model)
+                        {
+                            if (v.ReceiveQuantity == null)
+                            {
+                                <tr>
+                                <td>@v.Id</td>
+                                <td>@v.BomProductModel</td>
+                                <td>@v.OrderNo</td>
+                                <td>@v.Description</td>
+                                <td>@v.SpareDescription</td>
+                                <td>@v.ClaimQuantity</td>
+                                <td>@v.ClaimDate</td>
+                                <td>@v.ClaimedByName</td>
+                                <td>
+                                    <input type="number" class="form-control txtReceiveQuantity"/>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btnSave">Save</button>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+    
+                      <div class="portlet box blue">
+                          <div class="portlet-title">
+                              <div class="caption">Received FOC</div>
+                          </div>
+                          <div class="portlet-body">
+                              <div class="row">
+                                  <div class="table-responsive">
+                                      <table class="table table-bordered" id="tblReceivedFoc">
+                                          <thead>
+                                              <tr>
+                                                  <th>Id</th>
+                                                  <th>Project Model</th>
+                                                  <th>Order No</th>
+                                                  <th>Spare Name</th>
+                                                  <th>Description</th>
+                                                  <th>Claim Quantity</th>
+                                                  <th>Claim Date</th>
+                                                  <th>Claimed By</th>
+                                                  <th>Receive Quantity</th>
+                                                  <th>Receive Date</th>
+                                                  <th>Received By</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              @foreach (var v in Model)
+                                              {
+                                                  if (v.ReceiveQuantity != null)
+                                                  {
+                                                      <tr>
+                                                      <td>@v.Id</td>
+                                                      <td>@v.BomProductModel</td>
+                                                      <td>@v.OrderNo</td>
+                                                      <td>@v.Description</td>
+                                                      <td>@v.SpareDescription</td>
+                                                      <td>@v.ClaimQuantity</td>
+                                                      <td>@v.ClaimDate</td>
+                                                      <td>@v.ClaimedByName</td>
+                                                      <td>@v.ReceiveQuantity</td>
+                                                      <td>@v.ReceivedDate</td>
+                                                      <td>@v.ReceivedByName</td>
+                                                  </tr>
+                                                  }
+                                              }
+                                          </tbody>
+                                      </table>
+                                  </div>
+
+                              </div>
+                          </div>
+                      </div>
+    
+<script>
+    $(function() {
+        var tblFocClaimReceive = $('#tblFocClaimReceive').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false
+                }
+            ]
+        });
+        
+        var tblReceivedFoc = $('#tblReceivedFoc').DataTable({
+            "columnDefs": [
+                {
+                    "targets": [0],
+                    "visible": false
+                }
+            ]
+        });
+
+        $('#tblFocClaimReceive tbody').on('click', '.btnSave', function () {
+            var rowToTransfer = tblFocClaimReceive.row($(this).closest('tr'));
+            var data = rowToTransfer.data();
+            console.log(data);
+            var url = '@Url.Action("SaveFocClaimReceive","Common")';
+            var id = data[0];
+            var receiveQuantity = $(this).closest('tr').find('.txtReceiveQuantity').val();
+            console.log(receiveQuantity);
+            if (receiveQuantity != '' && receiveQuantity > 0) {
+                $.post(url, { id: id, receiveQuantity: receiveQuantity }, function (response) {
+                    console.log(response);
+                    if (response.ReceiveQuantity == receiveQuantity) {
+                        alertify.success('Receive quantity saved');
+                        rowToTransfer.remove().draw();
+                        tblReceivedFoc.row.add([
+                            response.Id,
+                            response.BomProductModel,
+                            response.OrderNo,
+                            response.Description,
+                            response.SpareDescription,
+                            response.ClaimQuantity,
+                            response.StrClaimDate,
+                            response.ClaimedByName,
+                            response.ReceiveQuantity,
+                            response.StrReceivedDate,
+                            response.ReceivedByName
+                        ]).draw();
+                    }
+                });
+            } else {
+                alertify.error('Please enter receive quantity');
+            }
+        });
+    })
+</script>
+

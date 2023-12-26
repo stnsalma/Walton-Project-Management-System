@@ -1,0 +1,2599 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.ViewModels.Commercial
+@model List<ProjectManagement.ViewModels.Commercial.VmIncentivePolicy>
+
+    <style>
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+            /*background-color: #65C1E0;*/
+            background-color: #569450;
+            color: white;
+        }
+
+        .nav-stacked > li.active > a, .nav-stacked > li.active > a:hover, .nav-stacked > li.active > a:focus {
+            background-color: #65C1E0;
+            color: white;
+        }
+    </style>
+    <style type="text/css">
+        .tabColor {
+            color: white !important;
+            background-color: rgb(209, 234, 170);
+            /*background-color:greenyellow;*/
+        }
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+            /*background-color: #65C1E0;*/
+            background-color: #569450;
+            color: white;
+        }
+
+        .nav-stacked > li.active > a, .nav-stacked > li.active > a:hover, .nav-stacked > li.active > a:focus {
+            background-color: #65C1E0;
+            color: white;
+        }
+
+        .page-header-fixed .page-container {
+            margin-top: 0px;
+        }
+
+        .navbar-fixed-top {
+            position: relative;
+        }
+
+        #loading {
+            width: 100%;
+            height: 100%;
+            top: 70px;
+            left: 0;
+            position: fixed;
+            display: block;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 999;
+            text-align: center;
+        }
+    </style>
+
+    <div class="portlet box green-seagreen">
+        <div class="portlet-title">
+            <div class="caption">
+                Welcome to Monthly Incentive
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+
+            <div class="row">
+                <br /><br /><br /><br />
+                <div class="col-sm-2"></div>
+                <div class="col-lg-2">
+                    Select Month
+                </div>
+                <div class="col-lg-7">
+
+                    <div class="col-lg-3">
+
+                        @{
+                            List<SelectListItem> listItems = new List<SelectListItem>();
+
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "Select Month",
+                                Value = "0"
+                            });
+
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "January",
+                                Value = "1"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "February",
+                                Value = "2",
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "March",
+                                Value = "3"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "April",
+                                Value = "4"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "May",
+                                Value = "5"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "June",
+                                Value = "6"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "July",
+                                Value = "7"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "August",
+                                Value = "8"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "September",
+                                Value = "9"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "October",
+                                Value = "10"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "Nobember",
+                                Value = "11"
+                            });
+                            listItems.Add(new SelectListItem
+                            {
+                                Text = "December",
+                                Value = "12"
+                            });
+                        }
+                        @Html.DropDownList("DDDMonth", new SelectList(listItems, "Value", "Text"), new { @class = "form-control DDDMonthCls1" })
+
+                    </div>
+
+                    <div class="col-lg-2">
+                        @{
+                            List<SelectListItem> listItems2 = new List<SelectListItem>();
+
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2017",
+                                Value = "2017"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2018",
+                                Value = "2018"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2019",
+                                Value = "2019"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2020",
+                                Value = "2020"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2021",
+                                Value = "2021"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2022",
+                                Value = "2022"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2023",
+                                Value = "2023"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2024",
+                                Value = "2024"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2025",
+                                Value = "2025"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2026",
+                                Value = "2026"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2027",
+                                Value = "2027"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2028",
+                                Value = "2028"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2029",
+                                Value = "2029"
+                            });
+                            listItems2.Add(new SelectListItem
+                            {
+                                Text = "2030",
+                                Value = "2030"
+                            });
+                        }
+                        @Html.DropDownList("DDDYear", new SelectList(listItems2, "Value", "Text"), "Select Year", new { @class = "form-control DDDYearCls" })
+                    </div>
+                    <div class="col-lg-2"></div>
+                    <div class="col-lg-3">
+                        <input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Generate Incentive"
+                               onclick="location.href='@Url.Action("MonthlyIncentive", "Commercial")?monId=' + $('option:selected', $('#DDDMonth')).val()+'&yearId=' + $('option:selected', $('#DDDYear')).val()" />
+
+
+                    </div>
+                    <div class="col-lg-1"></div>
+
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+            <br /><br /><br />
+            @if (TempData["Message2"] != null)
+            {
+
+                var msgss = TempData["Message2"];
+
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msgss
+                </div>
+
+
+            }
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="todo-ui" style="margin-top: 20px;">
+                        <div class="todo-content">
+                            <div class="table-toolbar">
+                                <div class="row">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="portlet box green-meadow">
+                                    <div class="portlet-title">
+                                        <div class="caption">
+                                            <i class="fa fa-cogs"></i>
+                                            Incentive Policy
+
+                                        </div>
+                                        <div class="tools">
+                                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="portlet-body">
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2" style="color: red;">Orders</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+                                                                    <input value="@item.Parameter" id="parameter1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+                                                            <input value="------------>" id="muliplication1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                                }
+                                                            }
+
+
+                                                        </div>
+
+                                                        <div class="col-lg-3">
+
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Primary Sales Target</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PrimarySales")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="primaryParameter" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PrimarySales")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameter_value" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Feature Phone Service Ratio</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForFeaturePhone")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="primaryParameterRatioForFeaturePhone" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow4" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForFeaturePhone")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameterValueForFeaturePhone" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Smart/Tablet Phone Service Ratio</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="primaryParameterRatioForSmartOrTablet" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow4" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameterValueForSmartOrTablet" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2">Orders</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetOrders)
+                                                            {
+
+                                                                <input value="@item.Orders" id="parameter" class="form-control" disabled="disabled" style="text-align: center" />
+
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "Orders")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2">Primary Sales Target</label>
+                                                    <div class="col-lg-2">
+                                                        @if (ViewBag.GetPrimarySaleForIncentive != null)
+                                                        {
+                                                            foreach (var item1 in ViewBag.GetPrimarySaleForIncentive)
+                                                            {
+                                                                <input value="@item1.SalesAmt" id="primaryParameter1" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="<-->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PrimarySales")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameter_value1" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="=" id="equals1" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                    <div class="col-lg-3">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PrimarySales")
+                                                            {
+
+                                                                <input value="@item1.PrimaryParameter_Total_Value1" id="primaryParameter_Total_value1" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2">Feature Phone Service Ratio</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetServiceForFeature)
+                                                        {
+                                                            <input value="@item1.TotalServiceIMEI" id="serviceIMEIForFeaturePhone" class="form-control" disabled="disabled" style="text-align: center;display: none;" />
+                                                        }
+                                                        @foreach (var item1 in ViewBag.GetSalesForFeature)
+                                                        {
+                                                            <input value="@item1.TotalSalesBarcode" id="salesBarcodeForFeaturePhone" class="form-control" disabled="disabled" style="text-align: center;display: none;" />
+
+                                                        }
+                                                        <input id="serviceToSalesForFeaturePhone" class="form-control" disabled="disabled" style="text-align: center;" />
+
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="<-->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForFeaturePhone")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameterValueForFeaturePhone1" class="form-control" disabled="disabled" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="=" id="equals1" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                    <div class="col-lg-3"><input value="" id="finalServiceToSalesRatioForFeature" class="form-control" disabled="disabled" style="text-align: center;" /></div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2">Smart/Tablet Phone Service Ratio</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetServiceForSmart)
+                                                        {
+                                                            <input value="@item1.TotalServiceIMEI" id="serviceIMEIForSmartPhone" class="form-control" readonly="true" style="text-align: center;display: none;" />
+                                                            <input value="@item1.Month" id="month" class="form-control" style="text-align: center;display: none;" />
+                                                            <input value="@item1.Year" id="year" class="form-control" style="text-align: center;display: none;" />
+                                                        }
+                                                        @foreach (var item1 in ViewBag.GetSalesForSmart)
+                                                        {
+
+                                                            <input value="@item1.TotalSalesBarcode" id="salesBarcodeForSmartPhone" class="form-control" readonly="true" style="text-align: center;display: none;" />
+
+                                                        }
+                                                        <input id="serviceToSalesForSmartPhone" class="form-control" readonly="true" style="text-align: center;" />
+
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="<-->" id="arrow" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "RatioForSmartOrTablet")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameterValueForSmartPhone1" class="form-control" readonly="true" style="text-align: center;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-1"><input value="=" id="equals1" class="form-control" readonly="true" style="text-align: center" /></div>
+                                                    <div class="col-lg-3"><input value="" id="finalServiceToSalesRatioForSmart" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-3">Total Incentive Amount</label>
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="col-lg-1"><input value="=" id="equals1" class="form-control" readonly="true" style="text-align: center;color:red;" /></div>
+
+                                                    <div class="col-lg-3"><input value="" id="totalIncentiveAmount" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                    <table id="tbl" class="table table-bordered table-striped table-condensed flip-content tbl">
+                                                        <thead class="flip-content note note-success">
+
+                                                            <tr>
+
+                                                                @*<th class="text-center"> # </th>*@
+                                                                <th style="text-align: center;"> UserName </th>
+                                                                <th style="text-align: center;"> ID </th>
+                                                                <th style="text-align: center;"> Percentage(%) </th>
+                                                                <th style="text-align: center;"> Previous MonthCarry </th>
+                                                                <th style="text-align: center;">ThisMonth Amount </th>
+                                                                <th style="text-align: center;display: none;"> FinalAmount </th>
+                                                                <th style="text-align: center;display: none;"> CarryAmount </th>
+                                                                <th style="text-align: center;">AddedAmount</th>
+                                                                <th style="text-align: center;">Remarks</th>
+                                                                <th style="text-align: center;">DeductionAmount</th>
+                                                                <th style="text-align: center;">DeductionRemarks</th>
+
+                                                                <th style="text-align: center;"> Incentive </th>
+                                                                <th style="text-align: center;">Fixed Incentive </th>
+
+                                                                <th style="text-align: center;"> CarryOver </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            @foreach (var item1 in ViewBag.GetUserInfo)
+                                                            {
+                                                                <tr class="tableTrCls1" id="trIdForIncentive">
+                                                                    <td><input value="@item1.UserFullName" id="userNames" class="form-control userNames" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.EmployeeCode" id="userIds" class="form-control userIds" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.Share" id="percentage" class="form-control percentage" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.RoleName" id="roleName" class="form-control roleName" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.AmountCarry" id="previousCarry" class="form-control previousCarry" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="" id="thisMonthAmount" class="form-control thisMonthAmount" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="" id="finalAmount" class="form-control finalAmount" disabled="disabled" style="text-align: center;display: none;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.CarryAmount" id="carryAmount" class="form-control carryAmount" disabled="disabled" style="text-align: center;" /></td>
+
+                                                                    @*<td><input value="@item1.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount()" /></td>*@
+                                                                    <td><input value="@item1.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount()" /></td>
+
+                                                                    <td><input value="@item1.Remarks" id="remarks" class="form-control remarks" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.AmountDeduction" id="amountDeduction" class="form-control amountDeduction" style="text-align: center;" onchange="updateAmountDeduction()" /></td>
+                                                                    <td><input value="@item1.DeductionRemarks" id="deductionRemarks" class="form-control deductionRemarks" style="text-align: center;" /></td>
+
+                                                                    <td><input value="" id="incentive" class="form-control incentive" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.FixedIncentive" id="fixedIncentive" class="form-control fixedIncentive" style="text-align: center;" /></td>
+                                                                    <td><input value="" id="amountAfterCarry" class="form-control amountAfterCarry" disabled="disabled" style="text-align: center;" /></td>
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            @*<div class="col-md-2">
+                                                    <br /><br />
+                                                    <input id="printButton" type="button" value="SAVE PDF" class="btn btn-group-circle btn-danger center" />
+                                                    <br /><br />
+                                                </div>*@
+                                        </div>
+                                        <br /><br />
+                                        @*<div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2" style="color: red;">Per Order</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+                                                                    <input value="@item.Parameter" id="parameterPerOrder" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+                                                            <input value="------------>" id="muliplication1" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_PerOrder" class="form-control" disabled="disabled" style="text-align: center;color: red;" />
+                                                                }
+                                                            }
+
+
+                                                        </div>
+
+                                                        <div class="col-lg-3">
+
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Per LC</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PerLC")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="primaryParameterPerLc" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "PerLC")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="primaryParameter_value_PerLc" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Sea Shipment Full</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "SeaShipmentFull")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="SeaShipmentFull1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "SeaShipmentFull")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="SeaShipmentFull_value1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Sea Shipment Partial</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "SeaShipmentPartial")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="SeaShipmentPartial1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "SeaShipmentPartial")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="SeaShipmentPartial_value1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Air Shipment Full</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "AirShipmentFull")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="AirShipmentFull1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "AirShipmentFull")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="AirShipmentFull_value1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-2" style="color:red;">Air Shipment Partial</label>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "AirShipmentPartial")
+                                                            {
+
+                                                                <input value="@item1.Parameter" id="AirShipmentPartial1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+
+                                                    </div>
+                                                    <div class="col-lg-2"><input value="------------->" id="arrow" class="form-control" disabled="disabled" style="text-align: center;color:red;" /></div>
+                                                    <div class="col-lg-2">
+                                                        @foreach (var item1 in ViewBag.GetIncentives)
+                                                        {
+                                                            if (item1.ParameterName == "AirShipmentPartial")
+                                                            {
+
+                                                                <input value="@item1.ParameterValue" id="AirShipmentPartial_value1" class="form-control" disabled="disabled" style="text-align: center;color:red;" />
+                                                            }
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Per Order</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetOrders)
+                                                            {
+                                                                <input value="@item.Orders" id="parameter_PerOrder2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_PerOrder2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerOrder")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_PerOrder2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Per LC</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetLcs)
+                                                            {
+
+
+                                                                <input value="@item.PerLc" id="parameter_PerLc2" class="form-control" disabled="disabled" style="text-align: center" />
+
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+
+
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_PerLc2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+
+
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "PerLC")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_PerLc2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Sea Shipment Full</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetSeaShipmentFulls)
+                                                            {
+
+
+                                                                <input value="@item.SeaShipmentFull" id="parameter_SeaShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_SeaShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentFull")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_SeaShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Sea Shipment Partial</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetSeaShipmentPartials)
+                                                            {
+
+                                                                <input value="@item.SeaShipmentPartial" id="parameter_SeaShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_SeaShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "SeaShipmentPartial")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_SeaShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Air Shipment Full</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetAirShipmentFulls)
+                                                            {
+
+
+                                                                <input value="@item.AirShipmentFull" id="parameter_AirShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+
+
+
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_AirShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+
+
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentFull")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_AirShipmentFull2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <label class="control-label col-lg-2"> Air Shipment Partial</label>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetAirShipmentPartials)
+                                                            {
+                                                                <input value="@item.AirShipmentPartial" id="parameter_AirShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1">
+
+                                                            <input value="*" id="muliplication" class="form-control" disabled="disabled" style="text-align: center" />
+                                                        </div>
+                                                        <div class="col-lg-2">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+
+                                                                    <input value="@item.ParameterValue" id="parameter_Value_AirShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"><input value="=" id="equals" class="form-control" disabled="disabled" style="text-align: center" /></div>
+                                                        <div class="col-lg-3">
+                                                            @foreach (var item in ViewBag.GetIncentives)
+                                                            {
+                                                                if (item != null && item.ParameterName == "AirShipmentPartial")
+                                                                {
+
+                                                                    <input value="@item.OrdersValue" id="orders_Value_AirShipmentPartial2" class="form-control" disabled="disabled" style="text-align: center" />
+                                                                }
+                                                            }
+                                                        </div>
+                                                        <div class="col-lg-1"></div>
+                                                    </div>
+                                                    <div class="col-lg-4"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-8">
+                                                    <label class="control-label col-lg-3">Total Incentive Amount</label>
+                                                    <div class="col-lg-1"></div>
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="col-lg-1"><input value="=" id="equals11" class="form-control" readonly="true" style="text-align: center;color:red;" /></div>
+
+                                                    <div class="col-lg-3"><input value="" id="totalIncentiveAmount2" class="form-control" readonly="true" style="text-align: center;" /></div>
+                                                    <div class="col-lg-1"></div>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+                                            </div>
+                                        </div>*@
+                                        @*<br/>
+                                        <div class="row">
+                                            <br />
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-1">******</div><div class="col-lg-4">
+                                                                                      Others<br />
+                                                                                      -------------------
+                                                                                  </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                                            </div>
+                                            <br /><br /><br />
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-4">
+                                                    <div class="col-lg-3" style="color: brown;"> Others Type </div>
+                                                    <div class="col-lg-9">
+                                                        <input class="form-control othersType" id="othersType" type="text" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label col-lg-4" style="color: brown;">Added Amount</label>
+                                                    <div class="col-lg-8">
+                                                        <input class="form-control othersAmount" id="othersAmount" type="number" min="1" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label col-lg-3" style="color: brown;">Remarks</label>
+                                                    <div class="col-lg-9">
+                                                        <input class="form-control othersRemark" id="othersRemark" type="text" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br /><br />
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-4">
+                                                    <label class="control-label col-lg-4" style="color: brown">Deduct Amount</label>
+                                                    <div class="col-lg-8">
+                                                        <input class="form-control othersDeduct" id="othersDeduct" type="number" min="1" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <label class="control-label col-lg-4" style="color: brown">Deduct Remarks</label>
+                                                    <div class="col-lg-8">
+                                                        <input class="form-control others_D_Remarks" id="others_D_Remarks" type="text" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                   
+                                                </div>
+                                            </div>
+                                            <br /><br /><br />
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-4"></div>
+                                                <div class="col-lg-4">
+                                                    <button id="btnAddOthers" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                                                </div>
+                                                <div class="col-lg-4"></div>
+
+                                            </div>
+                                            <br /><br /><br />
+                                        </div>*@
+                                       
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-5">Material Pass in China IQC<br />------------------------------------------------</div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                                            </div>
+                                            <br /><br /><br />
+                                            <div class="col-sm-12">
+                                                <div class="portlet light bordered">
+                                                    <div class="portlet box green-haze">
+                                                        <div class="portlet-body">
+                                                            <div>
+                                                                <table class="table table-bordered table-striped table-condensed flip-content tblChinaIqc" id="tblChinaIqc" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="display:none">Pro_Id</th>
+                                                                            <th>ProjectName</th>
+                                                                            <th>Orders</th>
+                                                                            <th>PoCategory</th>
+                                                                            <th>PoQuantity</th>
+                                                                            <th>Lot<br />Number</th>
+                                                                            <th>Lot<br />Quantity</th>
+                                                                            <th>Pm<br />Clearance <br />Date</th>
+                                                                            <th>China Iqc<br />Pass <br />100%</th>
+                                                                            <th>No Of Time<br />Inspection</th>
+                                                                            <th>Amount</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (ViewBag.GetChinaIqcIncentive != null)
+                                                                        {
+                                                                            foreach (var items in ViewBag.GetChinaIqcIncentive)
+                                                                            {
+                                                                                <tr class="tableTrCls2">
+                                                                                    <td style="display: none">@items.ProjectMasterId</td>
+                                                                                    <td>@items.ProjectName</td>
+                                                                                    <td>@items.Orders</td>
+                                                                                    <td>@items.PoCategory</td>
+                                                                                    <td>@items.PoQuantity</td>
+                                                                                    <td>@items.LotNumber</td>
+                                                                                    <td>@items.LotQuantity</td>
+                                                                                    <td>
+                                                                                        @if (@items.ProjectManagerClearanceDate != null)
+                                                                                        {@String.Format("{0:yyyy-MM-dd}", @items.ProjectManagerClearanceDate)}
+
+                                                                                    </td>
+                                                                                    <td>@items.ChinaIqcPassHundredPercent</td>
+                                                                                    <td>@items.NoOfTimeInspection</td>
+                                                                                    <td>@items.Amount</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-5">Same Model Manufactured in BD Or Any Technology Introduce Reward<br />------------------------------------------------</div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                                            </div>
+                                            <br /><br /><br />
+                                            <div class="col-sm-12">
+                                                <div class="portlet light bordered">
+                                                    <div class="portlet box green-haze">
+                                                        <div class="portlet-body">
+                                                            <div>
+                                                                <table class="table table-bordered table-striped table-condensed flip-content tblTech" id="tblTech" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th style="width: 100px;">Others Type</th>
+                                                                            <th>Added <br />Amount </th>
+                                                                            <th>Remarks </th>
+                                                                            <th>Deduct <br />Amount</th>
+                                                                            <th>Deduct<br /> Remarks </th>
+                                                                            <th>Effective<br /> Month</th>
+                                                                            <th>Final<br />Amount</th>
+                                                                            @*<th>Action</th>*@
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (ViewBag.GetOthersIncentive != null)
+                                                                        {
+                                                                            foreach (var items in ViewBag.GetOthersIncentive)
+                                                                            {
+                                                                                <tr class="tableTrCls2">
+                                                                                    <td>@items.OthersType</td>
+                                                                                    <td>@items.Amount</td>
+                                                                                    <td>@items.Remarks</td>
+                                                                                    <td>@items.DeductAmount</td>
+                                                                                    <td>@items.DeductRemarks</td>
+                                                                                    <td>
+                                                                                        @if (@items.EffectiveMonth != null)
+                                                                                        {@String.Format("{0:yyyy-MM-dd}", @items.EffectiveMonth)}
+
+                                                                                    </td>
+                                                                                    <td>@items.FinalAmount</td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="col-lg-5">Total Reward & Penalties<br />------------------------------------------------</div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                                            </div>
+                                            <br /><br /><br />
+                                            <div class="col-sm-12">
+                                                <div class="portlet light bordered">
+                                                    <div class="portlet box green-haze">
+                                                        <div class="portlet-body">
+                                                            <div>
+                                                                <table class="table table-bordered table-striped table-condensed flip-content" id="tblRewardPenalties" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Total<br /> Reward/Amount</th>
+                                                                            <th>Total<br /> Refund</th>
+                                                                            <th>Total<br />Penalties</th>
+                                                                            <th>Details</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (ViewBag.GetRewardAndPenalties != null)
+                                                                        {
+                                                                            foreach (var items in ViewBag.GetRewardAndPenalties)
+                                                                            {
+                                                                                if (@items.TotalReward1 != null && @items.TotalDeduction1 != null)
+                                                                                {
+                                                                                    <tr>
+                                                                                        <td><input id="tRewards" value="@items.TotalReward1" disabled="disabled" /></td>
+                                                                                        <td><input id="tRefunds" value="@items.TotalRefund1" disabled="disabled" /></td>
+                                                                                        <td><input id="tPenalties" value="@items.TotalDeduction1" disabled="disabled" /></td>
+                                                                                        <td><a target="_blank" onclick="RewardAndPenaltiesFunc()">Details</a></td>
+                                                                                    </tr>
+                                                                                }
+
+                                                                            }
+
+                                                                        }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                    <table id="tbl2" class="table table-bordered table-striped table-condensed flip-content tbl2">
+                                                        <thead class="flip-content note note-success">
+                                                            <tr>
+                                                                @*<th class="text-center"> # </th>*@
+                                                                <th style="text-align: center;"> UserName </th>
+                                                                <th style="text-align: center;"> ID </th>
+                                                                <th style="text-align: center;"> Percentage(%) </th>
+                                                                <th style="text-align: center; display: none;"> Previous MonthCarry </th>
+                                                                <th style="text-align: center;"> Reward </th>
+                                                                <th style="text-align: center;"> Penalties </th>
+                                                                <th style="text-align: center;">ThisMonth Amount </th>
+                                                                <th style="text-align: center;display: none;"> FinalAmount </th>
+                                                                <th style="text-align: center;display: none;"> CarryAmount </th>
+                                                                <th style="text-align: center;">AddedAmount</th>
+                                                                <th style="text-align: center;">Remarks</th>
+                                                                <th style="text-align: center;">DeductionAmount</th>
+                                                                <th style="text-align: center;">DeductionRemarks</th>
+                                                                <th style="text-align: center;"> Incentive </th>
+                                                                <th style="text-align: center; display: none;">Fixed Incentive </th>
+                                                                <th style="text-align: center; display: none;"> CarryOver </th>
+                                                                <th style="text-align: center;">Spacial<br />Amount</th>
+                                                                <th style="text-align: center;">Spacial<br />Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+
+                                                            @foreach (var item1 in ViewBag.GetUserInfo1)
+                                                            {
+                                                                <tr class="tableTrCls1" id="trIdForIncentive">
+                                                                    <td><input value="@item1.UserFullName" id="userNames" class="form-control userNames" disabled="disabled" style="text-align: left;" /></td>
+                                                                    <td><input value="@item1.EmployeeCode" id="userIds" class="form-control userIds" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.Share" id="percentage" class="form-control percentage" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.RoleName" id="roleName" class="form-control roleName" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.AmountCarry" id="previousCarry" class="form-control previousCarry" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="" id="rewards" class="form-control rewards" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="" id="penalties" class="form-control penalties" disabled="disabled" style="text-align: center;" /></td>
+
+                                                                    <td><input value="" id="thisMonthAmount" class="form-control thisMonthAmount" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="" id="finalAmount" class="form-control finalAmount" disabled="disabled" style="text-align: center;display: none;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.CarryAmount" id="carryAmount" class="form-control carryAmount" disabled="disabled" style="text-align: center;" /></td>
+
+                                                                   @*<td><input value="@item1.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" onchange="updateAddedAmount21()" /></td>*@
+                                                                    <td><input value="@item1.AddedAmount" id="addedAmount" class="form-control addedAmount" style="text-align: center;" /></td>
+
+                                                                    <td><input value="@item1.Remarks" id="remarks" class="form-control remarks" style="text-align: center;" /></td>
+                                                                    @*<td><input value="@item1.AmountDeduction" id="amountDeduction" class="form-control amountDeduction" style="text-align: center;" onchange="updateAmountDeduction21()" /></td>*@
+                                                                    <td><input value="@item1.AmountDeduction" id="amountDeduction" class="form-control amountDeduction" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.DeductionRemarks" id="deductionRemarks" class="form-control deductionRemarks" style="text-align: center;" /></td>
+
+                                                                     <td><input value="" id="incentive" class="form-control incentive" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="@item1.FixedIncentive" id="fixedIncentive" class="form-control fixedIncentive" style="text-align: center;" /></td>
+                                                                    <td style="display: none;"><input value="" id="amountAfterCarry" class="form-control amountAfterCarry" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.SpecialAmount" id="specialAmount" class="form-control specialAmount" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.SpecialRemarks" id="specialRemarks" class="form-control specialRemarks" style="text-align: center;" /></td>
+
+                                                                </tr>
+                                                            }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                       
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                    <table id="tblSpare" class="table table-bordered table-striped table-condensed flip-content tblSpare">
+                                                        <thead class="flip-content note note-success">
+                                                            <tr>
+                                                                <th style="text-align: center;"> UserName </th>
+                                                                <th style="text-align: center;"> ID </th>
+                                                                <th style="text-align: center;">Total imported<br/>Spare <br/>Parts Value(0.17%)</th>
+                                                                <th style="text-align: center;">Total Given<br/>Handset<br/>Value(0.17%)</th>
+                                                                <th style="text-align: center;"> Remarks </th>
+                                                                <th style="text-align: center;"> Incentive </th>
+                                                                <th style="text-align: center;">Spacial<br />Amount</th>
+                                                                <th style="text-align: center;">Spacial<br />Remarks</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item1 in ViewBag.GetUserInfoSpare)
+                                                            {
+                                                                <tr class="tableTrCls1" id="trIdForIncentive">
+                                                                    <td><input value="@item1.UserFullName" id="userNames" class="form-control userNames" disabled="disabled" style="text-align: left;" /></td>
+                                                                    <td><input value="@item1.EmployeeCode" id="userIds" class="form-control userIds" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.ImportedSpareValue" type="number" min="0" id="importedSpareValue" class="form-control importedSpareValue" style="text-align: center;" onchange="importedSpareValueChange(this.value)" /></td>
+                                                                    <td><input value="@item1.GivenHandsetValue" type="number" min="0" id="givenHandsetValue" class="form-control givenHandsetValue" style="text-align: center;" onchange="givenHandsetValueChange(this.value)" /></td>
+                                                                    <td><input value="@item1.Remarks" id="remarks" class="form-control remarks" style="text-align: center;" /></td>
+                                                                    <td><input value="" id="incentive" class="form-control incentive" disabled="disabled" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.SpecialAmount" id="specialAmount" class="form-control specialAmount" style="text-align: center;" /></td>
+                                                                    <td><input value="@item1.SpecialRemarks" id="specialRemarks" class="form-control specialRemarks" style="text-align: center;" /></td>
+
+                                                                 </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <br /><br />
+                                                <input id="proButton" type="button" value="Submit" class="btn btn-group-circle btn-success center" />
+                                                <br /><br />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+
+<script type="text/javaScript">
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    debugger;
+    var AllFinalAmount = 0;
+    var AllPenalties = 0;
+    function RewardAndPenaltiesFunc() {
+     
+        var monthName = $('#DDDMonth option:selected').text();
+        var monNum = $('#DDDMonth option:selected').val();
+        var year = $('#DDDYear option:selected').val();
+        window.open('@Url.Action("CmPenaltiesAndReward", "Commercial")' + '?MonNum=' + monNum + '&Year=' + year);
+                @*window.open('@Url.Action("CmPenaltiesAndReward", "Commercial")' + '?MonNum=' + monNum + '&Month=' + monthName + '&Year=' + year);*@
+    }
+
+    var spareImport = 0;
+    var handsetVal = 0;
+    function importedSpareValueChange() {
+        
+        $("#tblSpare tr.tableTrCls1").each(function () {
+
+            var importedSpareValue = $.trim($(this).find('#importedSpareValue').val());
+            console.log("importedSpareValue :" + importedSpareValue);
+            
+            spareImport = +importedSpareValue  + +handsetVal;
+            var incentive = $.trim($(this).find('#incentive').val((spareImport*0.0017).toFixed(0)));
+
+            console.log("incentive :" + incentive);
+
+
+            var givenHandsetValue = $.trim($(this).find('#givenHandsetValue').val());
+            if (importedSpareValue == 0 && givenHandsetValue == 0) {
+                spareImport = 0;
+                handsetVal = 0;
+                var incentive1 = $.trim($(this).find('#incentive').val(0));
+            }
+
+        });
+        
+        
+    }
+    function givenHandsetValueChange() {
+
+        $("#tblSpare tr.tableTrCls1").each(function () {
+
+            var givenHandsetValue = $.trim($(this).find('#givenHandsetValue').val());
+            console.log("givenHandsetValue :" + givenHandsetValue);
+
+            handsetVal = +givenHandsetValue + +spareImport;
+            var incentive = $.trim($(this).find('#incentive').val((handsetVal * 0.0017).toFixed(0)));
+
+            console.log("incentive :" + incentive);
+            
+            var importedSpareValue = $.trim($(this).find('#importedSpareValue').val());
+            if (importedSpareValue == 0 && givenHandsetValue == 0) {
+                spareImport = 0;
+                handsetVal = 0;
+                var incentive1 = $.trim($(this).find('#incentive').val(0));
+            }
+        });
+       
+    }
+    function updateAddedAmount() {
+        // $('#addedAmount').change(function () {
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#tbl tr.tableTrCls1").each(function () {
+
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("AddedAmount :" + addedAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (addedAmount != "") {
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            }
+            else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+        });
+    }
+  
+    // $('#amountDeduction').change(function() {
+    function updateAmountDeduction() {
+        var deductAmount = 0;
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#tbl tr.tableTrCls1").each(function () {
+
+            deductAmount = $.trim($(this).find('#amountDeduction').val());
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("deductAmount :" + deductAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (deductAmount != "") {
+
+                // totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#amountDeduction').val()) + +$.trim($(this).find('#thisMonthAmount').val())));
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            } else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+        });
+    }
+    function updateAddedAmount21() {
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#tbl2 tr.tableTrCls1").each(function () {
+
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("AddedAmount :" + addedAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (addedAmount != "") {
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            }
+            else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+        });
+    }
+    function updateAmountDeduction21() {
+        var deductAmount = 0;
+        var addedAmount = 0;
+        var incentive = 0;
+        var totals = 0;
+
+        $("#tbl2 tr.tableTrCls1").each(function () {
+
+            deductAmount = $.trim($(this).find('#amountDeduction').val());
+            addedAmount = $.trim($(this).find('#addedAmount').val());
+            console.log("deductAmount :" + deductAmount);
+
+            incentive = $.trim($(this).find('#incentive').val());
+
+            console.log("incentive :" + incentive);
+
+            if (deductAmount != "") {
+
+                // totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#amountDeduction').val()) + +$.trim($(this).find('#thisMonthAmount').val())));
+                totals = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+            } else {
+                incentive = 0;
+                totals = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+            }
+            console.log("Total  :" + totals);
+        });
+    }
+
+    $(function () {
+
+                @*$('#printButton').click(function () {
+            var selectedMonthValue = $('#DDDMonth').val();
+            var selectedYearValue = $('#DDDYear').val();
+            window.open('@Url.Action("IncentiveReport", "Commercial")' + '?monId=' + selectedMonthValue+'&yearId='+selectedYearValue);
+        });*@
+
+        $("#tblChinaIqc tr.tableTrCls2").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('td:eq(10)').text());
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +final_Am_Id1;
+        });
+        $("#tblTech tr.tableTrCls2").each(function () {
+            var final_Am_Id1 = $.trim($(this).find('td:eq(6)').text());
+            console.log("incentive :" + final_Am_Id1);
+            AllFinalAmount += +final_Am_Id1;
+        });
+
+       // alert(AllFinalAmount);
+      
+
+        $('#btnforname').on('click', function (e) {
+            e.preventDefault();
+            var selectedMonthText = document.getElementById('DDDMonth');
+            var selectedYearTest = document.getElementById('DDDYear');
+
+            var selecteddropTextMon = selectedMonthText.options[selectedMonthText.selectedIndex].text;
+            // var selecteddropTextMon1 = selectedMonthText.options[selectedMonthText.selectedIndex].value;
+            var selecteddropTextYear = selectedYearTest.options[selectedYearTest.selectedIndex].text;
+
+            if (selecteddropTextMon == "Select Month") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (selecteddropTextYear == "Select Year") {
+
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+
+        });
+        var myJsVariable = '@ViewBag.Selected';
+        $("#DDDMonth").val(myJsVariable);
+
+        var myJsVariable1 = '@ViewBag.SelectedYear';
+        $("#DDDYear").val(myJsVariable1);
+
+
+        var parameter = $('#parameter').val();
+        var parameterValue = $('#parameter_Value').val();
+
+        console.log("parameter-->" + parameter + "ParameterValue--->" + parameterValue);
+        var parameterTotal = 0;
+        if (parameter == undefined) {
+
+            parameterTotal = 0;
+            console.log(parameterTotal);
+        } else {
+            parameterTotal = parameter * parameterValue;
+        }
+
+
+        var ordersValue = $('#orders_Value').val(parameterTotal);
+
+        var primaryParameter = $('#primaryParameter').val();
+
+        var primaryParameter1 = $('#primaryParameter1').val();
+
+        var primaryParameterValue1 = $('#primaryParameter_value1').val();
+        var primarySalesTarget = 0;
+        if (primaryParameter1 == undefined) {
+            primarySalesTarget = 0;
+        } else {
+            primarySalesTarget = ((primaryParameterValue1 * primaryParameter1) / primaryParameter).toFixed(4);
+        }
+
+        var primaryParameterTotalValue1 = $('#primaryParameter_Total_value1').val(primarySalesTarget);
+
+        var serviceIMEIForFeaturePhone = $("#serviceIMEIForFeaturePhone").val();
+        var salesBarcodeForFeaturePhone = $("#salesBarcodeForFeaturePhone").val();
+
+        var serviceTosalesRatioForFeature = ((serviceIMEIForFeaturePhone / salesBarcodeForFeaturePhone) * 100).toFixed(4);
+
+        var serviceToSalesForFeaturePhone = $("#serviceToSalesForFeaturePhone").val(serviceTosalesRatioForFeature);
+
+        console.log("serviceTosalesRatioForFeature--->" + serviceTosalesRatioForFeature);
+
+        var primaryParameterRatioForFeaturePhone = $('#primaryParameterRatioForFeaturePhone').val();
+        console.log("primaryParameterRatioForFeaturePhone--->" + primaryParameterRatioForFeaturePhone);
+        var primaryParameterValueForFeaturePhone1 = $('#primaryParameterValueForFeaturePhone').val();
+        console.log("primaryParameterValueForFeaturePhone1--->" + primaryParameterValueForFeaturePhone1);
+
+        var finalRatioForFeature = 0;
+        if ((((serviceIMEIForFeaturePhone / salesBarcodeForFeaturePhone) * 100).toFixed(4)) == "NaN") {
+            finalRatioForFeature = 0;
+        } else {
+            finalRatioForFeature = ((primaryParameterRatioForFeaturePhone * primaryParameterValueForFeaturePhone1) / serviceTosalesRatioForFeature).toFixed(4);
+        }
+        console.log("finalRatioForFeature--->" + finalRatioForFeature);
+        var finalServiceToSalesRatioForFeature = $('#finalServiceToSalesRatioForFeature').val(finalRatioForFeature);
+        console.log("finalServiceToSalesRatioForFeature--->" + finalServiceToSalesRatioForFeature);
+
+        ////////////////////////
+
+        var serviceIMEIForSmartPhone = $("#serviceIMEIForSmartPhone").val();
+        var salesBarcodeForSmartPhone = $("#salesBarcodeForSmartPhone").val();
+
+        var serviceTosalesRatioForSmart = ((serviceIMEIForSmartPhone / salesBarcodeForSmartPhone) * 100).toFixed(4);
+
+        console.log(serviceTosalesRatioForSmart + "serviceTosalesRatioForSmart");
+
+        var serviceToSalesForSmartPhone = $("#serviceToSalesForSmartPhone").val(serviceTosalesRatioForSmart);
+
+        console.log("serviceTosalesRatioForSmart--->" + serviceTosalesRatioForSmart);
+
+        var primaryParameterRatioForSmartPhone = $('#primaryParameterRatioForSmartOrTablet').val();
+        console.log("primaryParameterRatioForSmartPhone--->" + primaryParameterRatioForSmartPhone);
+        var primaryParameterValueForSmartPhone1 = $('#primaryParameterValueForSmartOrTablet').val();
+        console.log("primaryParameterValueForSmartPhone1--->" + primaryParameterValueForSmartPhone1);
+        var finalRatioForSmart = 0;
+        if ((((serviceIMEIForSmartPhone / salesBarcodeForSmartPhone) * 100).toFixed(4)) == "NaN") {
+            finalRatioForSmart = 0;
+        } else {
+            finalRatioForSmart = ((primaryParameterRatioForSmartPhone * primaryParameterValueForSmartPhone1) / serviceTosalesRatioForSmart).toFixed(4);
+        }
+        console.log("finalRatioForSmart--->" + finalRatioForSmart);
+        var finalServiceToSalesRatioForSmart = $('#finalServiceToSalesRatioForSmart').val(finalRatioForSmart);
+        console.log("finalServiceToSalesRatioForSmart--->" + finalRatioForSmart);
+        var totalIncentiveAmount = (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart).toFixed(4);
+        console.log("totalIncentiveAmount--------->" + totalIncentiveAmount);
+        var totalIncentiveAmount1 = $('#totalIncentiveAmount').val(totalIncentiveAmount);
+
+        var percentage;
+        var finalAmount;
+        var carryAmount;
+        var amountAfterCarry;
+        var finalAmountAfterCarry;
+        var previousCarry;
+        var thisMonthAmount;
+
+        $("#tbl tr.tableTrCls1").each(function () {
+
+            percentage = $.trim($(this).find('#percentage').val());
+
+            console.log("percentage---->" + percentage);
+
+            var perPersonIncentive = ((percentage / 100) * (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart)).toFixed(0);
+
+            console.log("perPersonIncentive------->" + perPersonIncentive);
+
+            carryAmount = $.trim($(this).find('#carryAmount').val());
+            console.log("carryAmount------->" + carryAmount);
+
+            previousCarry = $.trim($(this).find('#previousCarry').val());
+            console.log("previousCarry------->" + previousCarry);
+
+            thisMonthAmount = $.trim($(this).find('#thisMonthAmount').val(perPersonIncentive));
+            finalAmount = $.trim($(this).find('#finalAmount').val(+previousCarry + +perPersonIncentive));
+
+            console.log("finalAmount------->" + finalAmount);
+
+            if ((+previousCarry + +perPersonIncentive) > carryAmount) {
+                amountAfterCarry = $.trim($(this).find('#amountAfterCarry').val((+previousCarry + +perPersonIncentive) - carryAmount));
+
+                console.log("amountAfterCarry------->" + amountAfterCarry);
+            } else {
+                amountAfterCarry = $.trim($(this).find('#amountAfterCarry').val(0));
+            }
+
+            if ((+previousCarry + +perPersonIncentive) < carryAmount) {
+                finalAmountAfterCarry = $.trim($(this).find('#incentive').val(+previousCarry + +perPersonIncentive));
+            } else {
+                finalAmountAfterCarry = $.trim($(this).find('#incentive').val(carryAmount));
+            }
+
+            if ((+previousCarry + +perPersonIncentive) == "NaN") {
+                finalAmountAfterCarry = $.trim($(this).find('#incentive').val(0));
+            }
+
+        });
+
+
+        ///////////////////////////////////////////////
+        //var parameterPerOrder = $('#parameter_PerOrder2').val();
+        //var parameterValuePerOrder = $('#parameter_Value_PerOrder2').val();
+
+        //console.log("parameterPerOrder-->" + parameterPerOrder + "parameterValuePerOrder--->" + parameterValuePerOrder);
+        //var parameterPerOrderTotal = 0;
+        //if (parameterPerOrder == undefined) {
+
+        //    parameterPerOrderTotal = 0;
+        //    console.log(parameterPerOrderTotal);
+        //} else {
+        //    parameterPerOrderTotal = parameterPerOrder * parameterValuePerOrder;
+        //}
+        //var ordersValuePerOrder = $('#orders_Value_PerOrder2').val(parameterPerOrderTotal);
+
+        //var perLcs = $('#parameter_PerLc2').val();
+        //var perLcsValue = $('#parameter_Value_PerLc2').val();
+        //var perLcsTotal = 0;
+        //if (perLcs == undefined) {
+        //    perLcsTotal = 0;
+        //    console.log(perLcsTotal);
+        //} else {
+        //    perLcsTotal = perLcs * perLcsValue;
+        //}
+        //var perLcTotalValue = $('#orders_Value_PerLc2').val(perLcsTotal);
+
+        //var parameter_SeaShipmentFull2 = $('#parameter_SeaShipmentFull2').val();
+        //var parameter_Value_SeaShipmentFull2 = $('#parameter_Value_SeaShipmentFull2').val();
+        //console.log("parameter_SeaShipmentFull2-->" + parameter_SeaShipmentFull2 + "parameter_Value_SeaShipmentFull2--->" + parameter_Value_SeaShipmentFull2);
+        //var orders_Value_SeaShipmentFull2 = 0;
+        //if (parameter_SeaShipmentFull2 == undefined) {
+
+        //    orders_Value_SeaShipmentFull2 = 0;
+        //    console.log(orders_Value_SeaShipmentFull2);
+        //} else {
+        //    orders_Value_SeaShipmentFull2 = parameter_SeaShipmentFull2 * parameter_Value_SeaShipmentFull2;
+        //}
+        //var ordersValueSeaShipmentFull = $('#orders_Value_SeaShipmentFull2').val(orders_Value_SeaShipmentFull2);
+
+
+        //var parameter_SeaShipmentPartial2 = $('#parameter_SeaShipmentPartial2').val();
+        //var parameter_Value_SeaShipmentPartial2 = $('#parameter_Value_SeaShipmentPartial2').val();
+        //console.log("parameter_SeaShipmentPartial2-->" + parameter_SeaShipmentPartial2 + "parameter_Value_SeaShipmentPartial2--->" + parameter_Value_SeaShipmentPartial2);
+        //var orders_Value_SeaShipmentPartial2 = 0;
+        //if (parameter_SeaShipmentPartial2 == undefined) {
+
+        //    orders_Value_SeaShipmentPartial2 = 0;
+        //    console.log(orders_Value_SeaShipmentPartial2);
+        //} else {
+        //    orders_Value_SeaShipmentPartial2 = parameter_SeaShipmentPartial2 * parameter_Value_SeaShipmentPartial2;
+        //}
+        //var ordersValueSeaShipmentPartial = $('#orders_Value_SeaShipmentPartial2').val(orders_Value_SeaShipmentPartial2);
+
+
+        //var parameter_AirShipmentFull2 = $('#parameter_AirShipmentFull2').val();
+        //var parameter_Value_AirShipmentFull2 = $('#parameter_Value_AirShipmentFull2').val();
+        //console.log("parameter_AirShipmentFull2-->" + parameter_AirShipmentFull2 + "parameter_Value_AirShipmentFull2--->" + parameter_Value_AirShipmentFull2);
+        //var orders_Value_AirShipmentFull2 = 0;
+        //if (parameter_AirShipmentFull2 == undefined) {
+
+        //    orders_Value_AirShipmentFull2 = 0;
+        //    console.log(orders_Value_AirShipmentFull2);
+        //} else {
+        //    orders_Value_AirShipmentFull2 = parameter_AirShipmentFull2 * parameter_Value_AirShipmentFull2;
+        //}
+        //var ordersValueAirShipmentFull = $('#orders_Value_AirShipmentFull2').val(orders_Value_AirShipmentFull2);
+
+        //var parameter_AirShipmentPartial2 = $('#parameter_AirShipmentPartial2').val();
+        //var parameter_Value_AirShipmentPartial2 = $('#parameter_Value_AirShipmentPartial2').val();
+        //console.log("parameter_AirShipmentPartial2-->" + parameter_AirShipmentPartial2 + "parameter_Value_AirShipmentPartial2--->" + parameter_Value_AirShipmentPartial2);
+        //var orders_Value_AirShipmentPartial2 = 0;
+        //if (parameter_AirShipmentPartial2 == undefined) {
+
+        //    orders_Value_AirShipmentPartial2 = 0;
+        //    console.log(orders_Value_AirShipmentPartial2);
+        //} else {
+        //    orders_Value_AirShipmentPartial2 = parameter_AirShipmentPartial2 * parameter_Value_AirShipmentPartial2;
+        //}
+        //var ordersValueAirShipmentPartial = $('#orders_Value_AirShipmentPartial2').val(orders_Value_AirShipmentPartial2);
+
+        //var totalIncentiveAmount2 = 0;
+        //totalIncentiveAmount2 = (+parameterPerOrderTotal + +perLcsTotal + +orders_Value_SeaShipmentFull2 + +orders_Value_SeaShipmentPartial2 + +orders_Value_AirShipmentFull2 + +orders_Value_AirShipmentPartial2).toFixed(4);
+        //console.log("totalIncentiveAmount2--------->" + totalIncentiveAmount2);
+        //var totalIncentiveAmount21 = $('#totalIncentiveAmount2').val(totalIncentiveAmount2);
+        //////////////////
+        ///////////////////////////////////////////
+
+        var percentage2;
+        var finalAmount2;
+        var carryAmount2;
+        var amountAfterCarry2;
+        var finalAmountAfterCarry2;
+        var previousCarry2;
+        var thisMonthAmount2;
+        var rewardF=0;
+        var penaltiesF=0;
+        
+        var tRewards = $('#tRewards').val();
+        if (tRewards==undefined) {
+            tRewards = 0;
+        }
+        var tRefunds = $('#tRefunds').val();
+        if (tRefunds == undefined) {
+            tRefunds = 0;
+        }
+        var tPenalties = $('#tPenalties').val();
+        if (tPenalties == undefined) {
+            tPenalties = 0;
+        }
+        //hii
+        $("#tbl2 tr.tableTrCls1").each(function () {
+            debugger;
+            percentage2 = $.trim($(this).find('#percentage').val());
+
+            if (AllFinalAmount >= 0) {
+                rewardF = ((+tRewards + +tRefunds + +AllFinalAmount) * percentage2) / 100;
+                penaltiesF = ((+tPenalties) * percentage2) / 100;
+
+            } else if (AllFinalAmount <= 0) {
+                
+                rewardF = ((+tRewards + +tRefunds) * percentage2) / 100;
+
+                penaltiesF = ((+tPenalties - +AllFinalAmount) * percentage2) / 100;
+            }
+           
+            var rewards = $.trim($(this).find('#rewards').val(rewardF));
+
+          
+            //if (AllFinalAmount<0) {
+               
+            //}
+           
+            var penalties = $.trim($(this).find('#penalties').val(penaltiesF));
+
+            console.log("percentage2---->" + percentage2);
+            //  var totalIncentiveAmount = (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart).toFixed(4);
+            var perPersonIncentive2 =(percentage2 / 100).toFixed(0);
+
+            console.log("perPersonIncentive2------->" + perPersonIncentive2);
+
+            carryAmount2 = $.trim($(this).find('#carryAmount').val());
+            console.log("carryAmount2------->" + carryAmount2);
+
+            previousCarry2 = $.trim($(this).find('#previousCarry').val());
+            console.log("previousCarry2------->" + previousCarry2);
+
+          
+            finalAmount2 = $.trim($(this).find('#finalAmount').val(+previousCarry2 + +perPersonIncentive2));
+
+            console.log("finalAmount2------->" + finalAmount2);
+
+            if ((+previousCarry2 + +perPersonIncentive2) > carryAmount2) {
+                amountAfterCarry2 = $.trim($(this).find('#amountAfterCarry').val((+previousCarry2 + +perPersonIncentive2) - carryAmount2));
+
+                console.log("amountAfterCarry2------->" + amountAfterCarry2);
+            } else {
+                amountAfterCarry2 = $.trim($(this).find('#amountAfterCarry').val(0));
+            }
+
+            if ((+previousCarry2 + +perPersonIncentive2) < carryAmount2) {
+                finalAmountAfterCarry2 = $.trim($(this).find('#incentive').val(+previousCarry2 + +perPersonIncentive2));
+            } else {
+                finalAmountAfterCarry2 = $.trim($(this).find('#incentive').val(carryAmount2));
+            }
+
+            if ((+previousCarry2 + +perPersonIncentive2) == "NaN") {
+                finalAmountAfterCarry2 = $.trim($(this).find('#incentive').val(0));
+            }
+
+            
+            var incentine22 = $.trim($(this).find('#incentive').val());
+            var tIncentine22 = +incentine22 + +rewardF - +penaltiesF;
+            thisMonthAmount2 = $.trim($(this).find('#thisMonthAmount').val(tIncentine22.toFixed(2)));
+
+            $.trim($(this).find('#incentive').val(tIncentine22.toFixed(2)));
+            
+           
+
+        });
+
+        ///////////////////////////////////////////////
+        var totalIncentiveAmountforShipment = 0;
+        $('#proButton').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            
+            var selectedMonthValue = $('#DDDMonth').val();
+            var selectedYearValue = $('#DDDYear').val();
+
+            var selectedMonthText = document.getElementById('DDDMonth');
+            var selectedYearTest = document.getElementById('DDDYear');
+
+            var selecteddropTextMon = selectedMonthText.options[selectedMonthText.selectedIndex].text;
+            var selecteddropTextYear = selectedYearTest.options[selectedYearTest.selectedIndex].text;
+
+            if (selecteddropTextMon == "Select Month") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Month",
+                }).show();
+                return false;
+            }
+            if (selecteddropTextYear == "Select Year") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Year",
+                }).show();
+                return false;
+            }
+
+            var monthName = $('#month').val();
+            var yearVal = $('#year').val();
+            totalIncentiveAmount = (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart).toFixed(4);
+            //   totalIncentiveAmountforShipment=
+            var obj = {};
+            var objArr = [];
+
+            var percentage1;
+            var finalAmount1;
+            var roleName1;
+            var userIds;
+            var carryAmount1;
+            var amountAfterCarry1;
+            var finalAmountAfterCarry1;
+            var previousCarry1;
+            var thisMonthAmount1;
+            var addedAmount1 = 0;
+            var incentive1 = 0;
+            var totals1 = 0;
+            var deductAmount1 = 0;
+            var fixedIncentive;
+            var remarks1;
+            var deductionRemarks1;
+
+            $("#tbl tr.tableTrCls1").each(function () {
+                obj = new Object();
+                percentage1 = $.trim($(this).find('#percentage').val());
+
+                console.log("percentage1---->" + percentage1);
+
+                var perPersonIncentive1 = ((percentage1 / 100) * (+parameterTotal + +primarySalesTarget + +finalRatioForFeature + +finalRatioForSmart)).toFixed(0);
+
+                console.log("perPersonIncentive1------->" + perPersonIncentive1);
+
+                carryAmount1 = $.trim($(this).find('#carryAmount').val());
+                console.log("carryAmount------->" + carryAmount1);
+
+                previousCarry1 = $.trim($(this).find('#previousCarry').val());
+                console.log("previousCarry1------->" + previousCarry1);
+                thisMonthAmount1 = $.trim($(this).find('#thisMonthAmount').val(perPersonIncentive1));
+
+                finalAmount1 = $.trim($(this).find('#finalAmount').val(+previousCarry1 + +perPersonIncentive1));
+
+                console.log("finalAmount------->" + finalAmount1);
+
+                if ((+previousCarry1 + +perPersonIncentive1) > carryAmount1) {
+                    amountAfterCarry1 = $.trim($(this).find('#amountAfterCarry').val((+previousCarry1 + +perPersonIncentive1) - carryAmount1));
+
+                    console.log("amountAfterCarry1------->" + amountAfterCarry1);
+                } else {
+                    amountAfterCarry1 = $.trim($(this).find('#amountAfterCarry').val(0));;
+                }
+                if ((+previousCarry1 + +perPersonIncentive1) < carryAmount1) {
+                    finalAmountAfterCarry1 = $.trim($(this).find('#incentive').val(+previousCarry1 + +perPersonIncentive1));
+                } else {
+                    finalAmountAfterCarry1 = $.trim($(this).find('#incentive').val(carryAmount1));
+                }
+
+                roleName1 = $.trim($(this).find('#roleName').val());
+                userIds = $.trim($(this).find('#userIds').val());
+
+                addedAmount1 = $.trim($(this).find('#addedAmount').val());
+                console.log("AddedAmount :" + addedAmount1);
+                deductAmount1 = $.trim($(this).find('#amountDeduction').val());
+                incentive1 = $.trim($(this).find('#incentive').val());
+                fixedIncentive = $.trim($(this).find('#fixedIncentive').val());
+                console.log("incentive :" + incentive1);
+
+                remarks1 = $.trim($(this).find('#remarks').val());
+                deductionRemarks1 = $.trim($(this).find('#deductionRemarks').val());
+
+                //if (addedAmount1 != "") {
+                //    totals1 = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+                //}
+                //else if (deductAmount1 != "") {
+                //    totals1 = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+                //}
+                //else {
+                //    incentive1 = 0;
+                //    totals1 = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+                //}
+
+                //if (addedAmount1 != "" && deductAmount1 == "") {
+                //    obj.Incentives  = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val())));
+                //}
+                //else if (deductAmount1 != "" && addedAmount1 =="") {
+                //    obj.Incentives = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+                //}
+                //else if (addedAmount1 != "" && deductAmount1 != "") {
+                //    obj.Incentives = $.trim($(this).find('#incentive').val(+$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val())));
+
+                //}
+                //else {
+                //    incentive1 = 0;
+                //    obj.Incentives  = $.trim($(this).find('#incentive').val($(this).find('#thisMonthAmount').val()));;
+                //}
+                if (addedAmount1 != "" && deductAmount1 == "") {
+                    obj.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val());
+                }
+                else if (deductAmount1 != "" && addedAmount1 == "") {
+                    obj.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) - +$.trim($(this).find('#amountDeduction').val());
+                }
+                else if (addedAmount1 != "" && deductAmount1 != "") {
+                    obj.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val());
+
+                }
+                else {
+                    incentive1 = 0;
+                    obj.Incentives = $.trim($(this).find('#thisMonthAmount').val());
+                }
+
+                //if (addedAmount1 != null && remarks1 == null) {
+
+                //    alertify.dialog('alert').set({
+                //        'title': '   ',
+                //        'transition': 'zoom',
+                //        'message': "Please must put remarks for extra added amount.",
+                //    }).show();
+                //    return false;
+                //}
+
+                //if (deductAmount1 !=null && deductionRemarks1 == null) {
+                //    alertify.dialog('alert').set({
+                //        'title': ' ',
+                //        'transition': 'zoom',
+                //        'message':"Please must put Deduction Remarks."
+
+                //     }).show();
+                //    return false;
+                //}
+
+                obj.Percentage = percentage1;
+                obj.ThisMonthAmount = perPersonIncentive1;
+                obj.FinalAmount = (+previousCarry1 + +perPersonIncentive1);
+                obj.Role = roleName1;
+                obj.Id = userIds;
+
+                if ((+previousCarry1 + +perPersonIncentive1) > carryAmount1) {
+                    obj.CarryOver = (+previousCarry1 + +perPersonIncentive1) - carryAmount1;
+                } else {
+                    obj.CarryOver = 0;
+                }
+                //if ((+previousCarry1 + +perPersonIncentive1) < carryAmount1) {
+
+                //    obj.Incentives = +previousCarry1 + +perPersonIncentive1;
+                //} else {
+                //    obj.Incentives = carryAmount1;
+                //}obj.Incentives = totals1;
+
+                obj.FixedIncentive = $.trim($(this).find('#fixedIncentive').val());
+                obj.AmountDeduction = $.trim($(this).find('#amountDeduction').val());
+                obj.DeductionRemarks = $.trim($(this).find('#deductionRemarks').val());
+                obj.AddedAmount = $.trim($(this).find('#addedAmount').val());
+                obj.Remarks = $.trim($(this).find('#remarks').val());
+                objArr.push(obj);
+            });
+
+
+            var obj21 = {};
+            var objArr21 = [];
+
+            var percentage21;
+            var finalAmount21;
+            var roleName21;
+            var userIds21;
+            var carryAmount21;
+            var amountAfterCarry21;
+            var finalAmountAfterCarry21;
+            var previousCarry21;
+            var thisMonthAmount21;
+            var addedAmount21 = 0;
+            var incentive21 = 0;
+            var totals21 = 0;
+            var deductAmount21 = 0;
+            var fixedIncentive21;
+            var remarks21;
+            var deductionRemarks21;
+
+            var reward21=0;
+            var treward21=0;
+            var penalties21=0;
+            var tpenalties21=0;
+
+            var specialAmount=0;
+            var specialRemarks;
+
+            $("#tbl2 tr.tableTrCls1").each(function () {
+                obj21 = new Object();
+                percentage21 = $.trim($(this).find('#percentage').val());
+
+                console.log("percentage21---->" + percentage21);
+
+                var perPersonIncentive21 = (percentage21 / 100).toFixed(0);
+
+                console.log("perPersonIncentive21------->" + perPersonIncentive21);
+
+                carryAmount21 = $.trim($(this).find('#carryAmount').val());
+                console.log("carryAmount21------->" + carryAmount21);
+
+                previousCarry21 = $.trim($(this).find('#previousCarry').val());
+                console.log("previousCarry21------->" + previousCarry21);
+                thisMonthAmount21 = $.trim($(this).find('#thisMonthAmount').val(perPersonIncentive21));
+
+                finalAmount21 = $.trim($(this).find('#finalAmount').val(+previousCarry21 + +perPersonIncentive21));
+
+                console.log("finalAmount21------->" + finalAmount21);
+
+                if ((+previousCarry21 + +perPersonIncentive21) > carryAmount21) {
+                    amountAfterCarry21 = $.trim($(this).find('#amountAfterCarry').val((+previousCarry21 + +perPersonIncentive21) - carryAmount21));
+
+                    console.log("amountAfterCarry21------->" + amountAfterCarry21);
+                } else {
+                    amountAfterCarry21 = $.trim($(this).find('#amountAfterCarry').val(0));;
+                }
+                if ((+previousCarry21 + +perPersonIncentive21) < carryAmount21) {
+                    finalAmountAfterCarry21 = $.trim($(this).find('#incentive').val(+previousCarry21 + +perPersonIncentive21));
+                } else {
+                    finalAmountAfterCarry21 = $.trim($(this).find('#incentive').val(carryAmount21));
+                }
+
+                roleName21 = $.trim($(this).find('#roleName').val());
+                userIds21 = $.trim($(this).find('#userIds').val());
+
+                addedAmount21 = $.trim($(this).find('#addedAmount').val());
+                console.log("AddedAmount21 :" + addedAmount21);
+                deductAmount21 = $.trim($(this).find('#amountDeduction').val());
+                
+                //reward and penalties//
+                treward21 = tRewards;
+                reward21 = $.trim($(this).find('#rewards').val());
+                tpenalties21 = tPenalties;
+                penalties21 = $.trim($(this).find('#penalties').val());
+                //end
+
+                incentive21 = $.trim($(this).find('#incentive').val());
+                fixedIncentive21 = $.trim($(this).find('#fixedIncentive').val());
+                console.log("incentive21 :" + incentive21);
+
+                remarks21 = $.trim($(this).find('#remarks').val());
+                deductionRemarks21 = $.trim($(this).find('#deductionRemarks').val());
+                
+                //special
+                specialAmount = $.trim($(this).find('#specialAmount').val());
+                specialRemarks = $.trim($(this).find('#specialRemarks').val());
+                //end speial
+
+                if (addedAmount21 != "" && deductAmount21 == "") {
+                    obj21.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val());
+                }
+                else if (deductAmount21 != "" && addedAmount21 == "") {
+                    obj21.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) - +$.trim($(this).find('#amountDeduction').val());
+                }
+                else if (addedAmount21 != "" && deductAmount21 != "") {
+                    obj21.Incentives = +$.trim($(this).find('#thisMonthAmount').val()) + +$.trim($(this).find('#addedAmount').val()) - +$.trim($(this).find('#amountDeduction').val());
+
+                }
+                else {
+                    incentive21 = 0;
+                    obj21.Incentives = $.trim($(this).find('#thisMonthAmount').val());
+                }
+
+                obj21.Percentage = percentage21;
+                obj21.ThisMonthAmount = perPersonIncentive21;
+                obj21.FinalAmount = (+previousCarry21 + +perPersonIncentive21);
+                obj21.Role = roleName21;
+                obj21.EmployeeCode = userIds21;
+
+                if ((+previousCarry21 + +perPersonIncentive21) > carryAmount21) {
+                    obj21.CarryOver = (+previousCarry21 + +perPersonIncentive21) - carryAmount21;
+                } else {
+                    obj21.CarryOver = 0;
+                }
+
+                obj21.FixedIncentive = $.trim($(this).find('#fixedIncentive').val());
+                obj21.AmountDeduction = $.trim($(this).find('#amountDeduction').val());
+                obj21.DeductionRemarks = $.trim($(this).find('#deductionRemarks').val());
+                obj21.AddedAmount = $.trim($(this).find('#addedAmount').val());
+                obj21.Remarks = $.trim($(this).find('#remarks').val());
+                
+                obj21.Reward = $.trim($(this).find('#rewards').val());
+                obj21.Penalties = $.trim($(this).find('#penalties').val());
+                obj21.TotalReward = treward21;
+                obj21.TotalPenalties = tpenalties21;
+                obj21.SpecialAmount = specialAmount;
+                obj21.SpecialRemarks = specialRemarks;
+
+                objArr21.push(obj21);
+            });
+            //spare
+            var obj31 = {};
+            var objArr31 = [];
+           
+            var empId;
+            var importedSpareValue;
+            var givenHandsetValue;
+            var remarks;
+            var incentive=0;
+
+            var specialAmount2=0;
+            var specialRemarks2;
+            
+            $("#tblSpare tr.tableTrCls1").each(function () {
+                obj31 = new Object();
+                empId = $.trim($(this).find('#userIds').val());
+                importedSpareValue = $.trim($(this).find('#importedSpareValue').val());
+                givenHandsetValue = $.trim($(this).find('#givenHandsetValue').val());
+                remarks = $.trim($(this).find('#remarks').val());
+                incentive = $.trim($(this).find('#incentive').val());
+                specialAmount2 = $.trim($(this).find('#specialAmount').val());
+                specialRemarks2 = $.trim($(this).find('#specialRemarks').val());
+                
+
+                obj31.EmployeeCode = empId;
+                if (importedSpareValue == null) {
+                    importedSpareValue = 0;
+                }
+                obj31.ImportedSpareValue = importedSpareValue;
+                if (givenHandsetValue == null) {
+                    givenHandsetValue = 0;
+                }
+                obj31.GivenHandsetValue = givenHandsetValue;
+                obj31.Remarks = remarks;
+                if (incentive==null) {
+                    incentive = 0;
+                }
+                obj31.Incentives = incentive;
+                obj31.SpecialAmount = specialAmount2;
+                obj31.SpecialRemarks = specialRemarks2;
+
+                objArr31.push(obj31);
+            });
+            //
+            //
+            var obj41 = {};
+            var objArr41 = [];
+
+            var proIds;
+            var proName;
+            var orders;
+            var poCategory;
+            var poQuantity;
+            var lotNum;
+            var lotQuantity;
+            var pmClearanceDate;
+            var chinaIqcPass;
+            var noOfInsTime;
+            var amounts;
+
+            $("#tblChinaIqc tr.tableTrCls2").each(function () {
+                obj41 = new Object();
+                
+                proIds = $.trim($(this).find('td:eq(0)').text());
+                proName = $.trim($(this).find('td:eq(1)').text());
+                orders = $.trim($(this).find('td:eq(2)').text());
+                poCategory = $.trim($(this).find('td:eq(3)').text());
+                poQuantity = $.trim($(this).find('td:eq(4)').text());
+                lotNum = $.trim($(this).find('td:eq(5)').text());
+                lotQuantity = $.trim($(this).find('td:eq(6)').text());
+                pmClearanceDate = $.trim($(this).find('td:eq(7)').text());
+                chinaIqcPass = $.trim($(this).find('td:eq(8)').text());
+                noOfInsTime = $.trim($(this).find('td:eq(9)').text());
+                amounts = $.trim($(this).find('td:eq(10)').text());
+
+
+                obj41.ProjectMasterId = proIds;
+                obj41.ProjectName = proName;
+                obj41.Orders = orders;
+                obj41.PoCategory = poCategory;
+                obj41.PoQuantity = poQuantity;
+                obj41.LotNumber = lotNum;
+                obj41.LotQuantity = lotQuantity;
+                obj41.ProjectManagerClearanceDate = pmClearanceDate;
+                obj41.ChinaIqcPassHundredPercent = chinaIqcPass;
+                obj41.NoOfTimeInspection = noOfInsTime;
+                obj41.Amount = amounts;
+
+                objArr41.push(obj41);
+            });
+            //
+            var month = monthName;
+            var year = yearVal;
+            var totalAmount = totalIncentiveAmount;
+            var totalAmount21 = +treward21 - +tpenalties21;
+
+
+            console.log("month-->" + month);
+            console.log("year-->" + year);
+            console.log("totalAmount-->" + totalAmount);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("MonthlyIncentive", "Commercial")',
+                data: "{ Month: '" + month
+                    + "', MonNum: '" + selectedMonthValue
+                    + "', Year: '" + year
+                    + "', TotalAmount: '" + totalAmount
+                    + "',objArr:'" + JSON.stringify(objArr)
+                    + "',objArr41:'" + JSON.stringify(objArr41)
+                    + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (!data.success) {
+                        if (data.errors.name) {
+                            //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                        }
+                    }
+                    else {
+                        //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                    }
+                }
+            });
+            
+            //tblSpare
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveMonthlyIncentiveForNewLogic", "Commercial")',
+                data: "{ Month: '" + month
+                    + "', MonNum: '" + selectedMonthValue
+                    + "', Year: '" + year
+                    + "', TotalAmount21: '" + totalAmount21
+                    + "',objArr21:'" + JSON.stringify(objArr21)
+                    + "',objArr31:'" + JSON.stringify(objArr31)
+                    + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                   // $('#loading').hide();
+                    if (!data.success) {
+                        if (data.errors.name) {
+                            //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                        }
+                    }
+                    else {
+                        //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                    }
+                }
+            });
+            //tblSpare
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveCmPenaltiesAndRewardData", "Commercial")',
+                data: "{ Month: '" + month
+                    + "', MonNum: '" + selectedMonthValue
+                    + "', Year: '" + year
+                    + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (!data.success) {
+                        if (data.errors.name) {
+                            //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                        }
+                    }
+                    else {
+                        //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                    }
+                }
+            });
+            /////////////////////////////////////////////////
+
+
+            ////////////////////////////////////////////////////
+            window.location = '@Url.Action("MonthlyIncentive", "Commercial")' + '?monId=' + selectedMonthValue + '&yearId=' + selectedYearValue;
+            //   var selectedMonthValue = $('#DDDMonth').val();
+            //var selectedYearValue = $('#DDDYear').val();
+            window.open('@Url.Action("IncentiveReport", "Commercial")' + '?monId=' + selectedMonthValue + '&month' + selecteddropTextMon + '&yearId=' + selectedYearValue);
+        });
+
+    });
+
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+
+</script>

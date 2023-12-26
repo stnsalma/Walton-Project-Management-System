@@ -1,0 +1,378 @@
+﻿@model ProjectManagement.Models.LcOpeningPermissionOtherProductModel
+@{
+    ViewBag.Title = "OtherProductLcOpeningApprovalDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Approve Other Product LC</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Product Type</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x=>x.ProductType,new{@class="form-control",@readonly=""})
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Product Name</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Product, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Other Product Model</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Model, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Company Name</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.CompanyName, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Opening Date</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.OpeningDate, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Supplier Name</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.SupplierName, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">LC For Model</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.OtherProductLcForTheProject, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">TTI</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.TtiPerLine, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Order No</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.OrderNo, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Supplier Grade</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.SupplierGrade, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Prev. Order Quanity</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PreviousOrderQunatity, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Stock Quantity</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.StockQuantity, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Pipeline Quantity</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.PipeLineQuantity, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Order Quantity</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.OrderQuantity, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">LC Amount</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.LcAmount, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Currency</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.Currency, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Total Amount</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.TotalAmount, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Oracle PO No</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.OraclePoNo, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Relevant Models</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.RelevantWaltonProjects, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Remarks by Creator</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Commercial Remarks</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.SourcingRemarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">CEO Remarks</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.CeoRemarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">Acknowledgement Remarks</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.AcknowledgeRemarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-3">Management Remarks</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.ApprovedByRemarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-3">BI Analyst Remarks</div>
+                <div class="col-md-9">
+                    @Html.TextAreaFor(x => x.BiRemarks, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Service to Sales Ratio of Relevant Models and LC Models</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Total Sales</th>
+                                <th>Total Service</th>
+                                <th>ServiceToSalesRatio</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.ServiceToSalesRatiosOfRelevantModels)
+                            {
+                                <tr>
+                                    <td>@v.Model</td>
+                                    <td>@v.TotalSales</td>
+                                    <td>@v.TotalService</td>
+                                    <td>@v.ServiceToSalesRatio1</td>
+                                    <td>@v.DateAdded</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Total Activated Invoice value vs Total Spare value</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>TotalActivatedInvoiceValue</th>
+                                <th>Total Spare</th>
+                                <th>PCBA</th>
+                                <th>LCD</th>
+                                <th>Touch</th>
+                                <th>IC</th>
+                                <th>Battery</th>
+                                <th>Accessories</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.InvoiceVsSpare)
+                            {
+                                <tr>
+                                    <td>@v.ModelName</td>
+                                    <td>@v.TotalActivatedInvoiceValue</td>
+                                    <td>@v.SpareTotal</td>
+                                    <td>@v.PCBA</td>
+                                    <td>@v.LCD</td>
+                                    <td>@v.Touch</td>
+                                    <td>@v.IC</td>
+                                    <td>@v.Battery</td>
+                                    <td>@v.Accessories</td>
+                                    <td>@String.Format("{0:yyyy-MM-dd}", @v.AddedDate)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <hr/>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Order Wise Service To Sales Ratio For Foc Claim</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>Order No</th>
+                                <th>Sales Quantity</th>
+                                <th>Service Quantity</th>
+                                <th>ServiceToSalesRatio</th>
+                                <th>MonthsPassed</th>
+                                <th>ReleaseDate</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.ServiceToSalesRatioForFocClaim)
+                            {
+                                <tr>
+                                    <td>@v.ModelName</td>
+                                    <td>@v.OrderNo</td>
+                                    <td>@v.SalesQuantity</td>
+                                    <td>@v.ServiceQuantity</td>
+                                    <td>
+                                        @if (@v.ServiceToSalesRatio > 2.00M && @v.MonthsPassed<=6)
+                                        {
+                                            <span style="color: red">@v.ServiceToSalesRatio</span>
+                                        }
+                                        else if (@v.ServiceToSalesRatio > 5.00M && @v.MonthsPassed <= 12)
+                                        {
+                                            <span style="color: red">@v.ServiceToSalesRatio</span>
+                                        }
+                                        else
+                                        {
+                                            @v.ServiceToSalesRatio
+                                        }
+                                        
+                                    </td>
+                                    <td>@v.MonthsPassed</td>
+                                    <td>
+                                        @if (@v.OrderNo != null && @v.OrderNo > 1)
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @v.ReleaseDate) @Html.Raw(" (Approximate)")
+                                        }
+                                        else
+                                        {
+                                            @String.Format("{0:yyyy-MM-dd}", @v.ReleaseDate)
+                                        }
+                                    </td>
+                                    <td>@String.Format("{0:yyyy-MM-dd}", @v.AddedDate)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                    <textarea class="form-control" id="txtApproveRemarks" placeholder="Approver Remarks" rows="5"></textarea>
+            </div>
+            @*<div class="col-md-6">
+                <div class="col-md-3">TTI per line</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.SupplierName, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>*@
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                    <button class="btn btn-success" id="btnApprove"><i class="fa fa-check"></i> Approve</button>
+                    <button class="btn btn-danger hidden" id="btnPleaseWait"><i class="fa fa-pulse fa-spinner"></i> Please Wait..</button>
+            </div>
+            @*<div class="col-md-6">
+                <div class="col-md-3">TTI per line</div>
+                <div class="col-md-9">
+                    @Html.TextBoxFor(x => x.SupplierName, new { @class = "form-control", @readonly = "" })
+                </div>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#btnApprove').on('click', function () {
+        $('#btnApprove').addClass('hidden');
+        $('#btnPleaseWait').removeClass('hidden');
+        var id = '@Model.Id';
+        var remarks = $('#txtApproveRemarks').val();
+        console.log(id);
+        var url = '@Url.Action("ApproveOtherLc", "Common")';
+        $.post(url, { id: id, remarks: remarks }, function(data) {
+            $('#btnApprove').removeClass('hidden');
+            $('#btnPleaseWait').addClass('hidden');
+            alertify.success('Approved Successfully');
+        });
+    });
+</script>

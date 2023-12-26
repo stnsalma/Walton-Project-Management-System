@@ -1,0 +1,207 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@using ProjectManagement.ViewModels.Software
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+
+
+<h2>Report Print For FieldTest</h2>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Project select & Print Report for Field Test
+        </div>
+
+    </div>
+
+    <div class="portlet-body" style="display: block;">
+        <div class="row">
+
+            <div class="col-lg-2">
+                Select Project
+            </div>
+            <div class="col-lg-9">
+
+                @if (Model != null && Model.ProjectMasterModelsList.Any())
+                {
+
+
+
+                    <div class="col-lg-5">
+                        @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(@Model.ProjectMasterModelsList, "ProjectMasterId", "ProjectName"), "Select Value", new { @class = "dropForProject form-control ddChosen", Value = @Model.ProjectMasterModel.ProjectName })
+
+
+                    </div>
+                    <div class="col-lg-3">
+             
+                        <input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("ReportPrintFieldTest", "Software")?projectId=' + $('option:selected', $('#ProjectMasterId')).val()  " />
+                    </div>
+
+                }
+
+            </div>
+
+            <div class="col-lg-2"></div>
+        </div>
+        <br />
+
+      
+    </div>
+</div>
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-list"></i>Field Test Result for different Project
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover" id="tblprojectID">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="display: none"> Project ID </th>
+                            <th class="text-center" style="display: none"> SwFieldTestId </th>
+                            <th class="text-center"> Project Name </th>
+                            <th class="text-center">Project Type</th>
+                            <th class="text-center">Project Pm Name</th>
+
+                            @*<th class="text-center" style="display: none">SwFieldTestId</th>*@
+                            <th class="text-center" style="display: none">SwQcInchargeAssignId</th>
+                            <th class="text-center">IssueOf</th>
+                            <th class="text-center"> CompareWith </th>
+                            <th class="text-center"> FieldTest Added Date </th>
+                            <th class="text-center">Os.Version</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (Model != null && Model.SwFieldTestReportViews.Any())
+                        {
+
+                            for (int i = 0; i < Model.SwFieldTestReportViews.Count; i++)
+                            {
+                                int projectId = 0;
+                                projectId = Convert.ToInt32(@Request.QueryString["projectId"]);
+
+                                if (projectId > 0)
+                                {
+
+                                    if (Model.SwFieldTestReportViews[i].ProjectMasterId == projectId)
+                                    {
+                                        <tr>
+                                         
+                                            <td class="text-center" style="display: none">@Model.SwFieldTestReportViews[i].ProjectMasterId</td>
+                                            <td  class="text-center" style="display: none">@Model.SwFieldTestReportViews[i].SwFieldTestId</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].ProjectName</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].ProjectType</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].UserFullName</td>
+                                            <td class="text-center" style="display: none">@Model.SwFieldTestReportViews[i].HwQcInchargeUserId</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].IssueOf</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].ComparedWith</td>
+                                            <td class="text-center">@String.Format("{0:yyyy-MM-dd}", @Model.SwFieldTestReportViews[i].AddedDate)</td>
+                                            <td class="text-center">@Model.SwFieldTestReportViews[i].OsVersion</td>
+                                            <td>
+
+                                                <button type="button" target='_blank' class="btn btn-success btnOpenPrintPage">
+                                                    <span class="glyphicon glyphicon-print"></span> Print
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+
+                    </tbody>
+                                            
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<script>
+    $(function () {
+
+        $(".btnOpenPrintPage").on('click', function (e) {
+            e.preventDefault();
+           
+          
+            var projectId = @Request.QueryString["projectId"];
+           // var fieldTextId = $('#swFieldTextId').val();
+
+          
+            var rowNumber = $(this).closest('td').index()+1;
+            var rowNumber1 = $('#rowNumber').val(rowNumber);
+           
+            //var  fieldTextId= $('#SwFieldTestId').val($.trim($(this).closest('tr').find('td:eq(1)').text()));
+            var  fieldTextId= $('#SwFieldTestId').val($.trim($(this).closest('tr').find('td:eq(1)').text()));
+           // $('#ProjectName').val($.trim($(this).closest('tr').find('td:eq(1)').text()));
+          
+            console.log(projectId);
+            console.log(fieldTextId);
+
+
+            // var url = '/RdlcReports/RdlcForFieldTestReport';
+            // var ajaxData = commonJqueryAjax(url);
+
+            // window.location = '/RdlcReports/RdlcForFieldTestReport.aspx';
+        });
+    });
+</script>*@
+
+
+<script type="text/javascript">
+
+    $(function() {
+
+        $(".btnOpenPrintPage").on('click', function(e) {
+            e.preventDefault();
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tblprojectID');
+            var projectMasterId = table.rows[rowIndex].cells[0].innerHTML;
+            var swFieldTestId = table.rows[rowIndex].cells[1].innerHTML;
+            var swQcInchargeId = table.rows[rowIndex].cells[5].innerHTML;
+
+            console.log(projectMasterId);
+            console.log(swFieldTestId);
+            //window.open("../../RdlcReports/RdlcReport.aspx?id=" + orderId + "^0^0^PurchaseOrder");
+            
+           // window.location = '@Url.Action("SwQcSpecification", "Software")';
+            //window.location = '/Software/SwQcSpecification';
+
+            window.open("../RdlcReports/RdlcReport.aspx?id=" + projectMasterId + "^" + swQcInchargeId + "^" + swFieldTestId + "^ReportPrintFieldTest");
+        });
+
+    });
+
+    $(document).ready(function () {
+
+        // var p_id = @*@Request.QueryString["projectId"];*@
+        // alert("hi"+p_id);
+        var p_id = @Request.QueryString["projectId"];
+       // alert(p_id);
+        var text1;
+        var value1;
+        $("#ProjectMasterId option").each(function () {
+
+            text1 = $(this).text();
+            value1 = $(this).val();
+            // alert(text1);
+            if (value1 == p_id) {
+                $("#ProjectMasterId").val(value1);
+
+            }
+
+        });
+
+
+    });
+
+</script>
+

@@ -1,0 +1,131 @@
+﻿@model IEnumerable<ProjectManagement.ViewModels.CostManagement.VmCostManTBD>
+@{
+    ViewBag.Title = "PendingPricingList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/inline_button_loading.css" rel="stylesheet" />
+<div class="portlet box blue-ebonyclay">
+    <div class="portlet-title">
+        <div class="caption">Cost Management : Pending Price Proposals</div>
+        @*<div class="tools">
+                <input type="button" class="btn btn-sm btn-warning" value="Create" onclick="location.href='@Url.Action("ProjectPoFeedback","Common")'" />
+            </div>*@
+    </div>
+    <div class="portlet-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="tbl_pending_cmd">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Order No</th>
+                        <th>Type</th>
+                        <th>OS</th>
+                        <th>Display</th>
+                        <th>CPU</th>
+                        <th>Chipset</th>
+                        <th>RAM</th>
+                        <th>ROM</th>
+                        <th>Supplier</th>
+                        <th>Prev. Given Pr.</th>
+
+                        <th>Price Proposal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            @Html.HiddenFor(model => v.CostMasterId, new { @class = "cost-master-id" })
+                            @Html.HiddenFor(model => v.CostManagementModelId)
+                            @Html.HiddenFor(model => v.ProjectMasterId)
+                            <td>@v.ProjectName</td>
+                            <td>@v.OrderNumber</td>
+                            <td>@v.ProjectType</td>
+                            <td>@v.OperatingSystem</td>
+                            <td>@v.DisplaySize</td>
+                            <td>@v.CpuName</td>
+                            <td>@v.ChipsetName</td>
+                            <td>@v.Ram</td>
+                            <td>@v.Rom</td>
+                            <td>@v.SupplierName</td>
+                            <td>@v.PreviousPrices</td>
+                            <td>@Html.TextBoxFor(model => v.ProposedPrice, new { @class = "txt-proposed-price form-control" })</td>
+
+                            <td>
+                                @if (v.ProposalCount < 3)
+                                {
+                                    <input type="button" class="btn btn-success" value="Update" onclick="save_proposed_price($(this))" />
+                                    @Html.ActionLink("Details", "CostDetailInfo", new { id = v.CostMasterId })
+                                }
+                                else
+                                {
+                                    <span class="badge badge-default">Action Not Available</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var mytable = $('#tbl_pending_cmd').DataTable({
+            "ordering": false
+            //"columnDefs": [
+            //    //{ className: "text-center", "targets": [2, 3, 4, 5] },
+            //    {
+            //        "targets": [0, 1],
+            //        "visible": false,
+            //        "searchable": false
+            //    }
+            //]
+        });
+
+
+
+    });
+
+    function save_proposed_price(ths) {
+
+        //var btn = document.querySelector(".button");
+        //var t = ths;
+        //btn.classList.add("button--loading");
+        var costMasterId = ths.closest('tr').find("input[type='hidden']")[0].defaultValue;
+        var proposedPrice = ths.closest('tr').find('td .txt-proposed-price').val();
+        if (confirm("Are you sure that your proposed price is " + proposedPrice + "?")) {
+            $.ajax({
+                url: ' @Url.Action("AddPrice", "CostManagement")', //Changed For test
+                type: 'Post',
+                //data: JSON.stringify({ statusList: packagingQcList }),
+                data: JSON.stringify({ costMasterId: costMasterId, proposedPrice: proposedPrice }),
+                dataType: 'json',
+                async: false,
+                contentType: 'application/json',
+                success: function (result) {
+                    if (result.Id = 0) {
+                        alertify.error(result.Message);
+                    } else {
+                        alertify.success(result.Message);
+                    }
+
+                },
+                error: function (result, textStatus, jqXHR) {
+                    iziToast.error({
+                        title: 'Error',
+                        message: 'Connection Error !!!',
+                    });
+                }
+            });
+        } else {
+            //btn.classList.remove("button--loading");
+            e.preventDefault();
+
+        }
+
+    }
+</script>
+

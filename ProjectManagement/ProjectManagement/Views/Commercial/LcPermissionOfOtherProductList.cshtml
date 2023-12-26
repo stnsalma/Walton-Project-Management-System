@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ProjectManagement.Models.LcOpeningPermissionOtherProductModel>
+@{
+    ViewBag.Title = "LcPermissionOfOtherProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">List of LC Permission for other products</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-bordered dtTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Type</th>
+                        <th>Product</th>
+                        <th>Model</th>
+                        <th>Company</th>
+                        <th>Opening Date</th>
+                        <th>Supplier Name</th>
+                        <th>Approved</th>
+                        <th>Added By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model)
+                    {
+                        <tr>
+                            <td>@v.Id</td>
+                            <td>@v.ProductType</td>
+                            <td>@v.Product</td>
+                            <td>@v.Model</td>
+                            <td>@v.CompanyName</td>
+                            <td>@String.Format("{0:yyyy-MM-dd}", @v.OpeningDate)</td>
+                            <td>@v.SupplierName</td>
+                            <td>@v.ApprovedByName</td>
+                            <td>@v.AddedByName</td>
+                            <td>
+                                <input type="submit" class="btn btn-warning btn-sm" value="Details" onclick="location.href='@Url.Action("LcOpeningPermissionForOtherProduct", "Commercial", new { id = v.Id })'" />
+                                <input type="submit" class="btn btn-success btn-sm" value="Printable Format" onclick="location.href='@Url.Action("LcOpeningOtherProductPrint", "Common", new { id = v.Id })'" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

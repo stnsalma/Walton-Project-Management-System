@@ -1,0 +1,488 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.Models.NinetyFiveProductionRewardModel
+
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<h2 style="color: red">Refund Project Amount For Incentive</h2>
+@*<h2>RefundProjectAmountForIncentive</h2>*@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="font-size: 13px;color: red">
+                    Select Month & Year
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box green-haze">
+                <div class="portlet-body table-scrollable table-responsive">
+                    <div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-5">
+                                <div class="col-lg-5" style="color: brown;">Select Month</div>
+                                <div class="col-lg-7">
+                                    @if (ViewBag.ddlMonths != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="col-lg-5" style="color: brown;">Select Year</div>
+                                <div class="col-lg-7">
+                                    @if (ViewBag.ddlYears != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-4" style="text-align: center">
+                                </div>
+
+                                <div class="col-md-4" style="text-align: center">
+                                    <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSearch" value="SEARCH" onclick="location.href = '@Url.Action("RefundProjectAmountForIncentive", "Commercial")?MonNum=' + $('option:selected', $('#DDDMonth')).val() + '&Year=' + $('option:selected', $('#DDDYear')).val() + '' ">
+                                </div>
+                                <div class="col-md-4" style="text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="font-size: 13px;color: red">
+                    Policy No.1: **For CKD and SKD Projects 150 Days [PoDate to Material arrive after deadline per day 100 tk will be deducted, if arrive before deadline per day 500tk will be rewarded]
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box green-haze">
+                <div class="portlet-body table-scrollable table-responsive">
+                    <div>
+                        <table class="table table-bordered table-striped table-condensed flip-content tbl1" id="tbl1" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                            <thead>
+                                <tr>
+                                    @*<th></th>*@
+                                    <th style="display: none">ProID</th>
+                                    <th>ProjectName</th>
+                                    <th>Project<br />Type</th>
+                                    <th>Shipment<br />Type</th>
+                                    <th>Sourcing<br />Type</th>
+                                    <th>Orders</th>
+                                    <th>Po___Date</th>
+                                    <th>Warehouse<br />Entrydate</th>
+                                    <th>DaysDiff</th>
+                                    <th>Effective<br />Days<br />CKD/SKD</th>
+                                    <th>Deduct<br />Point</th>
+                                    <th>DaysDiff<br />ForDeduct</th>
+                                    <th>Amount<br />Deduct</th>
+                                    <th>IsRefund<br />Select</th>
+                                    <th style="color: red">IsRefund?</th>
+                                    <th>Refund<br />Amount(70%)</th>
+                                    <th>Effective<br />Month</th>
+                                    <th>SAVE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.CmPenaltiesCkdSkd != null)
+                                {
+                                    foreach (var items in ViewBag.CmPenaltiesCkdSkd)
+                                    {
+                                        <tr class="tableTrCls1">
+                                            @*<td></td>*@
+                                            <td style="display: none">@items.ProjectMasterID</td>
+                                            <td>@items.ProjectName</td>
+                                            <td>@items.ProjectType</td>
+                                            <td>@items.ShipmentType</td>
+                                            <td>@items.SourcingType</td>
+                                            <td>@items.Orders</td>
+                                            <td>
+                                                @if (@items.PoDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                            </td>
+                                            <td>
+                                                @if (@items.WarehouseEntryDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                            </td>
+                                            <td>@items.DaysDiff</td>
+                                            <td>@items.EffectiveDays</td>
+                                            <td>@items.DeductPoint</td>
+                                            <td>@items.DaysDiffForDeduct</td>
+                                            <td class="AmountDeduct1">
+
+                                                <input type="number" id="AmountDeduct" style="width: 100px" class="form-control AmountDeduct" value="@items.AmountDeduct" disabled="disabled" />
+
+                                            </td>
+                                            <td class="isRefundTd">
+                                                <span>
+                                                    <select class="form-control isRefunds1" id="isRefunds1" name="@items.IsRefund" style="width: 100px">
+                                                        <option value=0>--Select--</option>
+                                                        <option value="NO">NO</option>
+                                                        <option value="YES">YES</option>
+                                                    </select>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <input value="@items.IsRefund" id="isRefunds" class="isRefunds" disabled="disabled" style="color: red" />
+                                            </td>
+                                            <td class="RefundAmount1">
+                                                @if (@items.RefundAmount != null)
+                                                {
+                                                    @items.RefundAmount
+                                                }
+                                                else
+                                                {
+                                                    <input type="number" id="RefundAmount" min="0" class="form-control RefundAmount" disabled="disabled" />
+                                                }
+                                            </td>
+
+                                            <td class="EffectiveMonth1">
+                                                @if (@items.EffectiveMonth != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @items.EffectiveMonth)
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="effectiveMonth" style="width: 100px" class="form-control datepicker effectiveMonth" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="effectiveMonth" />
+
+                                                }
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success save1" id="save1">
+                                                    <span class="glyphicon glyphicon-save"></span> SAVE
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="font-size: 13px;color: red">
+                    Policy No.1: **For Repeat Order Projects if Sea-100 Days and if Air-80 Days [PoDate to Material arrive after deadline per day 100 tk will be deducted, if arrive before deadline per day 500tk will be rewarded]
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box green-haze">
+                <div class="portlet-body table-scrollable table-responsive">
+                    <div>
+                        <table class="table table-bordered table-striped table-condensed flip-content tbl2" id="tbl2" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                            <thead>
+                                <tr>
+                                    @*<th></th>*@
+                                    <th style="display: none">ProID</th>
+                                    <th>ProjectName</th>
+                                    <th>Project<br />Type</th>
+                                    <th>Shipment<br />Type</th>
+                                    <th>Sourcing<br />Type</th>
+                                    <th>Orders</th>
+                                    <th>Po___Date</th>
+                                    <th>Warehouse<br />Entrydate</th>
+                                    <th>DaysDiff</th>
+                                    <th>Effective<br />Days<br />Sea/Air</th>
+                                    <th>Deduct<br />Point</th>
+                                    <th>DaysDiff<br />ForDeduct</th>
+                                    <th>Amount<br />Deduct</th>
+                                    <th>IsRefund<br />Select</th>
+                                    <th style="color: red">IsRefund?</th>
+                                    <th>Refund<br />Amount(70%)</th>
+                                    <th>Effective<br />Month</th>
+                                    <th>SAVE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.CmPenaltiesRepeatOrder != null)
+                                {
+                                    foreach (var items in ViewBag.CmPenaltiesRepeatOrder)
+                                    {
+                                        <tr class="tableTrCls1">
+                                            @*<td></td>*@
+                                            <td style="display: none">@items.ProjectMasterID</td>
+                                            <td>@items.ProjectName</td>
+                                            <td>@items.ProjectType</td>
+                                            <td>@items.ShipmentType</td>
+                                            <td>@items.SourcingType</td>
+                                            <td>@items.Orders</td>
+                                            <td>
+                                                @if (@items.PoDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                            </td>
+                                            <td>
+                                                @if (@items.WarehouseEntryDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                            </td>
+                                            <td>@items.DaysDiff</td>
+
+                                            <td>@items.EffectiveDays</td>
+                                            <td>@items.DeductPoint</td>
+                                            <td>@items.DaysDiffForDeduct</td>
+                                            <td class="AmountDeduct1">
+                                                <input type="number" id="AmountDeduct" style="width: 100px" class="form-control AmountDeduct" disabled="disabled" value="@items.AmountDeduct" />
+                                            </td>
+                                            <td class="isRefundTd">
+                                                <span>
+                                                    <select class="form-control isRefunds1" id="isRefunds1" name="@items.IsRefund" style="width: 100px">
+                                                        <option value=0>--Select--</option>
+                                                        <option value="NO">NO</option>
+                                                        <option value="YES">YES</option>
+                                                    </select>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <input value="@items.IsRefund" id="isRefunds" class="isRefunds" disabled="disabled" style="color: red" />
+                                            </td>
+                                            <td class="RefundAmount1">
+                                                @*@if (@items.RefundAmount != null)
+                                                {
+                                                    @items.RefundAmount
+                                                }
+                                                else
+                                                {*@
+                                                    <input type="number" id="RefundAmount" min="0" class="form-control RefundAmount" value="@items.RefundAmount" disabled="disabled" />
+                                                @*}*@
+                                            </td>
+
+                                            <td class="EffectiveMonth1">
+                                                @if (@items.EffectiveMonth != null)
+                                                {
+                                                    @String.Format("{0:yyyy-MM-dd}", @items.EffectiveMonth)
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="effectiveMonth" style="width: 100px" class="form-control datepicker effectiveMonth" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="effectiveMonth" />
+
+                                                }
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success save2" id="save2">
+                                                    <span class="glyphicon glyphicon-save"></span> SAVE
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+<script>
+    $('.datepicker').datepicker({
+        defaultDate: 'now',
+        format: 'yyyy-mm-dd',
+        autoclose: 1,
+    });
+    var d_amount1;
+    var refunds1;
+    var isRefund1;
+    $("#tbl1 tr.tableTrCls1").each(function () {
+        d_amount1 = $.trim($(this).find('#AmountDeduct').val());
+        refunds1 = (d_amount1 * 0.7).toFixed(2);
+        $.trim($(this).find('#RefundAmount').val(refunds1));
+
+        //isRefund1 = $.trim($(this).find('#isRefunds').val());
+        //if (isRefund1 == "YES") {
+        //    document.getElementById("save1").style.display = "none";
+        //}
+    });
+    var d_amount2;
+    var refunds2;
+ 
+    $("#tbl2 tr.tableTrCls1").each(function () {
+        d_amount2 = $.trim($(this).find('#AmountDeduct').val());
+        refunds2 = (d_amount2 * 0.7).toFixed(2);
+        $.trim($(this).find('#RefundAmount').val(refunds2));
+        //var isRefund2;
+        //isRefund2 = $.trim($(this).find('.isRefunds').val());
+        //if (isRefund2 == "YES") {
+        //    document.getElementById("save2").style.display = "none";
+        //}
+    });
+   
+    //save tbl1
+    $("body").on("click", "#tbl1 .save1", function () {
+        $('#loading').show();
+        var row = $(this).closest("tr");
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl1');
+
+
+        var refundSave = {};
+
+        refundSave.ProjectMasterID = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+        refundSave.ProjectName = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+        refundSave.ProjectType = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+        refundSave.ShipmentType = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+        refundSave.SourcingType = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+        refundSave.Orders = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+        refundSave.PoDate = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+        refundSave.WarehouseEntryDate = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+        refundSave.DaysDiff = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+        refundSave.EffectiveDays = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+        refundSave.DeductPoint = $.trim(table.rows[rowIndex].cells[10].innerHTML);
+        refundSave.DaysDiffForDeduct = $.trim(table.rows[rowIndex].cells[11].innerHTML);
+
+        refundSave.AmountDeduct = row.find(".AmountDeduct1").find("input").val();
+        refundSave.IsRefund = row.find(".isRefundTd").find("span").find(".isRefunds1").find(":selected").text();
+        if (refundSave.IsRefund == "--Select--") {
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select IsRefund.",
+            }).show();
+            return false;
+        }
+        refundSave.RefundAmount1 = row.find(".RefundAmount1").find("input").val();
+        refundSave.EffectiveMonth = row.find(".EffectiveMonth1").find("input").val();
+        if (refundSave.EffectiveMonth == "") {
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select EffectiveMonth.",
+            }).show();
+            return false;
+        }
+
+        //Ajax load//
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCmPenaltiesCkdSkd", "Commercial")',
+            data: '{refundSave:' + JSON.stringify(refundSave) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.data == "Action is successful.") {
+                    $('#loading').hide();
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Action is successful.",
+                    }).show();
+                }
+                $('#loading').hide();
+            }
+        });
+    });
+    //save tbl2
+    $("body").on("click", "#tbl2 .save2", function () {
+        $('#loading').show();
+        var row = $(this).closest("tr");
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('tbl2');
+
+
+        var refundSave = {};
+
+        refundSave.ProjectMasterID = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+        refundSave.ProjectName = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+        refundSave.ProjectType = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+        refundSave.ShipmentType = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+        refundSave.SourcingType = $.trim(table.rows[rowIndex].cells[4].innerHTML);
+        refundSave.Orders = $.trim(table.rows[rowIndex].cells[5].innerHTML);
+        refundSave.PoDate = $.trim(table.rows[rowIndex].cells[6].innerHTML);
+        refundSave.WarehouseEntryDate = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+        refundSave.DaysDiff = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+        refundSave.EffectiveDays = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+        refundSave.DeductPoint = $.trim(table.rows[rowIndex].cells[10].innerHTML);
+        refundSave.DaysDiffForDeduct = $.trim(table.rows[rowIndex].cells[11].innerHTML);
+
+        refundSave.AmountDeduct = row.find(".AmountDeduct1").find("input").val();
+        refundSave.IsRefund = row.find(".isRefundTd").find("span").find(".isRefunds1").find(":selected").text();
+        if (refundSave.IsRefund == "--Select--") {
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select IsRefund.",
+            }).show();
+            return false;
+        }
+        refundSave.RefundAmount1 = row.find(".RefundAmount1").find("input").val();
+        refundSave.EffectiveMonth = row.find(".EffectiveMonth1").find("input").val();
+        if (refundSave.EffectiveMonth == "") {
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select EffectiveMonth.",
+            }).show();
+            return false;
+        }
+
+        //Ajax load//
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SaveCmPenaltiesRepeatOrder", "Commercial")',
+            data: '{refundSave:' + JSON.stringify(refundSave) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.data == "Action is successful.") {
+                    $('#loading').hide();
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Action is successful.",
+                    }).show();
+                }
+                $('#loading').hide();
+            }
+        });
+    });
+</script>

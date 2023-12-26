@@ -1,0 +1,319 @@
+﻿@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Commercial.VmWarehouseEntry
+
+    @{
+    ViewBag.Title = "Prject Events";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    .row-header {
+        background-color: #00d0ff24;
+        padding: 8px 0px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .rm {
+        font-family: sans-serif;
+        border: 1px solid #ccc;
+    }
+
+    .inner-rm {
+        margin: 0px 0px;
+        font-family: sans-serif;
+        font-size: 14px;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+
+        .inner-rm:last-child {
+            border-bottom: none;
+        }
+
+    .remove-left-padding {
+        padding-left: 0px;
+    }
+
+    .add-left-padding {
+        padding-left: 50px;
+    }
+
+    .innnermost-rm {
+        font-family: sans-serif;
+        font-size: 14px;
+        padding: 10px 0px;
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+
+        .innnermost-rm:last-child {
+            border-bottom: none;
+        }
+
+    .inline-div {
+        display: inline-flex;
+    }
+</style>
+
+<div class="row">
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Project Events</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        @using (Html.BeginForm("ProjectEvents", "Commercial", FormMethod.Get))
+        {
+        <div class="portlet-title">
+            <div class="row">
+                <label class="col-lg-2 ">From Month</label>
+                <div class="col-lg-4 inline-div DivFromYear">
+                    <!--<input type="month" class="form-control date-picker" id="fromMonth" placeholder="Select Start Month" />-->
+
+                    <select class="form-control col-lg-4" id="fromYear">
+                        @for(int year=DateTime.Today.Year-8; year<=DateTime.Today.Year+2;year++)
+                        {
+                        <option selected="@(DateTime.Today.Year==year?true:false)"> @year </option>
+                        }
+
+                    </select>
+                    <select class="form-control col-lg-8" id="fromMonth">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03">March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+
+                    <input type="hidden" name="fromDate" id="fromDate" value="@ViewBag.FromDateText" />
+
+                </div>
+                <!--<div class="col-lg-2 DivFromMonth">
+
+                </div>-->
+                <label class="col-lg-1 col-lg-offset-1">To Month</label>
+                <div class="col-lg-4 inline-div DivEndYear">
+
+                    <select class="form-control col-lg-4" id="endYear">
+                        @for(int year=DateTime.Today.Year-8; year<=DateTime.Today.Year+2;year++)
+                        {
+                        <option selected="@(DateTime.Today.Year==year?true:false)"> @year </option>
+                        }
+
+                    </select>
+                    <select class="form-control col-lg-8" id="endMonth">
+                        <option value="01">January</option>
+                        <option value="02">February</option>
+                        <option value="03" selected>March</option>
+                        <option value="04">April</option>
+                        <option value="05">May</option>
+                        <option value="06">June</option>
+                        <option value="07">July</option>
+                        <option value="08">August</option>
+                        <option value="09">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+
+                    <input type="hidden" name="toDate" id="toDate" value="@ViewBag.ToDateText" />
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <label class="col-lg-2 ">Search</label>
+                <div class="col-lg-4">
+                    <input type="text" name="searchString" class="form-control" id="searchString" value="@(ViewBag.SearchString ?? String.Empty)" placeholder="Search By Model/Supplier" />
+                </div>
+                <div class="col-lg-3 col-lg-offset-1">
+                    <button type="submit" id="btnsearch" class="btn btn-success btn-circle">Search</button>
+
+                </div>
+            </div>
+            <br />
+        </div>
+
+        <div class="portlet-body">
+
+            <!--<div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                <div class="row rm row-header no-footer">
+                    <div class="col-sm-1">Month</div>
+                    <div class="col-sm-1">Product Type</div>
+                    <div class="col-sm-1">Supplier</div>
+                    <div class="col-sm-1">Model name</div>
+                    <div class="col-sm-1">Order No.</div>
+                    <div class="col-sm-1">CKD Model Type</div>
+                    <div class="col-sm-1">Order Qty</div>
+                    <div class="col-sm-1">Order date</div>
+                    <div class="col-sm-2 add-left-padding">Inspection Date</div>
+                    <div class="col-sm-2">Warehouse Receive Date</div>
+                </div>
+                <div class="row rm no-footer">
+                    @foreach (var item in Model.MonthList)
+                    {
+                    if (Model.MonthList.Count > 0)
+                    {
+                    <div class="row inner-rm">
+                        <div class="col-sm-1">@item</div>
+                        <div class="col-sm-11 .remove-left-padding">
+                            @foreach (var ptypeitem in Model.ProductTypeList.Where(i => i.MonthName == @item))
+                            {
+                            if (Model.ProductTypeList.Count(x =>  x.MonthName == @item) > 0)
+                            {
+                            <div class="row inner-rm">
+                                <div class="col-sm-1">
+                                @String.Format("{0}  Qty={1}",ptypeitem.TypeName,ptypeitem.TotalQty)
+                                </div>
+                                <div class="col-sm-11 remove-left-padding">
+
+                                    @foreach (var data in Model.CommercialEvents.Where(i => i.ProuductType == @ptypeitem.TypeName  && i.Month==@ptypeitem.MonthName))
+                                    {
+                                    <div class="row innnermost-rm">
+                                        <div class="col-sm-1">@data.SupplierName</div>
+                                        <div class="col-sm-1"></div>
+                                        <div class="col-sm-2">@data.ModelName</div>
+                                        <div class="col-sm-1 remove-left-padding">@data.OrderNumber</div>
+                                        <div class="col-sm-1">@data.CkdModelType</div>
+                                        <div class="col-sm-1">@data.OrderQuantity</div>
+                                        <div class="col-sm-2">@(String.Format("{0:dd/MM/yyyy}", data.OrderDate))</div>
+                                        <div class="col-sm-2 remove-left-padding">@(String.Format("{0:dd/MM/yyyy}", data.InspectionDate))</div>
+                                        <div class="col-sm-2">@(String.Format("{0:dd/MM/yyyy}", data.WareHouseReceiveDate))</div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                            }
+                            }
+                        </div>
+
+                    </div>
+                    }
+                    }
+
+                </div>
+            </div>-->
+            <table class="table table-striped table-scrollable table-bordered table-hover ">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>P Type</th>
+                        <th>Supplier</th>
+                        <th>Model name</th>
+                        <th>Order No.</th>
+                        <th>Shipment No.</th>
+                        <th>CKD Model Type</th>
+                        <th>Order Qty</th>
+                        <th>Order Date</th>
+                        <th>Inspection Date</th>
+                        <th>Warehouse Receive Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model.MonthList)
+                    {
+
+                    if (Model.MonthList.Count > 0)
+                    {
+                    int a = Model.CommercialEvents.Count(i => i.Month == item);
+                    int c = 0;
+                    foreach (var ptypeitem in Model.ProductTypeList.Where(i => i.MonthName == item))
+                    {
+                    if (Model.ProductTypeList.Count(x => x.MonthName == item) > 0)
+                    {
+                    int b = Model.CommercialEvents.Count(i => i.ProuductType == ptypeitem.TypeName && i.Month == ptypeitem.MonthName);
+
+                    int d = 0;
+                    var filtered = Model.CommercialEvents.Where(i => i.ProuductType == ptypeitem.TypeName && i.Month == ptypeitem.MonthName).ToList();
+                    foreach (var data in filtered)
+                    {
+                    <tr>
+                        @if (c == 0)
+                        {
+                        <td rowspan="@a">@item</td>
+                        }
+                        @if (d == 0)
+                        {
+                        <td rowspan="@b">@String.Format("{0}  Qty={1}", ptypeitem.TypeName, ptypeitem.TotalQty) </td>
+                        }
+                        <td>@data.SupplierName</td>
+                        <td>@data.ModelName</td>
+                        <td>@data.OrderNumber</td>
+                        <td>@data.PoWiseShipmentNumber</td>
+                        <td>@data.CkdModelType</td>
+                        <td>@data.OrderQuantity</td>
+                        <td>@(String.Format("{0:dd/MM/yyyy}", data.OrderDate))</td>
+                        <td>@(String.Format("{0:dd/MM/yyyy}", data.InspectionDate))</td>
+                        <td>@(String.Format("{0:dd/MM/yyyy}", data.WareHouseReceiveDate))</td>
+
+                    </tr>
+                    c = c + 1;
+                    d = d + 1;
+
+                    }
+                    }
+                    }
+                    }
+                    }
+                </tbody>
+
+
+
+            </table>
+
+        </div>
+
+        <br />
+
+
+        }
+    </div>
+    <script>
+        $(document).ready(function () {
+            var searchString = '@ViewBag.SearchString';
+            var fromDate = '@ViewBag.FromDateText';
+            if (fromDate != '') {
+                $("div.DivFromYear select:eq(0)").val(fromDate.slice(0, 4));
+                $("div.DivFromYear select:eq(1)").val(fromDate.slice(5, 7));
+            }
+
+            var toDate = '@ViewBag.ToDateText';
+            if (toDate != '') {
+                $("div.DivEndYear select:eq(0)").val(toDate.slice(0, 4));
+                $("div.DivEndYear select:eq(1)").val(toDate.slice(5, 7));
+            }
+
+            $('#btnsearch').on('click', function (e) {
+                //e.preventDefault();
+                //alert($('#fromMonth').val() +':'+ $('#endMonth').val());
+                $('#fromDate').val($('#fromYear').val() + '-' + $('#fromMonth').val() + '-01');
+                $('#toDate').val($('#endYear').val() + '-' + $('#endMonth').val() + '-01');
+            });
+
+        });
+    </script>
+</div>
+
+
+
+

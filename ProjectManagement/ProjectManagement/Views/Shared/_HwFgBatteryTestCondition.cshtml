@@ -1,0 +1,221 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Battery Test Conditions
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        @using (Html.BeginForm("PostHwFgTestCondition", "Hardware", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId, id="hdnHwQcAssignId" })
+                            @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+                            @Html.HiddenFor(model => model.HwFgBatteryTestConditionModel.HwFgBatteryTestMasterId, new { @Value = @ViewBag.hwFgBatteryTestMasterId })
+                            @Html.HiddenFor(model => model.HwFgBatteryTestConditionModel.HwFgBatteryTestConditionId, new { @Value = @ViewBag.HwFgBatteryTestConditionId })
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Test Condition", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.TestCondition, new { @Class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Charge Current(mA)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.ChargeCurrent, new { @Class = "form-control",placeholder="mA" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Limited Voltage(V)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.LimitedVoltage, new { @Class = "form-control",placeholder="V" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Discharge Current(mA)", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.DischargeCurrent, new { @Class = "form-control",placeholder="mA" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Cut-off Voltage", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.CutoffVoltage, new { @Class = "form-control",placeholder="V" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Rest Time After Discharge", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.RestTimeAfter_Discharge, new { @Class = "form-control",placeholder="minute" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Rest Time After Every Charge", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.RestTimeAfter_Charge, new { @Class = "form-control",placeholder="minute" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Cut-off Current", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwFgBatteryTestConditionModel.CutoffCurrent, new { @Class = "form-control",placeholder="mA" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+
+
+                                            <input type="submit" value="Save" class="btn btn-default" />
+
+                                            @*else
+                                                {
+                                                    <input type="submit" value="Update" class="btn btn-default" />
+                                                }*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <br />
+                        <h4 class="bold">Test Conditions</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="tblTestCondition">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th class="text-center"  width="15%"> Test Condition </th>
+                                                <th class="text-center"> Charge Current(mA) </th>
+                                                <th class="text-center"> Limited Voltage(V) </th>
+                                                <th class="text-center"> Cut-off Current </th>
+                                                <th class="text-center"> Discharge Current(mA) </th>
+                                                <th class="text-center"> Cut-off Voltage </th>
+                                                <th class="text-center"> Rest Time(After Charge) </th>
+                                                <th class="text-center"> Rest Time(After Discharge) </th>
+                                                <th class="text-center"> Action </th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (ViewBag.HwFgBatteryTestConditionList != null)
+                                            {
+                                                foreach (var item in ViewBag.HwFgBatteryTestConditionList)
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="hidden hdnHwFgBatteryTestConditionId"> @item.HwFgBatteryTestConditionId </td>
+                                                        <td class="text-center"> @item.TestCondition </td>
+                                                        <td class="text-center"> @item.ChargeCurrent </td>
+                                                        <td class="text-center"> @item.LimitedVoltage </td>
+                                                        <td class="text-center"> @item.CutoffCurrent </td>
+                                                        <td class="text-center"> @item.DischargeCurrent </td>
+                                                        <td class="text-center"> @item.CutoffVoltage </td>
+                                                        <td class="text-center"> @item.RestTimeAfter_Charge </td>
+                                                        <td class="text-center"> @item.RestTimeAfter_Discharge </td>
+                                                        <td class="text-center" style="width: 10%">
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-primary  btnTestResult">Insert Result </button>
+
+                                                                @*<button type="button" class="btn btn-danger btnTestConditionRemove">Remove </button>*@
+                                                            </div>
+
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //get Automatic Serial number column in the HTML Table
+    $('#tblTestCondition tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+
+    $('[class*="btnTestResult"]').click(function () {
+        var tableId = $(this).closest('table').prop('id');
+        if (tableId === "tblTestCondition") {
+            var hwfgbatterytestconditionId = $(this).closest("tr").find($("[class*=hdnHwFgBatteryTestConditionId]")).html();
+            var testCondition = $(this).closest("tr").find('td:nth-child(3)').html();
+            //alert(projectName);
+            var url = '@Url.Action("HwFgBatteryTestResults", "Hardware")?hwfgbatterytestconditionId=' + hwfgbatterytestconditionId + '&testCondition=' + encodeURIComponent(testCondition)+'&hwQcInchargeAssignId='+'@ViewBag.HwQcInchargeAssignId';
+            window.location.href = url;
+        }
+    });
+    
+    $('[class*="btnTestConditionRemove"]').click(function () {
+        var tableId = $(this).closest('table').prop('id');
+        if (tableId === "tblTestCondition") {
+            var hwfgbatterytestconditionId = $(this).closest("tr").find($("[class*=hdnHwFgBatteryTestConditionId]")).html();
+            var testCondition = $(this).closest("tr").find('td:nth-child(3)').html();
+            
+            var url = '@Url.Action("DeleteHwFgTestCondition", "Hardware")?hwfgbatterytestconditionId=' + hwfgbatterytestconditionId + '&hwQcAssignId=' + $('#hdnHwQcAssignId').val();
+            window.location.href = url;
+        }
+    });
+</script>
+
+
+

@@ -1,0 +1,144 @@
+﻿@model IEnumerable<ProjectManagement.Models.MarketPriceModel>
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-body">
+
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Multiplier</th>
+                                <th>Market Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @Html.HiddenFor(modelItem => item.MarketPriceId)
+                                        @Html.HiddenFor(modelItem => item.ProjectMasterId,new {@class="projectid"})
+
+                                        <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                        @if (item.FinalPrice == item.ProjectMasterPrice)
+                                        {
+                                            <td>@Html.TextBoxFor(modelItem => item.FinalPrice, new { @class = "form-control p-price", type = "number", disabled="disabled" })</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Html.TextBoxFor(modelItem => item.ProjectMasterPrice, new { @class = "form-control p-price", type = "number", disabled = "disabled" })</td>
+                                        }
+                                        <td>@Html.DisplayFor(modelItem => item.TotalPrice, new { @class = "t-price"})</td>
+                                        <td>@Html.TextBoxFor(modelItem => item.Multiplier, new { @class = "form-control multiplier", type = "number", onkeyup ="multiply_event(this.value, this);"})</td>
+                                        <td>@Html.TextBoxFor(modelItem => item.Mrp, new { @class = "form-control market-price", type = "number", onkeyup = "division_event(this.value, this);" })</td>
+                                        <td>
+                                                
+                                            <input class="btn sbold btn-outline blue" id="btnSave" type="submit" value="Save" onclick="save_market_price(0,this)" />
+                                            <input class="btn sbold btn-outline red" id="btnLock" type="submit" value="Lock" onclick="save_market_price(1,this)" />
+
+                                            </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END EXAMPLE TABLE PORTLET-->
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+
+        </div>
+    </div>
+<script type="text/javascript">
+    $(function() {
+        $('.dtTable').DataTable({
+            select: true
+        });
+    });
+    function multiply_event(mul, ths) {
+        console.log(mul);
+        var price = $(ths).closest('tr').find('.t-price').val();
+        var ddd = $(ths).closest('tr').find('.market-price').val(mul*price);
+        console.log(ths);
+    }
+    
+    function division_event(mktprc, ths) {
+        console.log(mktprc + '>>' + ths);
+        var price = $(ths).closest('tr').find('.t-price').val();
+        var mul = mktprc / price;
+        mul = mul.toFixed(3);
+        $(ths).closest('tr').find('.multiplier').val(mul);
+    }
+
+    function save_market_price(param,ths) {
+        var price = $(ths).closest('tr').find('.t-price').val();
+        
+        var mul = $(ths).closest('tr').find('.multiplier').val();
+        var marketPrice = $(ths).closest('tr').find('.market-price').val();
+        var projectId = $(ths).closest('tr').find('.projectid').val();
+        console.log('projectid='+projectId+' price='+ price +'multiplier='+mul+'Marketprice='+marketPrice+ '>>' + param);
+        var res;
+        $('#flag').empty();
+        if (isNaN(price) || (isNaN(mul) || mul <= 0) || (isNaN(marketPrice) || marketPrice <= 0)) {
+            console.log("invalid");
+            res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+            $('#flag').append(res);
+            alertify.error("Value can't be 0 in any field");
+
+        } else {
+            if (param == 1) {
+                alertify.confirm('Are you sure to lock this data ???',
+                    function () {
+                        $.post('@Url.Action("SaveMarketPrice", "Common")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function (data) {
+                            if (data == "ok") {
+                                res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                                $('#flag').append(res);
+                                alertify.success("success");
+
+                                $('#marketprice').prop("readonly", true);
+                                $('#multiplier').prop("readonly", true);
+
+                                $('#btnSave').prop("disabled", true);
+                                $('#btnLock').prop("disabled", true);
+                                alertify.error("Price Locked");
+
+                            } else if (data == "err") {
+                                res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                                $('#flag').append(res);
+                                alertify.error("there is an error occured");
+                            }
+
+                        });
+                    },
+                    function () {
+                        alertify.error('Cancel');
+                    });
+            } else {
+                $.post('@Url.Action("SaveMarketPrice", "Common")', { type: param, projectId: projectId, price: price, mul: mul, marketPrice: marketPrice }, function (data) {
+                    if (data == "ok") {
+                        res = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Success</div>';
+                        $('#flag').append(res);
+                        alertify.success("success");
+                    } else if (data == "err") {
+                        res = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-idden="true"></button><strong>Message:</strong> Error !!! Any of the values can not be empty or zero.</div>';
+                        $('#flag').append(res);
+                    }
+
+                });
+            }
+
+        }
+        console.log(price + "  --  " + mul + "  --  " + marketPrice);
+    }
+    
+    
+</script>

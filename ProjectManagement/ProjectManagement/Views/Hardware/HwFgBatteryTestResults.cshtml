@@ -1,0 +1,146 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <div class="action">
+        <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcInchargeAssignId='+'@ViewBag.hwQcInchargeAssignId'">
+            <i class="fa fa-arrow-circle-o-right"></i>
+            Go to Nav Page
+        </a>
+    </div>
+</div>
+
+<div class="note note-success text-center">
+    <i class="fa fa-recycle"></i> <label class="bold"> @ViewBag.TestCondition </label>
+</div>
+
+@*@Html.Partial("_HwFgBatteryTestResultCycle", Model)*@
+
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.HwFgBatteryTestMasterModel.HwQcInchargeAssignId, new { @Value = ViewBag.HwQcInchargeAssignId })
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Add Test Result
+                @Html.HiddenFor(model => model.HwFgBatteryTestResultModel.HwFgBatteryTestConditionId, new { @Value = @ViewBag.HwFgTestConditionId })
+                @Html.HiddenFor(model => model.HwFgBatteryTestConditionModel.TestCondition, new { @Value = @ViewBag.TestCondition })
+                @Html.DisplayFor(model => model.HwFgBatteryTestResultModel.CycleNo)
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <div class="col-md-12">
+
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="tblTestConditionCycle">
+                                            <thead>
+                                                <tr>
+
+                                                    <th class="text-center" style="width: 10%"> Cycle no </th>
+                                                    <th class="text-center" style="width: 10%"> Item No </th>
+                                                    <th class="text-center"> Item Name </th>
+                                                    <th class="text-center"> Charging Capacity(mAh) </th>
+                                                    <th class="text-center"> Charging Time </th>
+                                                    <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                    <th class="text-center"> Discharging Time </th>
+                                                    <th class="text-center"> Result </th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr>
+
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.CycleNo, new { @Class = "form-control",type="number",min="1",max="5" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.ItemNo, new { @Class = "form-control", type = "number", min = "1", max = "2" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.ItemName, new { @Class = "form-control" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.ChargingCapacity, new { @Class = "form-control" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.ChargingTime, new { @Class = "form-control" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.DischargingCapacity, new { @Class = "form-control" }) </td>
+                                                    <td> @Html.TextBoxFor(model => model.HwFgBatteryTestResultModel.DischargingTime, new { @Class = "form-control" }) </td>
+                                                    <td style="width: 11%">
+                                                        @Html.DropDownListFor(model => model.HwFgBatteryTestResultModel.Result, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Pass",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Fail",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                                    </td>
+
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div>
+                        <input type="submit" value="Add More" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>*@
+}
+
+
+@Html.Partial("_HwFgBatteryTestResultCycle", Model)
+
+<script>
+    $(function() {
+        //var msg = $('#hdnSuccess').val();
+        var msg=('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function() { console.log("dismiss"); });
+        }
+    });
+</script>
+
+
+
+

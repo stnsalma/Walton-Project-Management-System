@@ -1,0 +1,213 @@
+﻿@model IEnumerable<ProjectManagement.Models.LcOpeningPermissionModel>
+    @{
+        ViewBag.Title = "LcOpeningApproval";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Pending LC Approval
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <table class="table table-striped table-bordered table-hover" id="tblLcApprove">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Model</th>
+                                <th>Order No</th>
+                                <th>Opening Date</th>
+                                <th>Supplier Grade</th>
+                                <th>Product</th>
+                                <th>LC Amount</th>
+                                <th>Added By</th>
+                                <th>Added Date</th>
+                                <th>Remarks</th>
+                                <th>Approval Done By</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="lcId">@item.Id</td>
+                                        <td>@item.Model</td>
+                                        <td>@item.OrderNo</td>
+                                        <td>@if (@item.OpeningDate != null){@String.Format("{0:dd-MM-yyyy}", @item.OpeningDate)}</td>
+                                        <td>@item.SupplierGrade</td>
+                                        <td>@item.Product</td>
+                                        <td>@item.Currency @item.LcAmount</td>
+                                        <td>@item.AddedByName</td>
+                                        <td>@String.Format("{0:dd-MM-yyyy}", @item.AddedDate)</td>
+                                        <td>@item.Remarks</td>
+                                        <td>
+                                            @if (item.SourcingApprovalByName != null) { @Html.Raw(item.SourcingApprovalByName+",")}
+                                            @if (item.CeoApprovalByName != null) { @Html.Raw(item.CeoApprovalByName + ",")}
+                                            @if (item.AccountsApprovalByName != null) { @Html.Raw(item.AccountsApprovalByName + ",")}
+                                            @if (item.FinanceApprovalByName != null) { @Html.Raw(item.FinanceApprovalByName + ",")}
+                                            @if (item.BiApprovalByName != null) { @Html.Raw(item.BiApprovalByName + ",")}
+                                            @if (item.AcknowledgedByName != null) { @Html.Raw(item.AcknowledgedByName + ",")}
+                                            @if (item.ApprovedByName != null) { @Html.Raw(item.ApprovedByName)}
+                                        </td>
+                                        
+                                        <td style="white-space: nowrap">
+                                            @if (User.IsInRole("CM") || User.IsInRole("AUDHEAD")
+                        || User.IsInRole("AUD"))
+                                            {
+                                             <input type="submit" class="btn btn-warning btn-sm" value="Details" onclick="location.href='@Url.Action("UpdateLcPermissionDetailsById", "Commercial", new { id = item.Id })'" />   
+                                            }
+                                            
+                                            <input type="submit" class="btn btn-success btn-sm" value="Printable Format" onclick="location.href='@Url.Action("GetLcPermissionDetailsById", "Commercial", new { id = item.Id })'" />
+                                            <input type="submit" class="btn btn-danger btn-sm" value="Approval Details" onclick="window.open('@Url.Action("LcOpeningApprovalDetails", "Common", new { id = item.Id })')" />
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="portlet box red">
+    <div class="portlet-title">
+        <div class="caption">Other Product Permission</div>
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-scrollable table-bordered table-hover" id="tblOtherLcApprove">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Type</th>
+                        <th>Product</th>
+                        <th>Model</th>
+                        <th>Order No</th>
+                        <th>Opening Date</th>
+                        <th>LC Amount</th>
+                        <th>LC For Projects</th>
+                        <th>TT Date</th>
+                        <th>TT No</th>
+                        <th>TT Value</th>
+                        <th>Added By</th>
+                        <th>Added Date</th>
+                        <th>Remarks</th>
+                        <th>Approval Done By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.OtherProductPermission != null)
+                    {
+                        foreach (var item in ViewBag.OtherProductPermission)
+                        {
+                            <tr>
+                                <td class="lcId">@item.Id</td>
+                                <td>@item.ProductType</td>
+                                <td>@item.Product</td>
+                                <td>@item.Model</td>
+                                <td>@item.OrderNo</td>
+                                <td>
+                                    @if (@item.OpeningDate != null)
+                                    {
+                                        @String.Format("{0:dd-MM-yyyy}", @item.OpeningDate)
+                                    }
+                                </td>
+                                <td>@item.Currency @item.LcAmount</td>
+                                <td>@item.OtherProductLcForTheProject</td>
+                                <td>@item.TtDate</td>
+                                <td>@item.TtNumber</td>
+                                <td>@item.TtValue</td>
+                                <td>@item.AddedByName</td>
+                                <td>@String.Format("{0:dd-MM-yyyy}", @item.AddedDate)</td>
+                                <td>@item.Remarks</td>
+                                <td>
+                                    @if (item.SourcingApprovalByName != null)
+                                    {
+                                        @Html.Raw(item.SourcingApprovalByName + ",")
+                                    }
+                                    @if (item.CeoApprovalByName != null)
+                                    {
+                                        @Html.Raw(item.CeoApprovalByName + ",")
+                                    }
+                                    @if (item.AccountsApprovalByName != null)
+                                    {
+                                        @Html.Raw(item.AccountsApprovalByName + ",")
+                                    }
+                                    @if (item.FinanceApprovalByName != null)
+                                    {
+                                        @Html.Raw(item.FinanceApprovalByName + ",")
+                                    }
+                                    @if (item.AcknowledgedByName != null)
+                                    {
+                                        @Html.Raw(item.AcknowledgedByName + ",")
+                                    }
+                                    @if (item.BiApprovalByName != null)
+                                    {
+                                        @Html.Raw(item.BiApprovalByName + ",")
+                                    }
+                                    @if (item.ApprovedByName != null)
+                                    {
+                                        @Html.Raw(item.ApprovedByName)
+                                    }
+                                </td>
+                                <td style="white-space: nowrap">
+                                    @if (User.IsInRole("CM") || User.IsInRole("AUDHEAD")
+                        || User.IsInRole("AUD"))
+                        {
+                                        <input type="submit" class="btn btn-warning btn-sm" value="Details" onclick="location.href='@Url.Action("LcOpeningPermissionForOtherProduct", "Commercial", new { id = item.Id })'" />
+                                    }
+                                    <input type="submit" class="btn btn-success btn-sm" value="Printable Format" onclick="location.href='@Url.Action("LcOpeningOtherProductPrint", "Common", new { id = item.Id })'" />
+                                    <button class="btn btn-danger btn-sm btnApprove" onclick="window.open('@Url.Action("OtherProductLcOpeningApprovalDetails", "Common", new { id = item.Id })')"><i class="fa fa-refresh fa-spin hidden"></i> Approval Details</button>
+                                </td>
+            </tr>
+                        }
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(function () {
+            var tblLcApprove = $('#tblLcApprove').DataTable({
+                "columnDefs":[
+                    //{"width":"200%","targets":[9]}
+                ]
+            });
+            
+            var tblOtherLcApprove = $('#tblOtherLcApprove').DataTable({
+                "columnDefs": [
+                    //{ "width": "200%", "targets": [9] }
+                ]
+            });
+            //-------0--------
+
+            function formatDate(date) {
+                var d = new Date(date),
+                  month = '' + (d.getMonth() + 1),
+                  day = '' + d.getDate(),
+                  year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [day, month, year].join('-');
+            }
+        });
+    </script>
+

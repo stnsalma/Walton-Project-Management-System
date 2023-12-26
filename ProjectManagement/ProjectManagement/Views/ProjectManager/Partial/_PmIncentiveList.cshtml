@@ -1,0 +1,42 @@
+﻿@model ProjectManagement.Models.Custom_Pm_IncentiveModel
+
+<tr id="@Model.ProjectId" class="tableTrCls1">
+    @using (Html.BeginCollectionItem("Pm_IncentiveModel.Custom_Pm_IncentiveModel"))
+    {
+
+
+        @*<td style="display:none;">@Html.TextBoxFor(model => model.ProjectId, new { @class = "form-control projectId", @id = "projectId", @style = "display:none;" })</td>
+        <td style="display:none;">@Html.TextBoxFor(model => model.Pm_Incentive_Base_Id, new { @class = "form-control pm_Incentive_Base_Id", @id = "pm_Incentive_Base_Id", disabled = "disabled", @style = "display:none;" })</td>
+        <td style="display:none;">@Html.TextBoxFor(model => model.MonNum, new { @class = "form-control monNum", @id = "monNum", disabled = "disabled", @style = "display:none;" })</td>
+
+        <td style="width:300px;">@Html.TextBoxFor(model => model.IncentiveTypes, new { @class = "form-control incentiveTypes", @id = "incentiveTypes", disabled = "disabled" })</td>
+
+        <td>@Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control proName", @id = "proName", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.EmployeeCode, new { @class = "form-control employeeCode", @id = "employeeCode", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.Amount, new { @class = "form-control amount", @id = "amount", disabled = "disabled" })</td>
+    <td style="width:15%;">@Html.TextBoxFor(model => model.Remarks, new { @class = "form-control remarks", @id = "remarks", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.DeductionAmount, new { @class = "form-control deductionAmount", @id = "deductionAmount", disabled = "disabled" })</td>
+    <td style="width:15%;">@Html.TextBoxFor(model => model.D_Remarks, new { @class = "form-control d_Remarks", @id = "d_Remarks", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.FinalAmount, new { @class = "form-control finalAmount", @id = "finalAmount", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.Month, new { @class = "form-control month", @id = "month", disabled = "disabled" })</td>
+        <td>@Html.TextBoxFor(model => model.Year, new { @class = "form-control year", @id = "year", disabled = "disabled" })</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>*@
+
+    <td id="projectId" class="projectId" style="display:none;">@Model.ProjectId</td>
+    <td style="display:none;" id="pm_Incentive_Base_Id" class="pm_Incentive_Base_Id">@Model.Pm_Incentive_Base_Id</td>
+    <td style="display:none;" id="monNum" class="monNum">@Model.MonNum</td>
+    <td style="width:300px;" id="incentiveTypes" class="incentiveTypes">@Model.IncentiveTypes</td>
+
+    <td id="proName" class="proName">@Model.ProjectName</td>
+    <td id="employeeCode" class="employeeCode">@Model.EmployeeCode</td>
+    <td id="amount" class="amount">@Model.Amount</td>
+    <td style="width:15%;" id="remarks" class="remarks">@Model.Remarks</td>
+    <td id="deductionAmount" class="deductionAmount">@Model.DeductionAmount</td>
+    <td style="width:15%;" id="d_Remarks" class="d_Remarks">@Model.D_Remarks</td>
+    <td id="finalAmount" class="finalAmount">@Model.FinalAmount</td>
+    <td id="month" class="month">@Model.Month</td>
+    <td id="year" class="year">@Model.Year</td>
+    <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>
+

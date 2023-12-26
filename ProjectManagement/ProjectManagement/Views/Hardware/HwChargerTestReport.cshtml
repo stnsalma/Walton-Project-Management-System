@@ -1,0 +1,206 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+@{
+    ViewBag.Title = "HwChargerTestReport";
+}
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <a class="btn btn-outline btn-sm btn-default pull-right" id="PrintButton">Print</a>
+</div>
+
+<div id="PageContent">
+    <div class="portlet light bordered">
+
+        <div class="portlet-body">
+            <div class="note note-success text-center">
+                <h3 class="bold"> Walton Charger Test Report </h3>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="portlet-body">
+                        <table class="table table-bordered table-striped table-condensed">
+
+                            <tbody>
+                                <tr>
+                                    <td class="text-center bold"> Project Name </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.ProjectName </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Project Manager </td>
+                                    <td class="text-center"> @ViewBag.FgReportInitialInfo.UserFullName </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Charger Type </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.ChargerType) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Input Spec </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.InputSpec) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Output Spec </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.OutputSpec) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Test Condition </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.TestCondition) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Date </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.AddedDate) </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="table-scrollable">
+                        <table class="table table-bordered" id="tblTestConditionCycle">
+                            <thead>
+                                <tr>
+
+                                    <th class="text-center" rowspan="2"> Floating Voltage <br /> at 220V AC(5.0-5.4V) </th>
+                                    <th class="text-center" colspan="3"> Set Load as 1A, Output Voltage Should <br /> be 4.75-5.25V , Test Time 5 Minutes </th>
+                                    <th class="text-center" colspan="3"> Set load as 4.75V, Output current should <br /> be over 1A, Test Time 5 Minutes </th>
+                                    <th class="text-center" class="text-center" rowspan="2"> Current Leakage <br /> while 3KV Test <br /> ≦ 2.5mA, Test <br /> Time 60s  </th>
+                                    <th class="text-center" rowspan="2"> Short Protection</th>
+                                    <th class="text-center" rowspan="2"> Load Ripple </th>
+
+
+
+                                </tr>
+                                <tr>
+
+                                    <th class="text-center"> AC:180V </th>
+                                    <th class="text-center"> AC:220V </th>
+                                    <th class="text-center"> AC:240V </th>
+                                    <th class="text-center"> AC:180V </th>
+                                    <th class="text-center"> AC:220V </th>
+                                    <th class="text-center"> AC:240V </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.HwFgChargerDetail != null)
+                                {
+                                    foreach (var item in ViewBag.HwFgChargerDetail)
+                                    {
+                                        <tr>
+
+                                            <td class="text-center"> @item.FloatingVoltage </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac180v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac220v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutVoltage_Ac240v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac180v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac220v </td>
+                                            <td class="text-center"> @item.SetLoadOutPutCurrent_Ac240v </td>
+                                            <td class="text-center"> @item.CurrentLeakage </td>
+                                            <td class="text-center"> @item.ShortProtection </td>
+                                            <td class="text-center"> @item.LoadRipple </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="portlet-body">
+                        <table class="table table-bordered table-striped table-condensed">
+
+                            <tbody>
+                                <tr>
+                                    <td class="text-center bold"> Run With Full Load For 4H At CC Mode, Temperature: </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.CcModeTemperature) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Remarks </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.Remarks) </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Overall Test Result Status </td>
+                                    <td class="text-center">
+                                        @if (Model.HwFgChargerTestModel != null && Model.HwFgChargerTestModel.OverallTestResultStatus == true)
+                                        {
+                                            <label>yes</label>
+                                        }
+                                        @if (Model.HwFgChargerTestModel != null && Model.HwFgChargerTestModel.OverallTestResultStatus == false)
+                                        {
+                                            <label>no</label>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center bold"> Recommendation </td>
+                                    <td class="text-center"> @Html.DisplayFor(model => model.HwFgChargerTestModel.Recommendation) </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(function () {
+        $("#PrintButton").click(function () {
+            printPageContent($("#PageContent").html());
+        });
+
+        function printPageContent(content) {
+            var mywindow = window.open('', '', '');
+            var htmlToPrint = '' +
+                '<style type="text/css">' +
+                'body {' +
+                'margin:5%;' +
+                '}' +
+                'h3{' +
+                'text-align: center;' +
+                'text-decoration: underline;' +
+                '}' +
+                'h1{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'h4{' +
+                'font-size:15px;' +
+                'font-weight:bold;' +
+                '}' +
+                'table {' +
+                'font-family: arial, sans-serif;' +
+                'border-collapse: collapse;' +
+                'width: 100%;' +
+                '}' +
+                'table th, table td {' +
+                'border: 1px solid #dddddd;' +
+                'text-align: center;' +
+                'font-size: 10px;'+
+                '}' +
+                '</style>';
+            mywindow.document.write(htmlToPrint);
+            mywindow.document.write('<html><title>Charger Report</title><body>');
+            mywindow.document.write(content);
+            mywindow.document.write('</body></html>');
+            mywindow.document.close();
+            mywindow.print();
+            return true;
+        }
+    })
+</script>

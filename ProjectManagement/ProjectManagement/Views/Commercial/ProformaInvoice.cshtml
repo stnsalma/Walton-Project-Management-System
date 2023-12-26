@@ -1,0 +1,294 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProformaInvoice
+@{
+    ViewBag.Title = "Proforma Invoice";
+}
+<div class="page-head">
+    <h2>Proforma Invoice</h2>
+</div>
+
+
+
+@using (Html.BeginForm("ProformaInvoice", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Project Basics
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="row">
+
+                    @{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+        else if ((int)msgType == 2)
+        {
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+        else if ((int)msgType == 3)
+        {
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+}
+                </div>
+
+                <div class="row">
+                    @*@Html.HiddenFor(model=>model.ProjectMasterModel.ProjectMasterId);*@
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <div class="col-md-11">@Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })</div>
+                        <div class="col-md-1">
+                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("ProformaInvoice", "Commercial")?projectId=' + $('option:selected', $('#ProjectMasterModel_ProjectMasterId')).val()" />
+                        </div>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Company Name</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model=>model.ProjectMasterModel.SupplierName)
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierName, new { @class = "form-control", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.SupplierName, String.Empty, new { @style = "color:red;!important",  })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Model Name</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model => model.ProjectMasterModel.ProjectName)
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ProjectName, new { @class = "form-control", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ProjectName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Supplier Model Name</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model => model.ProjectMasterModel.SupplierModelName)
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierModelName, new { @class = "form-control", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.SupplierModelName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">PO Date</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model => model.ProjectMasterModel.ApproxProjectOrderDate)
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ApproxProjectOrderDate, new { @class = "form-control", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ApproxProjectOrderDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Appx. Shipment Date</label>
+                            <div class="col-md-9">
+                                @Html.HiddenFor(model => model.ProjectMasterModel.ApproxShipmentDate)
+                                @Html.TextBoxFor(model => model.ProjectMasterModel.ApproxShipmentDate, new { @class = "form-control", @disabled = "true" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterModel.ApproxShipmentDate, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+
+    if (@Model != null && @Model.ProjectMasterModel.ProjectMasterId > 0)
+    {
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    PI Info
+                </div>
+
+            </div>
+            <div class="portlet-body form">
+                <div class="form-body">
+                    @Html.HiddenFor(model => model.ProjectProformaInvoiceModel.ProjectProformaInvoiceId)
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">PI No.</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectProformaInvoiceModel.PiNo, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectProformaInvoiceModel.PiNo, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">PI Date</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectProformaInvoiceModel.PiDate, new { @class = "form-control date_picker" })
+                                    @Html.ValidationMessageFor(model => model.ProjectProformaInvoiceModel.PiDate, String.Empty, new { @style = "color:red;!important" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">File Upload</label>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(model => model.ProjectProformaInvoiceModel.File, new { type = "file", @class = "form-control" })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <br />
+                        <div class="col-lg-6">
+                            <div class="form-group">
+
+                                <div class="col-md-9">
+                                    <div class="file-preview-thumbnails">
+                                        <div class="container-fluid col-md-offset-3">
+                                            <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                <div class="">
+
+
+
+                                                    @if (@Model.ProjectProformaInvoiceModel.FilePath == null || @Model.ProjectProformaInvoiceModel.FilePath == "/Content/UploadImage/")
+                                                    {
+
+                                                        <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                                    }
+
+                                                    else if (@Model.ProjectProformaInvoiceModel.FileExtension == ".jpg" || @Model.ProjectProformaInvoiceModel.FileExtension == ".png" || @Model.ProjectProformaInvoiceModel.FileExtension == ".jpeg")
+                                                    {
+
+                                                        <img src="@Model.ProjectProformaInvoiceModel.FilePath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+
+                                                    }
+                                                    else if (@Model.ProjectProformaInvoiceModel.FileExtension == ".pdf")
+                                                    {
+
+                                                        <embed class="" id="filePath" src="@Model.ProjectProformaInvoiceModel.FilePath" width="600px" height="400px" type="application/pdf" />
+
+                                                    }
+
+
+
+                                                </div>
+                                                <div class="file-thumbnail-footer">
+                                                    @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                    <div class="file-actions">
+                                                        <div class="file-footer-buttons">
+
+                                                            <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                        </div>
+
+                                                        <div class="clearfix"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="submit" class="btn sbold uppercase btn-outline blue" value="Save" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('[class*="btnFilePreview"]').on('click', function () {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+
+
+                //  $('#btnModalDataChangeLabel').text(btnId);
+                //  console.log($('#btnModalDataChangeLabel').text());
+
+
+                modalData += '<embed src="@Model.ProjectProformaInvoiceModel.FilePath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            }
+
+             $('#filePreviewModal').modal();
+
+
+        });
+    });
+</script>

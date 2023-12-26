@@ -1,0 +1,93 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmSpecification
+@using (Html.BeginForm("Specification", "Commercial"))
+{
+    @Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)
+    @Html.HiddenFor(model => model.PhCamInfo.PhCamInfoId)
+    @Html.HiddenFor(model => model.TabIdentity, new { @Value = 4 })
+    
+    <div class="col-lg-12">
+        <div class="form-body">
+            <h3 class="form-section">Camera Information</h3>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">B. Cam*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhCamInfo.BackCam, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.BackCam, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">B. Cam. Sensor*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhCamInfo.BackCamSensor, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.BackCamSensor, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">B. Cam. BSI*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhCamInfo.BackCamBsi, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.BackCamBsi, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">F. Cam*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhCamInfo.FrontCam, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.FrontCam, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">F. Cam. Sensor*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.PhCamInfo.FrontCamSensor, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.FrontCamSensor, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">F. Cam. BSI*</label>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(i => i.PhCamInfo.FrontCamBsi, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PhCamInfo.FrontCamBsi, String.Empty, new { @style = "color:red;!important" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="col-md-offset-3 col-md-9">
+                        @if (Model.PhCamInfo.PhCamInfoId > 0)
+                        {
+                            <button class="btn sbold uppercase btn-outline blue">Update</button>
+                        }
+                        else
+                        {
+                            <button class="btn sbold uppercase btn-outline green">Save</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+

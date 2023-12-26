@@ -1,0 +1,23 @@
+﻿@model IEnumerable<ProjectManagement.DAL.DbModel.MaterialWastageRecommendation>
+<table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+    <thead>
+        <tr>
+            <th>Remarks</th>
+            <th>Recommendation By</th>
+            <th>Recommendation Type</th>
+            <th>Added Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.Remarks</td>
+                <td>@item.RecommendedBy</td>
+                <td>@item.RecommendationType</td>
+                <td>@item.AddedDate</td>
+            </tr>
+        }
+    </tbody>
+</table>

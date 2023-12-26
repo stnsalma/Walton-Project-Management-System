@@ -1,0 +1,13 @@
+﻿@model ProjectManagement.Models.ProjectPurchaseOrderConditionModel
+
+<tr id="@Model.ProjectPurchaseOrderFormId">
+    @using (Html.BeginCollectionItem("ProjectPurchaseOrderConditionModels"))
+    {
+        @Html.HiddenFor(m => m.ProjectPurchaseOrderConditionId)
+        @Html.HiddenFor(m => m.ProjectPurchaseOrderFormId)
+        @Html.HiddenFor(m => m.Statement)
+        @*<td>@Html.DisplayFor(m=>m.SerialNo)</td>*@
+        <td>@Html.DisplayFor(m => m.Statement)</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>

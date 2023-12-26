@@ -1,0 +1,567 @@
+﻿@*<h2>CommercialKpiChart</h2>*@
+
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectCommercial.VmCommercialKpi
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+
+    .datepicker {
+        /*top: 8px;
+        left: 243.375px;*/
+        /*display: block;*/
+        z-index: 9999;
+    }
+</style>
+<script src="~/Scripts/Chart.bundle.min.js"></script>
+<link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+@using (@Html.BeginForm("CommercialKpiChart", "ProjectCommercial", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box  blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">
+                Employee Performance Chart
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green; font-weight: bold; ">Start Month & Year</div>
+                        <div class="col-lg-12">
+                            <input class="form-control myDatepicker1" id="myDatepicker1" value="@Model.StartDate" style="" type="text" readonly="true" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green;font-weight: bold">End Month & Year</div>
+                        <div class="col-lg-12">
+                            <input class="form-control myDatepicker2" id="myDatepicker2" value="@Model.EndDate" style="" type="text" readonly="true" />
+                        </div>
+                    </div>
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3"></div>
+                </div>
+                <br />
+                <br /><br />
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12" style="color: green; font-weight: bold; ">Select Person</div>
+                        <div class="col-lg-12">
+                            @if (ViewBag.GetCommercialUsers != null)
+                            {
+                                @Html.DropDownListFor(model => model.UserFullName, new SelectList(ViewBag.GetCommercialUsers, "Value", "Text"), new { @class = "ComUsersCls1 form-control", @id = "ComUsers" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-3" style="">
+                        <div class="col-lg-12">
+                            <div class="col-lg-12">--------------</div>
+                            <div class="col-lg-12">
+                                <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="PROCESS" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+     
+        <div class="col-lg-8">
+            <div class="portlet light portlet-fit bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <span class="caption-subject font-dark sbold uppercase">KPI Achievement Percentage(%) Chart</span>
+                    </div>
+                    @*<div class="actions">
+                            <div class="btn-group btn-group-devided" data-toggle="buttons">
+                                <label class="btn btn-transparent dark btn-outline btn-circle btn-sm">
+                                    <input type="radio" name="options" class="toggle" id="option1">Actions
+                                </label>
+                                <label class="btn btn-transparent dark btn-outline btn-circle btn-sm active">
+                                    <input type="radio" name="options" class="toggle" id="option2">Settings
+                                </label>
+                            </div>
+                    </div>*@
+                </div>
+                <div class="portlet-body">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2"></div>
+        <div class="col-lg-2"></div>
+    </div>
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+}
+
+<script>
+ 
+    $('#myDatepicker1').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $('#myDatepicker2').datepicker({
+        format: "MM, yyyy",
+        startView: "year",
+        minViewMode: "months"
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+
+        $('#btnSearch').on('click', function () {
+            $('#loading').show();
+            var obj = {};
+
+            var userType = document.getElementById('ComUsers');
+            var userText = userType.options[userType.selectedIndex].text;
+            var userValue = userType.options[userType.selectedIndex].value;
+
+            if (userText == "SELECT PERSON") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Person must",
+                }).show();
+                return false;
+            }
+
+            var sDate = $("#myDatepicker1").val();
+            if (sDate == "") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Current Month & Year",
+                }).show();
+              
+                return false;
+            }
+            var endDate = $("#myDatepicker2").val();
+            if (endDate == "") {
+                $('#loading').hide();
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Forwarded Month & Year",
+                }).show();
+               
+                return false;
+            }
+
+
+            obj.userValue = userValue;
+            obj.sDate = sDate;
+            obj.endDate = endDate;
+
+            $.ajax({
+                url: '@Url.Action("CommercialKpiLineChart", "ProjectCommercial")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    debugger;
+
+                    console.log("data :" + data);
+
+                    var master = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    var traverse1 = [];
+                    traverse1[0] = 0;
+                    traverse1[1] = 0;
+                    traverse1[2] = 0;
+                    traverse1[3] = 0;
+                    traverse1[4] = 0;
+                    traverse1[5] = 0;
+                    traverse1[6] = 0;
+                    traverse1[7] = 0;
+                    traverse1[8] = 0;
+                    traverse1[9] = 0;
+                    traverse1[10] = 0;
+                    traverse1[11] = 0;
+                    var traverse2 = new Array();
+                    traverse2[0] = 0;
+                    traverse2[1] = 0;
+                    traverse2[2] = 0;
+                    traverse2[3] = 0;
+                    traverse2[4] = 0;
+                    traverse2[5] = 0;
+                    traverse2[6] = 0;
+                    traverse2[7] = 0;
+                    traverse2[8] = 0;
+                    traverse2[9] = 0;
+                    traverse2[10] = 0;
+                    traverse2[11] = 0;
+                    var traverse3 = new Array();
+                    traverse3[0] = 0;
+                    traverse3[1] = 0;
+                    traverse3[2] = 0;
+                    traverse3[3] = 0;
+                    traverse3[4] = 0;
+                    traverse3[5] = 0;
+                    traverse3[6] = 0;
+                    traverse3[7] = 0;
+                    traverse3[8] = 0;
+                    traverse3[9] = 0;
+                    traverse3[10] = 0;
+                    traverse3[11] = 0;
+                    var traverse4 = new Array();
+                    traverse4[0] = 0;
+                    traverse4[1] = 0;
+                    traverse4[2] = 0;
+                    traverse4[3] = 0;
+                    traverse4[4] = 0;
+                    traverse4[5] = 0;
+                    traverse4[6] = 0;
+                    traverse4[7] = 0;
+                    traverse4[8] = 0;
+                    traverse4[9] = 0;
+                    traverse4[10] = 0;
+                    traverse4[11] = 0;
+
+                    for (var j = 0; j < data.length; j++) {
+
+                        if (data[j].KpiName == "Materials Arriving (Smart Phone)") {
+                            for (var k1 = 0; k1 < master.length; k1++) {
+                                //master.indexOf(data[j].Month) > -1
+                                if (master[k1] == data[j].Month) {
+
+                                    if (data[j].Month == "January") {
+                                       // traverse1[0] = parseFloat(data[j].TotalAverageScore);
+                                        traverse1[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //traverse1[0] = 'Year : ' + data[j].Year;
+                                        //master[0] = 'January (' + data[j].Year+')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse1[1] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse1[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse1[3] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse1[4] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse1[5] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse1[6] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse1[7] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse1[8] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse1[9] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse1[10] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse1[11] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                    // traverse1.push(parseFloat(data[j].TotalAverageScore));
+                                }
+
+                            }
+                        }
+                        if (data[j].KpiName == "Materials Arriving (Feature Phone)") {
+                            for (var k2 = 0; k2 < master.length; k2++) {
+
+                                if (master[k2] == data[j].Month) {
+                                    //  traverse2.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse2[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse2[1] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse2[2] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse2[3] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse2[4] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse2[5] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse2[6] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse2[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse2[8] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse2[9] = parseFloat(data[j].TotalAverageAchievement);
+                                      //  master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse2[10] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse2[11] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        if (data[j].KpiName == "Repeat Order") {
+                            for (var k3 = 0; k3 < master.length; k3++) {
+
+                                if (master[k3] == data[j].Month) {
+                                    // traverse3.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse3[0] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse3[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse3[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse3[3] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse3[4] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse3[5] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse3[6] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse3[7] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse3[8] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse3[9] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse3[10] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse3[11] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        if (data[j].KpiName == "Material Pass on CHN IQC") {
+                            for (var k4 = 0; k4 < master.length; k4++) {
+
+                                if (master[k4] == data[j].Month) {
+                                    // traverse4.push(parseFloat(data[j].TotalAverageScore));
+                                    if (data[j].Month == "January") {
+                                        traverse4[0] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[0] = 'January (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "February") {
+                                        traverse4[1] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[1] = 'February (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "March") {
+                                        traverse4[2] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[2] = 'March (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "April") {
+                                        traverse4[3] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[3] = 'April (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "May") {
+                                        traverse4[4] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[4] = 'May (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "June") {
+                                        traverse4[5] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[5] = 'June (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "July") {
+                                        traverse4[6] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[6] = 'July (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "August") {
+                                        traverse4[7] = parseFloat(data[j].TotalAverageAchievement);
+                                        //master[7] = 'August (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "September") {
+                                        traverse4[8] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[8] = 'September (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "October") {
+                                        traverse4[9] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[9] = 'October (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "November") {
+                                        traverse4[10] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[10] = 'November (' + data[j].Year + ')';
+                                    }
+                                    else if (data[j].Month == "December") {
+                                        traverse4[11] = parseFloat(data[j].TotalAverageAchievement);
+                                       // master[11] = 'December (' + data[j].Year + ')';
+                                    }
+                                }
+                            }
+                        }
+                        chartCall(master, traverse1, traverse2, traverse3, traverse4);
+                   
+                    }
+                }
+            });//end line chart
+            //window.location = '@Url.Action("CommercialKpiChart", "ProjectCommercial")';
+           // window.location.reload(true);
+        });//btn1
+    });
+    function chartCall(master, traverse1, traverse2, traverse3, traverse4) {
+        var canvas = document.getElementById("barChart");
+        var ctx = canvas.getContext('2d');
+        
+        // Global Options:
+        Chart.defaults.global.defaultFontColor = 'black';
+        Chart.defaults.global.defaultFontSize = 16;
+
+        var dataFirst = {
+            label: "Materials Arriving (Smart Phone)",
+            data: traverse1,
+            //borderColor: "rgb(151,187,205)",
+            borderColor: "red",
+        };
+
+        var dataSecond = {
+            label: "Materials Arriving (Feature Phone)",
+            data: traverse2,
+            //borderColor: "rgb(220,220,220)",
+            borderColor: "blue",
+        };
+
+        var dataThird = {
+            label: "Repeat Order",
+            data: traverse3,
+            borderColor: "green",
+            //borderColor: "rgb(247,70,74)",
+        };
+
+        var dataFourth = {
+            label: "Material Pass on CHN IQC",
+            data: traverse4,
+            borderColor: "yellow",
+            //borderColor: "rgb(70,191,189)",
+        };
+
+        var speedData = {
+            labels: master,
+            datasets: [dataFirst, dataSecond, dataThird, dataFourth]
+        };
+
+        // Chart declaration:
+        var myBarChart = new Chart(ctx, {
+            type: 'line',
+            //type: 'bar',
+            data: speedData,
+            //options: {}
+            options: {
+                scales: {
+
+                    yAxes: [{
+                        ticks: {
+
+                            // min: 0,
+                            // max: 900,
+                            callback: function (value) { return value + "%" },
+                        },
+                        scaleLabel: {
+                            display: true,
+                            //labelString: "Percentage"
+                        }
+                    }]
+                }
+            }
+        });
+     
+        $('#loading').hide();
+    }
+
+    //function getRandomValues(length) {
+    //    var values = [];
+    //    for (var i = 0; i < length; i++) {
+    //        values.push(Math.random() * 10);
+    //    }
+    //    return values;
+    //}
+
+</script>

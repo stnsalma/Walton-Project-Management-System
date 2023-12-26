@@ -1,0 +1,405 @@
+﻿@model ProjectManagement.Models.DocManagementFileUploadModel
+
+@{
+    ViewBag.Title = "DocManagement";
+}
+
+<style>
+    .closedfolder, .download, .delete, .edit {
+        /*font-size: 30px;*/
+        cursor: pointer;
+    }
+
+   
+</style>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Doc Management</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            @*<div class="col-md-3">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="icon-social-dribbble font-blue-sharp"></i>
+                            <span class="caption-subject font-blue-sharp bold uppercase">Files</span>
+                        </div>
+                        <div class="actions">
+                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                <i class="icon-cloud-upload"></i>
+                            </a>
+                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                <i class="icon-wrench"></i>
+                            </a>
+                            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;">
+                                <i class="icon-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div id="tree_1" class="tree-demo jstree jstree-1 jstree-default" role="tree" aria-multiselectable="true" tabindex="0" aria-activedescendant="j1_1" aria-busy="false">
+                            <ul class="jstree-container-ul jstree-children" role="group">
+                                <li role="treeitem" aria-selected="true" aria-level="1" aria-labelledby="j1_1_anchor" aria-expanded="true" id="j1_1" class="jstree-node jstree-open">
+                                    <i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor jstree-clicked" href="#" tabindex="-1" id="j1_1_anchor">
+                                        <i class="jstree-icon jstree-themeicon fa fa-folder icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> Root node 1
+                                    </a><ul role="group" class="jstree-children" style="">
+                                        <li role="treeitem" data-jstree="{ &quot;selected&quot; : true }" aria-selected="false" aria-level="2" aria-labelledby="j1_2_anchor" id="j1_2" class="jstree-node  jstree-leaf"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="javascript:;" tabindex="-1" id="j1_2_anchor"><i class="jstree-icon jstree-themeicon fa fa-folder icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> Initially selected </a></li>
+                                        <li role="treeitem" data-jstree="{ &quot;icon&quot; : &quot;fa fa-briefcase icon-state-success &quot; }" aria-selected="false" aria-level="2" aria-labelledby="j1_3_anchor" id="j1_3" class="jstree-node  jstree-leaf"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="#" tabindex="-1" id="j1_3_anchor"><i class="jstree-icon jstree-themeicon fa fa-briefcase icon-state-success  jstree-themeicon-custom" role="presentation"></i> custom icon URL </a></li>
+                                        <li role="treeitem" data-jstree="{ &quot;opened&quot; : true }" aria-selected="false" aria-level="2" aria-labelledby="j1_4_anchor" aria-expanded="true" id="j1_4" class="jstree-node  jstree-open">
+                                            <i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="#" tabindex="-1" id="j1_4_anchor">
+                                                <i class="jstree-icon jstree-themeicon fa fa-folder icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> initially open
+                                            </a><ul role="group" class="jstree-children"><li role="treeitem" data-jstree="{ &quot;disabled&quot; : true }" aria-selected="false" aria-level="3" aria-labelledby="j1_5_anchor" aria-disabled="true" id="j1_5" class="jstree-node  jstree-leaf"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor  jstree-disabled" href="#" tabindex="-1" id="j1_5_anchor"><i class="jstree-icon jstree-themeicon fa fa-folder icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> Disabled Node </a></li><li role="treeitem" data-jstree="{ &quot;type&quot; : &quot;file&quot; }" aria-selected="false" aria-level="3" aria-labelledby="j1_6_anchor" id="j1_6" class="jstree-node  jstree-leaf jstree-last"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="#" tabindex="-1" id="j1_6_anchor"><i class="jstree-icon jstree-themeicon fa fa-file icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> Another node </a></li></ul>
+                                        </li>
+                                        <li role="treeitem" data-jstree="{ &quot;icon&quot; : &quot;fa fa-warning icon-state-danger&quot; }" aria-selected="false" aria-level="2" aria-labelledby="j1_7_anchor" id="j1_7" class="jstree-node  jstree-leaf jstree-last"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="#" tabindex="-1" id="j1_7_anchor"><i class="jstree-icon jstree-themeicon fa fa-warning icon-state-danger jstree-themeicon-custom" role="presentation"></i> Custom icon class (bootstrap) </a></li>
+                                    </ul>
+                                </li>
+                                <li role="treeitem" data-jstree="{ &quot;type&quot; : &quot;file&quot; }" aria-selected="false" aria-level="1" aria-labelledby="j1_8_anchor" id="j1_8" class="jstree-node  jstree-leaf jstree-last"><i class="jstree-icon jstree-ocl" role="presentation"></i><a class="jstree-anchor" href="http://www.jstree.com/" tabindex="-1" id="j1_8_anchor"><i class="jstree-icon jstree-themeicon fa fa-file icon-state-warning icon-lg jstree-themeicon-custom" role="presentation"></i> Clickanle link node </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.DropDownList("ProjectName" , new SelectList(ViewBag.ProjectNames, "ProjectName", "ProjectName"), "Select Project", new { @class = "form-control ddChosen" })
+                    </div>
+
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-addon input-circle-left">
+                                <i class="fa fa-arrow-circle-left" onclick="browseBack();"></i>
+                            </span>
+                            @*<span class="input-group-addon input-circle-right">
+                                <i class="fa fa-arrow-circle-right" onclick="browseForward();"></i>
+                            </span>*@
+                            <span class="input-group-addon">
+                                <i class="fa fa-folder"></i>
+                            </span>
+                            <input type="text" id="foldername" class="form-control" placeholder="Folder Name">
+                            <span class="input-group-addon">
+                                <a href="javascript:addFolder();">
+                                    <i class="fa fa-plus"></i> New Folder
+                                </a>
+                            </span>
+                            <span class="input-group-addon input-circle-right">
+                                <a href="javascript:uploadFileModal();">
+                                    <i class="fa fa-upload"></i> Upload Files
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-5"><span style="color: gray">Name</span></div>
+                            <div class="col-md-3"><span style="color: gray">Last Modified</span></div>
+                            <div class="col-md-1"><span style="color: gray">Size</span></div>
+                            <div class="col-md-3 text-center"><span style="color: gray">Actions</span></div>
+                        </div>
+                        <div id="folderdiv">
+                            
+                        </div>
+                        <div id="filediv">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ File Upload =======================================================================*@
+    <div id="hwTestModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Upload HW Test File</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @*@using (Html .BeginForm("HwTest", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {*@
+                                    <p>
+                                        Upload Files:
+                                        @*@Html.TextBoxFor(model => model.DocFilePath, new { type = "file", @class = "form-control", multiple = "true" })*@
+                                        <input id="docFilePath" type="file" class="form-control" multiple="" />
+                                    </p>
+                                    @*<p>
+                                        <input type="submit" value="Upload" />
+                                    </p>*@
+                                @*}*@
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="uploadFiles();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //======GLOBAL variable========
+    var parentfolder = 0;
+    //=======Dropdown ON Change====
+    $('#ProjectName').on('change', function () {
+        $('#folderdiv').empty();
+        $('#filediv').empty();
+        var projectName = $('#ProjectName option:selected').text();
+        parentfolder = 0;
+        var url = '@Url.Action("GetFolderByProjectName","Common")';
+        $.post(url, { projectname: projectName, parentfolder: parentfolder }, function (data) {
+            console.log(data);
+            for (var i = 0; i < data.Folders.length; i++) {
+                var dateString = data.Folders[i].UpdatedDate;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date = new Date(seconds);
+                date = formatDate(date);
+                var html = '<div class="row"> <div class="col-md-5"> <i class="glyphicon glyphicon-folder-close closedfolder" onclick="folderClick(this);" id="' + data.Folders[i].FolderId + '"> ' + data.Folders[i].FolderName + ' </i>  </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small">'+data.Folders[i].Size+' kb</div><div class="col-md-3 text-center"><i class="fa fa-pencil-square-o edit" data-toggle="tooltip" data-placement="bottom" title="Rename"></i></div></div>';
+                $('#folderdiv').append(html);
+
+                $('.closedfolder').hover(function () {
+                    //console.log('hover');
+                    $(this).removeClass('glyphicon-folder-close');
+                    $(this).addClass('glyphicon-folder-open');
+                });
+
+                $('.closedfolder').mouseleave(function () {
+                    //console.log('mouseleave');
+                    $(this).removeClass('glyphicon-folder-open');
+                    $(this).addClass('glyphicon-folder-close');
+                });
+            }
+            
+            for (var j = 0; j < data.Files.length; j++) {
+                dateString = data.Files[j].AddedDate;
+                seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                date = new Date(seconds);
+                date = formatDate(date);
+                html = '<div class="row"> <div class="col-md-5"><label class="files"  style="font-size: small"><i class="fa fa-file icon-state-warning icon-lg files" ></i>   ' + data.Files[j].DocFilePath + '</label> </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small">' + data.Files[j].Size + ' kb</div><div class="col-md-3 text-center" onclick="fileClick(this);" id="' + data.Files[j].DocManagerFileId + '"><i class="fa fa-download download"></i></div></div>';
+                $('#filediv').append(html);
+            }
+        });
+    });
+
+    //=====ADD Folder button click function=====
+    function addFolder() {
+        var foldername = $('#foldername').val();
+        var projectName = $('#ProjectName option:selected').text();
+        console.log(foldername + '-' + parentfolder + '-' + projectName);
+        var url = '@Url.Action("AddFolder","Common")';
+        if (foldername != "") {
+            if (projectName != "Select Project") {
+                $.post(url, { foldername: foldername, projectname: projectName, parentfolder: parentfolder }, function (data) {
+                    console.log(data);
+                    if (data.FolderId != 0) {
+                        var dateString = data.AddedDate;
+                        var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                        var date = new Date(seconds);
+                        date = formatDate(date);
+                        var html = '<div class="row"> <div class="col-md-5"> <i class="glyphicon glyphicon-folder-close closedfolder" onclick="folderClick(this);" id="' + data.FolderId + '"> ' + data.FolderName + ' </i>  </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small"></div><div class="col-md-3"></div></div>';
+                        $('#folderdiv').append(html);
+
+                        $('.closedfolder').hover(function () {
+                            //console.log('hover');
+                            $(this).removeClass('glyphicon-folder-close');
+                            $(this).addClass('glyphicon-folder-open');
+                        });
+
+                        $('.closedfolder').mouseleave(function () {
+                            //console.log('mouseleave');
+                            $(this).removeClass('glyphicon-folder-open');
+                            $(this).addClass('glyphicon-folder-close');
+                        });
+                    } else {
+                        alertify.alert('Folder Already exists');
+                    }
+                });
+            } else {
+                alertify.warning('Select a project first');
+            }
+        } else {
+            alertify.warning('Type a folder name');
+        }
+    }
+
+    //======Browse Folder Button function===
+    function folderClick(item) {
+        var id = $(item).attr("id");
+        parentfolder = id;
+        console.log('parentfolder value on folder click-' + id);
+        $('#folderdiv').empty();
+        $('#filediv').empty();
+        var projectName = $('#ProjectName option:selected').text();
+        var url = '@Url.Action("GetFolderByProjectName","Common")';
+        $.post(url, { projectname: projectName, parentfolder: parentfolder }, function (data) {
+            console.log(data);
+            for (var i = 0; i < data.Folders.length; i++) {
+                var dateString = data.Folders[i].AddedDate;
+                var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                var date = new Date(seconds);
+                date = formatDate(date);
+                var html = '<div class="row"> <div class="col-md-5"> <i class="glyphicon glyphicon-folder-close closedfolder" onclick="folderClick(this);" id="' + data.Folders[i].FolderId + '"> ' + data.Folders[i].FolderName + ' </i>  </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small"></div><div class="col-md-3"></div></div>';
+                $('#folderdiv').append(html);
+
+                $('.closedfolder').hover(function () {
+                    //console.log('hover');
+                    $(this).removeClass('glyphicon-folder-close');
+                    $(this).addClass('glyphicon-folder-open');
+                });
+
+                $('.closedfolder').mouseleave(function () {
+                    //console.log('mouseleave');
+                    $(this).removeClass('glyphicon-folder-open');
+                    $(this).addClass('glyphicon-folder-close');
+                });
+            }
+
+            for (var j = 0; j < data.Files.length; j++) {
+                dateString = data.Files[j].AddedDate;
+                seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                date = new Date(seconds);
+                date = formatDate(date);
+                html = '<div class="row"> <div class="col-md-5"><label class="files"  style="font-size: small"><i class="fa fa-file icon-state-warning icon-lg files" ></i>   ' + data.Files[j].DocFilePath + '</label> </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small">' + data.Files[j].Size + ' kb</div><div class="col-md-3 text-center" onclick="fileClick(this);" id="' + data.Files[j].DocManagerFileId + '"><i class="fa fa-download download"></i></div></div>';
+                $('#filediv').append(html);
+            }
+        });
+    }
+
+    //=======Borwse Back Button Function=====
+    function browseBack() {
+        console.log('parentfolder value on browse back click-' + parentfolder);
+        var projectName = $('#ProjectName option:selected').text();
+        if (parentfolder != 0) {
+            var url = '@Url.Action("BrowseBack","Common")';
+            $('#folderdiv').empty();
+            $('#filediv').empty();
+            $.post(url, { projectname: projectName, folderid: parentfolder }, function (data) {
+                console.log(data);
+                for (var i = 0; i < data.Folders.length; i++) {
+                    var dateString = data.Folders[i].AddedDate;
+                    var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    date = formatDate(date);
+                    var html = '<div class="row"> <div class="col-md-5"> <i class="glyphicon glyphicon-folder-close closedfolder" onclick="folderClick(this);" id="' + data.Folders[i].FolderId + '"> ' + data.Folders[i].FolderName + ' </i>  </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small"></div><div class="col-md-3"></div></div>';
+                    $('#folderdiv').append(html);
+
+                    $('.closedfolder').hover(function () {
+                        //console.log('hover');
+                        $(this).removeClass('glyphicon-folder-close');
+                        $(this).addClass('glyphicon-folder-open');
+                    });
+
+                    $('.closedfolder').mouseleave(function () {
+                        //console.log('mouseleave');
+                        $(this).removeClass('glyphicon-folder-open');
+                        $(this).addClass('glyphicon-folder-close');
+                    });
+                    parentfolder = data.Folders[0].Parent;
+                    if (i == data.Folders.length - 1) {
+                        console.log('parentfolder value on browse back success-' + parentfolder);
+                    }
+                }
+                for (var j = 0; j < data.Files.length; j++) {
+                    dateString = data.Files[j].AddedDate;
+                    seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    date = new Date(seconds);
+                    date = formatDate(date);
+                    html = '<div class="row"> <div class="col-md-5"><label class="files"  style="font-size: small"><i class="fa fa-file icon-state-warning icon-lg files" ></i>   ' + data.Files[j].DocFilePath + '</label> </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small">' + data.Files[j].Size + ' kb</div><div class="col-md-3 text-center" onclick="fileClick(this);" id="' + data.Files[j].DocManagerFileId + '"><i class="fa fa-download download"></i></div></div>';
+                    $('#filediv').append(html);
+                }
+            });
+        }
+    }
+    
+
+    //======File  On click function===
+    function fileClick(item){
+        var id = $(item).attr("id");
+        console.log('file id ' + id);
+        var url = '@Url.Action("DownloadFile","Common")';
+        url = url + '?id=' + id;
+        window.location.href = url;
+    }
+
+
+    //====Upload Files Function
+    function uploadFileModal() {
+        var projectName = $('#ProjectName option:selected').text();
+        if (projectName != "Select Project") {
+            console.log('Upload '+projectName+' file to folder id'+parentfolder);
+            $('#hwTestModal').modal('show');
+        }
+    }
+    
+    function uploadFiles() {
+        var projectName = $('#ProjectName option:selected').text();
+        var url = '@Url.Action("UploadFilesInFolder","Common")';
+        var files = $("#docFilePath").get(0).files;
+        var formData = new FormData();
+        formData.append('projectname', projectName);
+        formData.append('folderid', parentfolder);
+        for (var i = 0; i < files.length; i++) {
+            formData.append("fileInput", files[i]);
+        }
+        console.log('formdata = ' + formData.get('projectname') + '>>' + formData.get('fileInput'));
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: "json",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            data: formData,
+            success: function (result, status, xhr) {
+                console.log(result);
+                $('#hwTestModal').modal('hide');
+                for (var j = 0; j < result.length; j++) {
+                    var dateString = result[j].AddedDate;
+                    var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+                    var date = new Date(seconds);
+                    date = formatDate(date);
+                    var html = '<div class="row"> <div class="col-md-5"><label class="files"  style="font-size: small"><i class="fa fa-file icon-state-warning icon-lg files" ></i>   ' + result[j].DocFilePath + '</label> </div><div class="col-md-3" style="font-size: small">' + date + '</div><div class="col-md-1" style="font-size: small">' + result[j].Size + ' kb</div><div class="col-md-3 text-center" onclick="fileClick(this);" id="' + result[j].DocManagerFileId + '"><i class="fa fa-download download"></i></div></div>';
+                    $('#filediv').append(html);
+                }
+                if (result.length == 0) {
+                    alertify.alert("File with same name for this project already exists");
+                }
+            },
+            error: function (xhr, status, error) {
+                alertify.error(status);
+            }
+        });
+    }
+
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [day, month, year].join('-');
+    }
+</script>

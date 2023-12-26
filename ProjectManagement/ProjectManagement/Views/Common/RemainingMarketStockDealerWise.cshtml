@@ -1,0 +1,58 @@
+﻿@using ProjectManagement.ViewModels.Common
+@model ProjectManagement.ViewModels.Common.RemainingMarketStockDealerWiseViewModel
+    @{
+        ViewBag.Title = "Remaining Market Stock Dealer Wise";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="row">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="row">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Remaining Market Stock Dealer Wise</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portlet-body" id="smart-table">
+
+                <table class="table table-striped table-scrollable table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Dealer Code</th>
+                            <th class="text-center">Dealer Name</th>
+                            <th class="text-center">Model</th>
+                            <th class="text-center">Remaining Stock</th>
+                            <th class="text-center">Dealer City</th>
+                            <th class="text-center">Dealer Type</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model.RemainingStocksDetails)
+                            {
+                                <tr>
+                                    <td class="text-center"> @item.DealerCode </td>
+                                    <td class="text-center"> @item.DealerName </td>
+                                    <td class="text-center"> @item.ModelName </td>
+                                    <td class="text-center"> @item.RemainingStock </td>
+                                    <td class="text-center"> @item.DealerCity </td>
+                                    <td class="text-center"> @item.DealerType </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+
+

@@ -1,0 +1,508 @@
+﻿@using System
+@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmAllIncentiveList
+@{
+    ViewBag.Title = "SwQcOthersIncentive";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase" style="color: red">Others</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-1">******</div><div class="col-lg-4">
+                        Others<br />
+                        -------------------
+                    </div><div class="col-lg-3"></div><div class="col-lg-4"></div>
+                </div>
+                <br /><br /><br />
+
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;"> Others Type </div>
+                        <div class="col-lg-8">
+                            @Html.TextAreaFor(model => model.SwQcOthersIncentiveModel.OthersType, new { @class = "form-control" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+
+                        <div class="col-lg-4" style="color: brown;">Select Project</div>
+                        <div class="col-lg-8">
+                            @{
+                                Debug.Assert(@Model != null, "@Model != null");
+                            }
+                            @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), "SELECT PROJECT", new { @class = "ddChosen form-control projectNameForOthers", @id = "projectNameForOthers"})
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;">Test Phase Name</div>
+                        <div class="col-lg-8">
+                            @{
+                                Debug.Assert(@Model != null, "@Model != null");
+                            }
+                            @Html.DropDownListFor(model => model.TestPhaseId, new SelectList(ViewBag.ddlTestPhase, "Value", "Text"), "", new { @class = "ddChosen form-control dropForProject12", @id = "testPhaseName" })
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <br /><br /><br /><br />
+                <div class="col-lg-12">
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;">Critical</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.Critical, new { @class = "form-control", @id = "critical", @type = "number" })
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;">Major</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.Major, new { @class = "form-control", @id = "major", @type = "number" })
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;">Minor</label>
+                        <div class="col-lg-8">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.Minor, new { @class = "form-control", @id = "minor", @type = "number" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-4" style="color: brown;text-align: left">Select Person</div>
+                        <div class="col-lg-8" style="text-align: left">
+                            @if (ViewBag.ddlUsers != null)
+                            {
+                                @Html.ListBoxFor(model => model.EmployeeCode, new SelectList(ViewBag.ddlUsers, "Value", "Text"), new { @class = "ddChosen dropForPerson form-control", @id = "sltPerson" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;"> Effective Month</label>
+                        <div class="col-lg-8" style="text-align: left">
+                            @Html.TextBoxFor(model => model.SwQcOthersIncentiveModel.EffectiveMonth, new { @class = "form-control", @id = "EffectiveMonth", PlaceHolder = "yyyy-MM-dd" })
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="control-label col-lg-4" style="color: brown;"> Remarks</label>
+                        <div class="col-lg-8" style="text-align: left">
+                            @Html.TextAreaFor(model => model.SwQcOthersIncentiveModel.AddAmountRemarks, new { @class = "form-control", @id = "remarks" })
+                        </div>
+                    </div>
+                </div>
+                <br /><br /><br /><br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <button id="btnAddForOthers" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                    </div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+
+            <br /><br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="portlet light bordered">
+                        <div class="portlet box green-haze">
+                            <div class="portlet-body">
+                                <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+
+                                    <table class="table table-bordered table-striped table-condensed flip-content tblOthers" id="tblOthers" style="overflow-y: auto;overflow-x: auto">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 100px;">Incentive Type</th>
+                                                <th>P_Name</th>
+                                                <th>Assigned<br />Persons</th>
+                                                <th>TestPhase<br />Name</th>
+
+                                                <th>Critical </th>
+                                                <th>Major </th>
+                                                <th>Minor</th>
+                                                <th>Remarks </th>
+                                                <th>Effective<br /> Month</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tBodyOthers" class="tBodyOthers" style="overflow-y: auto;overflow-x: auto">
+
+                                            @foreach (var swQcOthers in Model.SwQcOthersIncentiveModel.Custom_Sw_IncentiveModels)
+                                            {
+                                                Html.RenderPartial("~/Views/Software/Partial/_SwQcOthersIncentiveField.cshtml", swQcOthers);
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+
+<div class="form-actions">
+    <div class="row">
+        <div class="col-md-6">
+            @*<input class="btn sbold uppercase btn-outline red-flamingo btnFinalSubmit" type="submit" id="btnFinalSubmit" value="Final Submit" onchange="winLoads()" />*@
+
+            <button id="btnFinalSubmit" type="submit" class="btn sbold uppercase btn-outline red-flamingo btnFinalSubmit" onchange="winLoads()">Final Submit</button>
+
+
+        </div>
+
+    </div>
+</div>
+<br /><br />
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet box green-haze">
+                <div class="portlet-body">
+                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+
+                        <table class="table table-bordered table-striped table-condensed flip-content tblOthersDetails" id="tblOthersDetails" style="overflow-y: auto;overflow-x: auto">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Incentive<br /> Type</th>
+                                    <th>P_Name</th>
+                                    <th>Assigned<br />Persons</th>
+                                    <th>Employee<br />ID</th>
+                                    <th>TestPhase<br />Name</th>
+                                    <th>Critical </th>
+                                    <th>Major </th>
+                                    <th>Minor</th>
+                                    <th>Base<br />Amount</th>
+                                    <th>Issue<br />Amount</th>
+                                    <th>Total<br />Amount</th>
+                                    <th>Particular<br />Person<br />Incentive</th>
+                                    <th>Remarks </th>
+                                    <th>Effective<br /> Month</th>
+                                    <th>Month</th>
+                                    <th>Year</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBodyOthers" class="tBodyOthers" style="overflow-y: auto;overflow-x: auto">
+                                @if (ViewBag.GetOthersDetails != null)
+                                {
+                                    foreach (var items in ViewBag.GetOthersDetails)
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td>@items.OthersType</td>
+                                            <td>@items.ProjectName</td>
+                                            <td>@items.AssignedPersons</td>
+                                            <td>@items.EmployeeCode</td>
+                                            <td>@items.IncentiveClaimArea</td>
+                                            <td>@items.Critical</td>
+                                            <td>@items.Major</td>
+                                            <td>@items.Minor</td>
+                                            <td>@items.BaseAmount</td>
+                                            <td>@items.IssueAmount</td>
+                                            <td>@items.TotalAmount</td>
+                                            <td>@items.ParticularPersonIncentive</td>
+                                            <td>@items.AddAmountRemarks</td>
+                                            <td>
+                                               
+                                                @if (@items.EffectiveMonth != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @items.EffectiveMonth)}
+                                            </td>
+                                            <td>@items.Month</td>
+                                            <td>@items.Year2</td>
+                                        </tr>
+                                    }
+
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function winLoads() {
+        windows.load();
+    }
+    function removeDetailRow(element) {
+        $(element).remove();
+
+    }
+    $(function () {
+        var t = $('#tblOthersDetails').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            //"fixedHeader": {
+            //    header: true,
+            //    footer: true
+            //}
+
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        $("#btnFinalSubmit").on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            //Others
+            var othersVal = "";
+
+            var objOthers = {};
+            var objOthersArr = [];
+
+            var incentiveTypes;
+            var proName;
+            var assignedPersons;
+            var assignedEmployees;
+            var testPhaseId;
+            var testPhaseName;
+            var critical;
+            var major;
+            var minor;
+            var remarks;
+            var effectiveMonth;
+
+            $("#tblOthers tr.tableTrCls").each(function () {
+                objOthers = new Object();
+
+                //others
+                incentiveTypes = $.trim($(this).find('td:eq(0)').text());
+                proName = $.trim($(this).find('td:eq(1)').text());
+                assignedPersons = $.trim($(this).find('td:eq(2)').text());
+                assignedEmployees = $.trim($(this).find('td:eq(3)').text());
+                testPhaseId = $.trim($(this).find('td:eq(4)').text());
+                testPhaseName = $.trim($(this).find('td:eq(5)').text());
+                critical = $.trim($(this).find('td:eq(6)').text());
+                major = $.trim($(this).find('td:eq(7)').text());
+                minor = $.trim($(this).find('td:eq(8)').text());
+                remarks = $.trim($(this).find('td:eq(9)').text());
+                effectiveMonth = $.trim($(this).find('td:eq(10)').text());
+
+                //objOthers
+                objOthers.OthersType = incentiveTypes;
+                objOthers.ProjectName = proName;
+                objOthers.AssignedPersons = assignedPersons;
+                objOthers.EmployeeCode = assignedEmployees;
+                objOthers.TestPhaseId = testPhaseId;
+                objOthers.IncentiveClaimArea = testPhaseName;
+                objOthers.Critical = critical;
+                objOthers.Major = major;
+                objOthers.Minor = minor;
+
+                objOthers.AddAmountRemarks = remarks;
+                objOthers.EffectiveMonth = effectiveMonth;
+
+                //objField
+                objOthersArr.push(objOthers);
+                console.log("objOthersArr---->" + objOthersArr);
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveSwIncentive_OthersAuto", "Software")',
+                data: "{objOthersArr:'" + JSON.stringify(objOthersArr) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    console.log(data);
+                    othersVal = "yes";
+
+                    if (data.data == "ok") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Saved Successfully.",
+                        }).show();
+                        return false;
+                    }
+                    window.location.reload(true);
+                }
+            });//end Ajax others
+            window.location.reload(true);
+
+            //tBodyOthers
+
+
+        });//end Final Submit Button
+
+        $('#EffectiveMonth').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            //startDate: today,
+            //endDate: 0
+        });
+
+        $("#btnAddForOthers").on('click', function (e) {
+            e.preventDefault();
+
+            var incentiveType = $('#SwQcOthersIncentiveModel_OthersType').val();
+            console.log("incentiveType :" + incentiveType);
+
+            if (incentiveType == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Input Others Type",
+                }).show();
+                return false;
+            }
+            debugger;
+            var projectNameForOthers = $('#projectNameForOthers option:selected').text();
+            console.log("projectName  :" + projectNameForOthers);
+
+            //for () {
+                
+            //}
+
+            if (projectNameForOthers == "SELECT PROJECT") {
+                projectNameForOthers = "";
+            }
+            if (projectNameForOthers == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project Name",
+                }).show();
+                return false;
+            }
+            var testPhaseNameVal = $('#testPhaseName option:selected').val();
+            console.log("testPhaseName  :" + testPhaseName);
+
+            var testPhaseName = $('#testPhaseName option:selected').text();
+
+            if (testPhaseName == "SELECT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Test Phase Name",
+                }).show();
+                return false;
+            }
+
+            var critical = $('#critical').val();
+            console.log(critical);
+            if (critical == "") {
+                critical = "0";
+            }
+
+            var major = $('#major').val();
+            console.log(major);
+            if (major == "") {
+                major = "0";
+            }
+
+            var minor = $('#minor').val();
+            console.log(minor);
+            if (minor == "") {
+                minor = "0";
+            }
+
+
+            var sltPerson = $('#sltPerson option:selected').text();
+            console.log("sltPerson  :" + sltPerson);
+
+            var sltPersonVal = $('#sltPerson').val();
+            console.log("sltPersonVal  :" + sltPersonVal);
+
+
+            if (sltPerson == "SELECT PERSON") {
+                sltPerson = "";
+            }
+            if (sltPerson == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Persons",
+                }).show();
+                return false;
+            }
+            var effectiveMonth = $('#EffectiveMonth').val();
+            console.log(effectiveMonth);
+
+            if (effectiveMonth == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Effective Month",
+                }).show();
+                return false;
+            }
+
+            var remarks = $('#remarks').val();
+            console.log(remarks);
+
+            //
+            $.post('@Url.Action("AddProjectsForOthersField", "Software")', {
+                incentiveType: incentiveType,
+                projectNameForOthers: projectNameForOthers,
+                testPhaseNameVal: testPhaseNameVal,
+                testPhaseName: testPhaseName,
+                critical: critical,
+                major: major,
+                minor: minor,
+                sltPersonVal: sltPersonVal,
+                effectiveMonth: effectiveMonth,
+                remarks: remarks
+
+            }, function (data) {
+                console.log(data);
+                $('#tBodyOthers').append(data);
+            });
+
+            $('#SwQcOthersIncentiveModel_OthersType').val("");
+            $('#critical').val("0");
+            $('#major').val("0");
+            $('#minor').val("0");
+            $('#EffectiveMonth').val("");
+            $('#remarks').val("");
+
+        });
+
+    });
+</script>

@@ -1,0 +1,534 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Software.VmAllIncentiveList
+@{
+    ViewBag.Title = "NewRewardOrPenalties";
+}
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FileSaver/FileSaver.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+        /*font-family: Verdana, SolaimanLipi; Shonar Bangla*/
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+</style>
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> New Reward Or Penalties </p>
+</div>
+<div class="row">
+    <button class="btn green btn-outline btn-circle btn-sm pull-right jquery-excell-export">
+        <i class="fa fa-save"></i>
+        Export as Excell
+    </button>
+</div>
+<br /><br />
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Select Month & Year
+        </div>
+    </div>
+    <div class="portlet-body table2excel" style="display: block;" id="table2excel">
+        <br /><br /><br />
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">Select Month</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">Select Year</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-4" style="text-align: center">
+                </div>
+                <div class="col-md-4" style="text-align: center">
+                    <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSearch" value="SEARCH" onclick="location.href = '@Url.Action("NewRewardOrPenalties", "Software")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&Year=' + $('option:selected', $('#DDDYear')).val() + '' ">
+                </div>
+                <div class="col-md-4" style="text-align: center">
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <br />
+        <br /><br />
+        <div class="row">
+            <div class="col-md-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="col-lg-12">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase" style="color: red">Pm Clearance Vs LSD</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-bordered table-hover table-both-scroll tbl11" id="tbl11">
+                            <thead>
+                                <tr class="trClsforSize1">
+                                    <th>#</th>
+                                    <th style="text-align: center;font-size: 12px"> ProjectName </th>
+                                    <th style="text-align: center;font-size: 12px"> Project<br />Type </th>
+                                    <th style="text-align: center;font-size: 12px"> Orders </th>
+                                    <th style="text-align: center;font-size: 12px"> PoCategory </th>
+                                    <th style="text-align: center;font-size: 12px"> PmClearance<br />Date </th>
+                                    <th style="text-align: center;font-size: 12px"> LSD </th>
+                                    <th style="text-align: center;font-size: 12px"> DaysBefore<br />Lsd</th>
+                                    <th style="text-align: center;font-size: 12px">DaysAfter<br />Lsd </th>
+                                    <th style="text-align: center;font-size: 12px">Reward</th>
+                                    <th style="text-align: center;font-size: 12px">Penalties </th>
+                                    <th style="text-align: center;font-size: 12px">TeamMember </th>
+                                    <th style="text-align: center;font-size: 12px">TeamReward </th>
+                                    <th style="text-align: center;font-size: 12px">TeamPenalties</th>
+                                    <th style="text-align: center;font-size: 12px">DeputyReward </th>
+                                    <th style="text-align: center;font-size: 12px">Deputy<br />Penalties </th>
+                                    <th style="text-align: center;font-size: 12px">HeadReward </th>
+                                    <th style="text-align: center;font-size: 12px">Head<br />Penalties</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetPmClearanceVsLsdForReport != null)
+                                {
+                                    foreach (var item in ViewBag.GetPmClearanceVsLsdForReport)
+                                    {
+                                        <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                            <td></td>
+                                            <td> @item.ProjectName</td>
+                                            <td> @item.ProjectType</td>
+                                            <td>Order @item.Orders </td>
+                                            @*<td>Order @item.ProjectType </td>*@
+                                            <td> @item.PoCategory </td>
+                                            <td>
+                                                @if (@item.ProjectManagerClearanceDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.ProjectManagerClearanceDate)}
+                                            </td>
+                                            <td>
+                                                @if (@item.LSD != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.LSD)}
+                                            </td>
+                                            <td>@item.DaysBeforeLsd</td>
+                                            <td>
+                                                @item.DaysAfterLsd
+                                            </td>
+                                            <td>@item.Reward</td>
+                                            <td>@item.RealPenalties</td>
+                                            <td>@item.TeamMember</td>
+                                            <td>@item.TeamReward</td>
+                                            <td>@item.TeamPenalties</td>
+                                            <td>@item.DeputyReward</td>
+                                            <td>@item.DeputyPenalties</td>
+                                            <td>@item.HeadReward</td>
+                                            <td>@item.HeadPenalties</td>
+                                           
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            </div>
+
+        </div>
+        <br /><br />
+        @*<div class="row">
+            <div class="col-md-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="col-lg-12">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase" style="color: red">PoDate Wise Penalties/Reward</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-bordered table-hover table-both-scroll tbl1" id="tbl1">
+                            <thead>
+                                <tr class="trClsforSize1">
+                                    <th>#</th>
+                                    <th style="text-align: center;font-size: 12px"> ProjectName </th>
+                                    <th style="text-align: center;font-size: 12px"> Project<br />Type </th>
+                                    <th style="text-align: center;font-size: 12px"> Orders </th>
+                                    <th style="text-align: center;font-size: 12px"> PoDate </th>
+                                    <th style="text-align: center;font-size: 12px"> LSD </th>
+                                    <th style="text-align: center;font-size: 12px"> PoVsLSD<br />Diff </th>
+                                    <th style="text-align: center;font-size: 12px">VesselDate </th>
+                                    <th style="text-align: center;font-size: 12px">LsdVsVessel<br />Diff <br />For Deduct </th>
+                                    <th style="text-align: center;font-size: 12px">Deduct<br />Point </th>
+                                    <th style="text-align: center;font-size: 12px">Deducted<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">LsdVsVessel<br />Diff<br />For Reward </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Point </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Users </th>
+                                    <th style="text-align: center;font-size: 12px">EmployeeCode </th>
+                                    <th style="text-align: center;font-size: 12px">Penlties<br/>Team<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Penlties<br/>Deputy<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Penlties<br /> QCHEAD<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Team<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Deputy<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br /> QCHEAD<br />Amount </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetPoDateWisePenalties != null)
+                                {
+                                    foreach (var item in ViewBag.GetPoDateWisePenalties)
+                                    {
+                                        <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                            <td></td>
+                                            <td> @item.ProjectName</td>
+                                            <td> @item.ProjectType</td>
+                                            <td>Order @item.Orders </td>
+                                            <td>
+                                                @if (@item.PoDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.PoDate)}
+                                            </td>
+                                            <td>
+                                                @if (@item.LSD != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.LSD)}
+                                            </td>
+                                            <td>@item.PoVsLSDDiff</td>
+                                            <td>
+                                                @if (@item.VesselDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.VesselDate)}
+                                            </td>
+                                            <td>@item.LsdVsVesselDiffForDeduct</td>
+                                            <td>@item.DeductPoint</td>
+                                            <td>@item.DeductedAmount</td>
+                                            <td>@item.LsdVsVesselDiffForReward</td>
+                                            <td>@item.RewardPoint</td>
+                                            <td>@item.RewardAmount</td>
+                                            <td>@item.UserFullName</td>
+                                            <td>@item.EmployeeCode</td>
+                                            <td>@item.PenaltiesTeamAmount</td>
+                                            <td>@item.PenaltiesDeputyAmount</td>
+                                            <td>@item.PenaltiesQcheadAmount</td>
+                                            <td>@item.TeamAmount</td>
+                                            <td>@item.DeputyAmount</td>
+                                            <td>@item.QcheadAmount</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            </div>
+
+        </div>
+        <br /><br />*@
+
+        <div class="row">
+            <div class="col-md-12">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="col-lg-12">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase" style="color: red">95 Percent Production Reward</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body  table-scrollable table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-both-scroll tbl2" id="tbl2">
+                            <thead>
+                                <tr class="trClsforSize1">
+                                    <th>#</th>
+                                    <th style="text-align: center;font-size: 12px"> ProjectName </th>
+                                    <th style="text-align: center;font-size: 12px"> Sourcing<br />Type </th>
+                                    <th style="text-align: center;font-size: 12px"> Orders </th>
+                                    <th style="text-align: center;font-size: 12px"> Warehouse<br />EntryDate </th>
+                                    <th style="text-align: center;font-size: 12px"> Extended<br />WarehouseDate </th>
+                                    <th style="text-align: center;font-size: 12px"> Order<br />Quantity </th>
+                                    <th style="text-align: center;font-size: 12px">Total<br />Production<br />Quantity </th>
+                                    <th style="text-align: center;font-size: 12px">Effective<br />Days </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Percentage</th>
+                                    <th style="text-align: center;font-size: 12px">Existed<br />Percentage </th>
+                                    <th style="text-align: center;font-size: 12px">Reward<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Users </th>
+                                    <th style="text-align: center;font-size: 12px">EmployeeCode </th>
+                                    <th style="text-align: center;font-size: 12px">Team<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">Deputy<br />Amount </th>
+                                    <th style="text-align: center;font-size: 12px">QCHEAD<br />Amount </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetNinetyFiveProductionReward != null)
+                                {
+                                    foreach (var item in ViewBag.GetNinetyFiveProductionReward)
+                                    {
+                                        <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                            <td></td>
+                                            <td> @item.ProjectModel</td>
+                                            <td> @item.SourcingType</td>
+                                            <td>@item.Orders</td>
+                                            <td>
+                                                @if (@item.WarehouseEntryDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.WarehouseEntryDate)}
+                                            </td>
+                                            <td>
+                                                @if (@item.ExtendedWarehouseDate != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.ExtendedWarehouseDate)}
+                                            </td>
+
+                                            <td>@item.OrderQuantity</td>
+                                            <td>@item.TotalProductionQuantity</td>
+                                            <td>@item.EffectiveDays</td>
+                                            <td>@item.RewardPercentage</td>
+                                            <td>@item.ExistedPercentage</td>
+                                            <td>@item.RewardAmount</td>
+                                            <td>@item.UserFullName</td>
+                                            <td>@item.EmployeeCode</td>
+                                            <td>@item.TeamAmount</td>
+                                            <td>@item.DeputyAmount</td>
+                                            <td>@item.QcheadAmount</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            </div>
+
+        </div>
+        <br /> <br /><br />
+        @*<div class="row">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="col-lg-12">
+                        <div class="caption font-dark">
+                            <i class="icon-settings font-dark"></i>
+                            <span class="caption-subject bold uppercase" style="color: red">95 Percent Sales Out Reward</span>
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                </div>
+                <div class="portlet-body table-scrollable table-responsive">
+                    <table class="table table-striped table-bordered table-hover table-both-scroll tbl3" id="tbl3">
+                        <thead>
+                            <tr class="trClsforSize1">
+                                <th>#</th>
+                                <th style="text-align: center;font-size: 12px"> ProjectName </th>
+                                <th style="text-align: center;font-size: 12px"> Orders </th>
+                                <th style="text-align: center;font-size: 12px"> Warehouse<br />EntryDate </th>
+                                <th style="text-align: center;font-size: 12px"> Extended<br />WarehouseDate </th>
+                                <th style="text-align: center;font-size: 12px"> Effective<br />Days </th>
+                                <th style="text-align: center;font-size: 12px"> Order<br />Quantity </th>
+                                <th style="text-align: center;font-size: 12px">Total<br />Sales Out</th>
+                                <th style="text-align: center;font-size: 12px">Reward<br />Percentage </th>
+                                <th style="text-align: center;font-size: 12px">Existed<br />Percentage </th>
+                                <th style="text-align: center;font-size: 12px">Reward<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">Users </th>
+                                <th style="text-align: center;font-size: 12px">EmployeeCode </th>
+                                <th style="text-align: center;font-size: 12px">Team<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">Deputy<br />Amount </th>
+                                <th style="text-align: center;font-size: 12px">QCHEAD<br />Amount </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.GetNinetyFiveSalesOutReward != null)
+                            {
+                                foreach (var item in ViewBag.GetNinetyFiveSalesOutReward)
+                                {
+                                    <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                        <td></td>
+                                        <td> @item.ProjectModel</td>
+                                        <td>@item.Orders</td>
+                                        <td>
+                                            @if (@item.WarehouseEntryDate != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.WarehouseEntryDate)}
+                                        </td>
+                                        <td>
+                                            @if (@item.ExtendedWarehouseDate != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.ExtendedWarehouseDate)}
+                                        </td>
+                                        <td>@item.EffectiveDays</td>
+                                        <td>@item.OrderQuantity</td>
+                                        <td>@item.TotalSalesOut</td>
+                                        <td>@item.RewardPercentage</td>
+                                        <td>@item.ExistedPercentage</td>
+                                        <td>@item.RewardAmount</td>
+                                        <td>@item.UserFullName</td>
+                                        <td>@item.EmployeeCode</td>
+                                        <td>@item.TeamAmount</td>
+                                        <td>@item.DeputyAmount</td>
+                                        <td>@item.QcheadAmount</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br /><br />*@
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $("#btnSearch").on('click', function (e) {
+        e.preventDefault();
+        var proMon = document.getElementById('DDDMonth');
+        var proMonText = proMon.options[proMon.selectedIndex].text;
+        var MonNum2 = proMon.options[proMon.selectedIndex].value;
+
+        if (proMonText == "SELECT MONTH") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Month must",
+            }).show();
+            return false;
+        }
+        //
+        var proYear = document.getElementById('DDDYear');
+        var proYearText = proYear.options[proYear.selectedIndex].text;
+        var Year2 = proYear.options[proYear.selectedIndex].value;
+        if (proYearText == "SELECT YEAR") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Year must",
+            }).show();
+            return false;
+        }
+    });
+    $(document).ready(function () {
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            "scrollY": true,
+            "scrollX": true,
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        var t2 = $('#tbl2').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            //"scrollY": true,
+            //"scrollX": true,
+        });
+        t2.on('order.dt search.dt', function () {
+            t2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var t3 = $('#tbl3').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            //"scrollY": true,
+            //"scrollX": true,
+        });
+        t3.on('order.dt search.dt', function () {
+            t3.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        
+        var t4 = $('#tbl11').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false,
+            "scrollY": true,
+            "scrollX": true,
+        });
+        t4.on('order.dt search.dt', function () {
+            t4.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+    $('.jquery-excell-export').click(function () {
+
+        var table = document.getElementById('table2excel');
+        var html = table.outerHTML;
+        window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+
+    });
+</script>

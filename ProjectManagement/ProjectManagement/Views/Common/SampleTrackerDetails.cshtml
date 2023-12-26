@@ -1,0 +1,251 @@
+﻿@model ProjectManagement.Models.SampleTrackerModel
+@{
+    ViewBag.Title = "SampleTrackerDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("SampleTrackerDetails", "Common", FormMethod.Post, new { id = "formSampleTracker" }))
+{
+    @Html.HiddenFor(@i=>i.SampleTrackerId)
+    @Html.HiddenFor(@i=>i.Role)
+    @Html.HiddenFor(@i=>i.SampleSentToPersonId)
+    @Html.HiddenFor(@i=>i.Others)
+    @Html.HiddenFor(@i=>i.AddedBy)
+    @Html.HiddenFor(@i=>i.AddedDate)
+    @Html.HiddenFor(@i=>i.ReceivedBy)
+    @Html.HiddenFor(@i=>i.ReceiveDate)
+    @Html.HiddenFor(@i=>i.ReturnedBy)
+    @Html.HiddenFor(@i=>i.ReturnDate)
+    @Html.HiddenFor(@i=>i.ReturnQuantity)
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Sample Tracker Details
+            </div>
+        </div>
+        <div class="portlet-body">
+            <h2>Send Sample to</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.Label("Department", new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.SampleSentToDept, new { @class = "form-control",@readonly="" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.Label("Employee", new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.SampleSentToPersonName, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.Others, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.Others, new { @class = "form-control", @readonly = "" })
+                    </div>
+                </div>
+            </div>
+            <h2>Other Infos</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.Model, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @*@Html.DropDownListFor(@i => i.Model, new SelectList(ViewBag.Model, "Value", "Text"), "Select One", new { @class = "form-control" ,@readonly=""})*@
+                        @Html.TextBoxFor(@i => i.Model, new { @class = "form-control" ,@readonly=""})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.Purpose, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(@i => i.Purpose, new List<SelectListItem>
+                            {
+                                new SelectListItem()
+                                {
+                                    Text = "R&D",Value = "R&D"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Gift",Value = "Gift"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Factory QC",Value = "Factory QC"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Software QC",Value = "Software QC"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Branding",Value = "Branding"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Process",Value = "Process"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Production",Value = "Production"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Service",Value = "Service"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Others",Value = "Others"
+                                }
+                            }, "select", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.AdditionalInfo, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.AdditionalInfo, new { @class = "form-control", PlaceHolder = "Processor,RAM,Camera etc." })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.Label("No of Sample", new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.NumberOfSample, new { @class = "form-control", type = "number", min = "0" })
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.SampleCategory, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(@i => i.SampleCategory, new List<SelectListItem>
+                            {
+                                new SelectListItem()
+                                {
+                                    Text = "T0",Value = "T0"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T1",Value = "T1"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T2",Value = "T2"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "T3",Value = "T3"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Final",Value = "Final"
+                                }
+                            }, "select", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.LabelFor(@i => i.Color, new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.Color, new { @class = "form-control" })
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.Label("Supplier", new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.SupplierName, new { @class = "form-control" })
+                    </div>
+                </div>
+                @*<div class="col-md-6">
+                        <div class="col-md-3">
+                            @Html.LabelFor(@i => i.ReturnStatus, new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.ReturnStatus, new List<SelectListItem>
+                            {
+                                new SelectListItem()
+                                {
+                                    Text = "Permanent",Value = "Permanent"
+                                },
+                                new SelectListItem()
+                                {
+                                    Text = "Returnable",Value = "Returnable"
+                                }
+                            }, "select", new { @class = "form-control" })
+                        </div>
+                    </div>*@
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-1">
+                        @Html.LabelFor(@i => i.IMEI)
+                    </div>
+                    <div class="col-md-11">
+                        @Html.TextAreaFor(@i => i.IMEI, new { @class = "form-control", placeholder = "IMEI1,IMEI2,IMEI3,........." })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-1">
+                        @Html.LabelFor(@i => i.Remarks)
+                    </div>
+                    <div class="col-md-11">
+                        @Html.TextAreaFor(@i => i.Remarks, new { @class = "form-control", placeholder = "Remarks" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-success col-md-offset-4 pull-left" id="btnUpdate">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    //$('#SampleSentToDept').chosen();
+    //$('#SampleSentToPersonId').chosen();
+    @*$('#Model').chosen();
+
+    $(function () {
+        if ('@Model.Model' != null) {
+            $('#Model option:selected').text('@Model.Model');
+            $('#Model option:selected').val('@Model.Model');
+            $('#Model').trigger('chosen:updated');
+        }
+    });*@
+</script>

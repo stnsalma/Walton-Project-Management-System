@@ -1,0 +1,142 @@
+﻿@*<h2>ExcelUploaderSupplierFeedback</h2>*@
+@using OfficeOpenXml.FormulaParsing.Excel.Functions.Math
+@model ProjectManagement.ViewModels.ProjectManager.SwQcIssueExcelModel
+@{
+    ViewBag.Title = "ExcelUploaderSupplierFeedback";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/New_2019/dataTables.fixedColumns.min.js"></script>
+<script src="~/Scripts/New_2019/dataTables.checkboxes.min.js"></script>
+<link href="~/Content/New_2019/dataTables.checkboxes.css" rel="stylesheet" />
+
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Supplier Feedback </p>
+</div>
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Select necessary project
+        </div>
+    </div>
+    <div class="portlet-body" style="display: block;">
+        @using (Html.BeginForm("ExcelUploaderSupplierFeedback", "ProjectManager", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-3">
+                            Select Project:
+                        </div>
+                        <div class="col-lg-9">
+                            @Html.DropDownListFor(m => m.SelectedProjectName, new SelectList(ViewBag.ProjectId, "Value", "Text"), "Please select", new { @class = "form-control ddChosen proSelect" })
+                            @*@Html.ValidationMessageFor(i => i.SelectedProjectName, String.Empty, new { @class = "required", style = "color:red;" })*@
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-3">
+                            Software Version Number:
+                        </div>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(m => m.SoftVersionNo, new { @class = "form-control", @min = "0", @max = "100", @type = "number", Value = "0" })
+                            @Html.ValidationMessageFor(i => i.SoftVersionNo, String.Empty, new { @class = "required", style = "color:red;" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-3">
+                            Upload File:
+                        </div>
+                        <div class="col-lg-9">
+                            @Html.TextBoxFor(m => m.ExcelFile, new { @class = "form-control", type = "file" })
+                            @Html.ValidationMessageFor(i => i.ExcelFile, String.Empty, new { @class = "required", style = "color:red;" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-3">
+                            Test Phase
+                        </div>
+                        <div class="col-lg-9">
+                            @if (ViewBag.CombinedIdsForTestPhase != null)
+                            {
+                                @Html.DropDownListFor(model => model.CombinedTestPhaseIds, new SelectList(ViewBag.CombinedIdsForTestPhase, "Value", "Text"), new { @class = "form-control ddChosen" })
+
+                            }
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+            <div class="row">
+                <div class="col-sm-3 submit-btn" style="margin-left: 415px;">
+                    @*<button type="button" class="btn btn-primary" style="" id="btSearch">Submit</button>*@
+                    <input type="submit" value="Submit" class="btn btn-info pull-left" id="btnSubmit" style="margin-left: 100px" />
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+        }
+    </div>
+</div>
+@{
+    if (ViewBag != null)
+    {
+        <input type="hidden" id="hidInp" value="@ViewBag.Message">
+    }
+}
+<script>
+
+    $(document).ready(function () {
+        debugger;
+        var val = $('#hidInp').val();
+
+        if (val != "") {
+
+            alert(val);
+        }
+        $('#btnSubmit').on('click', function () {
+            var proSelectId = document.getElementById('SelectedProjectName');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "Please select") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+        });
+    })
+
+</script>

@@ -1,0 +1,49 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectMasterModel>
+@{
+    ViewBag.Title = "RejectedProjectList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Rejected Projects</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Order Number</th>
+                                <th>Order Quantity</th>
+                                <th>Acknowledged By</th>
+                                <th>Acknowledge date</th>
+                                <th>Acknowledge Remarks</th>
+                                <th>CEO Action Date</th>
+                                <th>Management Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model)
+                            {
+                                <tr>
+                                    <td>@v.ProjectName</td>
+                                    <td>@v.OrderNuber</td>
+                                    <td>@v.OrderQuantity</td>
+                                    <td>@v.PsApprovalByName</td>
+                                    <td>@v.PsApprovalDate</td>
+                                    <td>@v.PsRemarks</td>
+                                    <td>@v.CeoApprovalDate</td>
+                                    <td>@v.ManagentComment</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

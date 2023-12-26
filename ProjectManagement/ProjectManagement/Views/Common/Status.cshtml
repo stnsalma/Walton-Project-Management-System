@@ -1,0 +1,292 @@
+﻿
+@{
+    ViewBag.Title = "Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/gitgraph.css" rel="stylesheet" />
+<script src="~/Scripts/gitgraph.js"></script>
+@*<h2>Status</h2>*@
+
+<style type="text/css">
+     .loadingModal {
+         display: none;
+         position: fixed;
+         z-index: 1000;
+         top: 0;
+         left: 0;
+         height: 100%;
+         width: 100%;
+         background: rgba( 255, 255, 255, .8 ) url('../Content/images/ajax-loader.gif') 50% 50% no-repeat;
+     }
+
+     body.loading {
+         overflow: hidden;
+     }
+
+         /* Anytime the body has the loading class, our
+    modal element will be visible */
+         body.loading .loadingModal {
+             display: block;
+         }
+</style>
+
+<body>
+
+    <div class="row">
+        <div class="col-lg-12" id="gitGraphDiv">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-dark hide"></i>
+                        <span class="caption-subject font-dark bold uppercase">Load Project Detail Status</span>
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-lg-4"></div>
+                        <div class="col-lg-4">
+                            @Html.DropDownList("ProjectMasterId", new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control" })
+                        </div>
+                        <div class="col-lg-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2"></div>
+                        <div class="col-lg-3">
+                            <label id="projectName"></label>
+                        </div>
+                        <div class="col-lg-7"></div>
+                    </div>
+                    <div class="row"><canvas id="gitGraph"></canvas></div>
+                    
+
+                </div>
+            </div>
+
+        </div>
+        @*<div class="col-lg-5">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-dark hide"></i>
+                        <span class="caption-subject font-dark bold uppercase">Something will shown up here</span>
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+
+                </div>
+            </div>
+
+        </div>*@
+
+    </div>
+</body>
+
+
+<div class="loadingModal"><!-- Place at bottom of page --></div>
+
+<script type="text/javascript">
+    $(function () {
+        
+        var statusDiv = $("#gitGraphDiv");
+        $body = $("body");
+
+        //$(document).on({
+        //    ajaxStart: function () { statusDiv.addClass("loading"); },
+        //    ajaxStop: function () { statusDiv.removeClass("loading"); }
+        //});
+
+
+        $('#ProjectMasterId').on('change', function () {
+            
+            var pId = $('#ProjectMasterId').val();
+            var name = $('#ProjectMasterId option:selected').text();
+            if (pId) {
+                $body.addClass("loading");
+                $('#gitGraph').empty();
+                $.post('@Url.Action("GetData", "Common")', { id: pId }, function(data) {
+                    console.log(data);
+                    var converted = JSON.parse(data);
+                    console.log("---------------------------------------------------------parsed----------------------------------------------------------");
+                    console.log(converted);
+                    if (data != "0") {
+                        $('#gitGraph').empty();
+                        //var commercialList = ["Prject Created on 01-01-2017", "Project Sent to Hardware for screening on 02-01-2017", "Screening report forwarded on 04-01-2017", "Purchase order completed on 05-01-2017", "LC opening complete", "shipment one complete", "end"];
+                        var commercialList = converted.CommercialList;
+                        var managementList = converted.ManagementList; //["Initial Approval completed on 02-01-2017", "Final Approval Complete on 05-01-2017"];
+                        //var hardwareList = ["Sample received from scrrening test on 02-01-2017", "Screening test complete on 03-01-2017", "Project forwarded for Hardware running test on 07-01-2017", "Hardware engineer assigned for running test", "Hardware running test started", "Hardware running test submitted to incharge", "end"];
+                        var hardwareList = converted.HardwareList;
+                        //var pmList = ["Project assigned to a project manager on 06-01-2017", "GB design uploaded", "software tested", "More action completed"];
+                        var pmList = converted.ProjectManagerList;
+                        //var swList = ["project forwarded for software QC on 07-01-02017", "QC engineer assigned", "Software QC running", "QC report Forwarded to In-charge", "end"];
+                        var swList = converted.SoftwareList;
+
+                        var myTemplateConfig = {
+                            colors: ["#ff5821", "#3498DB", "#22ba1f", "#3498DB", "#5b50f4", "#22ba1f", "#600909"], // branches colors, 1 per column
+                            branch: {
+                                lineWidth: 1,
+                                spacingX: 15,
+                                showLabel: false,                  // display branch names on graph
+                            },
+                            commit: {
+                                spacingY: 25,
+                                dot: {
+                                    size: 5
+                                },
+                                message: {
+                                    displayAuthor: true,
+                                    displayBranch: true,
+                                    displayHash: false,
+                                    font: "normal 12pt Arial"
+                                },
+                                shouldDisplayTooltipsInCompactMode: true, // default = true
+                                tooltipHTMLFormatter: function(commit) {
+                                    return "" + commit.sha1 + "" + ": " + commit.message;
+                                }
+                            }
+                        };
+                        var myTemplate = new GitGraph.Template(myTemplateConfig);
+                        var gitgraph = new GitGraph({
+                            orientation: "vertical",
+                            template: myTemplate
+                        });
+                        var commercialLength = commercialList.length;
+                        var hardwareLength = hardwareList.length;
+                        var managementLength = managementList.length;
+                        var pmLength = pmList.length;
+                        var swLength = swList.length;
+                        var commercialBranch = gitgraph.branch("commercial");
+
+
+                        if (commercialLength > 0) {
+
+                            commercialBranch.commit({ message: commercialList[0].Detail, author: "" });
+                            if (managementLength > 0) {
+                                var managementBranch = commercialBranch.branch("management");
+                                managementBranch.commit({ message: managementList[0].Detail });
+                                if (managementLength > 1) {
+                                    if (managementList[1].Detail == "m") {
+                                        managementBranch.merge(commercialBranch);
+                                    }
+                                }
+                                if (commercialLength > 1 && commercialList[1].Detail != "end") {
+                                    commercialBranch.commit({ message: commercialList[1].Detail });
+                                    if (hardwareLength > 0) {
+                                        var harwareFromCmBranch = commercialBranch.branch("hardware");
+                                        for (var i = 0; i < hardwareLength; i++) {
+                                            if (hardwareList[i].Detail == "screeningFinished") {
+                                                harwareFromCmBranch.merge(commercialBranch);
+                                                commercialBranch.commit({ message: commercialList[2].Detail });
+                                                if (managementLength > 2) {
+                                                    var managementBranch2 = commercialBranch.branch("management");
+                                                    for (var i = 2; i < managementLength; i++) {
+                                                        if (managementList[i].Detail == "m") {
+                                                            managementBranch2.merge(commercialBranch);
+                                                        } else {
+                                                            managementBranch2.commit({ message: managementList[i].Detail });
+                                                        }
+
+                                                    }
+                                                    if (commercialLength > 3) {
+                                                        commercialBranch.commit({ message: commercialList[3].Detail });
+                                                        if (pmLength > 0) {
+                                                            var projectManagerBranch = commercialBranch.branch("project manager");
+                                                            projectManagerBranch.commit({ message: pmList[0].Detail });
+                                                            if (pmLength > 1) {
+                                                                projectManagerBranch.commit({ message: pmList[1].Detail });
+                                                                var hardwareRunningBranch = projectManagerBranch.branch("hardware");
+
+                                                                //var indx = hardwareList.filter(function (element) {
+                                                                //    return element.Detail === "screeningFinished";
+                                                                //});
+                                                                var indx = 0;
+                                                                for (var i = 0; i < hardwareLength; i++) {
+                                                                    if (hardwareList[i].Detail == "screeningFinished") {
+                                                                        if (hardwareLength >= i + 1) {
+                                                                            indx = i + 1;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                if (indx > 0) {
+                                                                    hardwareRunningBranch.commit({ message: hardwareList[indx].Detail });
+                                                                }
+                                                                if (swLength > 0) {
+                                                                    projectManagerBranch.commit({ message: pmList[2].Detail });
+                                                                    var softwareTestingBranch = projectManagerBranch.branch("software");
+                                                                    softwareTestingBranch.commit({ message: swList[0].Detail });
+                                                                }
+                                                                console.log(indx);
+                                                                var commonList = converted.CommonStatusObjects;
+                                                                var commonLength = commonList.length;
+                                                                if (commonLength > 0) {
+                                                                    console.log("hello world----------------------");
+                                                                    for (var i = 0; i < commonLength; i++) {
+                                                                        if (commonList[i].UserType == "commercial") {
+                                                                            if (commonList[i].IsMarge == 1 && commonList[i].MargeTo.length > 0) {
+
+                                                                            } else {
+                                                                                commercialBranch.commit({ message: commonList[i].Detail });
+                                                                            }
+                                                                        } else if (commonList[i].UserType == "hardware") {
+                                                                            if (commonList[i].IsMarge == 1 && commonList[i].MargeTo.length > 0) {
+                                                                                hardwareRunningBranch.commit({ message: commonList[i].Detail });
+                                                                                hardwareRunningBranch.merge(projectManagerBranch);
+                                                                            } else {
+                                                                                hardwareRunningBranch.commit({ message: commonList[i].Detail });
+                                                                            }
+                                                                        } else if (commonList[i].UserType == "software") {
+                                                                            if (commonList[i].IsMarge == 1 && commonList[i].MargeTo.length > 0) {
+                                                                                softwareTestingBranch.commit({ message: commonList[i].Detail });
+                                                                                softwareTestingBranch.merge(projectManagerBranch);
+                                                                            } else {
+                                                                                softwareTestingBranch.commit({ message: commonList[i].Detail });
+                                                                            }
+                                                                        } else if (commonList[i].UserType == "project manager") {
+                                                                            if (commonList[i].IsMarge == 1 && commonList[i].MargeTo.length > 0) {
+
+                                                                            } else {
+                                                                                projectManagerBranch.commit({ message: commonList[i].Detail });
+                                                                            }
+
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                break;
+                                            } else {
+                                                harwareFromCmBranch.commit({ message: hardwareList[i].Detail });
+                                            }
+                                        }
+
+
+                                    }
+
+
+                                }
+                            }
+
+                        }
+                    }
+                    //$('#projectName').text(name);
+                    $body.removeClass("loading");
+                });
+            } else {
+                //alertify.alert("Please select a Project !!!")
+            }
+            
+            
+            
+        });
+
+
+
+    });
+
+
+
+</script>
+

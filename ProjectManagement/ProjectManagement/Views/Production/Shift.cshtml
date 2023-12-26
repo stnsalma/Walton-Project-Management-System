@@ -1,0 +1,667 @@
+﻿@*<h2>Shift</h2>*@
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+
+    td {
+        width: 30px !important;
+    }
+</style>
+
+@using (@Html.BeginForm("Shift", "Production", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box green-seagreen">
+        <div class="portlet-title">
+            <div class="caption">
+                Shift
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-3">
+                        <div class="col-lg-3" style="color: brown;">Unit</div>
+                        <div class="col-lg-9">
+                            @if (ViewBag.GetProductionType != null)
+                            {
+                                @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="col-lg-5" style="color: brown;">Select Month</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.ddlMonths != null)
+                            {
+                                @Html.DropDownListFor(model => model.MonNum1, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="col-lg-5" style="color: brown;">Select Year</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.ddlYears != null)
+                            {
+                                @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                            }
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="form-actions col-lg-8">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("Shift", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() " />
+                        </div>
+                        <div class="col-lg-4"> </div>
+                    </div>
+                </div>
+                @*<br /><br /><br /><br />
+                    <div class="col-lg-12">
+                        <div class="col-lg-4"> </div>
+
+                        <div class="form-actions col-lg-4">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("Shift", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() " />
+                        </div>
+
+                    </div>*@
+
+            </div>
+
+        </div>
+    </div>
+   
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            Saved Shift
+                        </div>
+
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl3" class="tbl3" style="width:900px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="display: none; border: 1px solid black">Id</th>
+                                        <th style="border: 1px solid black;text-align:left">Month</th>
+                                        <th style="border: 1px solid black;text-align:left">Year</th>
+                                        <th style="border: 1px solid black;text-align:left">Production<br />Unit</th>
+                                        <th style="text-align: left; border: 1px solid black">Line</th>
+                                        <th style="text-align: left; border: 1px solid black">Shift 1</th>
+                                        <th style="text-align: left; border: 1px solid black">Shift 2</th>
+                                        <th style="text-align: left; border: 1px solid black">Shift 3</th>
+                                        @*<th style="text-align: center; border: 1px solid black">Update </th>*@
+                                        <th style="text-align: center; border: 1px solid black">Delete </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetShiftSavedData != null)
+                                    {
+                                        foreach (var items in ViewBag.GetShiftSavedData)
+                                        {
+                                            <tr style="border: 1px solid black">
+                                                <td style="display: none;border: 1px solid black" class="teamId">@items.Id</td>
+                                                <td style="border: 1px solid black">@items.Month</td>
+                                                <td style="border: 1px solid black">@items.Year</td>
+                                                <td style="border: 1px solid black">@items.ProductionType</td>
+                                                <td style="border: 1px solid black">@items.Line</td>
+                                                <td style="border: 1px solid black">@items.Shift_1</td>
+                                                <td style="border: 1px solid black">@items.Shift_2</td>
+                                                <td style="border: 1px solid black">@items.Shift_3</td>
+                                                @*<td style="border: 1px solid black; text-align: center; padding: 4px">
+
+                                                    <button type="button" class="btn btn-success btnOpenModal">
+                                                        <span class="glyphicon glyphicon-edit"></span>
+                                                    </button>
+                                                </td>*@
+                                                <td style="border: 1px solid black; text-align: center; padding: 4px">
+                                                    <button type="submit" class="btn btn-danger removeBtns" id="removeBtns">
+                                                        <span class="glyphicon glyphicon-remove"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption" style="color:black;font-weight: bold;">
+                Add Shift
+            </div>
+            <div class="tools" style="background-color: dimgray;">
+                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+          
+            <div class="table-scrollable table-responsive">
+                <table id="tblSmart" class="table table-bordered table-striped table-condensed flip-content" style="display: block;width: 600px">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addMore1"><span class="glyphicon glyphicon-plus"></span>Add</button></th>
+                            <th> Line </th>
+                            <th>Shift-1</th>
+                            <th>Shift-2</th>
+                            <th>Shift-3</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="tableTrCls1">
+                            <td style="display: none;">0</td>
+                            <td style="display: none;"><input type="text" name="issueList[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].Line" id="Line" class="form-control input-small Line"></select>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].Shift_1" id="Shift_1" class="form-control input-small Shift_1"></select>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].Shift_2" id="Shift_2" class="form-control input-small Shift_2"></select>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].Shift_3" id="Shift_3" class="form-control input-small Shift_3"></select>
+                            </td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+        <div>
+            <input type="text" name="productionType" id="productionType" value="" style="display: none;" />
+            <input type="text" name="productionType11" id="productionType11" value="" style="display: none;" />
+            <input type="text" name="PhoneType" id="PhoneType" value="" style="display: none;" />
+            <input type="text" name="monName" id="monName" value="" style="display: none;" />
+            <input type="text" name="monNum1" id="monNum1" value="" style="display: none;" />
+            <input type="text" name="year" id="year" value="" style="display: none;" />
+            
+        </div>
+    </div>
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+    <div class="form-actions">
+        <button id="btnSubmit" type="submit" class="btn blue">Submit</button>
+    </div>
+}
+<script>
+    var currentRow;
+    var TeamResult;
+    var data1;
+    var obj11 = {};
+    obj11.productionType11 = $("select#ProType").val();
+   
+    function load1() {
+        if (obj11.productionType11 != "") {
+            //obj11.PhoneType = phnTyp;
+            data1 = JSON.stringify(obj11);
+            console.log(data1);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetAllTeam", "Production")',
+                data: data1,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data1) {
+                    var shift1 = data1;
+                    var elem1 = $("#Shift_1");
+                    elem1.empty();
+
+                    var elem2 = $("#Shift_2");
+                    elem2.empty();
+
+                    var elem3 = $("#Shift_3");
+                    elem3.empty();
+
+                    
+
+                    $.each(shift1.list, function (idx, obj) {
+
+                        elem1.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                        elem2.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                        elem3.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                       
+                    });
+
+                    //$('#tblSmart >tbody').closest('tr').find('.Shift_1').append(elem1);
+                    //$('#tblSmart >tbody').closest('tr').find('.Shift_2').append(elem2);
+                    //$('#tblSmart >tbody').closest('tr').find('.Shift_3').append(elem3);
+                    
+                }
+            });
+        }
+    }
+    function loadLine() {
+        if (obj11.productionType11 != "") {
+            data1 = JSON.stringify(obj11);
+            console.log(data1);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetAllLine", "Production")',
+                data: data1,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data1) {
+                    var shift1 = data1;
+                    var elem1 = $("#Line");
+                    elem1.empty();
+
+                    $.each(shift1.list, function (idx, obj) {
+
+                        elem1.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                       
+                    });
+                }
+            });
+        }
+    }
+    $(function () {
+        var index = 0;
+        load1();
+        loadLine();
+        $("body").on('focus', '.Line', function () {
+            var row = $(this).closest("tr");
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                if (obj11.productionType11 != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAllLine", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });
+        $("body").on('focus', '.Shift_1', function () {
+            var row = $(this).closest("tr");
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                if (obj11.productionType11 != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAllTeam", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+                    
+                    $(this).append(option);
+                }
+            }
+        });
+        $("body").on('focus', '.Shift_2', function () {
+            var row = $(this).closest("tr");
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                if (obj11.productionType11 != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAllTeam", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });
+        $("body").on('focus', '.Shift_3', function () {
+            var row = $(this).closest("tr");
+            if ($(this).has('option').length > 0) {
+                return false;
+            } else {
+                var category1;
+                //
+                if (obj11.productionType11 != "") {
+                    data1 = JSON.stringify(obj11);
+                    console.log(data1);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetAllTeam", "Production")',
+                        data: data1,
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        async: false,
+                        success: function (data1) {
+                            category1 = data1;
+                        }
+                    });
+                }//end if
+                for (var i = 0; i < category1.list.length; i++) {
+                    var option = '<option value="' + category1.list[i].Value + '">' + category1.list[i].Text + '</option>';
+
+                    $(this).append(option);
+                }
+            }
+        });
+        
+        $("body").on("click", "#tbl3 .removeBtns", function () {
+
+            event.preventDefault();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl3');
+            var row = $(this).closest("tr");
+
+            var lineId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var inactiveObj = {};
+            inactiveObj.Id = lineId;
+            $('#pro_id').val(lineId);
+            alertify.confirm('Delete Shift Data', 'Do you want to Delete this Shift Data?', function () {
+                alertify.success('Successfully Deleted.');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("InActiveShift", "Production")',
+                    data: '{inactiveObj:' + JSON.stringify(lineId) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Successfully Deleted",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+        });
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            var proType = document.getElementById('ProType');
+            var productionType = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (productionType == "SELECT UNIT") {
+                // alert("Please select Project must..........");
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select unit must",
+                }).show();
+                return false;
+            }
+
+            var proMonth = document.getElementById('DDDMonth');
+            var proMonthText = proMonth.options[proMonth.selectedIndex].text;
+            var proMonthValue = proMonth.options[proMonth.selectedIndex].value;
+            if (proMonthText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+            var proYearValue = proYear.options[proYear.selectedIndex].value;
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+        });
+
+        //removeBtn
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select unit must",
+                }).show();
+                return false;
+            }
+
+            var proMonth = document.getElementById('DDDMonth');
+            var proMonthText = proMonth.options[proMonth.selectedIndex].text;
+            var proMonthValue = proMonth.options[proMonth.selectedIndex].value;
+            if (proMonthText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+            var proYearValue = proYear.options[proYear.selectedIndex].value;
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+            
+            alertify.confirm('Confirm message', 'Do you want to Save this?', function () {
+                $('#loading').show();
+                alertify.success('Ok');
+
+                var obj = [];
+                obj.productionType = $("select#ProType").val();
+                obj.monName = proMonthText;
+                obj.monNum1 = $("select#DDDMonth").val();
+                obj.year = $("select#DDDYear").val();
+
+                $('#productionType').val(obj.productionType);
+                $('#monName').val(obj.monName);
+                $('#monNum1').val(obj.monNum1);
+                $('#year').val(obj.year);
+
+                $('#form1').trigger('submit');
+                $('#loading').hide();
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+        });
+        $('#addMore1').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select unit must",
+                }).show();
+                return false;
+            }
+
+            var proMonth = document.getElementById('DDDMonth');
+            var proMonthText = proMonth.options[proMonth.selectedIndex].text;
+            var proMonthValue = proMonth.options[proMonth.selectedIndex].value;
+            if (proMonthText == "SELECT MONTH") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Month must",
+                }).show();
+                return false;
+            }
+
+            var proYear = document.getElementById('DDDYear');
+            var proYearText = proYear.options[proYear.selectedIndex].text;
+            var proYearValue = proYear.options[proYear.selectedIndex].value;
+            if (proYearText == "SELECT YEAR") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Year must",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+               <tr class="tableTrCls1" id="tableTrCls1">
+                            <td style="display: none;">$#</td>
+                            <td style="display: none;"><input type="text" name="issueList[$#].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[$#].Line" id="Line" class="form-control input-small Line"></select>
+                            </td>                         
+                            <td class="numeric">
+                                <select name="issueList[$#].Shift_1" id="Shift_1" class="form-control input-small Shift_1"></select>
+                            </td>
+                             <td class="numeric">
+                                <select name="issueList[$#].Shift_2" id="Shift_2" class="form-control input-small Shift_2"></select>
+                            </td>
+                             <td class="numeric">
+                                <select name="issueList[$#].Shift_3" id="Shift_3" class="form-control input-small Shift_3"></select>
+                            </td>
+                            
+                        </tr>
+*/
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblSmart > tbody:last').append(replaceTr);
+
+        });
+    });
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    
+   
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

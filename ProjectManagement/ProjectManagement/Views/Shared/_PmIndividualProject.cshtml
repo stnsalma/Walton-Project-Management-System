@@ -1,0 +1,1705 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.AssignedProjectListViewModel
+@{
+    List<string> accrodionsTitles = Model.IndividualProjectViewModel.PmSwCustomizationInitialModels.GroupBy(x => x.PmSwCustomizationMenu).Select(y => y.Key.Trim()).ToList();
+
+
+}
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+<link href="~/Content/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+ 
+<script src="~/Content/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/Content/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/Content/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+
+@*<script src="../assets/pages/scripts/table-datatables-fixedheader.min.js" type="text/javascript"></script>*@
+
+
+
+
+<div class="portlet light bordered">
+
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-bar-chart font-green-sharp hide"></i>
+            <span class="caption-helper">Project Name:</span> &nbsp;
+            <span class="caption-subject font-green-sharp bold uppercase">
+                @if (Model != null)
+                {
+                    @Model.IndividualProjectViewModel.ProjectMasterModel.ProjectName;
+                }
+
+
+            </span>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tabbable-line boxless tabbable-reversed">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#tab_0" data-toggle="tab"> Boot Image & Animation </a>
+                        </li>
+                        <li>
+                            <a href="#tab_1" data-toggle="tab"> GB Design </a>
+                        </li>
+                        <li>
+                            <a href="#tab_2" data-toggle="tab"> Label Design  </a>
+                        </li>
+                        <li>
+                            <a href="#tab_3" data-toggle="tab"> ID  </a>
+                        </li>
+                        <li>
+                            <a href="#tab_4" data-toggle="tab"> Screen Protector </a>
+                        </li>
+                        <li>
+                            <a href="#tab_5" data-toggle="tab">  WallPapers </a>
+                        </li>
+                        <li>
+                            <a href="#tab_6" data-toggle="tab"> SW Customization </a>
+                        </li>
+
+                        <li>
+                            <a href="#tab_7" data-toggle="tab"> Color </a>
+                        </li>
+
+                        <li>
+                            <a href="#tab_8" data-toggle="tab"> Accessories </a>
+                        </li>
+
+
+
+
+                        <li>
+                            <a href="#tab_9" data-toggle="tab"> Camera </a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_0">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-image"></i>Boot Image & Animation Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="1" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmBootImageAnimationModel.PmBootImageAnimationId)
+
+
+                                            <!--Boot Image Section-->
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Boot Image</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageExtension == ".jpg" || @Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageExtension == ".png" || @Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageExtension == ".jpeg")
+                                                                            {
+
+                                                                                <img src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageExtension == ".pdf")
+                                                                            {
+
+                                                                                <embed class="" src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-1">Boot Image :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUploadFile, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div> <!--Boot Image Section Ends-->
+                                            <!--Boot Animation Section-->
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Boot Animation</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoExtension == ".jpg" || @Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoExtension == ".png" || @Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoExtension == ".jpeg")
+                                                                            {
+
+                                                                                <img src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoUpload1" class=" file-preview-image" title="" alt="" style="width:160px;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoExtension == ".pdf")
+                                                                            {
+
+                                                                                <embed class="" src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoUpload1" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewBootAnim"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-1">Boot Animation :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoUploadFile, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div> <!--Boot Animation Section End-->
+
+
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+
+
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--GB Design Modal-->
+                        <div class="tab-pane" id="tab_1">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-gg-circle"></i>GB Design Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="2" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmGiftBoxModel.PmGiftBoxId)
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">GB Design</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmGiftBoxModel.GBExtension == ".jpg" || @Model.IndividualProjectViewModel.PmGiftBoxModel.GBExtension == ".png" || @Model.IndividualProjectViewModel.PmGiftBoxModel.GBExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmGiftBoxModel.PmGbImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmGiftBoxModel.GBExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmGiftBoxModel.PmGbImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewGbImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-1">GB Design :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmGiftBoxModel.GbDesignUploadFile, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="tab_2">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>Label Design Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="3" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmLabelsModel.PmLabelId)
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Label Design</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmLabelsModel.LabelImageExtension == ".jpg" || @Model.IndividualProjectViewModel.PmLabelsModel.LabelImageExtension == ".png" || @Model.IndividualProjectViewModel.PmLabelsModel.LabelImageExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmLabelsModel.PmLabelImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmLabelsModel.LabelImageExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmLabelsModel.PmLabelImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewLabelImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-1">Label Design :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmLabelsModel.LabelImageUploadFile, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="tab_3">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>ID Design Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+
+
+
+
+
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="4" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmIdModel.PmIDId)
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Finishing</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmIdModel.FinishingDesignExtension == ".jpg" || @Model.IndividualProjectViewModel.PmIdModel.FinishingDesignExtension == ".png" || @Model.IndividualProjectViewModel.PmIdModel.FinishingDesignExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmIdModel.PmFinishingImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmIdModel.FinishingDesignExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmIdModel.PmFinishingImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewFinishingIdImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-1">Finishing :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmIdModel.PmFinishImageUpload, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Logo Design</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmIdModel.LogoDesignExtension == ".jpg" || @Model.IndividualProjectViewModel.PmIdModel.LogoDesignExtension == ".png" || @Model.IndividualProjectViewModel.PmIdModel.LogoDesignExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmIdModel.PmLogoTypeImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmIdModel.LogoDesignExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmIdModel.PmLogoTypeImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewLogoImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-2">Logo Design :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmIdModel.PmLogoTypeImageUpload, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Model Print Type Design</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmIdModel.ModelPrintDesignExtension == ".jpg" || @Model.IndividualProjectViewModel.PmIdModel.ModelPrintDesignExtension == ".png" || @Model.IndividualProjectViewModel.PmIdModel.ModelPrintDesignExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmIdModel.PmModelPrintImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmIdModel.ModelPrintDesignExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmIdModel.PmModelPrintImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewModelPrintImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-2">Model Print Design :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmIdModel.PmModelPrintImageUpload, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="tab_4">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>Screen Protector  Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+
+
+
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="5" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmScreenProtectorModel.PmScreenProtectorId)
+
+                                            <div class="col-lg-12">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">Screen Protector</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="row">
+
+                                                            <div class="file-preview-thumbnails">
+                                                                <div class="">
+                                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                        <div class="">
+
+
+
+                                                                            @if (@Model.IndividualProjectViewModel.PmScreenProtectorModel.SpExtension == ".jpg" || @Model.IndividualProjectViewModel.PmScreenProtectorModel.SpExtension == ".png" || @Model.IndividualProjectViewModel.PmScreenProtectorModel.SpExtension == ".jpeg")
+                                                                            {
+
+                                                                            <img src="@Model.IndividualProjectViewModel.PmScreenProtectorModel.PmScreenProtectorImageUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                            }
+                                                                            else if (@Model.IndividualProjectViewModel.PmScreenProtectorModel.SpExtension == ".pdf")
+                                                                            {
+
+                                                                            <embed class="" src="@Model.IndividualProjectViewModel.PmScreenProtectorModel.PmScreenProtectorImageUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                            }
+
+
+
+                                                                        </div>
+                                                                        <div class="file-thumbnail-footer">
+                                                                            @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                                                            <div class="file-actions">
+                                                                                <div class="file-footer-buttons">
+
+                                                                                    <button type="button" class="btn btn-xs btn-default btnFilePreview " title="View Details" id="btnFilePreviewSpImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                                </div>
+
+                                                                                <div class="clearfix"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+
+
+                                                        <div class="row">
+                                                            <div class="form-group">
+                                                                <label class="col-md-2">Screen Protector Design :</label>
+                                                                <div class="col-md-4">
+                                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmScreenProtectorModel.PmScreenProtectorImageUpload, new { type = "file" })
+
+                                                                </div>
+
+
+                                                            </div>
+
+
+
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--Wallpaper Hoy nai -->
+                        <div class="tab-pane" id="tab_5">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>WallPaper Upload
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+
+
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="6" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmWalpaperModel.PmWalpaperId)
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 1 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile1, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 2 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile2, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 3 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile3, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 4 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile4, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div> <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 5 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile5, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div> <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 6 : </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile6, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div> <div class="form-group">
+                                                <label class="col-md-3 control-label">WallPaper 7: </label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmWalpaperModel.WalpaperFile7, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="tab_6">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>SW Customization
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+
+
+
+                                    <form action="~/ProjectManager/testPost" class="form-horizontal" method="POST" enctype="multipart/form-data">
+
+                                        <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="7" />
+                                        @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                        @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+
+
+                                        <div class="portlet box green">
+
+                                            <div class="portlet-body">
+                                                <div class="panel-group accordion" id="accordion1">
+                                                    @for (int i = 0; i < accrodionsTitles.Count; i++)
+                                                    {
+                                                        var length = Model.IndividualProjectViewModel.PmSwCustomizationInitialModels.Where(x => x.PmSwCustomizationMenu == accrodionsTitles[i]).ToList();
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading">
+                                                                <h4 class="panel-title">
+                                                                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#@accrodionsTitles[i]">@accrodionsTitles[i]</a>
+                                                                </h4>
+                                                            </div>
+
+
+
+
+
+                                                            <div id="@accrodionsTitles[i]" class="panel-collapse collapse">
+                                                                <div class="panel-body">
+                                                                    <div class="row">
+
+                                                                        <div class="col-lg-1"></div>
+                                                                        <div class="col-lg-10">
+
+                                                                            <table class="table table-bordered  table-header-fixed" id="sample_1">
+                                                                                <thead>
+                                                                                    <tr class="">
+                                                                                        <th style="text-align: center"> Path </th>
+                                                                                        <th style="text-align: center"> Default Settings </th>
+
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @for (int j = 0; j < length.Count; j++)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td> <input class="form-control" value="@length[j].PmSwCustomizationPath" style="border:none" /> </td>
+                                                                                            <td><input class="form-control" value="@length[j].PmSwCustomizationDefaultSetting" />  </td>
+
+                                                                                        </tr>
+                                                                                    }
+                                                                                </tbody>
+                                                                            </table>
+
+
+
+                                                                        </div>
+                                                                        <div class="col-lg-1"></div>
+
+                                                                    </div>
+
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+
+
+
+
+                                                        </div>
+
+
+
+                                                    }
+
+
+
+
+                                                </div>
+                                                <br />
+                                                <div class="panel-group accordion" id="accordion1">
+                                                    <div class="panel panel-default">
+                                                        <div class="panel-heading">
+                                                            <h4 class="panel-title">
+                                                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapse_1"> Others </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapse_1" class="panel-collapse collapse ">
+                                                            <div class="panel-body">
+
+                                                                <button id="btnAddMoreInput" class="btn btn-circle btnAddMoreInput">Add More</button>
+                                                                <div class=" row " id="dyanamicForm">
+                                                                    <div class="col-lg-12">
+                                                                        <div class="col-lg-1"></div>
+                                                                        <div class="col-lg-10 dyanamicForm">
+
+
+
+
+                                                                        </div>
+                                                                        <div class="col-lg-1"></div>
+
+                                                                    </div>
+
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <div class="form-actions">
+                                                    <div class="row">
+
+                                                        <div class="col-lg-3">
+                                                            <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="tab_7">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>Color
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    @*<form action="#" class="form-horizontal">
+                                            <div class="form-body">
+                                                <div class="form-group">
+                                                    <label class="col-md-3 control-label">Back Part Color :</label>
+                                                    <div class="col-md-4 row ">
+
+
+                                                        <input type="file" name="files[]" multiple="">
+
+
+                                                    </div>
+                                                </div><div class="form-group">
+                                                    <label class="col-md-3 control-label">TP Color :</label>
+                                                    <div class="col-md-4 row ">
+
+
+                                                        <input type="file" name="files[]" multiple="">
+
+
+                                                    </div>
+                                                </div><div class="form-group">
+                                                    <label class="col-md-3 control-label">Middle Part :</label>
+                                                    <div class="col-md-4 row ">
+
+
+                                                        <input type="file" name="files[]" multiple="">
+
+
+                                                    </div>
+                                                </div><div class="form-group">
+                                                    <label class="col-md-3 control-label">Color Ratio :</label>
+                                                    <div class="col-md-4 row ">
+
+
+                                                        <input type="file" name="files[]" multiple="">
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-actions">
+                                                <div class="row">
+                                                    <div class="col-md-offset-3 col-md-9">
+                                                        <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>*@
+
+
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="11" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmPhnColorModel.PmPhnColorID)
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Number Of Color :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnColorModel.PmPhnNumberOfColor)
+
+                                                </div>
+
+
+                                            </div>
+
+                                            @*<div class="form-group">
+                                                    <label class="col-md-3 control-label">Camera SoftWare :</label>
+                                                    <div class="col-md-4">
+                                                        @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnCameraModel.PmCameraSoftware, new { type = "text" })
+
+                                                    </div>
+
+
+                                                </div>*@
+
+                                            <div class="row">
+                                                <div class="col-lg-12" id="TextBoxContainer">
+
+
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="tab-pane" id="tab_8">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>Accessories
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="8" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesID)
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Ear Phone :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesEarphoneFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">USB Cable :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesUSBCableFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Charger :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesChargerFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">OTG Cable :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesOTGCableFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Back Cover :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesBackCoverFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Flip Cover :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnAccessoriesModel.PmPhnAccessoriesFlipCoverFile, new { type = "file" })
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="tab-pane" id="tab_9">
+                            <div class="portlet box blue">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-paint-brush"></i>Camera
+                                    </div>
+                                    <div class="tools">
+                                        <a href="javascript:;" class="collapse"> </a>
+
+                                        <a href="javascript:;" class="reload"> </a>
+                                        <a href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body form">
+                                    <!-- BEGIN FORM-->
+                                    <form action="~/ProjectManager/PmUploadFile" class="form-horizontal" method="POST" enctype="multipart/form-data">
+                                        <div class="form-body">
+                                            <input type="hidden" id="tabIdentifier" name="tabIdentifier" value="10" />
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId)
+                                            @Html.HiddenFor(model => model.ProjectPmAssignModel.ProjectPmAssignId)
+                                            @Html.HiddenFor(model => model.IndividualProjectViewModel.PmPhnCameraModel.PmPhnCameraID)
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Camera HardWare(Actual) :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnCameraModel.PmCameraHardwareActual, new { type = "text" })
+
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Camera SoftWare :</label>
+                                                <div class="col-md-4">
+                                                    @Html.TextBoxFor(model => model.IndividualProjectViewModel.PmPhnCameraModel.PmCameraSoftware, new { type = "text" })
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                        <div class="form-actions">
+                                            <div class="row">
+                                                <div class="col-md-offset-2 col-md-9">
+                                                    <button type="submit" class="btn btn-circle green">Submit</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- END FORM-->
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--Modal Start-->
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                @*<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!--Modal End-->
+
+
+<script type="text/javascript">
+
+    function GetDynamicTextBox() {
+        return '<input name = "" type="text"  />' +
+            '<input name = "" type="text"  />' +
+            '<input name = "" type="text"  />'
+    }
+
+    
+
+    function GetDynamicRowOfInput(counter) {
+        return '<div class="col-lg-5"></br><input class="form-control" type="text" name="otherspath['+counter+']"/></div>' +
+            '<div class="col-lg-4"></br><input class="form-control" type="text" name="otherssettings[0]" /></div></div></br><div class="col-lg-1"><button  class=" btn btn-danger remove_textBox">Remove</button></div></br>'
+
+
+    }  
+                                                                          
+
+    $(document).ready(function() {
+
+
+        //dynamic form
+        var counter = 0;
+        var wrapper = $(".dyanamicForm"); //Fields wrapper
+        var add_button = $(".btnAddMoreInput"); //Add button ID
+        var remove_buttton = $(".remove_textBox");
+        var x = 0;
+
+
+        // console.log(numberOfColor)
+
+        $("#IndividualProjectViewModel_PmPhnColorModel_PmPhnNumberOfColor").change(function() {
+            var numberOfColor = $('#IndividualProjectViewModel_PmPhnColorModel_PmPhnNumberOfColor').val();
+            // alert(numberOfColor);
+            var html = "";
+            if (numberOfColor != null && numberOfColor != "") {
+
+                for (var i = 0; i < numberOfColor; i++) {
+                    html += " <div class='col-lg-3'><div class='panel panel-default'><div class='panel-heading'>Color</div><div class='panel-body'>" + GetDynamicTextBox() + "</div></div></div>";
+
+                    document.getElementById("TextBoxContainer").innerHTML = html;
+
+                }
+
+            } else {
+
+                html += "";
+                document.getElementById("TextBoxContainer").innerHTML = html;
+            }
+
+
+        });        
+
+
+        $(add_button).click(function(e) { //on add input button click
+            e.preventDefault();
+            x++;
+            $(wrapper).append(GetDynamicRowOfInput(x)); //add input box
+
+            x++; //text box increment
+    
+           
+        });
+        
+        $(document).on('click', '.remove_textBox', function (e) {
+            e.preventDefault();
+            //alert('Clciked');
+            $($(this).parent().parent(
+            )).css('display', 'none');
+            //  $(this.parent('div').hidden());
+
+        });
+
+        //$(".remove_textBox").click(function (e) { //on add input button click
+        //    e.preventDefault();
+
+        //    $(this.parent('div').hidden());
+
+
+        //});
+
+        //$(wrapper).on("click", ".remove_field", function(e) { //user click on remove text
+        //    e.preventDefault();
+          
+        //});
+
+
+        $('[class*=".btnFilePreview"]').on('click', function() {
+
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+            if (btnId == "btnFilePreviewBootImage") {
+
+
+                //  $('#btnModalDataChangeLabel').text(btnId);
+                //  console.log($('#btnModalDataChangeLabel').text());
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewBootAnim") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.VideoUpload1" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewGbImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmGiftBoxModel.PmGbImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewLabelImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmLabelsModel.PmLabelImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewModelPrintImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmIdModel.PmModelPrintImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewLogoImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmIdModel.PmLogoTypeImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewFinishingIdImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmIdModel.PmFinishingImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewSpImage") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmScreenProtectorModel.PmScreenProtectorImageUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } @*else if (btnId == "btnFilePreviewSw1Image") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmSwCustomizationModel.PmSwCustomizationUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            } else if (btnId == "btnFilePreviewSw2Image") {
+
+
+                modalData += '<embed src="@Model.IndividualProjectViewModel.PmSwCustomizationModel.PmSwCustomizationUploadPath2" style="width:500px; height:375px;" frameborder="0"></embed>';
+                document.getElementById("modelBody").innerHTML = modalData;
+
+
+            }*@
+
+            // $('#filePreviewModal').modal();
+
+
+        });
+
+
+    });
+
+
+
+</script>

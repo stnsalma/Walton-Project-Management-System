@@ -1,0 +1,332 @@
+﻿@model IEnumerable<ProjectManagement.ViewModels.ProjectCommercial.VmTacRequest>
+
+@{
+    ViewBag.Title = "TacRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@*@{
+        if (TempData["message"] != null)
+        {
+            var msgType = TempData["messageType"];
+            var msg = TempData["message"];
+            if ((int)msgType == 1)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+            }
+            else if ((int)msgType == 2)
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+            }
+            else if ((int)msgType == 3)
+            {
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                    <strong>Message:</strong> @msg
+                </div>
+            }
+        }
+    }*@
+@*<link href="~/Content/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+
+
+
+    <script src="~/Scripts/moment.min.js" type="text/javascript"></script>
+    <script src="~/Content/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+    <script src="~/Content/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+
+    <script src="~/Content/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>*@
+
+
+<div class="page-head">
+    <!-- BEGIN PAGE TITLE -->
+    <div class="page-title">
+        <h1>
+            Welcome,Shisir
+            <small>Head of Project Management</small>
+        </h1>
+    </div>
+
+</div>
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Project Basics
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-12">
+                        @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                        <div class="form-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+
+
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-10">
+
+
+
+                                        <div class="portlet-body flip-scroll">
+                                            <table class="table table-bordered table-striped table-condensed flip-content dtTable" id="tblTacData">
+                                                <thead class="flip-content">
+                                                    <tr>
+                                                        <th> Project Name </th>
+                                                        <th> PO No. </th>
+                                                        <th> PO Qty. </th>
+                                                        <th> TAC No. </th>
+                                                        <th> Request Date </th>
+                                                        <th> IMEI Range From </th>
+                                                        <th> IMEI Range To </th>
+                                                        <th>Required Quantity</th>
+                                                        <th class="numeric"> Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model != null && Model.Any())
+                                                    {
+                                                        foreach (var vmTacRequest in Model)
+                                                        {
+                                                            <tr>
+                                                                @Html.HiddenFor(item => vmTacRequest.ProjectMasterId)
+                                                                @Html.HiddenFor(item => vmTacRequest.ProjectBabtId)
+                                                                @Html.HiddenFor(item => vmTacRequest.AssignedId)
+                                                                @Html.HiddenFor(item => vmTacRequest.ProjectPurchaseFormOrderId)
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.ProjectName)</td>
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.PurchaseOrderNo)</td>
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.PurchaseOrderQuantity)</td>
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.TacNo)</td>
+                                                                <td>
+                                                                    @if (vmTacRequest.TacRequestDate > DateTime.MinValue)
+                                                                    {
+                                                                        @Html.DisplayFor(item => vmTacRequest.TacRequestDate)
+                                                                    }
+                                                                </td>
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.ImeiRangeFrom)</td>
+                                                                <td>@Html.DisplayFor(item => vmTacRequest.ImeiRangeTo)</td>
+                                                                <td>
+                                                                    @if (vmTacRequest.RequestedImeiQuantity > 0)
+                                                                    {
+                                                                        @Html.TextBoxFor(item => vmTacRequest.RequestedImeiQuantity, new { @class = "form-control", disabled = "true" })
+                                                                    }
+                                                                    else
+                                                                    { @Html.TextBoxFor(item => vmTacRequest.RequestedImeiQuantity, new { @class = "form-control reqQty" })}
+                                                                </td>
+                                                                <td>
+
+                                                                    @if ((vmTacRequest.ToSupplierDate > DateTime.MinValue) && (vmTacRequest.ImeiRangeFrom != null && vmTacRequest.ImeiRangeTo != null))
+                                                                    {
+                                                                        <span class="label label-sm label-danger"> No Action Available </span>
+                                                                    }
+                                                                    else if ((vmTacRequest.TacRequestDate > DateTime.MinValue) && (vmTacRequest.ImeiRangeFrom == null && vmTacRequest.ImeiRangeTo == null))
+                                                                    {
+                                                                        <span class="label label-sm label-warning"> Waiting for IMEI Range </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (!(vmTacRequest.TacRequestDate > DateTime.MinValue))
+                                                                        {
+                                                                            <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Request a TAC" onclick="SendRequest('@vmTacRequest.ProjectMasterId', '@vmTacRequest.AssignedId', '@vmTacRequest.ProjectPurchaseFormOrderId', '@vmTacRequest.ProjectBabtId',$(this).closest('tr'),'@vmTacRequest.PurchaseOrderQuantity')" />
+                                                                        }
+                                                                        if (vmTacRequest.ImeiRangeFrom != null && vmTacRequest.ImeiRangeTo != null)
+                                                                        {
+                                                                            <button class="btn btn-circle btn-sm blue  btnSupplierSendingDate" id="btnSupplierSendingDate" onclick="SendDate('@vmTacRequest.ProjectMasterId')">Supplier Sending Date</button>
+                                                                        }
+
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                            </div>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal-->
+
+
+<div id="supplierSendingModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" id="lblprojectName"></h4>
+
+                <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-5">Supplier Sending Date</label>
+                                    <div class="col-md-7">
+                                        <input class="form-control  input-medium " size="16" type="text" value="" id="supplierSendingDate" />
+                                        <label id="projectMasterId" style="display: none" />
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnSendToSupplier">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#supplierSendingDate').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+
+        });
+        $('#btnSendToSupplier').on('click', function () {
+            var sendingDate = $('#supplierSendingDate').val();
+            var pmId = $('#projectMasterId').val();
+            $.post('@Url.Action("SaveSendingSupplierDate", "ProjectCommercial")', { projectMasterId: pmId, sendingDate: sendingDate }, function (data) {
+                console.log(data);
+                if (data == "saved") {
+                    alertify.alert('Suppllier Date ', 'Send Supplier Date Successfully', function () {
+                        alertify.success('Date Send to Supplier');
+                        location.reload(true);
+                    });
+                }
+            });
+
+        });
+
+        // do something with productId, product, Quantity
+    });
+
+    function SendDate(projectMasterId) {
+        $('#projectMasterId').val(projectMasterId);
+        $('#supplierSendingModal').modal();
+    }
+
+    function SendRequest(masterId, assignedId, orderId, babtId, row, poQty) {
+        var masId = parseInt(masterId);
+        var assiId = parseInt(assignedId);
+        var odId = parseInt(orderId);
+        var aa = row.find('input[name="vmTacRequest.RequestedImeiQuantity"]').val();
+        var qty = parseInt(aa);
+        var poqnty = parseInt(poQty);
+        var bbtId = isNaN(parseInt(babtId)) ? 0 : parseInt(babtId);
+        console.log(aa);
+        if (isNaN(qty) || qty <= 0) {
+            alertify.alert("Requested IMEI Quantity is not valid");
+        } else {
+            if (poqnty > qty) {
+                alertify.confirm('Caution', 'Requested Quantity is smaller then Purchase Order Quantity. Are you sure to request smaller number then Purchase Order ? To proceed click OK', function () {
+                    $.post('@Url.Action("SaveBabtInfo", "ProjectCommercial")', { masterId: masId, assignedId: assiId, orderId: odId, reqQuantity: qty, babtId: bbtId }, function (data) {
+                        console.log(data);
+                        if (data == 1) {
+
+                            alertify.success('Successful TAC Request');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 500);
+                        } else {
+
+                            alertify.error('Error occured');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 500);
+                        }
+                    });
+
+                }, function () { alertify.error('Cancel'); });
+            } else if (poqnty * 2 <= qty) {
+                alertify.confirm('Caution', 'Requested Quantity is two times or tow times plus bigger then Purchase Order Quantity. Are you sure to request a very bigger number then Purchase Order ? To proceed click OK', function () {
+                    $.post('@Url.Action("SaveBabtInfo", "ProjectCommercial")', { masterId: masId, assignedId: assiId, orderId: odId, reqQuantity: qty, babtId: bbtId }, function (data) {
+                        if (data == 1) {
+
+                            alertify.success('Successful TAC Request');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 3000);
+                        } else {
+
+                            alertify.error('Error occured');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 3000);
+                        }
+                    });
+
+                }, function () { alertify.error('Cancel'); });
+            }
+            else if (poqnty == qty) {
+                alertify.confirm('Confirmation', 'Are you sure to request IMEI', function () {
+                    $.post('@Url.Action("SaveBabtInfo", "ProjectCommercial")', { masterId: masId, assignedId: assiId, orderId: odId, reqQuantity: qty, babtId: bbtId }, function (data) {
+                        if (data == 1) {
+
+                            alertify.success('Successful TAC Request');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 3000);
+                        } else {
+
+                            alertify.error('Error occured');
+                            setTimeout(
+                                function () {
+                                    location.reload(true);
+                                }, 3000);
+                        }
+                    });
+                }, function() {
+                });
+                
+            }
+        }
+
+    }
+</script>

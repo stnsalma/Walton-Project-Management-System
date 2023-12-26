@@ -1,0 +1,671 @@
+﻿@using ProjectManagement.DAL.DbModel
+@using ProjectManagement.ViewModels.ProjectManager
+@model ProjectManagement.ViewModels.ProjectManager.AssignedProjectListViewModel
+
+
+
+<div class="portlet light bordered">
+
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-bar-chart font-green-sharp hide"></i>
+            <span class="caption-helper">Project Name:</span> &nbsp;
+            <span class="caption-subject font-green-sharp bold uppercase">
+                @if (Model != null)
+                {
+                    @Model.IndividualProjectViewModel.ProjectMasterModel.ProjectName;
+
+
+
+                }
+
+
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Project Info
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse"> </a>
+
+                <a href="javascript:;" class="reload"> </a>
+                @*<a href="javascript:;" class="remove"> </a>*@
+            </div>
+        </div>
+        <div class="portlet-body flip-scroll">
+            <h1 class="bold">Initial Info from Commercial:</h1>
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="forwardToHardWareTable">
+                    <thead class="flip-content">
+                        <tr>
+                            @*<th style="display:none;">ProjectMasterID</th>*@
+                            <th> Project Name </th>
+                            <th> Suppiler Name </th>
+                            <th> Type </th>
+                            <th class="text-center"> OS Version </th>
+                            <th class="text-center"> PO Date </th>
+                            <th class="text-center"> Shipment Last Date </th>
+                            <th class="text-center"> Qunatity </th>
+                            <th class="text-center"> Main Spec </th>
+                            <th class="text-center"> Name of Sample </th>
+                            <th class="text-center"> Chipset </th>
+                            <th class="text-center"> Assign Date </th>
+                            <th class="text-center"> PM </th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+
+
+
+                            <tr>
+                                <td id="idProjectMaseterId" class="hidden clsProjectMaseterId">@Model.IndividualProjectViewModel.ProjectMasterModel.ProjectMasterId</td>
+                                <td id="idProjectPmAssignId" class="hidden clsProjectPmAssignId">@Model.ProjectPmAssignModel.ProjectPmAssignId</td>
+                                <td id="idProjectManagerUserId" class="hidden clsProjectManagerUserId">@Model.ProjectPmAssignModel.ProjectManagerUserId</td>
+                                <td> @Model.IndividualProjectViewModel.ProjectMasterModel.ProjectName </td>
+                                <td>@Model.IndividualProjectViewModel.ProjectMasterModel.SupplierName </td>
+                                <td class="text-center">@Model.IndividualProjectViewModel.ProjectMasterModel.ProjectType</td>
+                                <td class="text-center"> @(Model.IndividualProjectViewModel.ProjectMasterModel.OsName + " " + @Model.IndividualProjectViewModel.ProjectMasterModel.OsVersion) </td>
+                                <td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.ApproxProjectOrderDate </td>
+                                <td class="text-center">@Model.IndividualProjectViewModel.ProjectMasterModel.ApproxShipmentDate </td>
+                                <td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                                <td class="text-center">@(Model.IndividualProjectViewModel.ProjectMasterModel.Chipset + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.ProcessorName + " " + @Model.IndividualProjectViewModel.ProjectMasterModel.Ram + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.Rom + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.FrontCamera + "," + @Model.IndividualProjectViewModel.ProjectMasterModel.BackCamera)</td>
+                                <td class="text-center">@Model.IndividualProjectViewModel.ProjectMasterModel.NumberOfSample  </td>
+                                <td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                                <td class="text-center">@Model.ProjectPmAssignModel.AssignDate  </td>
+                                <td class="text-center"> @Model.UserName </td>
+
+
+
+                                <td class="text-center">
+
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnForwardToHardWare" id="btnForwardToHardWare">Forward  <i class="icon-control-forward"> </i></button>
+
+
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="portlet-body flip-scroll">
+            <h1 class="bold">Hardware Screening Test Info:</h1>
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="tblScreeningInfo">
+                    <thead class="flip-content">
+                        <tr>
+                            @*<th style="display:none;">ProjectMasterID</th>*@
+                            @*<th> Project Name </th>
+                                <th> Suppiler Name </th>
+                                <th> Type </th>*@
+                            <th class="text-center"> Chipset Vendor </th>
+                            <th class="text-center"> Processor Spec </th>
+                            <th class="text-center"> ROM </th>
+                            <th class="text-center"> RAM </th>
+                            <th class="text-center"> Front Camera </th>
+                            <th class="text-center"> Back Camera </th>
+                            <th class="text-center">HW Incharge Remarks</th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.PmViewHwTestHybridModel != null)
+                        {
+
+                            <tr>
+                                <td id="idProjectMaseterId" class="hidden clsProjectMaseterId">@Model.PmViewHwTestHybridModel.ProjectMasterId</td>
+                                <td id="idHwQcInchargeAssignId" class="hidden clsHwQcInchargeAssignId">@Model.PmViewHwTestHybridModel.HwQcInchargeAssignId</td>
+                                @*<td id="idProjectManagerUserId" class="hidden clsProjectManagerUserId">@Model.ProjectPmAssignModel.ProjectManagerUserId</td>*@
+                                <td class="hidden"> @Model.PmViewHwTestHybridModel.ProjectName </td>
+                                <td class="hidden">@Model.PmViewHwTestHybridModel.SupplierName </td>
+                                <td class="hidden text-center">@Model.PmViewHwTestHybridModel.ProjectType</td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.Chipset_Vendor </td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.Chipset_Speed  @Model.PmViewHwTestHybridModel.Chipset_Core </td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.FlashIC_ROM </td>
+                                <td class="text-center"> @Model.PmViewHwTestHybridModel.FlashIC_RAM  </td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.FrontCamera_MPSW </td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.BackCamera_MPSW  </td>
+                                <td class="text-center">@Model.PmViewHwTestHybridModel.Remark</td>
+                                @*<td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                                    <td class="text-center">@Model.ProjectPmAssignModel.AssignDate  </td>
+                                    <td class="text-center"> @Model.UserName </td>*@
+
+
+
+                                <td class="text-center">
+
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnDetails" id="btnScreeningDetails"><i class="icon-list"> </i>  Details</button>
+
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="portlet-body flip-scroll">
+            <h1 class="bold">Hardware Running Test Info:</h1>
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="tblRunningInfo">
+                    <thead class="flip-content">
+                        <tr>
+                            @*<th style="display:none;">ProjectMasterID</th>*@
+                            @*<th> Project Name </th>
+                                <th> Suppiler Name </th>
+                                <th> Type </th>*@
+                            <th class="text-center"> Chipset Vendor </th>
+                            <th class="text-center"> Processor Spec </th>
+                            <th class="text-center"> ROM </th>
+                            <th class="text-center"> RAM </th>
+                            <th class="text-center"> Front Camera </th>
+                            <th class="text-center"> Back Camera </th>
+                            <th class="text-center">HW Incharge Remarks</th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.PmViewHwTestHybridModelForRunning)
+                        {
+
+                            <tr>
+                                <td id="idProjectMaseterId" class="hidden clsProjectMaseterId">@item.ProjectMasterId</td>
+                                <td id="idHwQcInchargeAssignId" class="hidden clsHwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                @*<td id="idProjectManagerUserId" class="hidden clsProjectManagerUserId">@item.ProjectManagerUserId</td>*@
+                                <td class="hidden"> @item.ProjectName </td>
+                                <td class="hidden"> @item.SupplierName </td>
+                                <td class="hidden text-center">@item.ProjectType</td>
+                                <td class="text-center">@item.Chipset_Vendor </td>
+                                <td class="text-center">Speed: @item.Chipset_Speed , Core:@item.Chipset_Core </td>
+                                <td class="text-center">@item.FlashIC_ROM </td>
+                                <td class="text-center"> @item.FlashIC_RAM  </td>
+                                <td class="text-center">@item.FrontCamera_MPSW </td>
+                                <td class="text-center">@item.BackCamera_MPSW  </td>
+                                <td class="text-center">@item.Remark</td>
+                                @*<td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                                    <td class="text-center">@Model.ProjectPmAssignModel.AssignDate  </td>
+                                    <td class="text-center"> @Model.UserName </td>*@
+
+
+
+                                <td class="text-center">
+
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnFgReport" id="btnRunningDetails"><i class="icon-list"> </i>  Details</button>
+
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="portlet-body flip-scroll">
+            <h1 class="bold">Hardware Finished Goods Test Info:</h1>
+            <div class="table-scrollable">
+                <table class="table table-bordered table-striped table-condensed flip-content" id="tblFinishedInfo">
+                    <thead class="flip-content">
+                        <tr>
+                            @*<th style="display:none;">ProjectMasterID</th>*@
+                            @*<th> Project Name </th>
+                                <th> Suppiler Name </th>
+                                <th> Type </th>*@
+                            <th class="text-center"> Chipset Vendor </th>
+                            <th class="text-center"> Processor Spec </th>
+                            <th class="text-center"> ROM </th>
+                            <th class="text-center"> RAM </th>
+                            <th class="text-center"> Front Camera </th>
+                            <th class="text-center"> Back Camera </th>
+                            <th class="text-center">HW Incharge Remarks</th>
+                            <th class="text-center"> Action </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.PmViewHwTestHybridModelForFinished)
+                        {
+
+                            <tr>
+                                <td id="idProjectMaseterId" class="hidden clsProjectMaseterId">@item.ProjectMasterId</td>
+                                <td id="idHwQcInchargeAssignId" class="hidden clsHwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                @*<td id="idProjectManagerUserId" class="hidden clsProjectManagerUserId">@item.ProjectManagerUserId</td>*@
+                                <td class="hidden"> @item.ProjectName </td>
+                                <td class="hidden"> @item.SupplierName </td>
+                                <td class="hidden text-center">@item.ProjectType</td>
+                                <td class="text-center">@item.Chipset_Vendor </td>
+                                <td class="text-center">Speed: @item.Chipset_Speed , Core:@item.Chipset_Core </td>
+                                <td class="text-center">@item.FlashIC_ROM </td>
+                                <td class="text-center"> @item.FlashIC_RAM  </td>
+                                <td class="text-center">@item.FrontCamera_MPSW </td>
+                                <td class="text-center">@item.BackCamera_MPSW  </td>
+                                <td class="text-center">@item.Remark</td>
+                                @*<td class="text-center"> @Model.IndividualProjectViewModel.ProjectMasterModel.Chipset  </td>
+                                    <td class="text-center">@Model.ProjectPmAssignModel.AssignDate  </td>
+                                    <td class="text-center"> @Model.UserName </td>*@
+
+
+
+                                <td class="text-center">
+
+                                    <button class="btn btn-circle btn-sm blue btn-outline btnFgReport" id="btnFinishedDetails"><i class="icon-list"> </i>  Details</button>
+
+
+                                </td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!--MODAL start-->
+    <div id="forwardToHardwareQcModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Forward To Hardware </h4>
+
+                    <h4 class="modal-title" id="lblprojectMasterId" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectPmAssignId" style="display:none;"></h4>
+                    <h4 class="modal-title" id="lblProjectManagerUserId" style="display:none;"></h4>
+
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="#" id="" class="form-horizontal">
+                                <div class="form-body">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">
+                                            Project Name:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblprojectName" class="form-control" style="border: none" />
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">
+                                            Project Sample Type:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" id="ddlSampleType">
+                                                <option value=0>--Select--</option>
+                                                <option value="T0">T0</option>
+                                                <option value="T1">T1</option>
+                                                <option value="Golden">Golden Sample</option>
+                                                <option value="FinishGood">Finish Good</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">
+                                            Number Of Sample:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="number" min="1" id="txtSampleNumber" class="form-control" required />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+
+
+                                        <div class="mt-radio-inline">
+
+                                            <div class="col-lg-4">
+
+                                            </div>
+
+                                            <label class="mt-radio">
+                                                <input type="radio" name="txtTestValue" id="runningTestValue" value=1> Running Test
+                                                <span></span>
+                                            </label>
+                                            <label class="mt-radio">
+                                                <input type="radio" name="txtTestValue" id="finisTestValue" value=1> Finish Good
+                                                <span></span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="ProjectOrderList" style="display: none;">
+                                        <label class="control-label col-md-4">
+                                            Purchase Order Number:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <select class="form-control" id="ddlProjectOrderNumber">
+                                                <option>--Select--</option>
+                                                @foreach (var po in Model.ProjectPurchaseOrderFormModels)
+                                                {
+                                                    <option value="@po.ProjectPurchaseOrderFormId">@po.PurchaseOrderNumber</option>
+
+
+                                                }
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">
+                                            Comment:
+
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="3" name="txtProjectHeadRemarks" id="txtProjectHeadRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToHardWareConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MODAL end-->
+
+    <script type="text/javaScript">
+
+        $(document).ready(function () {
+
+            $('#forwardToHardWareTable tr > td > .btnForwardToHardWare').click(function () {
+
+                var currentRow;
+
+
+                var rowIndex = $(this).closest('tr').index() + 1;
+                var table = document.getElementById('forwardToHardWareTable');
+                var projectName = table.rows[rowIndex].cells[3].innerHTML;
+                var projectMasterId = table.rows[rowIndex].cells[0].innerHTML;
+                var projectPmAssignId = table.rows[rowIndex].cells[1].innerHTML;
+                var projectManagerUserId = table.rows[rowIndex].cells[2].innerHTML;
+
+
+
+
+                console.log(projectMasterId + "--->" + projectPmAssignId);
+
+                $('#forwardToHardwareQcModal').modal();
+
+
+                $('#lblprojectName').val(projectName);
+                $('#lblprojectMasterId').text(projectMasterId);
+                $('#lblProjectPmAssignId').text(projectPmAssignId);
+                $('#lblProjectManagerUserId').text(projectManagerUserId);
+
+                currentRow = $(this).closest('tr');
+
+
+                console.log(projectName);
+
+
+            });
+
+
+            $("[name=txtTestValue]").change(function (e) {
+                $("#ProjectOrderList").toggle($("[name=txtTestValue]").index(this) === 1);
+            });
+
+            $('#btnForwardToHardWareConfirm').on('click', function () {
+
+                var pmRemarks = $('#txtProjectHeadRemarks').val();
+                var projectName = $('#lblprojectName').val();
+                var projectMasterId = $('#lblprojectMasterId').text();
+                var projectPmAssignId = $('#lblProjectPmAssignId').text();
+                var sampleNumber = $('#txtSampleNumber').val();
+                var projectManagerUserId = $('#lblProjectManagerUserId').text();
+                var selectedSampleValue = $('#ddlSampleType :selected').val();
+                var selectedPoNumber = $('#ddlProjectOrderNumber :selected').val();
+                var selectedPoNumber1 = $('#ddlProjectOrderNumber :selected').text();
+                var runningTestValue = $('#runningTestValue:checked').val();
+                var finisTestValue = $('#finisTestValue:checked').val();
+
+               // alert(sampleNumber);
+
+                if (selectedSampleValue == 0) {
+                    $('#forwardToHardwareQcModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Project Sample Type.",
+                    }).show();
+                    return false;
+                }
+                
+                if (sampleNumber.length == 0) {
+                    $('#forwardToHardwareQcModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must provide Number of Sample.",
+                    }).show();
+                    return false;
+                }
+                
+                if (runningTestValue == null && finisTestValue == null) {
+                    $('#forwardToHardwareQcModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select any one option, Running Test/Finish Good.",
+                    }).show();
+                    return false;
+                }
+                
+
+                if (finisTestValue != null && selectedPoNumber1 == "--Select--") {
+                    $('#forwardToHardwareQcModal').modal('hide');
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Purchase Order Number.",
+                    }).show();
+                    return false;
+                }
+
+                if (selectedSampleValue != "0" && sampleNumber != "") {
+
+
+                    var obj = {};
+
+                    obj.pmRemarks = pmRemarks;
+                    obj.projectMasterId = projectMasterId;
+                    obj.projectPmAssignId = projectPmAssignId;
+                    obj.projectManagerUserId = projectManagerUserId;
+                    obj.selectedSampleValue = selectedSampleValue;
+                    obj.sampleNumber = sampleNumber;
+                    obj.runningTestValue = runningTestValue;
+                    obj.finisTestValue = finisTestValue;
+                    obj.selectedPoNumber = selectedPoNumber;
+
+
+                    $.ajax({
+                        url: '@Url.Action("ProjectForwardToHardWare", "ProjectManager")',
+                        type: 'POST',
+                        data: JSON.stringify(obj),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (data) {
+
+                            if (data == "Another Finished Test Already in Progress") {
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Another Finished Test Already in Progress of Project ' + projectName, function () {
+                                    alertify.error('Forwarded' + projectName);
+                                });
+
+
+                            } else if (data == "Another Running Test Already in Progress") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Another Running Test Already in Progress of Project ' + projectName, function () {
+                                    alertify.error('OK');
+                                });
+
+
+                            } else if (data == "Another Running Test Already in Progress") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Another Finished Test Already in Progress of Project ' + projectName, function () {
+                                    alertify.error('OK');
+                                });
+
+
+                            } else if (data == "Finished Test in Progress") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Finished Test in Progress of Project ' + projectName, function () {
+                                    alertify.error('OK');
+                                });
+
+
+                            } else if (data == "Finished Test in Progress") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Finished Test in Progress of Project ' + projectName, function () {
+                                    alertify.error('OK');
+                                });
+
+
+                            } else if (data == "Running Test in Progress") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Running Test in Progress of Project ' + projectName, function () {
+                                    alertify.error('OK');
+                                });
+
+
+                            } else if (data == "ok") {
+
+                                $('#txtProjectHeadRemarks').val('');
+                                $('#txtSampleNumber').val('');
+                                $('#txtProjectHeadRemarks').val('');
+
+
+
+                                alertify.alert('Project Forwarded To Hardware Qc', 'Project Forwarded To Hardware Qc.Project Name:  ' + projectName, function () {
+                                    alertify.success('OK');
+                                });
+
+
+                            }
+                        },
+                        error: function () {
+                            alert("error");
+                        }
+                    });
+                } else {
+                    $('#txtSampleNumber').css('border-color', 'red');
+                    $('#ddlSampleType').css('border-color', 'red');
+                    //alertify.alert("Sample type, sample number is required");
+                    $('#forwardToHardwareQcModal').modal('show');
+                }
+
+            });
+
+
+            $('.btnDetails').click(function () {
+                currentRow = $(this).closest('tr');
+                var projectId = $(this).closest('tr').find('td:eq(0)').text().trim();
+                var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(1)').text().trim();
+                var projectName = $(this).closest('tr').find('td:eq(2)').text().trim();
+                //alert(hwQcAssignId);
+                console.log(projectName);
+                $('#DetailsProjectMasterId').val(projectId);
+                $('#DetailsProjectName').val(projectName);
+
+                var url = '@Url.Action("HwDisplayScreeningTest", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+                window.open(url);
+                //Approval
+                //$('#responsive').modal({
+                //    show: true,
+                //    backdrop: 'static'
+                //});
+            });
+
+            $('[class*="btnFgReport"]').click(function () {
+                //alert();
+
+                //console.log($(this).find('#hwQcAssignId').html());
+                //alertify.alert($(this).find('#hwQcAssignId').html());
+                var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(1)').text().trim();
+                var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId;
+                window.location.href = url;
+
+            });
+        });
+    </script>
+</div>
+

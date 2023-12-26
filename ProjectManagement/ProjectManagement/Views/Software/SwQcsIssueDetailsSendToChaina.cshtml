@@ -1,0 +1,1811 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+@{
+    ViewBag.Title = "SwQcsIssueDetailsSendToChaina";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/New_2019/dataTables.fixedColumns.min.js"></script>
+<script src="~/Scripts/New_2019/dataTables.checkboxes.min.js"></script>
+<link href="~/Content/New_2019/dataTables.checkboxes.css" rel="stylesheet" />
+
+
+@*NEW *@
+<link href="~/Content/New_2019/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/New_2019/dataTables.fixedHeader.min.js"></script>
+
+
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .tblSam2 tbody tr {
+        min-height: 20px; /* or whatever height you need to make them all consistent */
+        text-align: left;
+    }
+
+    .tblSam2 {
+        margin: 0 auto;
+        width: 100%;
+        /*clear: both;*/
+        border-collapse: collapse;
+        table-layout: fixed;
+        word-wrap: break-word;
+        /*text-align: left;*/
+    }
+    /*table.dataTable.nowrap th, table.dataTable.nowrap td {
+        white-space: nowrap !important;
+    }*/
+
+    /*table.fixedHeader-floating {
+        position: fixed !important;
+        background-color: white;
+    }*/
+    /*.sample_1 thead {
+
+        overflow: auto;
+        white-space: nowrap;
+    }*/
+
+    /*.sample_1 th {
+        position: relative;
+        overflow: auto;
+    }*/
+
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    .DTFC_LeftBodyWrapper {
+        position: relative;
+        top: -11px !important;
+        left: 0px;
+        overflow: hidden;
+        height: 100%;
+    }
+
+    .DTFC_LeftBodyLiner {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        overflow: hidden;
+        height: 200px;
+        max-height: 200px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+
+    .backgroundForMinor {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #00b0f0;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForMajor {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #8ea9db;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForCritical {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #ff0000;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForYes {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #00b050;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForNo {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 60%;
+        height: 100%;
+        background-color: #ff0000;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForNewIssue {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #bdd7ee;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForSupplier {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #00b0f0;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForOptimized {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #fff2cc;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .backgroundForImproved {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #ffff00;
+        color: black;
+        /*z-index: 1;*/
+        font-weight: bold;
+    }
+
+    .trClsforSize td {
+        font-size: 12px;
+    }
+
+    .tableTrCls1 td {
+        font-size: 12px;
+    }
+</style>
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Supplier Issue Feedback </p>
+</div>
+
+@*@using (@Html.BeginForm("SwQcsIssueDetailsSendToChaina", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+    {*@
+
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Select necessary project
+        </div>
+    </div>
+    <div class="portlet-body" style="display: block;">
+        <div class="row">
+            @if (Model != null && Model.ProjectMasterModelsList.Any() && Model.SwQcIssueCategoryModels.Any())
+            {
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-3" style="text-align: right">
+                            Select Project
+                        </div>
+                        <div class="col-lg-9" style="text-align: left">
+                            @Html.DropDownListFor(model => model.CombinedProjectId, new SelectList(ViewBag.CombinedIds, "Value", "Text"), new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-5" style="text-align: right">
+                            Software Version Number
+                        </div>
+                        <div class="col-lg-7" style="text-align: left">
+                            <input type="number" min="0" id="swVersionNo" value="@Model.SoftwareVersionNumber" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-3" style="text-align: right">
+                            Module
+                        </div>
+                        <div class="col-lg-9" style="text-align: left">
+                            @Html.DropDownListFor(model => model.CombinedProjectIds, new SelectList(ViewBag.CombinedIdsForModule, "Value", "Text"), new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center">
+                        <div class="col-lg-5" style="text-align: right">
+                            Project Order
+                        </div>
+                        <div class="col-lg-7" style="text-align: left">
+                            <input type="number" min="0" id="projectOrder" value="@Model.OrderNumber" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <br /> <br />
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <div class="col-lg-3" style="text-align: right">
+                            Test Phase
+                        </div>
+                        <div class="col-lg-9" style="text-align: left">
+                            @Html.DropDownListFor(model => model.CombinedTestPhaseIds, new SelectList(ViewBag.CombinedIdsForTestPhase, "Value", "Text"), new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                    <div class="col-lg-6" style="text-align: center">
+
+                    </div>
+                </div>
+                <br /><br />
+                <div class="col-lg-12">
+                    <div class="col-lg-3"> </div>
+                    <div class="form-actions">
+                        <input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href = '@Url.Action("SwQcsIssueDetailsSendToChaina", "Software")?projectId=' + $('option:selected', $('#CombinedProjectId')).val()+ '&swVersionNo='+$('#swVersionNo').val()+ '&projectOrder='+$('#projectOrder').val()+ '&moduleName='+$('option:selected', $('#CombinedProjectIds')).val()+ '&testPhases='+$('option:selected', $('#CombinedTestPhaseIds')).val()" />
+
+                    </div>
+                    <div class="col-lg-3"> </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Responsible Person For Particular Software Version</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tbl1" id="tbl1">
+                    <thead>
+                        <tr class="trClsforSize1">
+                            <th>#</th>
+                            <th style="text-align: center;font-size: 12px"> ProjectName </th>
+                            <th style="text-align: center;font-size: 12px">Po<br />Category </th>
+                            <th style="text-align: center;font-size: 12px"> Order<br />Number </th>
+                            <th style="text-align: center;font-size: 12px"> Software <br />Version<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Software<br />VersionNo. </th>
+                            <th style="text-align: center;font-size: 12px"> TestPhase<br />Name </th>
+                            <th style="text-align: center;font-size: 12px"> Assigned<br />Person </th>
+                            <th style="text-align: center;font-size: 12px">Pm Assigned<br /> Date </th>
+                            <th style="text-align: center;font-size: 12px">QcHead<br /> Assigned Date </th>
+                            <th style="text-align: center;font-size: 12px">SwQc<br /> Finished Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.SwQcAssignsFromQcHeadModels)
+                        {
+                            <tr style="text-align: center" class="trClsforSize">
+                                <td></td>
+                                <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PoCategory)</td>
+                                <td>@Html.DisplayFor(modelItem => item.OrderNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SoftwareVersionName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                <td>@Html.DisplayFor(modelItem => item.TestPhaseName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.AssignedPerson)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PmToQcHeadAssignTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SwQcHeadToQcAssignTime)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SwQcFinishedTime)</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div class="row" id="forQcAprro">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">All Project Wise Added Issues For Approval</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                @*<table class="sample_1" id="sample_1">table table-striped table-bordered table-hover*@
+                <table class="table table-striped table-bordered table-hover sample_1" id="sample_1">
+                    <thead class="scrolsmenu">
+                        <tr>
+
+                            @*<th>#</th>*@
+                            <th></th>
+                            <th style="text-align: center;display: none"> SwQcAssignId</th>
+                            <th style="text-align: center;display: none"> SwQcHeadAssignId </th>
+                            <th style="text-align: center;display: none"> ProjectMasterId </th>
+                            <th style="text-align: center;font-size: 12px"> Issue SL. </th>
+                            <th style="text-align: center;font-size: 12px"> Soft.Ver.<br />No. </th>
+                            <th style="text-align: center;font-size: 12px"> File Or<br />Issue </th>
+                            <th style="text-align: center;font-size: 12px"> Issue <br />Scenario </th>
+                            <th style="text-align: center;font-size: 12px"> Expected<br /> Outcome </th>
+                            <th style="text-align: center;font-size: 12px"> Result </th>
+                            <th style="text-align: center;font-size: 12px"> Reference<br /> Module </th>
+                            <th style="text-align: center;font-size: 12px"> DoneBy </th>
+                            <th style="text-align: center;font-size: 12px"> Frequency </th>
+                            <th style="text-align: center;font-size: 12px"> Reproduce<br /> Path </th>
+                            <th style="text-align: center;font-size: 12px">Attachment </th>
+                            <th style="text-align: center;font-size: 12px">Files<br />Url </th>
+                            <th style="text-align: center; font-size: 12px">Upload </th>
+                            <th style="text-align: center;font-size: 12px">Issue<br /> Type </th>
+                            <th style="text-align: center; font-size: 12px">IsApproved<br />ForChina? </th>
+                            <th style="text-align: center; font-size: 12px">Approve </th>
+                            <th style="text-align: center; font-size: 12px">Edit </th>
+                            <th style="text-align: center; font-size: 12px">Delete </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (@Model.SwQcIssueDetailModels != null)
+                        {
+                            foreach (var item in Model.SwQcIssueDetailModels)
+                            {
+                                @Html.HiddenFor(modelItem => item.ExtendedRoleName, new { id = "roleNameForCheck" })
+                                @Html.HiddenFor(modelItem => item.RoleName, new { id = "roleNameForCheck1" })
+                                // var dd = @item.RoleName;
+                                if (item.ExtendedRoleName == "QCHEAD" || item.RoleName == "QCHEAD")
+                                {
+                                    <tr style="text-align: center;" class="tableTrCls1">
+                                        <td><input type="checkbox" id="smtChkId" class="smtChkId" name="smt" value="smt_CheckBx"></td>
+                                        @*<td></td>*@
+                                        <td class="SwQcAssignId" style="display: none;">
+                                            <span>@item.SwQcAssignId</span>
+                                        </td>
+                                        <td class="SwQcIssueId" style="display: none;">
+                                            <span>@item.SwQcIssueId</span>
+                                        </td>
+                                        <td class="ProjectMasterId" style="display: none;">
+                                            <span>@item.ProjectMasterId</span>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueSerial)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.FileOrIssue)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueScenario)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ExpectedOutcome)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Result)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.RefernceModule)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.UserFullName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Frequency)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueReproducePath)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Attachment)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.FilesUrl)</td>
+                                        <td>
+                                            <div class="file-preview-thumbnails">
+                                                <div class="">
+                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                        <div class="col-lg-12">
+                                                            @Html.HiddenFor(modelItem => item.Upload, new { @class = "clsRmv" })
+                                                            @Html.HiddenFor(modelItem => item.UploadedFile, new { @class = "clsRmv" })
+                                                            @if (item.FilesDetails != null && item.FilesDetails.Any())
+                                                            {
+                                                                for (int m = 0; m < item.FilesDetails.Count; m++)
+                                                                {
+                                                                    if (item.FilesDetails[m].Extention == ".jpg" || item.FilesDetails[m].Extention == ".png" || item.FilesDetails[m].Extention == ".mp4" || item.FilesDetails[m].Extention == ".jpeg" || item.FilesDetails[m].Extention == ".txt" || item.FilesDetails[m].Extention == ".xls" || item.FilesDetails[m].Extention == ".wav")
+                                                                    {
+
+                                                            <div class="col-lg-3">
+
+                                                                <embed class="" src="@item.FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                <br />
+                                                                <a target="_blank" href="@item.FilesDetails[m].FilePath">Download</a>
+
+                                                            </div>
+
+                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                    }
+                                                                    if (item.FilesDetails[m].Extention == ".zip" || item.FilesDetails[m].Extention == ".pdf" || item.FilesDetails[m].Extention == ".docx" || item.FilesDetails[m].Extention == ".xlsx" || item.FilesDetails[m].Extention == ".rar" || item.FilesDetails[m].Extention == ".pptx")
+                                                                    {
+                                                                        var urls = item.FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                        for (int k = 0; k < urls.Count; k++)
+                                                                        {
+                                                                            var last = urls[k].Split('-').Last();
+                                                                            var lastNameForM = item.FilesDetails[m].FilePath;
+
+                                                                            lastNameForM = Path.GetFileName(last);
+
+                                                            <div class="col-lg-3" style="width: 100px; height: 100px;">
+
+                                                                @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+
+                                                                <br />
+
+                                                                <a href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+
+                                                            </div>
+
+                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                        }
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="IssueType">
+                                            <span style="display: none">@item.IssueType</span>
+                                            @if (@item.IssueType == "MINOR")
+                                            {
+                                            <div class="backgroundForMinor"> @item.IssueType </div>
+
+                                            }
+                                            else if (@item.IssueType == "MAJOR")
+                                            {
+                                            <div class="backgroundForMajor"> @item.IssueType </div>
+                                            }
+                                            else if (@item.IssueType == "CRITICAL")
+                                            {
+                                            <div class="backgroundForCritical"> @item.IssueType </div>
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @if (@item.IsApprovedForChinas == "YES")
+                                            {
+                                            <div class="backgroundForYes"> @item.IsApprovedForChinas </div>
+
+                                            }
+                                            else if (@item.IsApprovedForChinas == "NO")
+                                            {
+                                            <div class="backgroundForNo"> @item.IsApprovedForChinas </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="col-lg-4">
+                                                <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle btnApprove" value="YES" id="btnApprove" />
+                                            </div>
+                                            <br /><br />
+                                            <div class="col-lg-4">
+                                                <input type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle btnDecline" id="btnDecline" value="NO" />
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-success btnOpenModal">
+                                                <span class="glyphicon glyphicon-edit"></span> EDIT
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="submit" style="width:120px" class="btn btn-danger removeBtns" id="removeBtns">
+                                                <span class="glyphicon glyphicon-remove"></span> DELETE
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                                else if (item.RoleName == "QC" && item.ExtendedRoleName != "QCHEAD")
+                                {
+                                    <tr style="text-align: center;" class="tableTrCls1">
+                                        <td><input type="checkbox" id="smtChkId" class="smtChkId" name="smt" value="smt_CheckBx"></td>
+                                        @*<td></td>*@
+                                        <td class="SwQcAssignId" style="display: none;">
+                                            <span>@item.SwQcAssignId</span>
+                                        </td>
+                                        <td class="SwQcIssueId" style="display: none;">
+                                            <span>@item.SwQcIssueId</span>
+                                        </td>
+                                        <td class="ProjectMasterId" style="display: none;">
+                                            <span>@item.ProjectMasterId</span>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueSerial)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.SoftwareVersionNo)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.FileOrIssue)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueScenario)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ExpectedOutcome)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Result)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.RefernceModule)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.UserFullName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Frequency)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IssueReproducePath)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Attachment)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.FilesUrl)</td>
+                                        <td>
+                                            <div class="file-preview-thumbnails">
+                                                <div class="">
+                                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                        <div class="col-lg-12">
+                                                            @Html.HiddenFor(modelItem => item.Upload, new { @class = "clsRmv" })
+                                                            @Html.HiddenFor(modelItem => item.UploadedFile, new { @class = "clsRmv" })
+                                                            @if (item.FilesDetails != null && item.FilesDetails.Any())
+                                                            {
+                                                                for (int m = 0; m < item.FilesDetails.Count; m++)
+                                                                {
+                                                                    if (item.FilesDetails[m].Extention == ".jpg" || item.FilesDetails[m].Extention == ".png" || item.FilesDetails[m].Extention == ".mp4" || item.FilesDetails[m].Extention == ".jpeg" || item.FilesDetails[m].Extention == ".txt" || item.FilesDetails[m].Extention == ".xls" || item.FilesDetails[m].Extention == ".wav")
+                                                                    {
+
+                                                            <div class="col-lg-3">
+
+                                                                <embed class="" src="@item.FilesDetails[m].FilePath" style="width: 100px;height: 100px" />
+                                                                <br />
+                                                                <a target="_blank" href="@item.FilesDetails[m].FilePath">Download</a>
+
+                                                            </div>
+
+                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                    }
+                                                                    if (item.FilesDetails[m].Extention == ".zip" || item.FilesDetails[m].Extention == ".pdf" || item.FilesDetails[m].Extention == ".docx" || item.FilesDetails[m].Extention == ".xlsx" || item.FilesDetails[m].Extention == ".rar" || item.FilesDetails[m].Extention == ".pptx")
+                                                                    {
+                                                                        var urls = item.FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                        for (int k = 0; k < urls.Count; k++)
+                                                                        {
+                                                                            var last = urls[k].Split('-').Last();
+                                                                            var lastNameForM = item.FilesDetails[m].FilePath;
+
+                                                                            lastNameForM = Path.GetFileName(last);
+
+                                                            <div class="col-lg-3" style="width: 100px; height: 100px;">
+
+                                                                @Html.TextAreaFor(model => lastNameForM, new { style = "width:100px;height:100px;", disabled = "disabled" })
+
+                                                                <br />
+
+                                                                <a href="@item.FilesDetails[m].FilePath" target="_blank">Download</a>
+
+                                                            </div>
+
+                                                            <div class="col-lg-3" style="width: 50px;"></div>
+
+                                                                        }
+                                                                    }
+
+                                                                }
+                                                            }
+
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="IssueType">
+                                            <span style="display: none">@item.IssueType</span>
+                                            @if (@item.IssueType == "MINOR")
+                                            {
+                                            <div class="backgroundForMinor"> @item.IssueType </div>
+
+                                            }
+                                            else if (@item.IssueType == "MAJOR")
+                                            {
+                                            <div class="backgroundForMajor"> @item.IssueType </div>
+                                            }
+                                            else if (@item.IssueType == "CRITICAL")
+                                            {
+                                            <div class="backgroundForCritical"> @item.IssueType </div>
+                                            }
+                                        </td>
+                                        <td>
+
+                                            @if (@item.IsApprovedForChinas == "YES")
+                                            {
+                                            <div class="backgroundForYes"> @item.IsApprovedForChinas </div>
+
+                                            }
+                                            else if (@item.IsApprovedForChinas == "NO")
+                                            {
+                                            <div class="backgroundForNo"> @item.IsApprovedForChinas </div>
+                                            }
+                                        </td>
+                                        <td>
+                                            @*<div class="col-lg-4">
+                                                    <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle btnApprove" value="YES" id="btnApprove" />
+                                                </div>
+                                                <br /><br />
+                                                <div class="col-lg-4">
+                                                    <input type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle btnDecline" id="btnDecline" value="NO" />
+                                                </div>*@
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-success btnOpenModal">
+                                                <span class="glyphicon glyphicon-edit"></span> EDIT
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="submit" style="width:120px" class="btn btn-danger removeBtns" id="removeBtns">
+                                                <span class="glyphicon glyphicon-remove"></span> DELETE
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <br />
+            <div class="col-lg-12" style="text-align: left">
+                <div class="form-actions appBtnHide" id="appBtnHide">
+                    <input type="submit" id="btnExample" class="btn sbold uppercase btn-outline blue" value="Approve" />
+                </div>
+            </div>
+            @*@if (@Model.SwQcIssueDetailModels != null)
+            {
+                 @Html.HiddenFor(modelItem => modelItem.SwQcIssueDetailModels[0].ExtendedRoleName, new { id = "roleNameForCheck" })
+                if (@Model.SwQcIssueDetailModels[0].ExtendedRoleName == "QCHEAD" || @Model.SwQcIssueDetailModels[0].RoleName == "QCHEAD")
+                {
+                    <div class="col-lg-12" style="text-align: left">
+                        <div class="form-actions appBtnHide" id="appBtnHide">
+                            <input type="submit" id="btnExample" class="btn sbold uppercase btn-outline blue" value="Approve" />
+                        </div>
+                    </div>
+                }
+            }*@
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="col-lg-12">
+                    <div class="caption font-dark">
+                        <i class="icon-settings font-dark"></i>
+                        <span class="caption-subject bold uppercase">Supplier Feedback</span>
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <table class="table table-striped table-bordered table-hover tblSam2" id="tblSam2">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;display: none;">SwQcIssueId </th>
+                            <th style="text-align: center;display: none;">SwQcAssignId </th>
+                            <th style="text-align: center;display: none;">SwQcHeadAssignId </th>
+                            <th style="text-align: center;display: none;">ProjectMasterId </th>
+                            <th style="text-align: center;display: none;">OrderNumber </th>
+                            <th style="text-align: center;display: none;">ProjectName </th>
+                            <th style="text-align: center; background-color: red; color: white; font-weight: bold; font-size: 12px;">Issue<br /> SL. </th>
+                            <th style="text-align: center; background-color: #b2abfa; width: auto; font-size: 12px;"> Issue Scenario </th>
+                            <th style="text-align: center; background-color: #b2abfa;font-size: 12px"> Expected Outcome </th>
+                            <th style="text-align: center; background-color: #b2abfa;font-size: 12px"> Reference<br /> Module </th>
+                            <th style="text-align: center; background-color: #b2abfa;font-size: 12px;display: none"> DoneBy </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px"> Frequency </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px"> Reproduce<br /> Path </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px">Attachment </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px">Issue<br /> Type </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px">Software<br /> Version Name </th>
+                            <th style="text-align: center; background-color: #b2abfa; font-size: 12px">Soft.<br /> Vr.No. </th>
+                            <th style="text-align: center; background-color: #00b050; font-size: 12px"> Wal.QC.Com.<br />Date </th>
+                            <th style="text-align: center; background-color: #00b050; font-size: 12px"> Walton QC Comment </th>
+                            <th style="text-align: center; background-color: #00b050; font-size: 12px"> Walton.QC.<br />Status </th>
+                            <th style="text-align: center; background-color: #00b050; font-size: 12px">Select<br />Qc.Status </th>
+                            <th style="text-align: center; background-color: #00b050; font-size: 12px"> Fixed Version </th>
+                            <th style="text-align: center; background-color: #ed7d31; font-size: 12px; display: none"> Sup.Com.Date </th>
+                            <th style="text-align: center; background-color: #ed7d31; font-size: 12px"> Supplier Comment </th>
+                            <th style="text-align: center; background-color: #ed7d31; font-size: 12px"> Supplier Status </th>
+                            <th style="text-align: center; background-color: #ed7d31;font-size: 12px;display: none">Select<br /> Supp.Status </th>
+                            <th style="text-align: center; background-color: #00b0f0;font-size: 12px;display:none"> Wal.PM.Com.Date</th>
+                            <th style="text-align: center; background-color: #00b0f0; font-size: 12px"> Walton PM Comment </th>
+                            @*<th style="text-align: center; background-color: #00b0f0"> Walton PM Status </th>*@
+                            <th style="text-align: center; font-size: 12px">Action </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.SwQcIssueDetailModels.OrderBy(x => x.IssueSerial))
+                        {
+                            if (item.IsApprovedForChina == true)
+                            {
+                                <tr style="text-align: center" class="trClsforSize">
+                                    @*<td></td>*@
+                                    <td class="SwQcIssueId" style="display:none">
+                                        <span>@item.SwQcIssueId</span>
+                                    </td>
+                                    <td class="SwQcAssignId" style="display:none">
+                                        <span>@item.SwQcAssignId</span>
+                                    </td>
+                                    <td class="SwQcHeadAssignId" style="display:none">
+                                        <span>@item.SwQcHeadAssignId</span>
+                                    </td>
+                                    <td class="ProjectMasterId" style="display:none">
+                                        <span>@item.ProjectMasterId</span>
+                                    </td>
+                                    <td class="OrderNumber" style="display:none">
+                                        <span>@item.OrderNumber</span>
+                                    </td>
+                                    <td class="ProjectName" style="display:none">
+                                        <span>@item.ProjectName</span>
+                                    </td>
+                                    <td class="IssueSerial">
+                                        <span>@item.IssueSerial</span>
+                                    </td>
+                                    <td class="IssueScenario">
+                                        <span>@item.IssueScenario</span>
+                                    </td>
+                                    <td>@item.ExpectedOutcome</td>
+                                    <td>@item.RefernceModule</td>
+                                    <td style="display: none">@item.UserFullName</td>
+                                    <td>@item.Frequency</td>
+                                    <td>@item.IssueReproducePath</td>
+                                    <td>@item.Attachment</td>
+                                    <td>
+                                        @if (@item.IssueType == "MINOR")
+                                        {
+                                            <div class="backgroundForMinor"> @item.IssueType </div>
+
+                                        }
+                                        else if (@item.IssueType == "MAJOR")
+                                        {
+                                            <div class="backgroundForMajor"> @item.IssueType </div>
+                                        }
+                                        else if (@item.IssueType == "CRITICAL")
+                                        {
+                                            <div class="backgroundForCritical"> @item.IssueType </div>
+                                        }
+                                    </td>
+                                    <td>@item.SoftwareVersionName</td>
+                                    <td class="SoftwareVersionNo">
+                                        <span>@item.SoftwareVersionNo</span>
+                                    </td>
+                                    <td class="WaltonQcComDate">
+                                        <span>
+                                            @if (@item.WaltonQcComDate != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.WaltonQcComDate)}
+                                        </span>
+                                        <input type="text" id="waltonQcComDateId" class="form-control datepicker waltonQcComDateCls" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="waltonQcComDateId" value="@String.Format("{0:yyyy-MM-dd}", @item.WaltonQcComDate)" style="display:none" />
+                                    </td>
+                                    <td class="WaltonQcComment">
+                                        <span>@item.WaltonQcComment</span>
+                                        @*<input type="text" id="waltonQcCommentId" class="form-control waltonQcCommentCls" value="@item.WaltonQcComment" style="display:none" />*@
+                                        @Html.TextArea("WaltonQcComment", @item.WaltonQcComment, new { @class = "form-control waltonQcCommentCls", @id = "waltonQcCommentId", style = "display:none" })
+
+                                    </td>
+                                    <td class="SWaltonQcStatusForShow" id="SWaltonQcStatusForShow">
+
+                                        @if (@item.WaltonQcStatus == "NOT FIXED")
+                                        {
+                                            <span class="backgroundForCritical"> @item.WaltonQcStatus </span>
+                                        }
+                                        else if (@item.WaltonQcStatus == "SUPPLIER CAN'T FIXED")
+                                        {
+                                            <span class="backgroundForSupplier"> @item.WaltonQcStatus </span>
+                                        }
+                                        else if (@item.WaltonQcStatus == "FIXED")
+                                        {
+                                            <span class="backgroundForYes"> @item.WaltonQcStatus </span>
+                                        }
+                                        else if (@item.WaltonQcStatus == "NEW ISSUE")
+                                        {
+                                            <span class="backgroundForNewIssue"> @item.WaltonQcStatus </span>
+                                        }
+                                    </td>
+                                    <td class="SWaltonQcStatus" id="SWaltonQcStatus">
+                                        <span>
+                                            <select id="SWaltonQcStatus1" class="form-control input-small SWaltonQcStatus1" onchange="chngQcStatus(this)">
+                                                <option value="0">SELECT</option>
+                                                <option value="FIXED">FIXED</option>
+                                                <option value="NOT FIXED">NOT FIXED</option>
+                                                <option value="SUPPLIER CAN'T FIXED">SUPPLIER CAN'T FIXED</option>
+                                                <option value="NEW ISSUE">NEW ISSUE</option>
+                                                <option value="PM ACCEPTED">PM ACCEPTED</option>
+                                                <option value="QC ACCEPTED">QC ACCEPTED</option>
+                                            </select>
+                                        </span>
+                                    </td>
+                                    <td class="FixedVersion">
+                                        @*<span>@item.FixedVersion</span>
+                                            <input type="text" id="fixedVersionId" class="form-control fixedVersionCls" value="@item.SoftwareVersionName" style="display:none" />*@
+                                        @item.FixedVersion
+                                    </td>
+                                    <td class="SupplierComDate" style="display:none">
+                                        <span>
+                                            @if (@item.SupplierComDate != null)
+                                            {@String.Format("{0:yyyy-MM-dd}", @item.SupplierComDate)}
+                                        </span>
+                                        <input type="text" id="supplierComDateId" class="form-control datepicker supplierComDateCls" data-date="" data-date-format="yyyy-mm-dd hh:ii:ss" data-link-format="yyyy-mm-dd hh:ii:ss" data-link-field="supplierComDateId" value="@String.Format("{0:yyyy-MM-dd}", @item.SupplierComDate)" style="display:none" />
+                                    </td>
+
+                                    <td class="SupplierComment">
+                                        <span>@item.SupplierComment</span>
+                                        @*<input type="text" id="supplierCommentId" class="form-control supplierCommentCls" value="@item.SupplierComment" style="display:none" />*@
+                                        @Html.TextArea("SupplierComment", @item.SupplierComment, new { @class = "form-control supplierCommentCls", @id = "supplierCommentId", style = "display:none" })
+                                    </td>
+                                    <td class="SsupplierStatusForShow" id="SsupplierStatusForShow">
+                                        @if (@item.SupplierStatus == "NOT FIXED")
+                                        {
+                                            <span class="backgroundForCritical"> @item.SupplierStatus </span>
+                                        }
+                                        else if (@item.SupplierStatus == "SUPPLIER CAN'T FIXED")
+                                        {
+                                            <span class="backgroundForSupplier"> @item.SupplierStatus </span>
+                                        }
+                                        else if (@item.SupplierStatus == "FIXED")
+                                        {
+                                            <span class="backgroundForMinor"> @item.SupplierStatus </span>
+                                        }
+                                        else if (@item.SupplierStatus == "NEW ISSUE")
+                                        {
+                                            <span class="backgroundForNewIssue"> @item.SupplierStatus </span>
+                                        }
+                                        else if (@item.SupplierStatus == "OPTIMIZED")
+                                        {
+                                            <span class="backgroundForOptimized"> @item.SupplierStatus </span>
+                                        }
+                                        else if (@item.SupplierStatus == "IMPROVED")
+                                        {
+                                            <span class="backgroundForImproved"> @item.SupplierStatus </span>
+                                        }
+                                    </td>
+                                    <td class="SsupplierStatus" id="SsupplierStatus" style="display: none;">
+                                        <span>
+                                            <select id="SsupplierStatus1" class="form-control input-small SsupplierStatus1" onchange="chngSuppStatus(this)">
+                                                <option value="0">SELECT</option>
+                                                <option value="FIXED">FIXED</option>
+                                                <option value="NOT FIXED">NOT FIXED</option>
+                                                <option value="SUPPLIER CAN'T FIXED">SUPPLIER CAN'T FIXED</option>
+                                                <option value="OPTIMIZED">OPTIMIZED</option>
+                                                <option value="IMPROVED">IMPROVED</option>
+                                                <option value="NEW ISSUE">NEW ISSUE</option>
+                                            </select>
+                                        </span>
+                                    </td>
+
+                                    <td class="WaltonPmComDate" style="display:none">
+                                        @if (@item.WaltonPmComDate != null)
+                                        {@String.Format("{0:yyyy-MM-dd}", @item.WaltonPmComDate)}
+                                    </td>
+                                    <td class="WaltonPmComment">
+                                        @item.WaltonPmComment
+                                    </td>
+
+                                    <td>
+                                        <div class="col-lg-12">
+
+                                            <button type="submit" style="width:60px" class="btn btn-success btn-sm btn-circle edit" id="editBtn"> Edit</button>
+                                            @*<br /><br />*@
+                                            <button type="submit" class="btn btn-success btn-sm btn-circle update" id="updateBtn" style="display: none; width: 60px">Update</button>
+                                            @*<br /><br />*@
+                                            <button type="submit" class="btn btn-danger btn-sm btn-circle cancel" id="btnCancel" style="display: none; width: 60px">Cancel</button>
+                                            @*<br />*@
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                @Html.ActionLink(
+                "Export to Excel",                                                  // linkText
+                "GetExcel",                                    // actionName
+                "Software",                                                   // controllerName
+                new
+                {                                                     // routeValues
+                    projectId = Model.CombinedProjectId,
+                    swVersionNo = Model.SoftwareVersionNumber,
+                    testPhaseIds = Model.CombinedTestPhaseIds,
+                    // replyblogPostmodel = Model
+                    // captchaValid = Model.CombinedProjectId.DisplayCaptcha
+                },
+                new { target = "_blank" }
+               )
+            </div>
+        </div>
+        <!-- END EXAMPLE TABLE PORTLET-->
+        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    </div>
+</div>
+
+<div>
+    <input type="text" name="pro_id" id="pro_id" value="" style="display:none;" />
+    <input type="text" name="swQcIncharge_id" id="swQcIncharge_id" value="" style="display:none;" />
+    <input type="text" name="proName" id="proName" value="" style="display:none;" />
+    <input type="text" name="moduleName" id="moduleName" value="" style="display:none;" />
+    <input type="text" name="swNo" id="swNo" value="" style="display:none;" />
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+
+@*}*@
+@*//modal*@
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">Edit An Issue</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" style='display: none'>
+                        <label class="control-label">Project ID :</label>
+                        <input name="ProjectMasterId6" id="ProjectMasterId6" type="text" class="form-control">
+                    </div>
+                    <div class="form-group" style="display: none">
+                        <label class="control-label">SwQcIssueId</label>
+                        <input name="SwQcIssueId6" id="SwQcIssueId6" type="text" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Issue Scenario :</label>
+                        <textarea name="IssueScenario6" id="IssueScenario6" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Expected Outcome :</label>
+                        <textarea name="ExpectedOutcome6" id="ExpectedOutcome6" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">Result :</label>
+                        <select name="single" id="singleResult6" class="form-control" style="width: 50%">
+                            <option value="0">SELECT</option>
+                            <option value="DONE">DONE</option>
+                            <option value="ISSUE">ISSUE</option>
+                            <option value="NOT APPLICABLE">NOT APPLICABLE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">ReferenceModule :</label>
+                        <select name="referenceModuleId" id="referenceModuleId6" class="form-control ">
+                            @if (ViewBag.ddlReferenceListForModal != null)
+                            {
+                                foreach (var item in ViewBag.ddlReferenceListForModal)
+                                {
+                                    <option value="@item.Value">
+                                        @item.Text
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">Frequency :</label>
+                        <select name="single" id="frequencyId6" class="form-control ">
+                            <option value="0">SELECT</option>
+                            <option value="ALWAYS">ALWAYS</option>
+                            <option value="SOMETIMES">SOMETIMES</option>
+                            <option value="RARE">RARE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Issue Reproduce Path :</label>
+                        <textarea name="IssueReproducePathId" id="IssueReproducePathId6" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">Attachment :</label>
+                        <textarea name="AttachmentId" id="AttachmentId6" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="single" class="control-label">Issue Type :</label>
+                        <select name="single" id="issueTypeId6" class="form-control ">
+                            <option value="0">SELECT</option>
+                            <option value="MINOR">MINOR</option>
+                            <option value="MAJOR">MAJOR</option>
+                            <option value="CRITICAL">CRITICAL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">URL :</label>
+                        <textarea name="FilesUrlId" id="FilesUrlId6" class="form-control"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="smitModalOfSave" class="btn green smitModalOfSave" value="Save changes" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<script>
+    /////sample_1 update with YES or No///
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    function chngSuppStatus(e) {
+        var row = $(e).closest("tr");
+        var strUser1 = row.find(".SsupplierStatus").find("span").find(".SsupplierStatus1").find(":selected").text();
+        // var strUser2 = row.find(".SsupplierStatusForShow").text(strUser1);
+        //var ttColor = strUser2.text();
+        //if (ttColor == "NOT FIXED") {
+        //    var divss = document.getElementById('backgroundForCritical');
+        //    divss.style.backgroundColor = 'red';
+        //}
+    }
+    function chngQcStatus(e) {
+        var row = $(e).closest("tr");
+        var strUser1 = row.find(".SWaltonQcStatus").find("span").find(".SWaltonQcStatus1").find(":selected").text();
+        //var strUser2 = row.find(".SWaltonQcStatusForShow").text(strUser1);
+
+        var ttColor = strUser1.text();
+        if (ttColor != "FIXED") {
+            var strUser33 = row.find(".FixedVersion").text("");
+        }
+    }
+    $(document).ready(function () {
+        debugger;
+        var dd1 = $("#roleNameForCheck").val();
+        var dd2 = $("#roleNameForCheck1").val();
+        
+        if (dd1 == "QCHEAD" && dd2 == "QC")
+        {
+            $('#appBtnHide').show();
+        }
+        else if (dd2 == "QCHEAD") {
+            $('#appBtnHide').show();
+        }
+        else {
+            $('#appBtnHide').hide();
+        }
+        //if (dd1 == "QC") {
+        //    $('#appBtnHide').hide();
+        //} else {
+        //    $('#appBtnHide').show();
+        //}
+
+        //appBtnHide
+        //var dd1 = $("#roleNameForCheck").val();
+        //if (dd1 == "QC") {
+        //    $('#forQcAprro').hide();
+        //} else {
+        //    $('#forQcAprro').show();
+        //}
+        // trigger("chosen:updated");
+        $('.btnApprove').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            var SwQcAssignId;
+            var SwQcIssueId;
+            var obj = {};
+
+            var row = $(this).closest("tr");
+
+
+            SwQcIssueId = row.find(".SwQcIssueId").find("span").html();
+            SwQcAssignId = row.find(".SwQcAssignId").find("span").html();
+
+            obj.SwQcIssueId = SwQcIssueId;
+            obj.SwQcAssignId = SwQcAssignId;
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateSwQcIssueDetailModelForApprove", "Software")',
+                data: "{objArr:'" + JSON.stringify(obj) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("SwQcsIssueDetailsSendToChaina", "Software")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+        });
+
+        $('.btnDecline').on('click', function (e) {
+            e.preventDefault();
+            $('#loading').show();
+            var SwQcAssignId;
+            var SwQcIssueId;
+            var obj = {};
+
+            var row = $(this).closest("tr");
+
+            SwQcAssignId = row.find(".SwQcAssignId").find("span").html();
+            SwQcIssueId = row.find(".SwQcIssueId").find("span").html();
+
+            obj.SwQcAssignId = SwQcAssignId;
+            obj.SwQcIssueId = SwQcIssueId;
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("UpdateSwQcIssueDetailModelForDecline", "Software")',
+                data: "{objArr:'" + JSON.stringify(obj) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.data == "OK") {
+                        window.location = '@Url.Action("SwQcsIssueDetailsSendToChaina", "Software")';
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+        });
+
+
+
+    });
+    ///end sample_1////////
+
+    //////////////////////////edit //////////////////////////
+    //Edit event handler.
+    $("body").on("click", "#tblSam2 .edit", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                $(this).find("input").show();
+                $(this).find("span").hide();
+
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+            }
+
+            if ($(this).find("textarea").length > 0) {
+                $(this).find("textarea").show();
+                $(this).find("span").hide();
+
+                var span1 = $(this).find("span");
+                var input1 = $(this).find("textarea");
+                span1.html(input1.val());
+            }
+        });
+        row.find(".update").show();
+        row.find(".cancel").show();
+
+        $(this).hide();
+    });
+
+    //Update event handler.
+    $("body").on("click", "#tblSam2 .update", function () {
+        $('#loading').show();
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+                span.html(input.val());
+
+                //if (row.find(".WaltonQcComDate").find("span").html() == "") {
+
+                //        var today = new Date();
+                //        var dd = String(today.getDate()).padStart(2, '0');
+                //        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                //        var yyyy = today.getFullYear();
+                //        today = yyyy + '-' + mm + '-' + dd;
+
+                //        $(this).find(".WaltonQcComDate").find("span").text(today);
+                //}
+                span.show();
+                input.hide();
+                // input.val(span.html());
+            }
+
+            if ($(this).find("textarea").length > 0) {
+                var span1 = $(this).find("span");
+                var textarea = $(this).find("textarea");
+                span1.html(textarea.val());
+                span1.show();
+                textarea.hide();
+            }
+        });
+        row.find(".edit").show();
+        row.find(".cancel").hide();
+        $(this).hide();
+
+        var supplierUpdate = {};
+        supplierUpdate.SwQcIssueId = row.find(".SwQcIssueId").find("span").html();
+        supplierUpdate.SwQcAssignId = row.find(".SwQcAssignId").find("span").html();
+        supplierUpdate.SwQcHeadAssignId = row.find(".SwQcHeadAssignId").find("span").html();
+        supplierUpdate.ProjectMasterId = row.find(".ProjectMasterId").find("span").html();
+        supplierUpdate.ProjectName = row.find(".ProjectName").find("span").html();
+        supplierUpdate.OrderNumber = row.find(".OrderNumber").find("span").html();
+        //IssueScenario
+        supplierUpdate.IssueSerial = row.find(".IssueSerial").find("span").html();
+        supplierUpdate.IssueScenario = row.find(".IssueScenario").find("span").html();
+        supplierUpdate.WaltonQcComDate = row.find(".WaltonQcComDate").find("span").html();
+
+        //if (supplierUpdate.WaltonQcComDate == "") {
+        //    var today = new Date();
+        //    var dd = String(today.getDate()).padStart(2, '0');
+        //    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        //    var yyyy = today.getFullYear();
+
+        //    //today = mm + '/' + dd + '/' + yyyy;
+        //    today = yyyy + '-' + mm + '-' + dd;
+        //    document.write(today);
+
+
+        //    supplierUpdate.WaltonQcComDate = today;
+        //}
+
+        supplierUpdate.WaltonQcComment = row.find(".WaltonQcComment").find("span").html();
+        supplierUpdate.WaltonQcStatus = row.find(".SWaltonQcStatusForShow").find("span").html();
+        if (supplierUpdate.WaltonQcStatus != undefined) {
+            supplierUpdate.WaltonQcStatus = supplierUpdate.WaltonQcStatus.trim();
+        }
+
+        var strUser = row.find(".SWaltonQcStatus").find("span").find(".SWaltonQcStatus1").find(":selected").text();
+        supplierUpdate.WaltonQcStatusSelect = strUser;
+        if (supplierUpdate.WaltonQcStatusSelect != undefined) {
+            supplierUpdate.WaltonQcStatusSelect = supplierUpdate.WaltonQcStatusSelect.trim();
+        }
+        //WaltonQcStatusSelect
+
+        //SsupplierStatus
+        supplierUpdate.SupplierComDate = row.find(".SupplierComDate").find("span").html();
+        supplierUpdate.SupplierComment = row.find(".SupplierComment").find("span").html();
+        supplierUpdate.SupplierStatus = row.find(".SsupplierStatusForShow").find("span").html();
+        if (supplierUpdate.SupplierStatus != undefined) {
+            supplierUpdate.SupplierStatus = supplierUpdate.SupplierStatus.trim();
+        }
+        var strUser1 = row.find(".SsupplierStatus").find("span").find(".SsupplierStatus1").find(":selected").text();
+        supplierUpdate.SupplierStatusSelect = strUser1;
+        if (supplierUpdate.SupplierStatusSelect != undefined) {
+            supplierUpdate.SupplierStatusSelect = supplierUpdate.SupplierStatusSelect.trim();
+        }
+        supplierUpdate.SoftwareVersionNo = row.find(".SoftwareVersionNo").find("span").html();
+
+        //Ajax load//
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateSwQcIssueDetailModelForSupplier", "Software")',
+            data: '{supplierUpdate:' + JSON.stringify(supplierUpdate) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            //async: false,
+            success: function (data) {
+                if (data.data == "Already Supplier Feeadback Generated.") {
+                    $('#loading').hide();
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Already Supplier Feeadback Generated.",
+                    }).show();
+                    //return true;
+                }
+                $('#loading').hide();
+            }
+        });
+        //Ajax load//
+
+        @*$.ajax({
+            type: "POST",
+            url: '@Url.Action("UpdateSwQcIssueDetailModelForSupplier", "Software")',
+            data: '{supplierUpdate:' + JSON.stringify(supplierUpdate) + '}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
+        $('#loading').hide();*@
+    });
+
+    //Cancel event handler.
+    $("body").on("click", "#tblSam2 .cancel", function () {
+        var row = $(this).closest("tr");
+        $("td", row).each(function () {
+            if ($(this).find("input").length > 0) {
+                var span = $(this).find("span");
+                var input = $(this).find("input");
+
+                input.val(span.html());
+                span.show();
+                input.hide();
+            }
+            if ($(this).find("textarea").length > 0) {
+                var span1 = $(this).find("span");
+                var textarea = $(this).find("textarea");
+
+                textarea.val(span1.html());
+                span1.show();
+                textarea.hide();
+            }
+        });
+        row.find(".edit").show();
+        row.find(".update").hide();
+        $(this).hide();
+    });
+    ///////////////////edit////
+    $(function () {
+        //$(document).ready(function () {
+        //    //$('#sample_1').dataTable({
+        //    //    "aLengthMenu": [[3, 50, 75, -1], [25, 50, 75, "All"]],
+        //    //    "iDisplayLength": 25
+        //    //});
+        //    //if ($.fn.dataTable.isDataTable('#sample_1')) {
+        //    //    var table = $('#sample_1').DataTable();
+        //    //    table({
+        //    //        paging: true,
+        //    //        "scrollX": true,
+        //    //        "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        //    //    });
+
+        //    //}
+        //    var table = $('#sample_1').DataTable({
+        //        retrieve: true,
+        //        paging: true,
+        //        "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        //    });
+        //    return table;
+        //});
+
+
+
+        $('#btnforname').on('click', function () {
+            var proSelectId = document.getElementById('CombinedProjectId');
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "Select One") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+
+        });
+
+    });
+    $('.datepicker').datepicker({
+        defaultDate: 'now',
+        format: 'yyyy-mm-dd',
+        autoclose: 1,
+    });
+
+    $(document).ready(function () {
+
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            }
+            // "scrollY": 340,
+            //  "scrollX": true,
+            // "order": [[1, 'asc']]
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var example = $('#sample_1').DataTable({
+            'columnDefs': [
+                {
+                    'targets': 0,
+                    'checkboxes': {
+                        'selectRow': true,
+                    }
+                }
+            ],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            'select': {
+                style: 'multi',
+            },
+            "paging": false,
+
+            "order": [[1, 'desc']],
+            fixedHeader: true,
+
+            "scrollY": 550,
+            "scrollX": true,
+            "scrollCollapse": true,
+        });
+        //example.on("click", "td.select-checkbox", function () {
+        //    if ($("td.select-checkbox").hasClass("selected")) {
+        //        example.rows().deselect();
+        //        $("td.select-checkbox").removeClass("selected");
+        //    } else {
+        //        example.rows().select();
+        //        $("td.select-checkbox").addClass("selected");
+        //    }
+        //}).on("select deselect", function () {
+        //    ("Some selection or deselection going on")
+        //    if (example.rows({
+        //        selected: true
+        //    }).count() !== example.rows().count()) {
+        //        $("td.select-checkbox").removeClass("selected");
+        //    } else {
+        //        $("td.select-checkbox").addClass("selected");
+        //    }
+        //});
+
+
+        var tdtblSam2 = $('.tblSam2').DataTable({
+            //"columnDefs": [{
+            //    "searchable": false,
+            //    "orderable": true,
+            //    "targets": 6
+            //}],
+            "columnDefs": [
+                { "width": "0px", "targets": 0 },
+                { "width": "0px", "targets": 1 },
+                { "width": "0px", "targets": 2 },
+                { "width": "0px", "targets": 3 },
+                { "width": "0px", "targets": 4 },
+                { "width": "0px", "targets": 5 },
+                { "width": "20px", "targets": 6 },
+                { "width": "220px", "targets": 7 },
+                { "width": "150px", "targets": 8 },
+                { "width": "40px", "targets": 9 },
+                { "width": "0px", "targets": 10 },
+                { "width": "40px", "targets": 11 },
+                { "width": "110px", "targets": 12 },
+                { "width": "110px", "targets": 13 },
+                { "width": "40px", "targets": 14 },
+                { "width": "80px", "targets": 15 },
+                { "width": "30px", "targets": 16 },
+                { "width": "70px", "targets": 17 },
+                { "width": "120px", "targets": 18 },
+                { "width": "70px", "targets": 19 },
+                { "width": "110px", "targets": 20 },
+                { "width": "110px", "targets": 21 },
+                { "width": "0px", "targets": 22 },
+                { "width": "180px", "targets": 23 },
+                { "width": "50px", "targets": 24 },
+                { "width": "0px", "targets": 25 },
+                { "width": "0px", "targets": 26 },
+                { "width": "50px", "targets": 27 },
+                { "width": "180px", "targets": 28 }
+            ],
+
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+            "scrollY": true,
+            "scrollX": true,
+            "scrollCollapse": true,
+            "autoWidth": false,
+            fixedColumns: {
+                leftColumns: 9
+
+            },
+            "order": [[6, 'asc']],
+            fixedHeader: {
+                header: true,
+                footer: false,
+            }
+        });
+
+
+        // Handle form submission event
+
+    });
+
+    //Assign Click event to Button.
+    $("#btnExample").click(function (e) {
+        $('#loading').show();
+        var obj = {};
+        var objArr = [];
+        var SwQcAssignId;
+        var SwQcIssueId;
+        var smtChk = false;
+
+        $("#sample_1 input[type=checkbox]:checked").each(function () {
+
+            obj = new Object();
+
+            var row = $(this).closest("tr");
+
+            SwQcAssignId = row.find(".SwQcAssignId").find("span").html();
+            SwQcIssueId = row.find(".SwQcIssueId").find("span").html();
+
+            obj.smtChk = true;
+            obj.SwQcAssignId = SwQcAssignId;
+            obj.SwQcIssueId = SwQcIssueId;
+
+            objArr.push(obj);
+            console.log("objArr---->" + objArr);
+        });
+
+        console.log("objArr---->" + objArr);
+
+        if (objArr.length != 0) {
+            alertify.confirm('Select All For Supplier', 'Do you want to Submit?', function () {
+                alertify.success('Successfully Submitted.');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AllApproveForChaina", "Software")',
+                    data: "{objArr:'" + JSON.stringify(objArr) + "'}",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            window.location = '@Url.Action("SwQcsIssueDetailsSendToChaina", "Software")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+                , function () {
+                    alertify.error('Cancel');
+                    $('#loading').hide();
+                });
+
+        } else {
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select check list",
+            }).show();
+            return false;
+        }
+    });
+
+    $("#CombinedProjectId").chosen();
+    $("#CombinedProjectIds").chosen();
+    $("#CombinedTestPhaseIds").chosen();
+
+    //rv
+
+    $('.removeBtns').on('click', function (e) {
+        event.preventDefault(e);
+
+        var SwQcIssueId;
+        var row = $(this).closest("tr");
+        SwQcIssueId = row.find(".SwQcIssueId").find("span").html();
+
+        var supplierUpdate = {};
+        supplierUpdate.SwQcIssueId = SwQcIssueId;
+
+        alertify.confirm('Delete A Issue', 'Do you want to Delete this Issue?', function () {
+            alertify.success('Successfully Deleted.');
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SwQcIssueDelete", "Software")',
+                data: '{supplierUpdate:' + JSON.stringify(supplierUpdate) + '}',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data == "OK") {
+                        $('#loading').hide();
+                        row.hide();
+                    }
+                }
+            });
+            event.preventDefault(); //Prevent the default submit
+        }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+    });
+    var currentRow;
+    //modal
+    $('.btnOpenModal').on('click', function (e) {
+        e.preventDefault();
+
+        var row = $(this).closest("tr");
+        var rowIndex = $(this).closest('tr').index() + 1;
+        var table = document.getElementById('sample_1');
+
+
+        var projectId = $.trim(row.find(".ProjectMasterId").find("span").html());
+        var swQcIssueId = $.trim(row.find(".SwQcIssueId").find("span").html());
+        var issueScenario = $.trim(table.rows[rowIndex].cells[7].innerHTML);
+        var expectedOutcome = $.trim(table.rows[rowIndex].cells[8].innerHTML);
+        var result = $.trim(table.rows[rowIndex].cells[9].innerHTML);
+        var referenceModuleId = $.trim(table.rows[rowIndex].cells[10].innerHTML);
+        var frequency = $.trim(table.rows[rowIndex].cells[12].innerHTML);
+        var IssueReproducePathId = $.trim(table.rows[rowIndex].cells[13].innerHTML);
+        var AttachmentId6 = $.trim(table.rows[rowIndex].cells[14].innerHTML);
+        var issueTypeId6 = $.trim(row.find(".IssueType").find("span").html());
+        var FilesUrlId6 = $.trim(table.rows[rowIndex].cells[15].innerHTML);
+
+        $('#draggable').modal();
+
+        $('#ProjectMasterId6').val(projectId);
+        $('#IssueScenario6').val(issueScenario);
+        $('#SwQcIssueId6').val(swQcIssueId);
+        $('#ExpectedOutcome6').val(expectedOutcome);
+        $('#singleResult6').val(result);
+        $('#referenceModuleId6').val(referenceModuleId);
+        $('#frequencyId6').val(frequency);
+        $('#IssueReproducePathId6').val(IssueReproducePathId);
+        $('#AttachmentId6').val(AttachmentId6);
+        $('#issueTypeId6').val(issueTypeId6);
+        $('#FilesUrlId6').val(FilesUrlId6);
+
+        currentRow = $(this).closest('tr');
+
+        console.log("issueScenario  :" + issueScenario);
+        console.log("projectId  :" + projectId);
+        console.log("swQcIssueId  :" + swQcIssueId);
+    });
+
+    //ed
+    $('.smitModalOfSave').on('click', function () {
+
+        $('#draggable').modal('hide');
+
+        var ProjectMasterId6;
+        var SwQcIssueId6;
+        var IssueScenario6;
+        var ExpectedOutcome6;
+        var singleResult6;
+        var referenceModuleId6;
+        var IssueReproducePathId6;
+        var AttachmentId6;
+        var issueTypeId6;
+        var FilesUrlId6;
+        var Frequency6;
+
+        var obj = {};
+
+        //var rowIndex = $(this).closest('tr').index() + 1;
+        //var table = document.getElementById('tbl33');
+
+
+        ProjectMasterId6 = $('#ProjectMasterId6').val();
+        SwQcIssueId6 = $('#SwQcIssueId6').val();
+        IssueScenario6 = $('#IssueScenario6').val();
+        ExpectedOutcome6 = $('#ExpectedOutcome6').val();
+        singleResult6 = $('#singleResult6').val();
+        referenceModuleId6 = $('#referenceModuleId6').val();
+        IssueReproducePathId6 = $('#IssueReproducePathId6').val();
+        AttachmentId6 = $('#AttachmentId6').val();
+        issueTypeId6 = $('#issueTypeId6').val();
+        FilesUrlId6 = $('#FilesUrlId6').val();
+        Frequency6 = $('#frequencyId6').val();
+
+        if (singleResult6 == "0" || singleResult6 == null) {
+            $('#draggable').modal('hide');
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must Select Result.",
+            }).show();
+            return false;
+        }
+        if (issueTypeId6 == "0" || issueTypeId6 == null) {
+            $('#draggable').modal('hide');
+            $('#loading').hide();
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must Select Issue Type.",
+            }).show();
+            return false;
+        }
+
+        $('#loading').show();
+        obj.ProjectMasterId = ProjectMasterId6;
+        obj.SwQcIssueId = SwQcIssueId6;
+        obj.IssueScenario = IssueScenario6;
+        obj.ExpectedOutcome = ExpectedOutcome6;
+        obj.Result = singleResult6;
+        obj.RefernceModule = referenceModuleId6;
+        obj.IssueReproducePath = IssueReproducePathId6;
+        obj.Attachment = AttachmentId6;
+        obj.IssueType = issueTypeId6;
+        obj.FilesUrl = FilesUrlId6;
+        obj.Frequency = Frequency6;
+        $.ajax({
+            url: '@Url.Action("EditSwQcIssueDetails", "Software")',
+            type: 'POST',
+            data: JSON.stringify(obj),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                console.log("data :" + data);
+                if (data == "OK") {
+                    // window.location = '@Url.Action("SwQcsTotalIssueDetails", "Software")';
+                    window.location.reload(true);
+                    $('#loading').hide();
+                }
+            }
+        });
+
+        event.preventDefault(); //Prevent the default submit
+    });
+
+</script>
+
+<script src="~/assets/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/assets/pages/scripts/table-datatables-rowreorder.min.js" type="text/javascript"></script>

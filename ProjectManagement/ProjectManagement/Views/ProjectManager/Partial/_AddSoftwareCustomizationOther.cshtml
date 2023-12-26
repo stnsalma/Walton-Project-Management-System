@@ -1,0 +1,12 @@
+﻿@model ProjectManagement.Models.PmSwCustomizationFinalModel
+
+<tr id="@Model.ProjectMasterId">
+    @using (Html.BeginCollectionItem("Others"))
+    {
+        @Html.HiddenFor(m => m.ProjectMasterId)
+        @Html.HiddenFor(m => m.PmSwCustomizationFinalMenu)
+        <td>@Html.TextBoxFor(model=>model.PmSwCustomizationFinalPath, new{@class="form-control"})</td>
+        <td>@Html.TextBoxFor(model => model.PmSwCustomizationFinalSettings, new { @class = "form-control" })</td>
+        <td><button type="button" id="removeProductRow" class="btn btn-primary" onclick="removeDetailRow(this)">Remove</button></td>
+    }
+</tr>

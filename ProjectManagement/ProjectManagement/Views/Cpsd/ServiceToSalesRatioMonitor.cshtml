@@ -1,0 +1,196 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.Models.ServiceToSalesRatioWarningMailModel
+@{
+    ViewBag.Title = "ServiceToSalesRatioMonitor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="col-lg-3">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">List</span>
+            </div>
+            <div class="tools"> </div>
+        </div>
+        <div class="col-lg-2">
+            @*<button id='newIssue' class="btn sbold uppercase btn-outline red-haze" onclick="goToController('/Common/Create')">New Issue</button>*@
+        </div>
+
+    </div>
+    <div class="portlet-body">
+
+        <div class="table-scrollable">
+            <table class="table table-bordered table-scrollable table-hover" id="tblViewServiceToSales" role="grid" aria-describedby="sample_1_info">
+                <thead>
+                    <tr>
+                        <th class="text-center">ServiceToSalesRatioWarningId</th>
+                        <th class="text-center">Product Code</th>
+                        <th class="text-center">Model</th>
+                        <th class="text-center">Launch Date</th>
+                        <th class="text-center">Service to Sales Ratio</th>
+                        <th class="text-center">Is Solved</th>
+                        <th class="text-center">Solution</th>
+                        <th class="text-center">Action</th>
+
+                    </tr>
+                </thead>
+
+                @foreach (var item in ViewBag.ServiceToSalesRatioWarningMail)
+                {
+                    <tr>
+                        <td class="text-center">@item.ServiceToSalesRatioWarningId</td>
+                        <td class="text-center">@item.ProductCode</td>
+                        <td class="text-center">@item.Model</td>
+                        <td class="text-center">@item.LaunchDate</td>
+                        <td class="text-center">@item.ServiceToSalesRatio</td>
+                        <td class="text-center">
+                            @if (@item.IsSolved != true)
+                            {
+                                <span class="label label-danger"> Pending </span>
+                            }
+                            else
+                            {
+                                <span class="label label-success"> Solved </span>
+                            }
+                        </td>
+                        <td class="text-center">@item.Solution</td>
+                        @if (ViewContext.HttpContext.User.IsInRole("CPSD") || ViewContext.HttpContext.User.IsInRole("CPSDHEAD"))
+                        {
+                            if (@item.IsSolved != true)
+                            {
+                                <td class="text-center"><button class="btnClose">Close</button></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><button disabled="">Closed</button></td>
+                            }
+                        }
+                        @if (ViewContext.HttpContext.User.IsInRole("ASPM") || ViewContext.HttpContext.User.IsInRole("ASPMHEAD"))
+                        {
+                            if (@item.Solution == null)
+                            {
+                                <td class="text-center"><button class="btnSolution">Solve</button></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><button disabled="">Solved</button></td>
+                            }
+                        }
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ ITEM NUMBER PART START =======================================================================*@
+    <div id="solutionModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Provide Solution</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>
+                                    <input type="hidden" id="hdnModalRatioId" />
+                                    <label id="lblModalModelName"></label>
+                                </p>
+                                <p>
+                                    Solution:
+                                    @*<input type="text" class="form-control" id="modalSpareName" />*@
+                                    <textarea class="form-control" id="txtModalSolution"></textarea>
+                                </p>
+                                @*<p>
+                                        Proposed Impotr Ratio:
+                                        <input type="text" class="form-control" id="modalPir"/>
+                                    </p>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="solution();">Save</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function solution() {
+        var id = $('#hdnModalRatioId').val();
+        console.log(id);
+        var solution = $('#txtModalSolution').val();
+        console.log('solved' + id + 'Solution:' + solution);
+        $('#solutionModal').modal('hide');
+        var url = '@Url.Action("ServiceToSalesRatioSolved","Cpsd")';//'../Cpsd/ServiceToSalesRatioSolved';
+        $.post(url, { id: id, solution: solution }, function (data) {
+            if (data.isRedirect) {
+                window.location.href = data.redirectUrl;
+            }
+        });
+    }
+
+    $(function () {
+        var table = $('#tblViewServiceToSales').DataTable({
+            "ordering": false,
+            "columnDefs": [
+                //{ className: "text-center", "targets": [2, 3, 4, 5] },
+                {
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }
+            ]
+        });
+
+        //var count = table.data().count();
+
+
+        //for (var i = 0; i < count; i++) {
+        //    var data = table.row(i).data();
+        //    //alert(data[5]);
+        //    if (data[5] == 'Solved') {
+        //        $(i).addClass('redClass');
+        //    }
+        //}
+
+        $('#tblViewServiceToSales tbody').on('click', '.btnSolution', function () {
+            var data =  table.row($(this).parents('tr')).data();
+            console.log('RatioID:' + data[0] + ' ProductCode:' + data[1] + " Model:" + data[2] + " Is Solved:" + data[5]);
+            $('#hdnModalRatioId').val(data[0]);
+            $('#lblModalModelName').text(data[2]);
+            $('#solutionModal').modal('show');
+        });
+
+        $('#tblViewServiceToSales tbody').on('click', '.btnClose', function () {
+            var url = '@Url.Action("ServiceToSalesRatioSolved","Cpsd")';//'../Cpsd/ServiceToSalesRatioSolved';
+            var rowindex = $(this).closest('tr').index();
+            console.log(rowindex);
+            var data = table.row($(this).parents('tr')).data();
+            console.log('RatioID:' + data[0] + ' ProductCode:' + data[1] + " Model:" + data[2]);
+            $.post(url, { id: data[0], solution: "" }, function (json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+            });
+        });
+    });
+</script>

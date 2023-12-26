@@ -1,0 +1,137 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectMasterWithPoCustomModel>
+
+    @{
+        ViewBag.Title = "FinalAppprovedProjecstList";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div class="page-head">
+        <!-- BEGIN PAGE TITLE -->
+        <div class="page-title">
+            <h1>
+                Welcome,@ViewBag.userInfo.UserFullName
+
+            </h1>
+        </div>
+
+    </div>
+
+
+
+    <style>
+        .hiddenColumn {
+            display: none;
+        }
+
+        .popover-title {
+            background: #428bca;
+            color: white;
+        }
+    </style>
+
+
+    <!-- BEGIN EXAMPLE TABLE PORTLET-->
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="caption font-dark">
+                <i class="icon-settings font-dark"></i>
+                <span class="caption-subject bold uppercase">All Approved Project List</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+
+            <div class="table-scrollable">
+                <table class="table table-bordered table-hover dtTable" id="tblDetails" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="hiddenColumn projectId">@Html.DisplayNameFor(model => model.ProjectMasterId)</th>
+                            <th class="hiddenColumn">@Html.DisplayNameFor(model => model.ProjectTypeId)</th>
+                            <th class="text-center" data-toggle="true">Project Name</th>
+                            <th class="text-center" data-toggle="true">Order Number</th>
+                            <th class="text-center" data-toggle="true">Order Quantity</th>
+                            <th class="text-center" data-toggle="true">Screening Name</th>
+                            <th class="text-center">Supp. Name</th>
+                            <th class="text-center">Supp. Model</th>
+                            @*<th class="text-center">No.Samples</th>*@
+                            <th class="text-center">Appx. Finish</th>
+                            <th class="text-center">Trust Level</th>
+                            <th class="text-center">PO Date</th>
+                            @*<th class="text-center">A.Shipment</th>*@
+                            <th class="text-center">Price($)</th>
+                            <th class="text-center">Last Shipment Date</th>
+                            @*<th class="text-center">Details</th>*@
+                            <th class="text-center">Action</th>
+                            @*<th class="text-center">Action</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var quantity = string.Format("{0:n0}", item.OrderQuantity);
+                            var approxFinDate = item.ApproxProjectFinishDate == null ? Convert.ToDateTime("0001-01-01 00:00:00.0000000") : item.ApproxProjectFinishDate;
+                            var podate = item.PoDate == null ? Convert.ToDateTime("2017-08-10 00:00:00.0000000") : item.PoDate;
+                            var shipment = item.ChainaInspectionDate == null ? Convert.ToDateTime("0001-01-01 00:00:00.0000000") : item.ChainaInspectionDate;
+                            <tr>
+                                <td class="hiddenColumn">@Html.DisplayFor(modelItem => item.ProjectMasterId)</td>
+                                <td class="hiddenColumn">@Html.DisplayFor(modelItem => item.ProjectTypeId)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.OrderNuber)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => quantity)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.ProjectNameForScreening)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierName)</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierModelName)</td>
+                                @*<td class="text-center">@Html.DisplayFor(modelItem => item.NumberOfSample)</td>*@
+                                <td class="text-center">@approxFinDate.Value.ToString("dd MMM yyyy")</td>
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.SupplierTrustLevel)</td>
+                                <td class="text-center">@podate.Value.ToString("dd MMM yyyy")</td>
+                                @*<td class="text-center">@Html.DisplayFor(modelItem => item.ApproxShipmentDate)</td>*@
+                                <td class="text-center">@Html.DisplayFor(modelItem => item.FinalPrice)</td>
+                                <td class="text-center">@shipment.Value.ToString("dd MMM yyyy")</td>
+                                @*<td class="text-center">
+                                        OS: @Html.DisplayFor(modelItem => item.OsName),
+                                        OS Version:@Html.DisplayFor(modelItem => item.OsVersion),
+                                        <a id="popoverOption" class="btn popoverOption" style="font-weight: bolder;z-index: 100;" data-content="Display:@Html.DisplayFor(modelItem => item.DisplaySize) ,Display Name:=@Html.DisplayFor(modelItem => item.DisplaySpeciality),Processor:@Html.DisplayFor(modelItem => item.CpuName),
+                                           clock:@Html.DisplayFor(modelitem => item.ChipsetFrequency),
+                                           chipset:@Html.DisplayFor(modelitem => item.ChipsetName),f.camera:@Html.DisplayFor(modelitem => item.FrontCam),
+                                           r.camera:@Html.DisplayFor(modelitem => item.BackCam) ,
+                                           ram:@Html.DisplayFor(modelitem => item.Ram) ,
+                                           rom:@Html.DisplayFor(modelitem => item.Rom) ,
+                                           battery:@Html.DisplayFor(modelitem => item.BatteryRating)" rel="popover" data-placement="top" data-original-title="@item.ProjectName">Details</a>
+
+                                    </td>*@
+                                <td class="text-center">
+                                    <button class="btn btn-success specification">Details</button>
+                                </td>
+                                @*<td>
+                                        <button id="btnApprove" type="button" class="modalButton btn btn-success">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button id="btnDecline" type="button" class="modalButton btn btn-danger">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+
+                                    </td>*@
+                            </tr>
+                        }
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('.specification').on('click', function () {
+                //alert($(this).closest('tr').find('td:eq(0)').text());
+                var projectId = $(this).closest('tr').find('td:eq(0)').text();
+                var url = '@Url.Action("ProjectSpec", "Management")?id=' + projectId;
+                window.location.href = url;
+            });
+        });
+    </script>
+
+
+
+

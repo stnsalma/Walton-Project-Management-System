@@ -1,0 +1,88 @@
+﻿@model ProjectManagement.ViewModels.Home.VmUpdateUserProfile
+
+
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-arrow-right font-green"></i>
+                        <span class="caption-subject font-green sbold uppercase">User Profile | Account</span>
+                        
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="table-toolbar">
+                        <div class="row"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <!-- BEGIN PROFILE CONTENT -->
+                        <div class="profile-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="portlet light bordered">
+                                        <div class="portlet-title tabbable-line">
+                                            <div class="caption caption-md">
+                                                <i class="icon-globe theme-font hide"></i>
+                                                <span class="caption-subject font-blue-madison bold uppercase"></span>
+                                            </div>
+                                            <ul class="nav nav-tabs">
+                                                <li class="active">
+                                                    <a href="#tab_1_1" data-toggle="tab">Personal Info</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#tab_1_3" data-toggle="tab">Change Password</a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="tab-content">
+                                                <!-- PERSONAL INFO TAB -->
+                                                <div class="tab-pane active" id="tab_1_1">
+                                                    @Html.Partial("_UpdateUserProfile", Model)
+                                                </div>
+                                                <!-- END PERSONAL INFO TAB -->
+                                                <!-- CHANGE PASSWORD TAB -->
+                                                <div class="tab-pane" id="tab_1_3">
+                                                    @Html.Partial("_ChangePassword", Model)
+                                                </div>
+                                                <!-- END CHANGE PASSWORD TAB -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END PROFILE CONTENT -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var IsUserInfoUpdated = $('#IsUserInfoUpdated').val();
+        console.log(IsUserInfoUpdated);
+        if (IsUserInfoUpdated === 'True') {
+            alertify.alert('IsUserInfoUpdated', function () { alertify.success('Ok'); });
+            $('#IsUserInfoUpdated').attr('value', false);
+        }
+
+        var IsPasswordUpdated = $('#IsPasswordUpdated').val();
+        console.log(IsPasswordUpdated);
+        if (IsPasswordUpdated === 'True') {
+            alertify.alert('IsPasswordUpdated', function () { alertify.success('Ok'); });
+            $('#IsPasswordUpdated').attr('value', false);
+        }
+
+
+
+        //
+    })
+</script>

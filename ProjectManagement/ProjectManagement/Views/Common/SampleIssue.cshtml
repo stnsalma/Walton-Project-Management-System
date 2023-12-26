@@ -1,0 +1,117 @@
+﻿@model ProjectManagement.Models.SampleTrackerModel
+@{
+    ViewBag.Title = "SampleIssue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("SampleIssue", "Common", FormMethod.Post, new { id = "formSampleIssue" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">Sample Issue</div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Project Name</div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(@i => i.Model, new SelectList(ViewBag.Model, "Value", "Text"), "Select One", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            @*<div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">
+                        @Html.Label("Sample Issue Request To", new { @class = "" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(@i => i.SampleIssueReqTo, new SelectList(ViewBag.Users, "Value", "Text"), "Select One", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>*@
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Issue Quantity</div>
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(@i => i.SampleIssueQuantity, new { @class = "form-control",type="number",required="" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3">Issue Purpose</div>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(@i => i.SampleIssuePurpose, new { @class = "form-control",rows="5",required="" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <input class="btn btn-success" type="submit" value="Save" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Issue list</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Tracker ID</th>
+                            <th>Project Name</th>
+                            <th>Issue Quantity</th>
+                            <th>Issue Purpose</th>
+                            <th>Issue Date</th>
+                            <th>Assign Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in ViewBag.MyIssues)
+                        {
+                            <tr> 
+                               <td>@m.SampleTrackerId</td> 
+                               <td>@m.Model</td> 
+                               <td>@m.SampleIssueQuantity</td> 
+                               <td>@m.SampleIssuePurpose</td> 
+                               <td>@m.SampleIssueDate.ToString("dd-MM-yyyy")</td> 
+                               <td>@m.NumberOfSample</td> 
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#Model').chosen();
+    $('#SampleIssueReqTo').chosen();
+    
+    $("#formSampleIssue").submit(function (e) {
+        //var deptText = $('#SampleSentToDept option:selected').text();
+        //var empText = $('#SampleIssueReqTo option:selected').text();
+        var model = $('#Model option:selected').text();
+        //if (empText == 'Select One') {
+        //    alertify.error('You must select an employee to place issue request.');
+        //    e.preventDefault();
+        //}
+        if (model == 'Select One') {
+            alertify.error('You must select a project to place issue request.');
+            e.preventDefault();
+        }
+    });
+</script>
+

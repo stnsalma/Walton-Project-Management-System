@@ -1,0 +1,303 @@
+﻿@model ProjectManagement.ViewModels.Common.VmPostProductionIssue
+@{
+    ViewBag.Title = "PostProductionIssue";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using (Html.BeginForm("PostProductionIssue", "Common", FormMethod.Post, new {enctype = "multipart/form-data"}))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                Post Production Issue Creation Form
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+                <div class="row">
+
+                    @{
+                        if (TempData["message"] != null)
+                        {
+                            var msgType = (string) TempData["messageType"];
+                            var msg = TempData["message"];
+                            if (msgType == "1")
+                            {
+                                <div class="alert alert-success alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                            else if (msgType == "2")
+                            {
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                                    <strong>Message:</strong> @msg
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            
+                <div class="row">
+                    @Html.HiddenFor(model => model.PostProductionIssueModel.SwQcAllProjectIssueId)
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Project Name</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.PostProductionIssueModel.ProjectName, new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", onchange = "get_purchase_orders($('option:selected', $('#PostProductionIssueModel_ProjectName')).val())" })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.ProjectName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Order Number</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.PostProductionIssueModel.OrderNumbers, Enumerable.Empty<SelectListItem>(), new { @class = "form-control ddChosen", multiple = "multiple", value = @Model.PostProductionIssueModel.OrderNumber })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.OrderNumbers, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Issue</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.PostProductionIssueModel.IssueName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.IssueName, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Remarks</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(model => model.PostProductionIssueModel.Comment, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.Comment, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Type</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.PostProductionIssueModel.IssueType, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Selected = true },
+                                    new SelectListItem { Text = "MINOR", Value = "MINOR"},
+                                    new SelectListItem { Text = "MAJOR", Value = "MAJOR"},
+                                    new SelectListItem { Text = "CRITICAL", Value = "CRITICAL"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.IssueType, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Frequency</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.PostProductionIssueModel.Frequency, new SelectList(new[]
+                                {
+                                    new SelectListItem { Text = "Select", Selected = true },
+                                    new SelectListItem { Text = "ALWAYS", Value = "ALWAYS"},
+                                    new SelectListItem { Text = "SOMETIMES", Value = "SOMETIMES"},
+                                    new SelectListItem { Text = "RARE", Value = "RARE"}
+                                }, "Value", "Text"), new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PostProductionIssueModel.Frequency, String.Empty, new { @style = "color:red;!important" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Issue Reproduce Path</label>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(model => model.PostProductionIssueModel.IssueReproducePath, new { @class = "form-control", placeholder = "Ex: Settings>Sound>Sound profile>Do not disturb" })
+                                @*@Html.ValidationMessageFor(model => model.ProjectMasterModel.SupplierName, String.Empty, new { @style = "color:red;!important" })*@
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br/>
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">File Upload</label>
+                            <div class="col-md-9">
+                                <table>
+                                    <td class="numeric">
+                                        <div class="col-md-11">
+                                            <table class="File11" id="hh1">
+                                                <tr id="trIdForFile">
+                                                    <td class="filesss" id="filesId">
+
+                                                        <div class="col-md-9" id="fileIdForCr">
+                                                            @*<input type="file" name="@Model.File" id="File11" />*@
+                                                            @Html.TextBoxFor(model => model.PostProductionIssueModel.File, new { type = "file" })
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr'));">
+                                                                <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        <br /><br />
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+
+                                        </div>
+
+
+                                        <div class="col-md-8">
+                                            <div class="col-md-2">
+
+                                                <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success center" onclick="javascript: addField('', $(this).closest('tr'));">
+                                                    <span><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                                </button><br /><br />
+                                            </div>
+
+                                            <div class="col-md-6"></div>
+                                        </div>
+
+                                    </td>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button class="btn sbold uppercase btn-outline blue">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+
+        </div>
+    </div>
+
+}
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            Your Issue List
+        </div>
+
+    </div>
+    <div class="portlet-body">
+        <div class="table-scrollable">
+            <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                <thead>
+                    <tr>
+                        <th>Issue Name</th>
+                        <th>Issue Detail</th>
+                        <th>Project Name</th>
+                        <th>Purchase Orders</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model.PostProductionIssueModels)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.IssueName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Comment)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.PurchaseOrderOrdinals)</td>
+                                <td>
+                                    <input type="submit" class="btn btn-danger btn-sm mt-ladda-btn ladda-button btn-circle" value="Cancel" onclick="cancel_issue('@Url.Action("CancelPostProductionIssue", "Common")', @item.SwQcPostProductAssignId, $(this).closest('tr'))" />
+                                </td>
+                                @*<td>
+                                @if (item.ProjectStatus == "INITIAL")
+                                {
+                                    <input type="submit" class="btn btn-info btn-sm mt-ladda-btn ladda-button btn-circle" value="Sreening" onclick="request_screening('@Url.Action("RequestScreening", "Commercial")', @item.ProjectMasterId, $(this))" />
+                                }
+                                @if (item.ProjectStatus == "PARTIAL2")
+                                {
+                                    <input type="submit" class="btn btn-warning btn-sm mt-ladda-btn ladda-button btn-circle" value="Sreening Issues" onclick="goToController('@Url.Action("ScreeningIssues", "Commercial", new { id = @item.ProjectMasterId })')" />
+                                }
+                                <input type="submit" class="btn btn-success btn-sm mt-ladda-btn ladda-button btn-circle" value="Details" onclick="location.href='@Url.Action("Project", "Commercial", new {projectId = item.ProjectMasterId })'" />
+
+                            </td>*@
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+            
+
+        </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    
+    $(function () {
+        $.validator.setDefaults({
+            ignore: []
+        });
+    });
+    function get_purchase_orders(projectName) {
+        $.get('@Url.Action("GetPurchaseOrder", "Common")', { projectName: projectName }, function(data) {
+            $("#PostProductionIssueModel_OrderNumbers").empty();
+            $("#PostProductionIssueModel_OrderNumbers").trigger("chosen:updated");
+            var parsed = JSON.parse(data);
+            for (var i = 0 ;i < parsed.length; i++) {
+                var option = '<option value=' + parsed[i].Value + '>' + parsed[i].Text + '</option>';
+                $('#PostProductionIssueModel_OrderNumbers').append(option);
+            }
+            $("#PostProductionIssueModel_OrderNumbers").trigger("chosen:updated");
+            console.log(parsed);
+        });
+    }
+    
+    function addField(id, td) {
+        var fileControl = '@Html.TextBoxFor(model => model.PostProductionIssueModel.File, new { type = "file" })';
+        var cc = "<tr id='trIdForFile'><td class='filesss' id='filesId'><div class='col-md-9' id='fileIdForCr'>"+fileControl+"</div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true'></i></span></button></div><br /><br /></td></tr>";
+        td.find('.File11').append($(cc));
+
+    }
+    function removeDetailRow(element) {
+        $(element).remove();
+
+    }
+    function cancel_issue(id, td) {
+        alertify.alert("This function is in under construction !!!");
+    }
+</script>
+

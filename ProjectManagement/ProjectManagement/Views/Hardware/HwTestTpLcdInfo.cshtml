@@ -1,0 +1,582 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("HwTestTpLcdInfo", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.HwTestTpLcdInfoModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwTestTpLcdInfoModel.HwQcInchargeAssignId, new { @Value = @ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwTestTpLcdInfoModel.Added)
+    @Html.HiddenFor(model => model.HwTestTpLcdInfoModel.AddedDate)
+    @Html.HiddenFor(model => model.HwTestCustomModel.HwTestTpLcdInfoId, new { @Value = @ViewBag.HwTestCustomModel.HwTestTpLcdInfoId })
+    @Html.HiddenFor(model => model.HwTestTpLcdInfoModel.QcDocUploadPath)
+    <input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome! @ViewBag.UserInfo.UserFullName, Project Name : @Model.ProjectMasterModel.ProjectName
+                
+                @*<small>only projects which passed QC</small>*@
+            </h1>
+        </div>
+        <div class="action">
+            @if (ViewBag.FgFlag == 1)
+            {
+                @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+            else
+            {
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+                <a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>
+                <a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>
+                <a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+                <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+                <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+                <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+                <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+                <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+                <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+                <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+                <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+                <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+                <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+                <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>
+                @if (ViewBag.FgFlag == 1)
+                {
+                    <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div id="sortable_portlets" class="row ui-sortable">
+        <div class="col-md-6 column sortable">
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Technology
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("Technology(OGS/Seperated)", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.Technology, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "yes",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "no",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.Technology)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>TP point
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP Point", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_Point, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_Point)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP Material Type", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.TP_MaterialType, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "G+G",Value = "G+G"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "G+F",Value = "G+F"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "G+F+F",Value = "G+F+F"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "G2+F",Value = "G2+F"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "G2P",Value = "G2P"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "ON Cell",Value = "ON Cell"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "IN Cell",Value = "IN Cell"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_MaterialType)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP Driver Vendor", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_Vendor, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_Vendor)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP Driver IC", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_IcTouch, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_IcTouch)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP Driver Touch Capability", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_Capability, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_DriverInfo_Capability)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP  Protection Glass Info", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_ProtectionGlassInfo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_ProtectionGlassInfo)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP  Protection Glass Thickness", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.TP_ProtectionGlassThickness, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_ProtectionGlassThickness)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("TP  Driver At PCBA", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.TP_DriverAtPCBA, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "yes",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "no",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.TP_DriverAtPCBA)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("FPC, TP & LCD Connection Attached Together", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.FPC_TpAndLcdConnection, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "yes",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "no",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.FPC_TpAndLcdConnection)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Upload File
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">File Upload</label>
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.HwQcDocUpload, new { type = "file", @class = "form-control" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">Preview</div>
+                                <div class="file-preview-thumbnails">
+                                    <div class="container-fluid">
+                                        <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                            <div class="">
+                                                @if (@Model.HwTestTpLcdInfoModel == null || @Model.HwTestTpLcdInfoModel.QcDocUploadPath == null || @Model.HwTestTpLcdInfoModel.QcDocUploadPath == "../Content/UploadImage/")
+                                                {
+                                                    <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+                                                }
+                                                else if (@Model.HwTestTpLcdInfoModel.ImageExtension == ".jpg" || @Model.HwTestTpLcdInfoModel.ImageExtension == ".png" || @Model.HwTestTpLcdInfoModel.ImageExtension == ".jpeg")
+                                                {
+                                                    <img src="@Model.HwTestTpLcdInfoModel.QcDocUploadPath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+                                                }
+                                                else if (@Model.HwTestTpLcdInfoModel.ImageExtension == ".pdf")
+                                                {
+                                                    <embed class="file-preview-image img-responsive" id="filePath" src="@Model.HwTestTpLcdInfoModel.QcDocUploadPath" width="auto" height="400px" type="application/pdf" />
+                                                }
+                                            </div>
+                                            <div class="file-thumbnail-footer">
+
+                                                <div class="file-actions">
+                                                    <div class="file-footer-buttons">
+
+                                                        <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                    </div>
+
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 column sortable">
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>LCD
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Size", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.LCD_Size, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_Size)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Material Info", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.LCD_MaterialInfo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_MaterialInfo)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Resolution", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.LCD_Resolution, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_Resolution)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Back Steel Protection", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.LCD_BackSteelProtection, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "yes",Value = "True"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "no",Value = "False"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_BackSteelProtection)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Brightness At specified 5 points", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.LCD_Brigntness,new {@class="form-control"})
+                                            @*@Html.DropDownListFor(model => model.HwTestTpLcdInfoModel.LCD_Brigntness, new List<SelectListItem>
+                                            {
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Up",Value = "Up"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Middle",Value = "Middle"
+                                                },
+                                                new SelectListItem()
+                                                {
+                                                    Text = "Down",Value = "Down"
+                                                }
+                                            }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_Brigntness)*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.Label("LCD Driver IC Info", new { @class = "control-label col-md-6" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HwTestTpLcdInfoModel.LCD_DriverIcInfo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.LCD_DriverIcInfo)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="portlet portlet-sortable box green">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-plug"></i>Recommendation & Comment
+                    </div>
+                    <div class="tools">
+                        <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                        <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                        <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+                    </div>
+                </div>
+                <div class="portlet-body">
+                    <div class="row">
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            @Html.Label("Recommendation", new { @class = "control-label col-md-6" })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.HwTestTpLcdInfoModel.Recommendation, new { @class = "form-control", @rows = 3 })
+                                                @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.Recommendation)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            @Html.Label("Comment", new { @class = "control-label col-md-6" })
+                                            <div class="col-md-6">
+                                                @Html.TextAreaFor(model => model.HwTestTpLcdInfoModel.Comment, new { @class = "form-control", @rows = 3 })
+                                                @Html.ValidationMessageFor(model => model.HwTestTpLcdInfoModel.Comment)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                @if (@ViewBag.HwTestCustomModel.HwTestTpLcdInfoId == null)
+                {
+                    <input type="submit" value="Save" class="btn btn-lg btn-block btn-circle btn-primary" id="btnsave" />
+                }
+                else
+                {
+                    <input type="submit" value="Update" class="btn btn-lg btn-block btn-circle btn-success" id="btnupdate" />
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+<script>
+    $(function () {
+        //var msg = $('#hdnSuccess').val();
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+    });
+</script>    

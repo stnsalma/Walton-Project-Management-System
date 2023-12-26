@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "ProjectClosePenalty";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">List of Running Projects with Penalty</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-container">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Project Name</th>
+                                <th class="text-center">Order Number</th>
+                                <th class="text-center">PO Date</th>
+                                <th class="text-center">Months passed after PO</th>
+                                <th class="text-center">Days passed after 7 months of PO</th>
+                                <th class="text-center">Penalty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.RunningPenalty)
+                            {
+                                <tr>
+                                    <td class="text-center">@v.ProjectName</td>
+                                    <td class="text-center">@v.OrderNumber</td>
+                                    <td class="text-center">@v.PoDate</td>
+                                    <td class="text-center">@v.PoCreatedBeforeMonth months</td>
+                                    <td class="text-center">@v.DaysPassedAfterSevenMonth days</td>
+                                    <td class="text-center">Tk. @v.Penalty</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">List of Closed Projects with Penalty</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-container">
+                    <table class="table table-bordered dtTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Project Name</th>
+                                <th class="text-center">Order Number</th>
+                                <th class="text-center">PO Date</th>
+                                <th class="text-center">Months passed after PO</th>
+                                <th class="text-center">Days passed after 7 months of PO</th>
+                                <th class="text-center">Penalty</th>
+                                <th class="text-center">Closing Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in ViewBag.ClosedPenalty)
+                            {
+                                <tr>
+                                    <td class="text-center">@v.ProjectName</td>
+                                    <td class="text-center">@v.OrderNumber</td>
+                                    <td class="text-center">@v.PoDate</td>
+                                    <td class="text-center">@v.PoCreatedBeforeMonth months</td>
+                                    <td class="text-center">@v.DaysPassedAfterSevenMonth days</td>
+                                    <td class="text-center">Tk. @v.Penalty</td>
+                                    <td class="text-center">@v.IsCompletedDate</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

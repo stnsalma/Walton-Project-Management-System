@@ -1,0 +1,453 @@
+﻿@using ProjectManagement.Models.Common
+@model ProjectManagement.ViewModels.Common.NewMajorMinorIssuesViewModel
+@{
+    ViewBag.Title = "Daily Sales Invoice New Major Minor Issues";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #chartMajorProblem {
+        width: 100%;
+        height: 500px;
+    }
+
+    #chartSpares {
+        width: 90%;
+        height: 500px;
+    }
+
+    #chartMonthlyService {
+        width: 100%;
+        height: 500px;
+    }
+    #chartDaywiseService {
+        width: 100%;
+        height: 500px;
+    }
+    .custom-table thead tr th {
+        font-size: 12px;
+    }
+
+    .custom-table tbody tr td {
+        font-size: 12px;
+    }
+</style>
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<div class="row">
+    <div class="portlet light bordered">
+@using (Html.BeginForm("DailySalesInvoiceNewMajorMinorIssues", "Common"))
+{
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">Daily Sales Invoice New Major Minor Issues</span>
+                </div>
+            </div>
+        </div>
+       
+            <div class="portlet-title">
+                <div class="row">
+
+                    <label class="col-lg-3">Select Date</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownList("ModelName", new SelectList(ViewBag.Models, "ProjectName", "ProjectName"), "Please select", new { @class = "form-control modelname" })
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <label class="col-lg-3">Select Order</label>
+                    <div class="col-lg-4">
+                        @Html.DropDownList("Order", new SelectList(ViewBag.Orders, "OrderName", "OrderName"), new { @class = "form-control order" })
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-3 col-lg-offset-3">
+                        <button type="submit" id="btnSearch" class="btn btn-success btn-circle">Search</button>
+                    </div>
+                </div>
+
+            </div>
+   
+        <div class="portlet-body" id="smart-table">
+            <h2>All Searching Query</h2>
+            <table class="table table-striped table-scrollable table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Model Name</th>
+                        <th>Totsl Receive</th>
+                        <th>Non Warranty</th>
+                        <th>Spare Parts Pending</th>
+                        <th>Work Pending</th>
+                        <th>Total Pending </th>
+                        <th>Total Work Done</th>
+                        <th>Average Return Time</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @Model.TotalReceiveCount
+                            </td>
+                            <td class="text-center">
+                                @Model.NonWarrantyCount
+                            </td>
+                            <td class="text-center">
+                                @Model.WarrentyCount
+                            </td>
+                            <td class="text-center">
+                                @Model.SparePartsPendingCount
+                            </td>
+                            <td class="text-center">
+                                @Model.WorkPendingCount
+                            </td>
+                            <td class="text-center">
+                                @Model.TotalPendingCount
+                            </td>
+                            <td class="text-center">
+                                @Model.TotalWorkDoneCount
+                            </td>
+                            <td class="text-center">
+                                @Model.TotalAverageReturnTimeCount
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <h2>Major Problems</h2>
+            <br />
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div id="chartMajorProblem"></div>
+                </div>
+                <div class="col-md-6">
+                    <div id="chartSpares"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="chartMonthlyService"></div>
+
+            </div>
+            <div class="row">
+                 @Html.ActionLink("Export Data", "PrintDataListByOrderFromLauncingDate", "Common", new { model1 = @Model.ModelName, orders1 = @Model.Order }, null)
+                <br />
+                @Html.ActionLink("Export IMEI", "exportIMEI_Click", "Common", new { model1 = @Model.ModelName, orders1 = @Model.Order }, null)
+                <br />
+                <div id="chartDaywiseService"></div>
+
+            </div>
+            </div>
+}
+    </div>
+    <script>
+        $(document).ready(function () {
+            
+            var selectedModel = $('.modelname').children("option:selected").val();
+            var selectedOrder = $('.order').children("option:selected").val();
+            if (selectedModel != '') {
+                getMajorProblemChartData(selectedModel, selectedOrder);
+                getSpareUsedChartData(selectedModel, selectedOrder);
+                getMonthlyServiceChartData(selectedModel, selectedOrder);
+                getDaywiseServiceChartData(selectedModel, selectedOrder);
+            }
+
+            @*$('#btnExport').click(function () {
+                $.ajax({
+                    url: '@Url.Action("PrintDataListByOrderFromLauncingDate", "Common")',
+                    type: 'GET',
+                    data: { modelName: modelname, order: order },
+                    contentType: 'application/json',
+                    success: function (result) {
+                        alert('Success');
+                    }
+                });
+            });*@
+        });
+
+       
+
+        var getMajorProblemChartData = function (modelname, order) {
+            $.ajax({
+                url: '@Url.Action("MajorProblemData", "Common")',
+                type: 'GET',
+                data: { modelName: modelname, order: order },
+                contentType: 'application/json',
+                success: function (result) {
+                    var dataset = [];
+                    $.each(result, function (key, value) {
+                        var item = {};
+                        item.issue = value.IssueType;
+                        item.count = value.TotalProblem;
+                        dataset.push(item);
+                    });
+
+                    var jsondata = JSON.parse(JSON.stringify(dataset));
+                    LoadMajorProblemChart(jsondata);
+                }
+            });
+
+        };
+
+        var getSpareUsedChartData = function (modelname, order) {
+            $.ajax({
+                url: '@Url.Action("SpareUsedData", "Common")',
+                type: 'GET',
+                data: { modelName: modelname, order: order },
+                contentType: 'application/json',
+                success: function (result) {
+                    var dataset = [];
+                    $.each(result, function (key, value) {
+                        var item = {};
+                        item.issue = value.ItemName;
+                        item.count = value.TotalProblem;
+                        dataset.push(item);
+                    });
+
+                    var jsondata = JSON.parse(JSON.stringify(dataset));
+                    LoadSpareUsedChart(jsondata);
+                }
+            });
+
+        };
+
+        var getMonthlyServiceChartData = function (modelname, order) {
+            $.ajax({
+                url: '@Url.Action("TotalReceiveData", "Common")',
+                type: 'GET',
+                data: { modelName: modelname, order: order },
+                contentType: 'application/json',
+                success: function (result) {
+                    var dataset = [];
+                    $.each(result, function (key, value) {
+                        var item = {};
+                        item.year = value.Month + '(' +value.Year+')';
+                        item.quantity = value.ServiceQuantity;
+                        dataset.push(item);
+                    });
+
+                    var jsondata = JSON.parse(JSON.stringify(dataset));
+                    LoadMonthlyServiceQtyChart(jsondata);
+                }
+            });
+
+        };
+        var getDaywiseServiceChartData = function (modelname, order) {
+            $.ajax({
+                url: '@Url.Action("OrderFromLauncingDate", "Common")',
+                type: 'GET',
+                data: { modelName: modelname, order: order },
+                contentType: 'application/json',
+                success: function (result) {
+                    console.log(JSON.stringify(result));
+                     var dataset = [
+                        {
+                            "days": "Ten days",
+                            "count": result.tendays
+                        },
+                        {
+                            "days": "Twenty days",
+                            "count": result.twentydays
+                        },
+                        {
+                            "days": "Forty days",
+                            "count": result.fortydays
+                        },
+                        {
+                            "days": "Sixty days",
+                            "count": result.sixtydays
+                        },
+                        {
+                            "days": "Ninty days",
+                            "count": result.nintydays
+                        },
+                        {
+                            "days": "One Eighty days",
+                            "count": result.oneEightydays
+                        },
+                        {
+                            "days": "Two Seventy days",
+                            "count": result.twoseventy
+                        },
+                        {
+                            "days": "Three Sixty days",
+                            "count": result.threeSixty
+                        },
+                        {
+                            "days": "Rest of the Days",
+                            "count": result.restoftheDays
+                        },
+                    ];
+                    
+                    
+                    var jsondata = JSON.parse(JSON.stringify(dataset));
+                    console.log(JSON.stringify(jsondata));
+                    LoadDaywiseServiceQtyChart(jsondata);
+                }
+            });
+
+        };
+        var LoadMajorProblemChart = function (data) {
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            var chart = am4core.create("chartMajorProblem", am4charts.PieChart3D);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            chart.legend = new am4charts.Legend();
+            chart.fontSize = 10;
+
+            chart.data = data;
+
+            var series = chart.series.push(new am4charts.PieSeries3D());
+            series.dataFields.value = "count";
+            series.dataFields.category = "issue";
+        }
+        var LoadSpareUsedChart = function (data) {
+            // Themes begin
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            var chart = am4core.create("chartSpares", am4charts.PieChart3D);
+            chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+            chart.legend = new am4charts.Legend();
+            chart.fontSize = 10;
+
+            chart.data = data;
+
+            var series = chart.series.push(new am4charts.PieSeries3D());
+            series.dataFields.value = "count";
+            series.dataFields.category = "issue";
+        }
+        var LoadMonthlyServiceQtyChart = function (data) {
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+            // Create chart instance
+            var chart = am4core.create("chartMonthlyService", am4charts.XYChart);
+
+            // Export
+            chart.exporting.menu = new am4core.ExportMenu();
+
+            // Data for both series
+            chart.data = data;
+
+            /* Create axes */
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "year";
+            categoryAxis.renderer.minGridDistance = 30;
+
+            /* Create value axis */
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            /* Create series */
+            //var columnSeries = chart.series.push(new am4charts.ColumnSeries());
+            //columnSeries.name = "Income";
+            //columnSeries.dataFields.valueY = "income";
+            //columnSeries.dataFields.categoryX = "year";
+
+            //columnSeries.columns.template.tooltipText = "[#fff font-size: 15px]{name} in {categoryX}:\n[/][#fff font-size: 20px]{valueY}[/] [#fff]{additional}[/]"
+            //columnSeries.columns.template.propertyFields.fillOpacity = "fillOpacity";
+            //columnSeries.columns.template.propertyFields.stroke = "stroke";
+            //columnSeries.columns.template.propertyFields.strokeWidth = "strokeWidth";
+            //columnSeries.columns.template.propertyFields.strokeDasharray = "columnDash";
+            //columnSeries.tooltip.label.textAlign = "middle";
+
+            var lineSeries = chart.series.push(new am4charts.LineSeries());
+            lineSeries.name = "Quantity";
+            lineSeries.dataFields.valueY = "quantity";
+            lineSeries.dataFields.categoryX = "year";
+
+            lineSeries.stroke = am4core.color("#fdd400");
+            lineSeries.strokeWidth = 2;
+            lineSeries.propertyFields.strokeDasharray = "lineDash";
+            lineSeries.tooltip.label.textAlign = "middle";
+           
+
+            var bullet = lineSeries.bullets.push(new am4charts.Bullet());
+            bullet.fill = am4core.color("#fdd400"); // tooltips grab fill from parent by default
+            bullet.tooltipText = "[#fff font-size: 15px]{name} in {categoryX}:\n[/][#fff font-size: 20px]{valueY}[/] [#fff]{additional}[/]";
+            var circle = bullet.createChild(am4core.Circle);
+            circle.radius = 4;
+            circle.fill = am4core.color("#fff");
+            circle.strokeWidth = 2;
+
+        }
+
+        var LoadDaywiseServiceQtyChart = function (data) {
+
+            am4core.useTheme(am4themes_animated);
+            // Themes end
+
+            // Create chart instance
+            var chart = am4core.create("chartDaywiseService", am4charts.XYChart);
+            chart.exporting.menu = new am4core.ExportMenu();
+            // Add data
+            chart.data = data;
+            
+            var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "days";
+            categoryAxis.renderer.grid.template.location = 0;
+            categoryAxis.renderer.minGridDistance = 30;
+
+            categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
+                if (target.dataItem && target.dataItem.index & 2 == 2) {
+                    return dy + 25;
+                }
+                return dy;
+            });
+
+            var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            // Create series
+            var series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "count";
+            series.dataFields.categoryX = "days";
+            series.name = "Counts";
+            series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+            series.columns.template.fillOpacity = .8;
+
+            var columnTemplate = series.columns.template;
+            columnTemplate.strokeWidth = 1;
+            columnTemplate.strokeOpacity = 1;
+
+
+
+
+
+
+            // Create axes
+            //var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
+            //categoryAxis.dataFields.category = "days";
+            //categoryAxis.numberFormatter.numberFormat = "#";
+            //categoryAxis.renderer.minGridDistance = 10;
+            
+            //var valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+            //valueAxis.renderer.minGridDistance = 30;
+
+            //// Create series
+            //var series = chart.series.push(new am4charts.ColumnSeries());
+            //series.name = "Count";
+            //series.dataFields.valueY = "count";
+            //series.dataFields.categoryX = "days";
+           
+
+           
+            //columnSeries.columns.template.tooltipText = "[#fff font-size: 15px]{name} in {categoryX}:\n[/][#fff font-size: 20px]{valueY}[/] [#fff]{additional}[/]"
+            //columnSeries.columns.template.propertyFields.fillOpacity = "fillOpacity";
+            //columnSeries.columns.template.propertyFields.stroke = "stroke";
+            //columnSeries.columns.template.propertyFields.strokeWidth = "strokeWidth";
+            //columnSeries.columns.template.propertyFields.strokeDasharray = "columnDash";
+            //columnSeries.tooltip.label.textAlign = "middle";
+        }
+    </script>
+</div>

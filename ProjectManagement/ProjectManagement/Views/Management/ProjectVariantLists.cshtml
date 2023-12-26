@@ -1,0 +1,237 @@
+﻿@using ProjectManagement.ViewModels.Management
+@model List<ProjectManagement.ViewModels.Management.OrderQuantityDetailsVm>
+    @{
+        ViewBag.Title = "ProjectVariantLists";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">Project Variant List</div>
+        </div>
+        <div class="portlet-body">
+            <input class="form-control" id="myInput" type="text" placeholder="Search..">
+            <br />
+            <div class="table-responsive">
+                <table class="table table-bordered" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Order Number</th>
+                            <th>Project Model</th>
+                            <th>Order Quantity</th>
+                            <th>Variant Name</th>
+                            <th>Quantity</th>
+                            <th>Unassigned Quantity</th>
+                            <th colspan="2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.DistinctList != null)
+                        {
+                            var newList = (List<VarientViewModel>)ViewBag.DistinctList;
+                            foreach (var a in newList)
+                            {
+                                var modelList = Model.Where(i => i.ProjectModel == a.ModelName && i.OrderNuber == a.OrderNo).ToList();
+                                int cnt = modelList.Count;
+                                
+                                for (int i = 0; i < cnt; i++)
+                                {
+                                    string colorClass = modelList[i].RowSpan > 1 ? "#F0ECEC" : "white";
+                                    if (i == 0)
+                                    {
+                                        <tr style="background-color: @colorClass">
+                                            <td class="tdProjectId" rowspan="@modelList[i].RowSpan">@modelList[i].ProjectMasterId</td>
+                                            <td rowspan="@modelList[i].RowSpan">@modelList[i].ProjectName</td>
+                                            <td rowspan="@modelList[i].RowSpan">@modelList[i].OrderNuber</td>
+                                            <td rowspan="@modelList[i].RowSpan">@modelList[i].ProjectModel</td>
+                                            <td class="tdOrderQuantity" rowspan="@modelList[i].RowSpan">@modelList[i].OrderQuantity</td>
+                                            <td hidden="" class="hdnVariantId">@modelList[i].VariantId</td>
+                                            <td>@modelList[i].VariantName</td>
+                                            <td>
+                                                @if (modelList[i] != null && modelList[i].IsLocked == false)
+                                                {
+                                                    <input type="number" min="0" class="form-control txtQuantiy" value="@modelList[i].QuantityInCalculator" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="number" min="0" class="form-control txtQuantiy" readonly="" value="@modelList[i].QuantityInCalculator" />
+                                                }
+                                            </td>
+                                            <td rowspan="@modelList[i].RowSpan"><input type="number" class="form-control txtUnassignedQuantiy" readonly="" /></td>
+                                            <td class="tdSaveLock">
+                                                @if (modelList[i] != null && modelList[i].IsLocked == true)
+                                                {
+                                                    <span class="badge badge-danger">Locked</span>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>
+                                                    <button type="button" class="btn btn-primary btn-sm btnLock"><i class="fa fa-lock"></i></button>
+                                                }
+                                            </td>
+                                            <td rowspan="@modelList[i].RowSpan"><button type="button" class="btn btn-sm btn-danger btnAddVariant">Add/Update <br /> Variant Name</button></td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr style="background-color: @colorClass">
+                                            <td class="tdProjectId" hidden="">@modelList[i].ProjectMasterId</td>
+                                            <td class="tdOrderQuantity" hidden="">@modelList[i].OrderQuantity</td>
+                                            <td hidden="" class="hdnVariantId">@modelList[i].VariantId</td>
+                                            <td>@modelList[i].VariantName</td>
+                                            <td>
+                                                @if (modelList[i] != null && modelList[i].IsLocked == false)
+                                                {
+                                                    <input type="number" min="0" class="form-control txtQuantiy" value="@modelList[i].QuantityInCalculator" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="number" min="0" class="form-control txtQuantiy" readonly="" value="@modelList[i].QuantityInCalculator" />
+                                                }
+                                            </td>
+                                            <td class="tdSaveLock">
+                                                @if (modelList[i] != null && modelList[i].IsLocked == true)
+                                                {
+                                                    <span class="badge badge-danger">Locked</span>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>
+                                                    <button type="button" class="btn btn-primary btn-sm btnLock"><i class="fa fa-lock"></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+
+                            }
+                        }
+                        
+
+                    @*<tbody>atiq vai code here </tbody>*@
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var counter = 0;
+        $(document).ready(function () {
+            $('table > tbody > tr').each(function () {
+                var assigned = 0;
+                var totalQuantity = 0;
+                var quantity = 0;
+                //if ($(this).find('.tdProjectId').html() == 291) {
+                //    debugger;
+                //}
+                if ($(this).find('.tdProjectId').html() != $(this).prev().find('.tdProjectId').html() && $(this).find('.tdProjectId').html() != $(this).next().find('.tdProjectId').html()) {
+                    totalQuantity = parseInt($(this).find('.tdOrderQuantity').html());
+                    assigned = parseInt($(this).find('.txtQuantiy').val());
+                    $(this).find('.txtUnassignedQuantiy').val(totalQuantity - assigned);
+                }
+                if ($(this).find('.tdProjectId').html() != $(this).prev().find('.tdProjectId').html() && $(this).find('.tdProjectId').html() == $(this).next().find('.tdProjectId').html()) {
+                    totalQuantity = parseInt($(this).find('.tdOrderQuantity').html());
+                    var projectId = $(this).find('.tdProjectId').html();
+                    ///var unassignedPlaceHolder=
+                    $('table > tbody > tr').each(function () {
+                        if ($(this).find('.tdProjectId').html() == projectId) {
+                            console.log($(this).find('.txtQuantiy').val());
+                            quantity = parseInt($(this).find('.txtQuantiy').val());
+                            assigned = assigned + quantity;
+                            console.log('assigned ' + assigned);
+                        }
+                    });
+                    $(this).find('.txtUnassignedQuantiy').val(totalQuantity - assigned);
+                }
+
+                counter = counter + 1;
+            });
+        });
+
+        $('table tbody').on('click', '.btnAddVariant', function () {
+            var projectId = $(this).closest('tr').find('.tdProjectId').html();
+            console.log(projectId);
+            var url = '@Url.Action("AddVariant", "Management")';
+            url = url + '?projectId=' + projectId;
+            window.location.href = url;
+        });
+
+
+        $(document).on('input', function () {
+            var row = $(document.activeElement).parent().parent();
+            var variantId = row.find('.hdnVariantId').html();
+            var totalQuantity = parseInt(row.find('.tdOrderQuantity').html());
+            var projectId = row.find('.tdProjectId').html();
+            console.log(projectId + '~' + variantId + '--' + '>>' + totalQuantity);
+            var assigned = 0;
+            $('table > tbody > tr').each(function () {
+                if ($(this).find('.tdProjectId').html() == projectId) {
+                    console.log($(this).find('.txtQuantiy').val());
+                    var quantity = parseInt($(this).find('.txtQuantiy').val());
+                    assigned = assigned + quantity;
+                    console.log('assigned ' + assigned);
+                }
+            });
+            if (!isNaN(assigned)) {
+                var unassigned = totalQuantity - assigned;
+                console.log('unassigned = ' + unassigned);
+                if (unassigned >= 0) {
+                    $('table > tbody > tr').each(function () {
+                        if ($(this).find('.tdProjectId').html() == projectId) {
+                            $(this).find('.txtUnassignedQuantiy').val(unassigned);
+                        }
+                    });
+                } else {
+
+                    alertify.error('You have exceeded unassigned quantity');
+                    var defaultQuantity = parseInt(row.find('.txtQuantiy').val());
+                    row.find('.txtQuantiy').val(defaultQuantity - 1);
+                }
+                if (unassigned < 0) {
+                    row.find('.txtQuantiy').val(0);
+                }
+            }
+
+        });
+
+        $(document).on('click', '.btnSave', function () {
+            var url = '@Url.Action("SaveVariant","Management")';
+            var row = $(this).closest('tr');
+            var variantId = row.find('.hdnVariantId').html();
+            var quantity = row.find('.txtQuantiy').val();
+            console.log(variantId + quantity);
+            $.post(url, { variantId: variantId, quantity: quantity, isLocked: false }, function (data) {
+                console.log(data);
+                if (data.Id > 0) {
+                    alertify.success('Quantity Updated');
+                }
+            });
+        });
+
+        $(document).on('click', '.btnLock', function () {
+            var url = '@Url.Action("SaveVariant","Management")';
+            var row = $(this).closest('tr');
+            var variantId = row.find('.hdnVariantId').html();
+            var quantity = row.find('.txtQuantiy').val();
+            console.log(variantId + quantity);
+            $.post(url, { variantId: variantId, quantity: quantity, isLocked: true }, function (data) {
+                console.log(data);
+                alertify.success('Locked');
+                row.find('.btnSave').hide();
+                row.find('.btnLock').hide();
+                row.find('.tdSaveLock').html('<span class="badge badge-danger">Locked</span>');
+                row.find('.txtQuantiy').prop('readonly', true);
+
+            });
+        });
+
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("table tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        });
+    </script>

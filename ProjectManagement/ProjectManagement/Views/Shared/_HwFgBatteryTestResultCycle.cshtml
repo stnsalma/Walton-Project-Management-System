@@ -1,0 +1,526 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+
+@Html.HiddenFor(model => model.HwFgBatteryTestConditionModel.HwFgBatteryTestConditionId, new { @Value = @ViewBag.HwFgTestConditionId })
+<div class="portlet box blue cycle" id="divCycle1">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+            {
+                if (item.CycleNo == 1)
+                {
+                    <label>Cycle No : @item.CycleNo</label>
+                }
+                break;
+            }
+
+            @*@Html.DisplayFor(model=>model.HwFgBatteryTestResultModel.CycleNo )*@
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <br />
+                        <h4 class="bold">Test Result</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle1">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Serial</th>
+                                                <th class="text-center"> Item No </th>
+                                                <th class="text-center"> Item Name </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 1)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"> @item.ItemNo </td>
+                                                        <td class="text-center"> @item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+
+
+                                                    </tr>
+                                                }
+
+                                            }
+
+
+
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue cycle" id="divCycle2">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+            
+            <label>Cycle No : 2</label>
+                
+
+            @*@Html.DisplayFor(model=>model.HwFgBatteryTestResultModel.CycleNo )*@
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <br />
+                        <h4 class="bold">Test Result</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle2">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Serial</th>
+                                                <th class="text-center"> Item No </th>
+                                                <th class="text-center"> Item Name </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 2)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"> @item.ItemNo </td>
+                                                        <td class="text-center"> @item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue" id="divCycle3">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+
+            <label>Cycle No : 3</label>
+
+
+            @*@Html.DisplayFor(model=>model.HwFgBatteryTestResultModel.CycleNo )*@
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <br />
+                        <h4 class="bold">Test Result</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle3">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Serial</th>
+                                                <th class="text-center"> Item No </th>
+                                                <th class="text-center"> Item Name </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 3)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"> @item.ItemNo </td>
+                                                        <td class="text-center"> @item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue" id="divCycle4">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+
+            <label>Cycle No : 4</label>
+
+
+            @*@Html.DisplayFor(model=>model.HwFgBatteryTestResultModel.CycleNo )*@
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <br />
+                        <h4 class="bold">Test Result</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle4">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Serial</th>
+                                                <th class="text-center"> Item No </th>
+                                                <th class="text-center"> Item Name </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 4)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"> @item.ItemNo </td>
+                                                        <td class="text-center"> @item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue" id="divCycle5">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>
+
+            <label>Cycle No : 5</label>
+
+
+            @*@Html.DisplayFor(model=>model.HwFgBatteryTestResultModel.CycleNo )*@
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <div class="col-md-12">
+                        <br />
+                        <h4 class="bold">Test Result</h4>
+                        <hr />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered cycle" id="tblCycle5">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Serial</th>
+                                                <th class="text-center"> Item No </th>
+                                                <th class="text-center"> Item Name </th>
+                                                <th class="text-center"> Charging Capacity(mAh) </th>
+                                                <th class="text-center"> Charging Time </th>
+                                                <th class="text-center"> Discharging Capacity(mAh) </th>
+                                                <th class="text-center"> Discharging Time </th>
+                                                <th class="text-center"> Result </th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.HwFgBatteryTestResultModel)
+                                            {
+                                                if (item.CycleNo == 5)
+                                                {
+
+                                                    <tr>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center"> @item.ItemNo </td>
+                                                        <td class="text-center"> @item.ItemName </td>
+                                                        <td class="text-center"> @item.ChargingCapacity </td>
+                                                        <td class="text-center"> @item.ChargingTime </td>
+                                                        <td class="text-center"> @item.DischargingCapacity </td>
+                                                        <td class="text-center"> @item.DischargingTime </td>
+                                                        @if (@item.Result == true)
+                                                        {
+                                                            <td class="text-center"> Pass </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-center"> Fail </td>
+                                                        }
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                @*<div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div>
+                                                    <input type="submit" value="Save" class="btn btn-default" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    if ($("#tblCycle1 > tbody > tr").length == 0) {
+        $("#divCycle1").css('display', 'none');
+    }
+
+    if ($("#tblCycle2 > tbody > tr").length == 0) {
+        $("#divCycle2").css('display', 'none');
+    }
+
+    if ($("#tblCycle3 > tbody > tr").length == 0) {
+        $("#divCycle3").css('display', 'none');
+    }
+    
+    if ($("#tblCycle4 > tbody > tr").length == 0) {
+        $("#divCycle4").css('display', 'none');
+    }
+    
+    if ($("#tblCycle5 > tbody > tr").length == 0) {
+        $("#divCycle5").css('display', 'none');
+    }
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblCycle1 tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblCycle2 tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblCycle3 tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblCycle4 tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+    
+    //get Automatic Serial number column in the HTML Table
+    $('#tblCycle5 tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+</script>

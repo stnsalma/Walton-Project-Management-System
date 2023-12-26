@@ -1,0 +1,1069 @@
+﻿@model ProjectManagement.ViewModels.Commercial.VmProjectShipment
+@{
+    ViewBag.Title = "Shipment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Shipment</h2>
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+</style>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="col-sm-3">
+            <div class="caption">
+                Project Basics
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <input type="button" class="btn sbold uppercase btn-outline" value="Back To List" onclick="location.href='@Url.Action("Shipments", "Commercial")?projectId=0'" />
+        </div>
+    </div>
+    <div class="portlet-body form">
+        @using (Html.BeginForm("Shipment", "Commercial", FormMethod.Post, new { id = "shipmentForm", enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    @{
+            if (TempData["message"] != null)
+            {
+                var msgType = TempData["messageType"];
+                var msg = TempData["message"];
+                if ((int)msgType == 1)
+                {
+                    <div class="alert alert-success alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msg
+                    </div>
+                }
+                else if ((int)msgType == 2)
+                {
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msg
+                    </div>
+                }
+                else if ((int)msgType == 3)
+                {
+                    <div class="alert alert-info alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                        <strong>Message:</strong> @msg
+                    </div>
+                }
+            }
+                    }
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                            <div class="form-body">
+                                <div class="row">
+
+                                    @Html.HiddenFor(model => model.ProjectOrderShipmentModel.ProjectOrderShipmentId)
+                                    @Html.HiddenFor(model => model.ProjectOrderShipmentModel.ProjectMasterId)
+                                    @*@Html.HiddenFor(model=>model.ProjectOrderShipmentModel.ProjectPurchaseOrderFormId)*@
+                                    @Html.HiddenFor(model => model.ProjectOrderShipmentModel.IsComplete)
+                                    @Html.HiddenFor(model => model.ProjectOrderShipmentModel.Added)
+                                    @Html.HiddenFor(model => model.ProjectOrderShipmentModel.AddedDate)
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-11">
+                                            @Html.DropDownListFor(model => model.ProjectMasterModel.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="button" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("Shipment", "Commercial")?projectId=' + $('option:selected', $('#ProjectMasterModel_ProjectMasterId')).val()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Supplier</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.ProjectMasterModel.SupplierName, new { @class = "form-control", @disabled = "true" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Supplier Model</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(model => model.ProjectMasterModel.SupplierModelName, new { @class = "form-control", @disabled = "true" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Walton Model</label>
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(i => i.ProjectMasterModel.ProjectName, new { @disabled = "true", @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            if (@Model != null && @Model.ProjectMasterModel.ProjectMasterId > 0)
+            {
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            Project Basics
+                        </div>
+
+                    </div>
+                    <div class="portlet-body form">
+                        <div class="row"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        @*@Html.HiddenFor(model => model.ProjectMaster.ProjectMasterId)*@
+                                        <div class="form-body">
+                                            <div class="row">
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">PO No. -- PO Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.DropDownListFor(model => model.ProjectOrderShipmentModel.ProjectPurchaseOrderFormId, new SelectList(ViewBag.ProjectOrders, "Value", "Text"), new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.ProjectPurchaseOrderFormId, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Shipment Type</label>
+                                                        <div class="col-md-9">
+
+                                                            @Html.DropDownListFor(
+                                                                     model => model.ProjectOrderShipmentModel.ShipmentType,
+                                                                     new SelectList(
+                                                                         new List<object>
+                                                                         {
+                                                                             new {value = "", text = "Select Shipment Type"},
+                                                                             new {value = "Sea", text = "Sea"},
+                                                                             new {value = "Air", text = "Air"}
+                                                                         }, "value", "text", Model.ProjectOrderShipmentModel.ShipmentType), new { @class = "form-control" })
+
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.ShipmentType, String.Empty, new { @style = "color:red;!important" })
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">China Inspection Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ChainaInspectionDate, new { Value = Model.ProjectOrderShipmentModel.ChainaInspectionDate.HasValue ? Model.ProjectOrderShipmentModel.ChainaInspectionDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @*@Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.ChainaInspectionDate, String.Empty, new { @style = "color:red;!important" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Forwarder Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.ProjectOrderShipmentModel.ForwarderDate, new { Value = Model.ProjectOrderShipmentModel.ForwarderDate.HasValue ? Model.ProjectOrderShipmentModel.ForwarderDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @*@Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.ForwarderDate, String.Empty, new { @style = "color:red;!important" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Flight Departure Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.FlightDepartureDate, new { Value = Model.ProjectOrderShipmentModel.FlightDepartureDate.HasValue ? Model.ProjectOrderShipmentModel.FlightDepartureDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @*@Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.FlightDepartureDate, String.Empty, new { @style = "color:red;!important" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Ariport Arrival Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.ProjectOrderShipmentModel.AriportArrivalDate, new { Value = Model.ProjectOrderShipmentModel.AriportArrivalDate.HasValue ? Model.ProjectOrderShipmentModel.AriportArrivalDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @*@Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.AriportArrivalDate, String.Empty, new { @style = "color:red;!important" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Bank NOC Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.BankNocDate, new { Value = Model.ProjectOrderShipmentModel.BankNocDate.HasValue ? Model.ProjectOrderShipmentModel.BankNocDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.BankNocDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">CNF Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.ProjectOrderShipmentModel.CnfDate, new { Value = Model.ProjectOrderShipmentModel.CnfDate.HasValue ? Model.ProjectOrderShipmentModel.CnfDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.CnfDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">CNF Pay Order Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.CnfPayOrderDate, new { Value = Model.ProjectOrderShipmentModel.CnfPayOrderDate.HasValue ? Model.ProjectOrderShipmentModel.CnfPayOrderDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.CnfPayOrderDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Airport Release Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.ProjectOrderShipmentModel.AirportReleaseDate, new { Value = Model.ProjectOrderShipmentModel.AirportReleaseDate.HasValue ? Model.ProjectOrderShipmentModel.AirportReleaseDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.AirportReleaseDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Market Release Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.MarketReleaseDate, new { Value = Model.ProjectOrderShipmentModel.MarketReleaseDate.HasValue ? Model.ProjectOrderShipmentModel.MarketReleaseDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.MarketReleaseDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">PM Clearance Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ProjectManagerClearanceDate, new { Value = Model.ProjectOrderShipmentModel.ProjectManagerClearanceDate.HasValue ? Model.ProjectOrderShipmentModel.ProjectManagerClearanceDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @*@Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.ProjectManagerClearanceDate, String.Empty, new { @style = "color:red;!important" })*@
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3">Costing Date</label>
+                                                        <div class="col-md-9">
+                                                            @Html.TextBoxFor(model => model.ProjectOrderShipmentModel.CostingDate, new { Value = Model.ProjectOrderShipmentModel.CostingDate.HasValue ? Model.ProjectOrderShipmentModel.CostingDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                            @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.CostingDate, String.Empty, new { @style = "color:red;!important" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="mt-element-ribbon bg-grey-steel">
+                                                    <div class="ribbon ribbon-color-default uppercase">Additional Data</div>
+                                                    <p class="ribbon-content">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3" style="color:red">Shipment Percentage**</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.DropDownListFor(
+                                                                            model => model.ProjectOrderShipmentModel.ShipmentPercentage,
+                                                                            new SelectList(
+                                                                                new List<object>
+                                                                                {
+                                                                                    new {value = "0", text = "Select"},
+                                                                                    new {value = "Partial", text = "Partial"},
+                                                                                    new {value = "Full", text = "Full"}
+                                                                                }, "value", "text", Model.ProjectOrderShipmentModel.ShipmentPercentage), new { @class = "form-control" })
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3" style="color:red">Is Final Shipment**</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.DropDownListFor(
+                                                                            model => model.ProjectOrderShipmentModel.IsFinalShipment,
+                                                                            new SelectList(
+                                                                                new List<object>
+                                                                                {
+                                                                                    new {value = "0", text = "Select"},
+                                                                                    new {value = "No", text = "No"},
+                                                                                    new {value = "Yes", text = "Yes"}
+                                                                                }, "value", "text", Model.ProjectOrderShipmentModel.IsFinalShipment), new { @class = "form-control" })
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3" style="color:red">Order Shipment Qty.</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.OrderShipmentQuantity, new { @type = "number", min = 0, @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3" style="color:red">FOC Quantity</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.FocQuantity, new { @type = "number", min = 0, @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <br />
+                                                        @*----------drops1---------*@
+
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="col-lg-4" style="text-align: right">
+                                                                    <input type="checkbox" id="forFinishGood" class="forFinishGood" name="finishGoods" value="finishGoods_CheckBx">
+                                                                </div>
+                                                                <div class="col-lg-8" style="text-align: left;font-weight: bold">
+                                                                    Is Finish Good Manufacturing possible?
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="portlet box green" id="forFinishGoodDetails" style="display: none;">
+                                                            <div class="portlet-title">
+                                                                <div class="caption">
+                                                                    FINISH GOOD DETAILS
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="portlet-body form">
+                                                                <div class="row"></div>
+                                                                <br />
+                                                                <div class="row">
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-lg-3" style="color:red">Finish Good Model</label>
+                                                                            <div class="col-md-9">
+                                                                                @Html.DropDownListFor(model => model.ProjectOrderShipmentModel.ProjectMasterId, new SelectList(ViewBag.ProjectsForFinishGood, "ProjectMasterId", "ProjectModel"),
+                                                                                "Select One", new { @class = "form-control", @id = "proIds" })
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label col-md-3" style="color:red">Approx.F.Good Manufacture Qty.</label>
+                                                                            <div class="col-md-9">
+                                                                                @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ApproxFinishGoodManufactureQty, new { @type = "number", min = 0, @class = "form-control", @id = "approxFinishGoodManufactureQty" })
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br /><br />
+                                                                    <div class="col-lg-12">
+                                                                        <div class="col-lg-4"></div>
+                                                                        <div class="col-lg-4">
+                                                                            <span class="blink">
+                                                                                <button id="btnAddForFoc" class="btn btn-lg green m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add Must</button>
+
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <br /><br />
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="portlet light bordered">
+                                                                            <div class="portlet box green-haze">
+                                                                                <div class="portlet-body">
+                                                                                    <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+                                                                                        <table class="table table-bordered table-striped table-condensed flip-content tblFinish" id="tblFinish" style="overflow-y: auto;overflow-x: auto">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th style="display:none">IsRemoved</th>
+                                                                                                    <th style="display: none;">ProjectMasterId</th>
+                                                                                                    <th>Project Model</th>
+                                                                                                    <th> Approx. Finish Good Quantity</th>
+                                                                                                    <th>Action</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody id="tBodyFinish" class="tBodyFinish" style="overflow-y: auto;overflow-x: auto">
+
+                                                                                                @foreach (var swQcOthers in Model.ProjectMasterModels)
+                                                                                                {
+                                                                                                    Html.RenderPartial("~/Views/Commercial/CmPartials/_AddFinishGood.cshtml", swQcOthers);
+                                                                                                }
+
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <br /><br />
+                                                            </div>
+                                                        </div>
+
+
+                                                        @*<br />
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3" style="color:red">100% Material <br />Pass On China IQC?**</label>
+                                                                        <div class="col-md-9">
+                                                                            @Html.DropDownListFor(model => model.ProjectOrderShipmentModel.ChinaIqcPassHundredPercent,
+                                                                                new SelectList(
+                                                                                    new List<object>
+                                                                                    {
+                                                                                        new {value = "0", text = "Select"},
+                                                                                        new {value = "No", text = "No"},
+                                                                                        new {value = "Yes", text = "Yes"}
+                                                                                    }, "value", "text", Model.ProjectOrderShipmentModel.ChinaIqcPassHundredPercent), new { @class = "form-control" })
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3" style="color:red">No of Time C.IQC Fail**</label>
+                                                                        <div class="col-md-9">
+                                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ChinaIqcFail, new { @type = "number",min=0, @class = "form-control" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br />
+                                                            <div class="row">
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3" style="color:red">Management Approved?**</label>
+                                                                        <div class="col-md-9">
+                                                                            @Html.DropDownListFor(model => model.ProjectOrderShipmentModel.ManagementApproval,
+                                                                                new SelectList(
+                                                                                    new List<object>
+                                                                                    {
+                                                                                        new {value = "0", text = "Select"},
+                                                                                        new {value = "No", text = "No"},
+                                                                                        new {value = "Yes", text = "Yes"}
+                                                                                    }, "value", "text", Model.ProjectOrderShipmentModel.ManagementApproval), new { @class = "form-control" })
+
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label col-md-3" style="color:red">Management Approve Date**</label>
+                                                                        <div class="col-md-9">
+                                                                            @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ManagementApprovalDate, new { Value = Model.ProjectOrderShipmentModel.ManagementApprovalDate.HasValue ? Model.ProjectOrderShipmentModel.ManagementApprovalDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>*@
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">RM Shipment Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.RawMaterialShipmentDate, new { Value = Model.ProjectOrderShipmentModel.RawMaterialShipmentDate.HasValue ? Model.ProjectOrderShipmentModel.RawMaterialShipmentDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">RM Shipment Mode</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.DropDownListFor(
+                                                                            model => model.ProjectOrderShipmentModel.RawMaterialShipmentMode,
+                                                                            new SelectList(
+                                                                                new List<object>
+                                                                                {
+                                                                                    new {value = "", text = "Select"},
+                                                                                    new {value = "Full BOM", text = "Full BOM"},
+                                                                                    new {value = "Partial BOM", text = "Partial BOM"}
+                                                                                }, "value", "text", Model.ProjectOrderShipmentModel.RawMaterialShipmentMode), new { @class = "form-control" })
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Vessel Type</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.DropDownListFor(
+                                                                            model => model.ProjectOrderShipmentModel.VesselType,
+                                                                            new SelectList(
+                                                                                new List<object>
+                                                                                {
+                                                                                    new {value = "", text = "Select"},
+                                                                                    new {value = "Direct", text = "Direct"},
+                                                                                    new {value = "Indirect", text = "Indirect"}
+                                                                                }, "value", "text", Model.ProjectOrderShipmentModel.VesselType), new { @class = "form-control" })
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Container Type</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.DropDownListFor(
+                                                                            model => model.ProjectOrderShipmentModel.ContatinerType,
+                                                                            new SelectList(
+                                                                                new List<object>
+                                                                                {
+                                                                                    new {value = "", text = "Select"},
+                                                                                    new {value = "FCL", text = "FCL"},
+                                                                                    new {value = "LCL", text = "LCL"}
+                                                                                }, "value", "text", Model.ProjectOrderShipmentModel.ContatinerType), new { @class = "form-control" })
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Vessel Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.VesselDate, new { Value = Model.ProjectOrderShipmentModel.VesselDate.HasValue ? Model.ProjectOrderShipmentModel.VesselDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Warehouse Entry Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.WarehouseEntryDate, new { Value = Model.ProjectOrderShipmentModel.WarehouseEntryDate.HasValue ? Model.ProjectOrderShipmentModel.WarehouseEntryDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                        @Html.ValidationMessageFor(model => model.ProjectOrderShipmentModel.WarehouseEntryDate, String.Empty, new { @style = "color:red;!important" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">IQC Jigs & Fixture Shmnt Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.IQC_JigsAndFixtureShipmentDate, new { Value = Model.ProjectOrderShipmentModel.IQC_JigsAndFixtureShipmentDate.HasValue ? Model.ProjectOrderShipmentModel.IQC_JigsAndFixtureShipmentDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Production Jigs & Fixture Shmnt Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.ProductionJigsAndFixtureShipmentDate, new { Value = Model.ProjectOrderShipmentModel.ProductionJigsAndFixtureShipmentDate.HasValue ? Model.ProjectOrderShipmentModel.ProductionJigsAndFixtureShipmentDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Stencil Shipment Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.StencilShipmentDate, new { Value = Model.ProjectOrderShipmentModel.StencilShipmentDate.HasValue ? Model.ProjectOrderShipmentModel.StencilShipmentDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Pallet Shipment Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.PalletShipmentDate, new { Value = Model.ProjectOrderShipmentModel.PalletShipmentDate.HasValue ? Model.ProjectOrderShipmentModel.PalletShipmentDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">Duty Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.BdDate, new { Value = Model.ProjectOrderShipmentModel.BdDate.HasValue ? Model.ProjectOrderShipmentModel.BdDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">VAT Decleration Date</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.VatDeclerationDate, new { Value = Model.ProjectOrderShipmentModel.VatDeclerationDate.HasValue ? Model.ProjectOrderShipmentModel.VatDeclerationDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3">VAT Decleration Price</label>
+                                                                    <div class="col-md-9">
+                                                                        @Html.TextBoxFor(i => i.ProjectOrderShipmentModel.VatDeclerationPrice, new { @type = "number", @class = "form-control" })
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+
+                                                    </p>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <div class="form-group">
+                                                        <div class="col-md-offset-3 col-md-9">
+                                                            <input type="submit" id="btnSubmit" class="btn sbold uppercase btn-outline blue" value="Save" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var fNal = 0;
+        function removeDetailRow1(element1) {
+            $(element1).remove();
+            //$("#tblFinish tr.tableTrCls").each(function () {
+            //    var ddApprox = parseInt($.trim($(this).find('td:eq(3)').text()));
+            //    fNal += +ddApprox;
+            //});
+
+            var ddApprox = parseInt($.trim($(element1).find('td:eq(3)').text()));
+
+            fNal += -ddApprox;
+        }
+
+        var focFinishChk = false;
+        $(function () {
+            $(document).on('submit', 'form', function () {
+                var button = $(this).find('input[type="submit"]');
+                setTimeout(function () {
+                    button.attr('disabled', 'disabled');
+                }, 0);
+            });
+
+            // var approxVal = $('#approxFinishGoodManufactureQty').val();
+            var modssTxt = $('#ProjectMasterModel_ProjectMasterId option:selected').text();
+            var modssVal = $('#ProjectMasterModel_ProjectMasterId option:selected').val();
+            //start//
+            $("#forFinishGood").on('change', function () {
+                var orderQtyVal = $('#ProjectOrderShipmentModel_OrderShipmentQuantity').val();
+                if (orderQtyVal == "") {
+
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must input Order Shipment Qty.",
+                    }).show();
+
+                    focFinishChk = false;
+                    $("#forFinishGood").prop("checked", false);
+                    return false;
+                }
+
+                if ($(this).is(':checked')) {
+                    $(this).attr('value', 'true');
+                    document.getElementById('forFinishGoodDetails').style.display = "block";
+
+
+                    $('#approxFinishGoodManufactureQty').val(orderQtyVal);
+
+                    $('#proIds option:selected').text(modssTxt);
+                    $('#proIds option:selected').val(modssVal);
+                } else {
+                    $(this).attr('value', 'false');
+                    document.getElementById('forFinishGoodDetails').style.display = "none";
+
+                    $('#approxFinishGoodManufactureQty').val("");
+                }
+                focFinishChk = $('#forFinishGood').val();
+                console.log("focFinishChk :" + focFinishChk);
+
+                $("#proIds").chosen();
+                $("#proIds").trigger("chosen:updated");
+            });
+            if ($("#forFinishGood").is(':checked')) {
+                $("#forFinishGood").attr('value', 'true');
+                $("#forFinishGood").prop("checked", true);
+                document.getElementById('forFinishGoodDetails').style.display = "block";
+
+            } else {
+                $("#forFinishGood").attr('value', 'false');
+                $("#forFinishGood").prop("checked", false);
+                document.getElementById('forFinishGoodDetails').style.display = "none";
+            }
+            focFinishChk = $('#forFinishGood').val();
+            console.log("focFinishChk :" + focFinishChk);
+
+
+            //end//
+
+            var IsRemoved = 0;
+
+            $("#btnAddForFoc").on('click', function (e) {
+                e.preventDefault();
+
+                var orderQtys = $('#ProjectOrderShipmentModel_OrderShipmentQuantity').val();
+
+                var proTxts = $('#proIds option:selected').text();
+                var proIds = $('#proIds option:selected').val();
+                console.log("proIds :" + proIds);
+
+                if (proTxts == "Select One") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must select Project Model",
+                    }).show();
+                    return false;
+                }
+
+                var aproxValue = $('#approxFinishGoodManufactureQty').val();
+                console.log("aproxValue  :" + aproxValue);
+
+                if (parseInt(aproxValue) > parseInt(orderQtys)) {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Approx. Finish Good Manufacture Qty. must equal to Order Shipment Qty.",
+                    }).show();
+                    return false;
+                }
+
+                if (aproxValue == "") {
+                    aproxValue = "0";
+                }
+
+                if (aproxValue == "0") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must select Approx. Finish Good Manufacture Qty.",
+                    }).show();
+                    return false;
+                }
+
+                var approxFinishGoodManufactureQty = $('#approxFinishGoodManufactureQty').val();
+                if (approxFinishGoodManufactureQty == "") {
+                    approxFinishGoodManufactureQty = "0";
+                }
+
+                fNal += +parseInt(approxFinishGoodManufactureQty);
+
+                if (fNal > parseInt(orderQtys)) {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Approx. Finish Good Manufacture Qty. must equal to Order Shipment Qty.",
+                    }).show();
+                    //IsRemoved--;
+                    fNal += -parseInt(approxFinishGoodManufactureQty);
+                    return false;
+                }
+                //
+                $.post('@Url.Action("AddFinishGoodModel", "Commercial")', {
+                    IsRemoved: IsRemoved,
+                    ProIds: proIds,
+                    ProTxts: proTxts,
+                    aproxValue: aproxValue,
+                }, function (data) {
+                    console.log(data);
+                    debugger;
+
+                    $('#tBodyFinish').append(data);
+
+                    //$("#tblFinish tr.tableTrCls").each(function () {
+                    //    var ddApprox = parseInt($.trim($(this).find('td:eq(3)').text()));
+                    //    fNal += +ddApprox;
+                    //});
+
+                    //if (fNal > parseInt(orderQtys)) {
+                    //    alertify.dialog('alert').set({
+                    //        'title': '   ',
+                    //        'transition': 'zoom',
+                    //        'message': "Approx. Finish Good Manufacture Qty. must equal to Order Shipment Qty.",
+                    //    }).show();
+                    //    //IsRemoved--;
+                    //    return false;
+                    //}
+
+                    IsRemoved++;
+                });
+
+                //$('#proIds').val("");
+                $('#approxFinishGoodManufactureQty').val("");
+
+                //$('#proIds option:selected').text("Select One");
+                //$('#proIds option:selected').val("");
+
+            });
+            //
+
+            $('#btnSubmit').on('click', function () {
+                var shipmentPercentage = $('#ProjectOrderShipmentModel_ShipmentPercentage').val();
+
+                if (shipmentPercentage == "0") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Shipment Percentage.",
+                    }).show();
+                    return false;
+                }
+
+                var isFinalShipment = $('#ProjectOrderShipmentModel_IsFinalShipment').val();
+
+                if (isFinalShipment == "0") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Select Is Final Shipment.",
+                    }).show();
+                    return false;
+                }
+
+                var orderShipmentQuantity = $('#ProjectOrderShipmentModel_OrderShipmentQuantity').val();
+
+                if (orderShipmentQuantity == "") {
+                    orderShipmentQuantity = "0";
+                }
+
+                if (orderShipmentQuantity == "0") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Input Order Shipment Quantity.",
+                    }).show();
+                    return false;
+                }
+
+                //var chinaIqcFail = $('#ProjectOrderShipmentModel_ChinaIqcFail').val();
+
+                //if (chinaIqcFail=="") {
+                //    chinaIqcFail = 0;
+                //}
+
+                //if (chinaIqcPass == "No" && chinaIqcFail==0) {
+                //    alertify.dialog('alert').set({
+                //        'title': '   ',
+                //        'transition': 'zoom',
+                //        'message': "Please must Select China IQC Fail Times like 1,2,3 and so on.",
+                //    }).show();
+                //    return false;
+                //}
+                //var managementApproval = $('#ProjectOrderShipmentModel_ManagementApproval').val();
+
+                //if (managementApproval == "0") {
+                //    alertify.dialog('alert').set({
+                //        'title': '   ',
+                //        'transition': 'zoom',
+                //        'message': "Please must Select Management Approval.",
+                //    }).show();
+                //    return false;
+                //}
+                //var managementApprovalDate = $('#ProjectOrderShipmentModel_ManagementApprovalDate').val();
+
+                //if (managementApproval == "Yes" && managementApprovalDate=="") {
+                //    alertify.dialog('alert').set({
+                //        'title': '   ',
+                //        'transition': 'zoom',
+                //        'message': "Please must Select Management Approval Date.",
+                //    }).show();
+                //    return false;
+                //}
+
+
+                //var url = window.location.pathname;
+                //var ids = url.substring(url.lastIndexOf('/') + 1);
+                //// alert(ids);
+                //if (ids.trim() == "Shipment") {
+                //    var x1 = document.getElementById("tblFinish").rows.length;
+                //    if (x1 == 1) {
+                //        alertify.dialog('alert').set({
+                //            'title': '   ',
+                //            'transition': 'zoom',
+                //            'message': "Please must Click on 'Add' to add Finish Good Model & Approx. Finish Good Manufacture Qty.",
+                //        }).show();
+                //        return false;
+                //    }
+                //}
+
+                if (focFinishChk == "true") {
+                    var x1 = document.getElementById("tblFinish").rows.length;
+                    if (x1 == undefined) {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Please must Click on 'Add' to add Finish Good Model & Approx. Finish Good Manufacture Qty.",
+                        }).show();
+                        return false;
+                    }
+                   
+                    if (x1 == 1) {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Please must Click on 'Add' to add Finish Good Model & Approx. Finish Good Manufacture Qty.",
+                        }).show();
+                        return false;
+                    }
+                   
+                }
+
+                $('#btnSubmit').prop('disabled', true);
+                $('#shipmentForm').submit();
+            });
+
+            $("#ProjectOrderShipmentModel_ProjectPurchaseOrderFormId").on("change", function () {
+                var orderNumber = '@Model.ProjectMasterModel.OrderNuber';
+                var numDays = 0;
+                if (orderNumber > 1) {
+                    numDays = 105;
+                } else {
+                    numDays = 150;
+                }
+                var selectedData = $("#ProjectOrderShipmentModel_ProjectPurchaseOrderFormId").text();
+                var splitArray = selectedData.split(" -- ");
+                var orderDate = new Date(splitArray[1]);
+                var b = new Date(orderDate.setDate(orderDate.getDate() + numDays));
+                var month = ('0' + (b.getMonth() + 1)).slice(-2);
+                var day = ('0' + b.getDate()).slice(-2);
+                var latestWareHouseDate = b.getFullYear() + '-' + month + '-' + day;
+                $("#ProjectOrderShipmentModel_WarehouseEntryDate").val(latestWareHouseDate).data('Zebra_DatePicker').show();
+                console.log(orderDate);
+            });
+            $("#ProjectOrderShipmentModel_BdDate").Zebra_DatePicker({
+                onSelect: function (date) {
+                    //alert(date);
+                    var newDate = new Date(date);
+                    var bdArrivalDate = new Date(newDate.setDate(newDate.getDate() + 4));
+
+                    var month = ('0' + (bdArrivalDate.getMonth() + 1)).slice(-2);
+                    var day = ('0' + bdArrivalDate.getDate()).slice(-2);
+                    var formattedBdArrivalDate = bdArrivalDate.getFullYear() + '-' + month + '-' + day;
+                    $("#ProjectOrderShipmentModel_WarehouseEntryDate").val(formattedBdArrivalDate).data('Zebra_DatePicker').show();
+                },
+                default_position: 'below'
+            });
+
+            $("#ProjectOrderShipmentModel_VesselDate").Zebra_DatePicker({
+                onSelect: function (date) {
+                    //alert(date);
+                    var vesselDate = new Date(date);
+                    var vesselType = $('#ProjectOrderShipmentModel_VesselType').val();
+                    var containerType = $('#ProjectOrderShipmentModel_ContatinerType').val();
+                    var extraDays = 0;
+                    if (vesselType === "" || containerType === "") {
+                        //var vesselDatePicker = $('#ProjectOrderShipmentModel_VesselDate').data('Zebra_DatePicker');
+                        //vesselDatePicker.clearDate();
+                        $("#ProjectOrderShipmentModel_VesselDate").val("").data('Zebra_DatePicker').show();
+                        alert("Please select Vassel Type & Container Type first");
+                        return;
+                    }
+                    if (containerType == "LCL" && vesselType == "Direct") {
+                        extraDays = 35;
+                    } else if (containerType == "LCL" && vesselType == "Indirect") {
+                        extraDays = 45;
+                    } else if (containerType == "FCL" && vesselType == "Direct") {
+                        extraDays = 30;
+                    } else if (containerType == "FCL" && vesselType == "Indirect") {
+                        extraDays = 40;
+                    }
+
+
+                    var b = new Date(vesselDate.setDate(vesselDate.getDate() + extraDays));
+
+                    var month = ('0' + (b.getMonth() + 1)).slice(-2);
+                    var day = ('0' + b.getDate()).slice(-2);
+                    var latestWareHouseDate = b.getFullYear() + '-' + month + '-' + day;
+                    $("#ProjectOrderShipmentModel_WarehouseEntryDate").val(latestWareHouseDate).data('Zebra_DatePicker').show();
+                },
+                default_position: 'below'
+            });
+
+        });
+        setInterval(function () {
+            window.location.reload();
+        }, 300000);
+
+
+        function blink_text() {
+            $('.blink').fadeOut(20);
+            $('.blink').fadeIn(500);
+        }
+        setInterval(blink_text, 1000);
+
+    </script>
+}

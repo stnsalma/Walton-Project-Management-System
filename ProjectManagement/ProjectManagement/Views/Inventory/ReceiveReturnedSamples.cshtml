@@ -1,0 +1,125 @@
+﻿@model IEnumerable<ProjectManagement.Models.SampleTrackerModel>
+@{
+    ViewBag.Title = "ReceiveReturnedSamples";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Receive Samples</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblReceiveSample">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Model</th>
+                                <th>Return Quantity</th>
+                                <th>Returned By</th>
+                                <th>Return date</th>
+                                <th>Return Remarks</th>
+                                <th>Receive Remarks</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                if (m.InventoryReceiveDate == null)
+                                {
+                                    <tr>
+                                    <td class="trackerId">@m.SampleTrackerId</td>
+                                    <td>@m.Model</td>
+                                    <td>@m.NumberOfSample</td>
+                                    <td>@m.InventoryReturnedByName</td>
+                                    <td>@m.InventoryReturnDate</td>
+                                    <td>@m.InventoryReturnRemarks</td>
+                                    <td>@Html.TextArea("invRemarks", @m.InventoryReceiveRemarks, new { @class = "form-control invRemarks" })</td>
+                                    <td><button class="btn btn-success btnReceive">Receive</button></td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Samples received</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-scrollable">
+                    <table class="table table-bordered" id="tblSampleReceived">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Model</th>
+                                <th>Return Quantity</th>
+                                <th>Returned By</th>
+                                <th>Return date</th>
+                                <th>Return Remarks</th>
+                                <th>Receive Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                if (m.InventoryReceiveRemarks != null)
+                                {
+                                  <tr>
+                                    <td>@m.SampleTrackerId</td>
+                                    <td>@m.Model</td>
+                                    <td>@m.NumberOfSample</td>
+                                    <td>@m.InventoryReturnedByName</td>
+                                    <td>@m.InventoryReturnDate</td>
+                                    <td>@m.InventoryReturnRemarks</td>
+                                    <td>@m.InventoryReceiveRemarks</td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script>
+    $(function () {
+        var tblReceiveSample = $('#tblReceiveSample').DataTable();
+        var tblSampleReceived = $('#tblSampleReceived').DataTable();
+
+        $('#tblReceiveSample tbody').on('click', '.btnReceive', function () {
+            var url = '@Url.Action("ReceiveReturnedSample","Inventory")';
+            var row = tblReceiveSample.row($(this).closest('tr'));
+            var id = $(this).closest('tr').find('.trackerId').text();
+            var remarks = $(this).closest('tr').find('.invRemarks').val();
+            console.log(id + remarks);
+            $.post(url, { id: id, remarks: remarks }, function (data) {
+                console.log(data);
+                alertify.success('Received Successfully');
+                row.remove().draw();
+                tblSampleReceived.row.add([
+                            data.SampleTrackerId,
+                            data.Model,
+                            data.NumberOfSample,
+                            data.InventoryReturnedByName,
+                            data.InventoryReturnDate,
+                            data.InventoryReturnRemarks,
+                            data.InventoryReceiveRemarks
+                ]).draw();
+            });
+        });
+    });
+</script>
+

@@ -1,0 +1,299 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<script src="~/Scripts/FileSaver/FileSaver.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+    <div class="action">
+        <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" href="javascript:void(0)">
+            <i class="fa fa-wordpress"></i>
+            Export as .doc
+        </a>
+    </div>
+</div>
+
+@*<div class="note note-success">
+        <h3 class="bold"> Sourcing Sample Screening Test Report </h3>
+    </div>*@
+
+
+
+<div class="row">
+    <div class="col-md-12">
+
+
+        <div class="portlet box" id="page-content">
+            @*<div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-gift"></i> 1. PCB Material Info
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                    </div>
+                </div>*@
+            <div class="portlet-body">
+                <div class="note note-success text-center">
+                    <h3 class="bold"> Sourcing Sample Screening Test Report </h3>
+                </div>
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="portlet-body">
+                            <table class="table table-bordered table-striped table-condensed">
+                                @*<thead class="flip-content">
+                                        <tr>
+                                            <th width="20%"> Code </th>
+                                            <th> Company </th>
+
+                                        </tr>
+                                    </thead>*@
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center"> Sample Name : </td>
+                                        <td class="text-center"> @ViewBag.HwProjectMasterCustomInfo.SupplierModelName </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"> Sample Quantity : </td>
+                                        <td class="text-center"> @ViewBag.HwProjectMasterCustomInfo.NumberOfSample </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"> Sample Provided By : </td>
+                                        <td class="text-center"> @ViewBag.HwProjectMasterCustomInfo.ProvidedByName </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center"> Sample Provided Date : </td>
+                                        <td class="text-center"> @ViewBag.HwProjectMasterCustomInfo.SampleProvidedDate </td>
+
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="portlet-empty">
+
+                            <h4 class="bold">1. PCB Material Info</h4>
+                            <hr />
+                            <ul>
+                                <li> Materials : @Html.DisplayFor(model => model.HwTestPcbModel.Materials) </li>
+                                <li> Thickness : @Html.DisplayFor(model => model.HwTestPcbModel.Thickness) </li>
+
+                            </ul>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4 bold">
+                                                Recommendation:
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.DisplayFor(model => model.HwTestPcbModel.Recommendation, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="col-md-4 bold">
+                                                Comment :
+                                            </div>
+                                            <div class="col-md-8">
+                                                @Html.DisplayFor(model => model.HwTestPcbModel.Comment, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+                        <h4 class="bold">2. PCBA Components Info</h4>
+                        <hr />
+                        <ul>
+                            <li> Chipset(Vendor/Core/Speed/GPU) : @Html.DisplayFor(model => model.HwTestPcbAModel.Chipset_Vendor) / @Html.DisplayFor(model => model.HwTestPcbAModel.Chipset_Core) / @Html.DisplayFor(model => model.HwTestPcbAModel.Chipset_Speed) </li>
+                            <li> Flash IC(Vendor/Technology/RAM+ROM/Ball) : @Html.DisplayFor(model => model.HwTestPcbAModel.FlashIC_Vendor) / @Html.DisplayFor(model => model.HwTestPcbAModel.FlashIC_Technology) / @Html.DisplayFor(model => model.HwTestPcbAModel.FlashIC_RAM) + @Html.DisplayFor(model => model.HwTestPcbAModel.FlashIC_ROM) / @Html.DisplayFor(model => model.HwTestPcbAModel.FlashIC_Ball)</li>
+                            <li>RF IC : @Html.DisplayFor(model => model.HwTestPcbAModel.RFIC)</li>
+                            <li>BT+WIFI IC : @Html.DisplayFor(model => model.HwTestPcbAModel.BTWIFIIC)</li>
+                            <li>
+                                RF Network PA info:
+                                <ul>
+                                    <li>
+                                        2G PA : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_2GPA)
+                                    </li>
+                                    <li>3G PA : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_3GPA)</li>
+                                    <li>4G/TDD : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_4GPA) / @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_TDD)</li>
+                                    <li>CDMA PA : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_CDMAPA)</li>
+                                    <li>3G/CDMA/4G : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_3G) / @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_4G)</li>
+                                    <li>TDD PA : @Html.DisplayFor(model => model.HwTestPcbAModel.RFNetwork_TDDPA)</li>
+                                </ul>
+                            </li>
+                            <li>Charging (IC/Switch/Rating) : @Html.DisplayFor(model => model.HwTestPcbAModel.Charging_IC) / @Html.DisplayFor(model => model.HwTestPcbAModel.Charging_Switch) / @Html.DisplayFor(model => model.HwTestPcbAModel.Charging_Rating)</li>
+                            <li>Backlight IC : @Html.DisplayFor(model => model.HwTestPcbAModel.BacklightIC)</li>
+                            <li>
+                                Audio PA : @if (Model.HwTestPcbAModel != null && Model.HwTestPcbAModel.AudioPA_Yes == true)
+                                {
+                                    @Html.Label("Yes")
+                                } / @Html.DisplayFor(model => model.HwTestPcbAModel.AudioPA) / @Html.DisplayFor(model => model.HwTestPcbAModel.AudioPA)
+                            </li>
+                            <li>
+                                Sensors Info :
+                                <ul>
+                                    <li>P-Sensor IC (With L-Sensor) : @Html.DisplayFor(model => model.HwTestPcbAModel.Sensors_PSensorIC)</li>
+                                    <li>G-Sensor IC : @Html.DisplayFor(model => model.HwTestPcbAModel.Sensors_GSensorIC)</li>
+                                    <li>M-Sensor : @Html.DisplayFor(model => model.HwTestPcbAModel.Sensors_MSensorIC)</li>
+                                    <li>OTG : @Html.DisplayFor(model => model.HwTestPcbAModel.Sensors_OTG)</li>
+                                </ul>
+                            </li>
+                            <li>USB Connector Type : @Html.DisplayFor(model => model.HwTestPcbAModel.USBConnector_Name) / @Html.DisplayFor(model => model.HwTestPcbAModel.USBConnector_Type)</li>
+                            <li>Flash Light Driver (Fake/Original) : @Html.DisplayFor(model => model.HwTestPcbAModel.FlashLightDriver_Original) / @Html.DisplayFor(model => model.HwTestPcbAModel.FlashLightDriver_Name)</li>
+                            <li>Sub-PCBA : @Html.DisplayFor(model => model.HwTestPcbAModel.SubPCBA) </li>
+                        </ul>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-4 bold">
+                                            Recommendation:
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DisplayFor(model => model.HwTestPcbAModel.Recommendation, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4 bold">
+                                            Comment :
+                                        </div>
+                                        <div class="col-md-8">
+                                            @Html.DisplayFor(model => model.HwTestPcbAModel.Comment, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    //send projectid to controller for project info
+    $('#btnLoadProject').click(function () {
+        //alert('e');
+        var url = '@Url.Action("HwDisplayScreeningTest", "Hardware")?projectId=' + $('option:selected', $('#single')).val();
+        window.location.href = url;
+    });
+</script>
+
+<script>
+    if (typeof jQuery !== "undefined" && typeof saveAs !== "undefined") {
+        (function ($) {
+            $.fn.wordExport = function (fileName) {
+                fileName = typeof fileName !== 'undefined' ? fileName : "Screening Test Report";
+                var static = {
+                    mhtml: {
+                        top: "Mime-Version: 1.0\nContent-Base: " + location.href + "\nContent-Type: Multipart/related; boundary=\"NEXT.ITEM-BOUNDARY\";type=\"text/html\"\n\n--NEXT.ITEM-BOUNDARY\nContent-Type: text/html; charset=\"utf-8\"\nContent-Location: " + location.href + "\n\n<!DOCTYPE html>\n<html>\n_html_</html>",
+                        head: "<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style>\n_styles_\n</style>\n</head>\n",
+                        body: "<body>_body_</body>"
+                    }
+                };
+                var options = {
+                    maxWidth: 624
+                };
+                // Clone selected element before manipulating it
+                var markup = $(this).clone();
+
+                // Remove hidden elements from the output
+                markup.each(function () {
+                    var self = $(this);
+                    if (self.is(':hidden'))
+                        self.remove();
+                });
+
+                // Embed all images using Data URLs
+                var images = Array();
+                var img = markup.find('img');
+                for (var i = 0; i < img.length; i++) {
+                    // Calculate dimensions of output image
+                    var w = Math.min(img[i].width, options.maxWidth);
+                    var h = img[i].height * (w / img[i].width);
+                    // Create canvas for converting image to data URL
+                    var canvas = document.createElement("CANVAS");
+                    canvas.width = w;
+                    canvas.height = h;
+                    // Draw image to canvas
+                    var context = canvas.getContext('2d');
+                    context.drawImage(img[i], 0, 0, w, h);
+                    // Get data URL encoding of image
+                    var uri = canvas.toDataURL("image/png");
+                    $(img[i]).attr("src", img[i].src);
+                    img[i].width = w;
+                    img[i].height = h;
+                    // Save encoded image to array
+                    images[i] = {
+                        type: uri.substring(uri.indexOf(":") + 1, uri.indexOf(";")),
+                        encoding: uri.substring(uri.indexOf(";") + 1, uri.indexOf(",")),
+                        location: $(img[i]).attr("src"),
+                        data: uri.substring(uri.indexOf(",") + 1)
+                    };
+                }
+
+                // Prepare bottom of mhtml file with image data
+                var mhtmlBottom = "\n";
+                for (var i = 0; i < images.length; i++) {
+                    mhtmlBottom += "--NEXT.ITEM-BOUNDARY\n";
+                    mhtmlBottom += "Content-Location: " + images[i].location + "\n";
+                    mhtmlBottom += "Content-Type: " + images[i].type + "\n";
+                    mhtmlBottom += "Content-Transfer-Encoding: " + images[i].encoding + "\n\n";
+                    mhtmlBottom += images[i].data + "\n\n";
+                }
+                mhtmlBottom += "--NEXT.ITEM-BOUNDARY--";
+
+                //TODO: load css from included stylesheet
+                var styles = "";
+
+                // Aggregate parts of the file together
+                var fileContent = static.mhtml.top.replace("_html_", static.mhtml.head.replace("_styles_", styles) + static.mhtml.body.replace("_body_", markup.html())) + mhtmlBottom;
+
+                // Create a Blob with the file contents
+                var blob = new Blob([fileContent], {
+                    type: "application/msword;charset=utf-8"
+                });
+                saveAs(blob, fileName + ".doc");
+            };
+        })(jQuery);
+    } else {
+        if (typeof jQuery === "undefined") {
+            console.error("jQuery Word Export: missing dependency (jQuery)");
+        }
+        if (typeof saveAs === "undefined") {
+            console.error("jQuery Word Export: missing dependency (FileSaver.js)");
+        }
+    }
+
+
+
+
+    $("a.jquery-word-export").click(function (event) {
+        $("#page-content").wordExport();
+    });
+</script>

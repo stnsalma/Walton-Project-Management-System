@@ -1,0 +1,123 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("PostDocUploadByHwQc", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-body">
+                    <h3 class="form-section">Preview</h3>
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcInchargeAssignId, new { id = "hwQcInchargeAssignId" })
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcAssignDate, new { @Value = DateTime.Now })
+                    @Html.HiddenFor(model => model.ProjectMasterModel.ProjectMasterId)
+                    @Html.HiddenFor(model => model.HwQcAssignModel.HwQcAssignId)
+                    @Html.HiddenFor(model => model.HwQcInchargeAssignModel.IsScreeningTest)
+                    @Html.HiddenFor(model => model.HwQcInchargeAssignModel.IsRunningTest)
+                    @Html.HiddenFor(model => model.HwQcInchargeAssignModel.IsFinishedGoodTest)
+                    <br />
+                    <div class="row">
+
+                        <div class="file-preview-thumbnails">
+                            <div class="container-fluid col-md-offset-3">
+                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                    <div class="">
+
+
+
+                                        @if (@Model.HwQcAssignModel.QcDocUploadPath == null || @Model.HwQcAssignModel.QcDocUploadPath == "../Content/UploadImage/")
+                                        {
+
+                                            <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                        }
+
+                                        else if (@Model.HwQcAssignModel.ImageExtension == ".jpg" || @Model.HwQcAssignModel.ImageExtension == ".png" || @Model.HwQcAssignModel.ImageExtension == ".jpeg")
+                                        {
+
+                                            <img src="@Model.HwQcAssignModel.QcDocUploadPath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+
+                                        }
+                                        else if (@Model.HwQcAssignModel.ImageExtension == ".pdf")
+                                        {
+
+                                            <embed class="" id="filePath" src="@Model.HwQcAssignModel.QcDocUploadPath" width="600px" height="400px" type="application/pdf" />
+
+                                        }
+
+
+
+                                    </div>
+                                    <div class="file-thumbnail-footer">
+                                        @*<div class="file-footer-caption" title="Desert.jpg">Desert.jpg <br><samp>(807.62 KB)</samp></div>*@
+
+                                        <div class="file-actions">
+                                            <div class="file-footer-buttons">
+
+                                                <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row upload">
+                        <div class="col-md-5">
+                            <div class="form-group">
+
+                                <div>
+                                    @Html.TextBoxFor(model => model.HwQcAssignCustomMasterModel.HwQcDocUpload, new { type = "file", @class = "form-control", id = "txtHwQcDocUploadFile" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-info" id="btnUploadQcScreeningDoc">Upload</button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Upload Date</label>
+                                <div class="col-md-9">
+                                    @*<input type="text" class="form-control" data-val="true" data-val-number="The field ProjectTypeId must be a number." data-val-required="The ProjectTypeId field is required." disabled="true" id="ProjectMaster_ProjectTypeId" name="ProjectMaster.ProjectTypeId" value=@DateTime.Now>*@
+                                    @Html.TextBoxFor(model => model.HwQcAssignModel.HwDocUploadDate, new { type = "text", @class = "form-control", @disabled = "true", @Value = DateTime.Now.ToShortDateString() })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--Modal Start-->
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                @*<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Modal End-->

@@ -1,0 +1,657 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+@{
+    ViewBag.Title = "SwQcSpecification";
+}
+
+
+@*<h1 style="color: green">Welcome to QC module Start page</h1>*@
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        /*background-color: #65C1E0;*/
+        background-color: #569450;
+        color: white;
+    }
+
+    .nav-stacked > li.active > a, .nav-stacked > li.active > a:hover, .nav-stacked > li.active > a:focus {
+        background-color: #65C1E0;
+        color: white;
+    }
+</style>
+<style type="text/css">
+    .tabColor {
+        color: white !important;
+       background-color: rgb(209, 234, 170);
+       /*background-color:greenyellow;*/
+    }
+</style>
+
+<div class="portlet box green-seagreen">
+    <div class="portlet-title">
+        <div class="caption">
+            Welcome to QC module Start page
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="todo-ui" style="margin-top:20px;">
+                    <div class="form-body">
+
+
+                        <div class="row">
+                            <div class="col-md-7">
+
+                                <p style="color:red;font-weight: bold" class="col-md-2">Welcome<h1 style="color:darkgoldenrod;font-weight: bold">@ViewBag.UserInfo.UserFullName !!</h1></p>
+
+
+                            </div>
+                            <div class="col-md-3"></div>
+                            <br /><br />
+                            <div class="col-lg-12">
+                               
+                                <div class="col-lg-9">
+
+                                    @if (Model != null && Model.SwQcAssignModels.Any())
+                                    {
+
+                                        
+
+                                        <div class="col-lg-5">
+                                            @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(@Model.SwQcAssignModels, "ProjectMasterId", "ProjectName"), "Select Project", new { @class = "dropForProject form-control ddChosen", Value = @Model.ProjectMasterModel.ProjectName })
+
+
+                                        </div>
+                                        <div class="col-lg-3">
+                                            @*<input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("SwQcSpecification", "Software")?projectId=' + $('option:selected', $('#ProjectMasterId')).val() + '&AssignId=@Model.SwQcAssignModels[0].SwQcAssignId' " />*@
+                                            <input type="button" id="btnforname" class="btn sbold uppercase btn-outline blue" value="Load Project" onclick="location.href='@Url.Action("SwQcSpecification", "Software")?projectId=' + $('option:selected', $('#ProjectMasterId')).val()  " />
+                                        </div>
+                             
+                                    }
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-2"></div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="todo-content">
+                        <div class="table-toolbar">
+                            <div class="row">
+
+
+                            </div>
+                        </div>
+                        <!--new table_1-->
+                        
+                        <div class="col-md-12">
+                            <div class="portlet box green-meadow">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        Project Details
+                                      
+                                    </div>
+                                    <div class="tools">
+                                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="table-scrollable table-responsive">
+                                        <table class="table table-bordered table-striped table-condensed flip-content">
+                                            <thead class="flip-content">
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr>
+                                                    
+                                                    @Html.HiddenFor(i => i.ProjectMasterModel.ProjectType)
+                                                    <th class="col-md-2">Project Name :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.ProjectName, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+                                                    
+                                                    <th class="col-md-2">Current Date :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.Date, new { @class = "form-control col-md-4", @readonly = "readonly", @Value = @DateTime.Now.ToString("yyyy-MM-dd") })</td>
+
+                                                </tr>
+                                                <tr>
+
+                                                 
+                                                    <th class="col-md-2">Test Phase :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.TestPhaseName, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">Appx. Finish Date :</th>
+                                                    <td>
+                                                        @if (@Model.ProjectMasterModel.ApproxProjectFinishDate != null)
+                                                        {
+                                                            @Html.TextBoxFor(i => i.ProjectMasterModel.ApproxProjectFinishDate, "{0:yyyy-MM-dd}", new { @class = "form-control col-md-4", @readonly = "readonly" })
+                                                        }
+                                                       
+                                                    </td>
+
+                                                    <th class="col-md-2">Version :</th>
+                                                    <td>
+                                                        <input type="text" value="@Model.ProjectMasterModel.OsName - @Model.ProjectMasterModel.OsVersion" class="form-control col-md-4" disabled="disabled" />
+
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">  Back Camera :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.BackCamera, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th class="col-md-2">  Front Camera :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.FrontCamera, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">RAM :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.Ram, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th class="col-md-2">ROM :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.Rom, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">Battery :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.Battery, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th class="col-md-2">Chipset :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.Chipset, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">Display Name :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.DisplayName, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th class="col-md-2">Display Size :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.DisplaySize, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">Number Of Sample :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.NumberOfSample, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th class="col-md-2">Processor Name :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.ProcessorName, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                </tr>
+                                                <tr>
+                                                    @*//int result=0;
+                                                    //    if(int.TryParse(textBox1.Text,out result))
+                                                    string pMasterId = @Request.QueryString["projectId"];
+                                                    long projectId;
+                                                    long.TryParse(pMasterId, out projectId);
+
+
+                                                    //  var idss = @Request.QueryString["projectId"];
+                                                    // projectId = Convert.ToInt32(idss, out projectId);
+                                                    //projectId = Request.QueryString["projectId"];*@
+                                                   
+
+                                                    @if (Model != null && Model.SwQcAssignModels.Any() )
+                                                    {
+                                                       
+                                                        for (int j = 0; j < Model.SwQcAssignModels.Count; j++)
+                                                        {
+
+                                                            int projectId = 0;
+                                                            if (Request.QueryString["projectId"] != null)
+                                                            {
+                                                                
+                                                                int.TryParse(Request.QueryString["projectId"].ToString(), out projectId);
+                                                            }
+                                                            
+                                                            if (projectId > 0)
+                                                            {
+                                                                if (Model.SwQcAssignModels[j].ProjectMasterId == projectId)
+                                                                {
+
+
+
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].ProjectMasterId, new { @id = "lblProjectId" })
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].SwQcUserId, new { @id = "lblSwQcUserId" })
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].Status, new { @id = "lblProjectStatus" })
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].SwQcInchargeAssignId, new { @id = "lblSwQcInchargeAssignId" })
+
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].SwQcAssignId, new { @id = "lblSwQcAssignId" })
+
+                                                                    @Html.HiddenFor(model => model.SwQcAssignModels[j].SwQcAssignId, new {@id = "lblSwQcAssignId"})
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                </tr>
+                                                <tr>
+                                                    <th class="col-md-2">Processor Clock :</th>
+                                                    <td>@Html.TextBoxFor(i => i.ProjectMasterModel.ProcessorClock, new { @class = "form-control col-md-4", @readonly = "readonly" })</td>
+
+                                                    <th style="color:red;font-weight:bold;font-size:20px;" class="col-md-2">Final Submit:</th>
+                                                    <td>
+                                                      
+                                                        <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline" id="btnForwardToPm">Final Submit</button>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*}*@
+                        <!--new table_1-->
+                        <br />
+                        <!--new table_2-->
+                        <div class="col-md-12">
+                            <div class="portlet box green-jungle">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        <i class="fa fa-cogs"></i>
+                                        Software QC Testing Module
+
+                                    </div>
+                                    <div class="tools">
+                                        <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                                        <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                                        <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                                    </div>
+                                </div>
+                                <div class="portlet-body">
+                                    <div class="table-scrollable">
+                                        <nav>
+                                            <ul class="nav nav-tabs" id="menu">                                   
+                                                                                        
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Start Up")!=-1 ? "tabColor":"")"> <a href="#tabs-1" style="display: none;"> @Html.ActionLink("Start Up", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Start Up", projectType = @Model.ProjectMasterModel.ProjectType }, null)  </a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Call setting") != -1 ? "tabColor" : "")"><a href="#tabs-2" style="display: none;">@Html.ActionLink("Call setting", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Call setting", projectType = @Model.ProjectMasterModel.ProjectType }, null) </a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Message") != -1 ? "tabColor" : "")"> <a href="#tabs-3" style="display: none;">@Html.ActionLink("Message", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Message", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Tools Check") != -1 ? "tabColor" : "")"> <a href="#tabs-4" style="display: none;">@Html.ActionLink("Tools Check", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Tools Check", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Camera") != -1 ? "tabColor" : "")"> <a href="#tabs-5" style="display: none;">@Html.ActionLink("Camera", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Camera", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Display Loop") != -1 ? "tabColor" : "")"> <a href="#tabs-6" style="display: none;">@Html.ActionLink("Display Loop", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Display Loop", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Display") != -1 ? "tabColor" : "")"> <a href="#tabs-7" style="display: none;">@Html.ActionLink("Display", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Display", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Settings") != -1 ? "tabColor" : "")"> <a href="#tabs-8" style="display: none;">@Html.ActionLink("Settings", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Settings", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Multimedia") != -1 ? "tabColor" : "")"> <a href="#tabs-9" style="display: none;">@Html.ActionLink("Multimedia", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Multimedia", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Google Services") != -1 ? "tabColor" : "")"> <a href="#tabs-10" style="display: none;">@Html.ActionLink("Google Services", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Google Services", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Storage check") != -1 ? "tabColor" : "")"> <a href="#tabs-11" style="display: none;">@Html.ActionLink("Storage check", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Storage check", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Game") != -1 ? "tabColor" : "")"> <a href="#tabs-12" style="display: none;">@Html.ActionLink("Game", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Game", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Testing App") != -1 ? "tabColor" : "")"> <a href="#tabs-13" style="display: none;">@Html.ActionLink("Testing App", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Testing App", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "File manager") != -1 ? "tabColor" : "")"> <a href="#tabs-14" style="display: none;">@Html.ActionLink("File manager", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "File manager", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Connectivity") != -1 ? "tabColor" : "")"> <a href="#tabs-15" style="display: none;">@Html.ActionLink("Connectivity", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Connectivity", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+                                                <li class="@(Model.SwQcTabColorModels.FindIndex(i => i.QcCategoryName == "Shut down") != -1 ? "tabColor" : "")"> <a href="#tabs-16" style="display: none;">@Html.ActionLink("Shut down", "SwQcSpecification", "Software", new { projectId = @Model != null ? @Model.ProjectMasterModel.ProjectMasterId : 0, @Model.AssignId, tabName = "Shut down", projectType = @Model.ProjectMasterModel.ProjectType }, null)</a></li>
+
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div id="tabs-1">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcStartUpModels.Any() )
+                                                    {
+                                                        @Html.Partial("_SwQcStartUp", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-2">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcCallSettingModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcCallSetting", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-3">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcMessageModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcMassageCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-4">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcToolsCheckModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcToolCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-5">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcCameraModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcCameraCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-6">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcDisplayLoopModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcDisplayLoop", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-7">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcDisplayModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcDisplay", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-8">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcSettingModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcSettings", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-9">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcMultimediaModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcMultimedia", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-10">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcGoogleServiceModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcGoogleServiceCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-11">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcStorageCheckModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcStorageCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-12">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcGameModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcGameCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-13">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcTestingAppModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcTestingApps", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-14">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcFileManagerModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcFileManagerCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-15">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcConnectivityModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcConnectivityCheck", Model)
+                                                    }
+                                                </div>
+                                                <div id="tabs-16">
+                                                    @if (Model != null && Model.ProjectMasterModel.ProjectMasterId > 0 && Model.SwQcShutDownModels.Any())
+                                                    {
+                                                        @Html.Partial("_SwQcShutDown", Model)
+                                                    }
+                                                </div>
+                                            </div>
+
+                                        </nav>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--new table_2-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BEGIN FORM-->
+
+
+<script language="javascript" type="text/javascript">
+    // $(document).ready(function () {
+    //$("#tabs").tabs({ active: document.tabTest.currentTab.value });
+
+    //$('#tabs a').click(function (e) {
+    //    var curTab = $('.ui-tabs-active').css('background-color', '#f00');
+    //    curTabIndex = curTab.index();
+    //    document.tabTest.currentTab.value = curTabIndex;
+    //});
+
+
+    //$("#menu").tabs({ active: document.value });
+
+    //$('#menu a').click(function (e) {
+
+    //    var curTab = $('.ui-tabs-active');
+    //  var curTabIndex = curTab.index();
+    //    document.value = curTabIndex;
+    //});
+
+    //  });
+
+    $(function () {
+        // this will get the full URL at the address bar
+        var url = window.location.href;
+
+        // passes on every "a" tag
+        $("#menu a").each(function () {
+            // checks if its the same on the address bar
+            if (url == (this.href)) {
+                $(this).closest("li").addClass("active");
+            }
+        });
+
+        //$("#menu1 a").each(function () {
+        //    // checks if its the same on the address bar
+        //    if (url == (this.href)) {
+        //        $(this).closest("li").addClass("active");
+        //    }
+        //});
+
+    });
+    $(document).ready(function () {
+
+        $('#btnforname').on('click', function () {
+
+            var proSelectId = document.getElementById('ProjectMasterId');
+
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "Select Project") {
+                alert("Please select Project must..........");
+                //alertify.dialog('alert').set({
+                //    'title': '   ',
+                //    'transition': 'zoom',
+                //    'message': "Please select Project must",
+                //}).show();
+                return false;
+            }
+
+        });
+
+    });
+    //$(document).ready(function () {
+    $('#btnForwardToPm').on('click', function () {        
+          
+        var tabs = document.getElementsByClassName('tabColor');          
+        console.log(tabs);
+        
+        //if (tabs.length > 0) {
+        //  console.log("dddddddddddd");            
+        //  alert("dddddddddddd");
+        //}
+        if (tabs.length <= 0) {
+           
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must check Software QC Testing Module.",
+            }).show();
+            return false;
+        }
+
+        var obj = {};
+        var proSelectId = document.getElementById('ProjectMasterId');
+
+        console.log(proSelectId);
+        var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+        // var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+        console.log("hiii :  " + selecteddropText);
+        //console.log(selecteddropValue);
+
+        var swQcUserId = document.getElementById('lblSwQcUserId');
+        // alert(swQcUserId);
+        console.log("hellooo  : " + swQcUserId);
+        if (selecteddropText == "Select Project" && swQcUserId == null) {
+            // alert("Please must Load a Project which you want to submit to QcInchare..");
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must Load a Project which you want to submit to QcInchare.",
+            }).show();
+            return false;
+        }
+
+        if (swQcUserId == null && selecteddropText != "Select Project") {
+            // alert("Please must Load a Project which you want to submit to QcInchare..");
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please must Load a Project which you want to submit to QcInchare.",
+            }).show();
+            return false;
+        }
+
+        alertify.confirm('Confirm message', 'Do you want to finally submit this project to Incharge?', function () {
+            alertify.success('Ok');
+
+            var projectMasterId = document.getElementById('lblProjectId').value;
+            var swQcUserId = document.getElementById('lblSwQcUserId').value;
+            var proStatus = document.getElementById('lblProjectStatus').value;
+            var swQcInchargeAssignId = document.getElementById('lblSwQcInchargeAssignId').value;
+
+            //alert(projectMasterId);
+            //alert(swQcUserId);
+            //alert(proStatus);
+            //alert(swQcInchargeAssignId);
+
+
+            obj.projectMasterId = projectMasterId;
+            obj.swQcUserId = swQcUserId;
+            obj.proStatus = proStatus;
+            obj.swQcInchargeAssignId = swQcInchargeAssignId;
+
+
+            //  var data = commonJqueryAjax('/Software/QcToQcInchargeFinalProjectSubmit', obj);
+
+
+            $.ajax({
+                            type: 'POST',
+               
+                            //url : '/Software/QcToQcInchargeFinalProjectSubmit',
+                            url: '@Url.Action("QcToQcInchargeFinalProjectSubmit", "Software")',
+                            data: "{ projectMasterId: '" + obj.projectMasterId
+                               + "', swQcUserId: '" + obj.swQcUserId
+                               + "', proStatus: '" + obj.proStatus
+                               + "', swQcInchargeAssignId: '" + obj.swQcInchargeAssignId
+                               + "'}",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: 'json',
+                            async: false,
+                            success   : function(data) {
+                                if (!data.success) {
+                                    if (data.errors.name) {
+                                      //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                                    }
+                                }
+                                else {
+                                  //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                                }
+                            }
+                        });
+                      //  event.preventDefault(); //Prevent the default submit
+
+                  window.location = '@Url.Action("SwQcSpecification", "Software")';
+            //window.location = '/Software/SwQcSpecification';
+        }
+          , function () {
+              alertify.error('Cancel');
+
+          });
+
+        // var data = commonJqueryAjax('/Software/QcToQcInchargeFinalProjectSubmit', obj);
+        //  window.location = '/Software/SwQcSpecification';
+
+    });
+    //});
+
+
+    $(document).ready(function () {
+
+        // var p_id = @*@Request.QueryString["projectId"];*@
+        // alert("hi"+p_id);
+      //  var p_id = document.getElementById('lblProjectId').value;
+
+        var p_id;
+        var text1;
+        var value1;
+
+        $("#ProjectMasterId option").each(function () {
+
+            text1 = $(this).text();
+            value1 = $(this).val();
+            p_id = document.getElementById('lblProjectId');
+            
+            if (p_id != null) {
+                if (value1 == p_id.value) {
+                    $("#ProjectMasterId").val(value1);
+                    // var proID = value1;
+
+
+                    //  obj.projectMasterId = proID;
+                    // alert(proID);
+                    //?projectId=' + $('option:selected', $('#ProjectMasterId')).val()
+                    // var data = commonJqueryAjax('/Software/SwQcTabFunction', obj);
+                    // window.location = '/Software/SwQcSpecification?projectId=';
+                }
+            }
+
+           
+
+        });
+
+    });
+
+    //$('#btnforname').on('click', function () {
+
+    //    var proSelectId = document.getElementById('ProjectMasterId');
+
+    //    console.log(proSelectId);
+    //    var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+    //    var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+    //    console.log(selecteddropText);
+    //    console.log(selecteddropValue);
+
+    //    if (selecteddropText == "Select Value") {
+    //        //  alert("Please select Project must");
+    //        alertify.dialog('alert').set({
+    //            'title': '   ',
+    //            'transition': 'zoom',
+    //            'message': "Please select Project must",
+    //        }).show();
+    //        return false;
+    //    }
+
+    //});
+</script>
+
+

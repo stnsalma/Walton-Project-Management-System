@@ -1,0 +1,424 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+@{
+    ViewBag.Title = "SwQcNewInnovation";
+
+}
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/loadingText.css" rel="stylesheet" />
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> NEW INNOVATIONS / METHODS / EXTRA WORKS </p>
+</div>
+
+@using (@Html.BeginForm("SwQcNewInnovation", "Software", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="color: brown;">
+                        <span class="caption-subject #569450 sbold"> All Added Innovations/Methods/Extra Works</span>
+                    </div>
+                </div>
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:brown;">
+                            <i class="fa fa-cogs"></i>ALL Works
+                        </div>
+
+                        <div class="tools" style="background-color:green;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="table-responsive table-scrollable">
+                            <table id="tbl33" class="table table-striped table-bordered table-hover tbl33">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th class="text-center"> # </th>
+                                        <th style="text-align: center;"> Project Name </th>
+                                        <th style="text-align: center;"> AssignedBy </th>
+                                        <th style="text-align: center;"> Description </th>
+                                        <th style="text-align: center;">Work Type </th>
+                                        <th style="text-align: center;"> Added Date </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.SwQcNewInnovationModels.Any())
+                                    {
+                                        for (int i = 0; i < Model.SwQcNewInnovationModels.Count; i++)
+                                        {
+
+                                            <tr style="text-align: center">
+                                                <td></td>
+                                                <td>@Html.DisplayFor(x => x.SwQcNewInnovationModels[i].ProjectName)</td>
+                                                <td>@Html.DisplayFor(x => x.SwQcNewInnovationModels[i].AssignedBy)</td>
+                                                <td>@Html.DisplayFor(x => x.SwQcNewInnovationModels[i].Description)</td>
+                                                <td>@Html.DisplayFor(x => x.SwQcNewInnovationModels[i].WorkType)</td>
+                                                <td>@Html.DisplayFor(x => x.SwQcNewInnovationModels[i].EffectiveDate)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="portlet box green">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>ADD NEW INNOVATION/METHOD/EXTRA WORK
+            </div>
+            <div class="tools">
+                <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+            </div>
+        </div>
+
+        <div class="portlet-body">
+            <div class="table-scrollable table-responsive">
+                <table id="tbl" class="table table-bordered table-striped table-condensed flip-content" style="display: block;">
+                    <thead class="flip-content">
+                        <tr>
+                            <th style="display: none;">Index</th>
+                            <th style="display: none;">IsRemoved</th>
+                            <th> Project Name </th>
+                            <th> AssignedBy </th>
+                            <th> Description </th>
+                            <th>Work Type </th>
+                            <th> Added Date </th>
+                            <th class="numeric"><button class="btn btn-circle btn-success" id="addmore"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">0</td>
+                            <td style="display: none;"><input type="text" name="issueList[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[0].ProjectName" id="ProjectName" class="form-control input-small" rows="4" placeholder="Project Name"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].RefernceModules" id="RefernceModules" class="form-control input-small RefernceModules" multiple="multiple"></select>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[0].Description" id="Description" class="form-control input-small" rows="4" placeholder="Description"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[0].WorkType" class="form-control input-small">
+                                    <option value="">SELECT</option>
+                                    <option>New Innovation</option>
+                                    <option>Method</option>
+                                    <option>Extra Task</option>
+                                </select>
+                            </td>
+                            <td class="numeric">
+                                <div class="input-group date form_datetime col-lg-12" id="EffectiveDate" data-date=" " data-date-format="yyyy-mm-dd" data-link-format="yyyy-mm-dd" data-link-field="EffectiveDate">
+                                    <input class="form-control input-medium" name="issueList[0].EffectiveDate" id="EffectiveDate" size="66" type="text">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+
+    <div class="form-actions">
+        <button id="btnSubmit" type="submit" class="btn blue">Submit</button>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        var t = $('#tbl33').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "lengthMenu": [[3, 5, 10, 20, 30, 50, -1], [3, 5, 10, 20, 30, 50, "All"]],
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+
+    function addField(id, td) {
+        td.find('.File11').append($("<tr id='trIdForFile'><td class='filesss' id='filesId'><div class='col-md-9' id='fileIdForCr'><input type='file' name='" + id + "' id='File11' /></div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true'></i></span></button></div><br /><br /></td></tr>"));
+    }
+
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    var issueChk = false;
+    var fileChk = false;
+
+    function load() {
+        var refernceModuleresult1 = commonJqueryAjax('GetRefernceRole', {});
+        var elem = $("#RefernceModules");
+        $("#RefernceModules").chosen("destroy");
+        elem.empty();
+        console.log(refernceModuleresult1);
+        $.each(refernceModuleresult1.list, function (idx, obj) {
+
+            elem.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+        });
+
+        elem.chosen({ width: "100%", height: "10px" });
+    }
+
+    $(function () {
+        var index = 0;
+        load();
+
+        //Added Time picker
+        $(document).on('focus', '.form_datetime', function (e) {
+            $(this).datetimepicker({
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                use24hours: true,
+                useSeconds: false,
+                minuteStep: 1,
+                format: 'yyyy-mm-dd hh:ii:00'
+            });
+
+        });
+
+        $('.form_datetime').on('changeTime', function () {
+            $('#EffectiveDate').datetimepicker('option', 'minTime', $(this).val());
+        });
+
+        //removeBtn
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+
+        $('#addmore').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            var projectName;
+            var description;
+            var effectiveDate;
+
+            $("#tbl tr.tableTrCls1").each(function () {
+                projectName = $.trim($(this).find('#ProjectName').val());
+                console.log("projectName  1:   " + projectName);
+                description = $.trim($(this).find('#Description').val());
+                effectiveDate = $.trim($(this).find('#EffectiveDate').val());
+            });
+            if (projectName == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Project Name.",
+                }).show();
+                return false;
+            }
+            if (description == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Description.",
+                }).show();
+                return false;
+            }
+            if (effectiveDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert effective Date.",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+                    <tr class="tableTrCls1" id="trIdForUpload">
+                            <td style="display: none;">$#</td>
+                            <td style="display: none;"><input type="text" name="issueList[$#].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[$#].ProjectName" id="ProjectName" class="form-control input-small" rows="4" placeholder="Project Name"></textarea>
+                                </div>
+                            </td>
+                             <td class="numeric">
+                               <select name="issueList[$#].RefernceModules" id="RefernceModules" class="form-control input-small RefernceModules" multiple="multiple"></select>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <textarea name="issueList[$#].Description" id="Description" class="form-control input-small" rows="4" placeholder="Description"></textarea>
+                                </div>
+                            </td>
+                            <td class="numeric">
+                                <select name="issueList[$#].WorkType" class="form-control input-small">
+                                    <option value="">SELECT</option>
+                                    <option>New Innovation</option>
+                                    <option>Method</option>
+                                    <option>Extra Task</option>
+                                </select>
+                            </td>
+                            <td class="numeric">
+                               <div class="input-group date form_datetime col-lg-12" data-date=" " data-date-format="yyyy-mm-dd hh:ii" data-link-format="yyyy-mm-dd hh:ii" data-link-field="EffectiveDate">
+                                   <input class="form-control col-lg-12 input-small" name="issueList[$#].EffectiveDate" id="EffectiveDate" size="66" type="text" readonly>
+                                   <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                   <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                               </div>
+                           </td>
+                            <td class="numeric">
+                                <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                            </td>
+                        </tr>
+                 */
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tbl > tbody:last').append(replaceTr);
+
+            var refernceModuleresult1 = commonJqueryAjax('GetRefernceRole', {});
+            var elem = $(".RefernceModules");
+
+            $.each(refernceModuleresult1.list, function (idx, obj) {
+                elem.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+            });
+            elem.chosen({ width: "100%", height: "10px" });
+
+            $('#tbl >tbody').find('tr').eq(index + 1).find('.RefernceModules').append(elem);
+        });
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var projectName;
+            var description;
+            var effectiveDate;
+
+            $("#tbl tr.tableTrCls1").each(function () {
+                projectName = $.trim($(this).find('#ProjectName').val());
+                description = $.trim($(this).find('#Description').val());
+                effectiveDate = $.trim($(this).find('#EffectiveDate').val());
+            });
+            if (projectName == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Project Name.",
+                }).show();
+                return false;
+            }
+            if (description == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert Description.",
+                }).show();
+                return false;
+            }
+            if (effectiveDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Insert effective Date.",
+                }).show();
+                return false;
+            }
+            alertify.confirm('Confirm message', 'Do you want to submit New work/innovation/extra work to Software QC Incharge?', function () {
+                $('#loading').show();
+                alertify.success('Ok');
+
+                $('#form1').trigger('submit');
+                $('#loading').hide();
+
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+        });
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>
+

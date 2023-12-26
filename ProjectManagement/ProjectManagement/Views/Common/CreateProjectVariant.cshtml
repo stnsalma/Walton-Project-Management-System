@@ -1,0 +1,383 @@
+﻿
+@{
+    ViewBag.Title = "CreateProjectVariant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Create Project Variant</div>
+    </div>
+    <div class="portlet-body">
+        <input type="hidden" id="hdnProductModel" />
+        <div class="row">
+            <div class="col-md-4">
+                @Html.DropDownList("projectId", new SelectList(ViewBag.projects, "ProjectMasterId", "ProjectName"), "Select", new { @class = "form-control ddChosen" })
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-xs btn-warning hidden btnAddProjectModel" onclick="addProjectModelToProjectMaster();">Add Project Model</button>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <span style="font-size: 12px; font-weight: bold">Order Quantity: <label id="lblOrderQuantity">0</label></span>
+                <br />
+                <span style="font-size: 12px; font-weight: bold">Unassigned    : <label id="unassigned">0</label></span>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-lg btn-danger hidden btnAddVariant" onclick="addRow();">Add Variant</button>
+                <div class="table table-scrollable" id="divVariant">
+                    <table class="table table-bordered table-striped table-condensed flip-content" id="tblProjectVariant">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Project Model</th>
+                                <th class="text-center">Default Project Model</th>
+                                <th class="text-center">Variant<br/>Keywords</th>
+                                <th class="text-center">RAM Vendor</th>
+                                <th class="text-center">ROM Vendor</th>
+                                <th class="text-center">Variant Quantity</th>
+                                <th class="text-center">Full Variant Name<br/><span style="font-size: xx-small;color: red">(Default Project Model + Variant Keywords)</span></th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <hr/>
+                <p><span style="color: red; font-size:medium;font-weight: bold">N.B. Please follow these instructions as naming convention -  </span></p>
+                <ul>
+                    <li>
+                        <span style="color: red; font-size:small">If there is no variant do not type anything in the "Variant Keyword" column, please be careful that you do not accidentally type any whitespace in that column before saving.</span>
+                    </li>
+                    <li>
+                        <span style="color: red; font-size:small">If there is a RAM/ROM variant, write the RAM/ROM capacity in "Variant Keyword" column inside first bracket without using any space i.e. (3GB),(64GB)</span>
+                    </li>
+                    <li>
+                        <span style="color: red; font-size:small">If there is two variant keyword, like 'Turbo','Pro','Plus' etc. and RAM/ROM variant,then type the first keyword+space+RAM/ROM capacity inside first bracket without using any space in "Variant Keyword" column.</span>
+                    </li>
+                    <li>
+                        <span style="color: red; font-size:small">Please use the relevant variant name for the project created here for any kind of documentation/identification/information in every place because this name will be used in production and packaging.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    var projectModelFromName = '';
+    $('#projectId').on('change', function () {
+        $('#tblProjectVariant tbody').empty();
+        var url = '@Url.Action("CheckProjectInfoAndExistingVariant", "Common")';
+        var projectId = $('#projectId option:selected').val();
+        var projectName = $('#projectId option:selected').text();
+        if (projectName != 'Select') {
+            console.log(projectId + '->' + projectName);
+            $.post(url, { projectId: projectId }, function(data) {
+                console.log(data);
+                $('#hdnProductModel').val(data.projectDetail.ProjectModel);
+                $('#lblOrderQuantity').html(data.projectDetail.OrderQuantity);
+                if (data.projectDetail.ProjectModel == null) {
+                    $('.btnAddProjectModel').removeClass('hidden');
+                    $('.btnAddVariant').addClass('hidden');
+                    var splitProjectName = (data.projectDetail.ProjectName).split(" ");
+                    jQuery.each(splitProjectName, function(index, item) {
+
+                        if (index == 0) {
+                            projectModelFromName = capitalizeFirstLetter(item.toLowerCase());
+                        }
+                        if (index == 1) {
+                            projectModelFromName = projectModelFromName + " " + item;
+                            console.log(projectModelFromName);
+                        }
+                        if (index > 1) {
+                            projectModelFromName = projectModelFromName + " " + capitalizeFirstLetter(item.toLowerCase());
+                            console.log(projectModelFromName);
+                        }
+                    });
+                } else {
+                    if (data.orderQuantityDetails.length > 0) {
+                        $('.btnAddProjectModel').addClass('hidden');
+                        $('.btnAddVariant').removeClass('hidden');
+                        console.log('detail has');
+                        for (var i = 0; i < data.orderQuantityDetails.length; i++) {
+                            var suffix = '';
+                            var prefix = '';
+                            splitProjectName = (data.orderQuantityDetails[i].ProjectModel).split(" ");
+                            jQuery.each(splitProjectName, function (index, item) {
+                                if (index == 0) {
+                                    prefix = capitalizeFirstLetter(item.toLowerCase());
+                                }
+                                if (index == 1) {
+                                    prefix = prefix.trim() + " " + item.trim();
+                                    console.log(projectModelFromName);
+                                }
+                                if (index > 1) {
+                                    suffix = suffix.trim()+" "+item.trim();
+                                    console.log('Suffix:'+ suffix);
+                                }
+                            });
+                            row = '<tr>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.orderQuantityDetails[i].Id + '" class="form-control variantId"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + data.projectDetail.ProjectModel + '" class="form-control text-center projectModel"/></td>' +
+                                '<td class="text-center"><input type="text" readonly="" value="' + prefix.trim() + '" class="form-control text-center prefix"/></td>' +
+                                //'<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + suffix.trim() + '" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + (data.orderQuantityDetails[i].RamVendor == null ? "" : data.orderQuantityDetails[i].RamVendor) + '" class="form-control text-center ramVendor"/></td>' +
+                                '<td class="text-center"><input type="text" value="' + (data.orderQuantityDetails[i].RomVendor == null ? "" : data.orderQuantityDetails[i].RomVendor) + '" class="form-control text-center romVendor"/></td>' +
+                                '<td class="text-center"><input type="number" min="0" value="' + data.orderQuantityDetails[i].OrderQuantity + '" class="form-control text-center variantQuantity"/></td>' +
+                                '<td class="text-center"><input type="text" readonly="" value="' + prefix.trim() + ' ' + suffix.trim() + '" class="form-control text-center projectVariantName"/></td>' +
+                                '<td class="text-center"><span class="badge badge-success">SAVED</span></td>' +
+                                '<td class="text-center" style="width:120px">' +
+                                '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                                //'<button type="button" class="btn btn-danger btn-sm btnLock"><i class="fa fa-lock"></i></button>' +
+                                '</td>' +
+                                '<td class="text-center hidden"><input type="text" value="' + data.orderQuantityDetails[i].AddedBy + '" class="form-control addedBy"/></td>' +
+                                '<td class="text-center hidden"><input type="text"  value="' + data.orderQuantityDetails[i].AddedDate + '" class="form-control addedDate"/></td>' +
+                                '</tr>';
+                            $('#tblProjectVariant tbody').append(row);
+                        }
+                        //--Unassigned calculation
+                        var assigned = 0;
+                        var totalOrderQuantity = parseInt(data.projectDetail.OrderQuantity);
+                        var unAssigned = 0;
+                        $('#tblProjectVariant > tbody > tr').each(function () {
+                            assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+                        });
+                        console.log('Assigned: ' + assigned);
+                        unAssigned = totalOrderQuantity - assigned;
+                        $('#unassigned').html(unAssigned);
+                    } else {
+                        $('.btnAddProjectModel').addClass('hidden');
+                        $('.btnAddVariant').removeClass('hidden');
+                        var projectModelParts = (data.projectDetail.ProjectModel).split(" ");
+                        var defaultVariantName = '';
+                        if (projectModelParts.length >= 2) {
+                            defaultVariantName = projectModelParts[0] + ' ' + projectModelParts[1];
+                        }
+                        var row = '<tr>' +
+                                '<td class="text-center hidden"><input type="text" class="form-control variantId"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + data.projectDetail.ProjectModel + '" class="form-control text-center projectModel"/></td>' +
+                                '<td class="text-center"><input type="text" readonly="" value="' + defaultVariantName.trim() + '" class="form-control text-center prefix"/></td>' +
+                                //'<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                                '<td class="text-center"><input type="text" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center ramVendor"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center romVendor"/></td>' +
+                                '<td class="text-center"><input type="number" min="0" value="' + data.projectDetail.OrderQuantity + '" class="form-control text-center variantQuantity"/></td>' +
+                                '<td class="text-center"><input type="text" readonly=""  value="' + defaultVariantName.trim() + '" class="form-control text-center projectVariantName"/></td>' +
+                                '<td class="text-center"><span class="badge badge-warning">NEW</span></td>' +
+                                '<td class="text-center" style="width:120px">' +
+                                '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                                '</td>' +
+                                '<td class="text-center hidden"><input type="text" class="form-control addedBy"/></td>' +
+                                '<td class="text-center hidden"><input type="text" class="form-control addedDate"/></td>' +
+                                '</tr>';
+                        $('#tblProjectVariant tbody').append(row);
+                    }
+                }
+            });
+        }
+    });
+    
+    function addProjectModelToProjectMaster() {
+        var url = '@Url.Action("UpdateProjectModelInProjectMaster","Common")';
+        var projectId = $('#projectId option:selected').val();
+        $.post(url, { projectModel: projectModelFromName, projectId: projectId }, function (data) {
+            if (data == 'updated') {
+                alertify.success(projectModelFromName);
+                $('.btnAddProjectModel').addClass('hidden');
+                $('.btnAddVariant').removeClass('hidden');
+                var projectModelParts = projectModelFromName.split(" "); 
+                var defaultVariantName = '';
+                if (projectModelParts.length >= 2) {
+                    defaultVariantName = projectModelParts[0] + ' ' + projectModelParts[1];
+                }
+                var row = '<tr>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control variantId"/></td>' +
+                        '<td class="text-center"><input type="text" readonly=""  value="' + projectModelFromName.trim() + '" class="form-control text-center projectModel"/></td>' +
+                        '<td class="text-center"><input type="text" readonly="" value="' + defaultVariantName.trim() + '" class="form-control text-center prefix"/></td>' +
+                        //'<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                        '<td class="text-center"><input type="text" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center ramVendor"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center romVendor"/></td>' +
+                        '<td class="text-center"><input type="number" min="0" value="' + $('#lblOrderQuantity').html() + '" class="form-control text-center variantQuantity"/></td>' +
+                        '<td class="text-center"><input type="text" readonly="" value="' + defaultVariantName.trim() + '" class="form-control text-center projectVariantName"/></td>' +
+                        '<td class="text-center"><span class="badge badge-warning">NEW</span></td>' +
+                        '<td class="text-center" style="width:120px">' +
+                        '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                        '</td>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control addedBy"/></td>' +
+                        '<td class="text-center hidden"><input type="text" class="form-control addedDate"/></td>' +
+                        '</tr>';
+                $('#tblProjectVariant tbody').append(row);
+            } else {
+                alertify.success(data);
+            }
+        });
+    }
+    
+    //--capitalize first letter of a string--
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    
+    //--Add variant button function
+    function addRow() {
+        var assigned = 0;
+        var totalOrderQuantity = parseInt($('#lblOrderQuantity').html());
+        var unAssigned = 0;
+        $('#tblProjectVariant > tbody > tr').each(function () {
+            assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+        });
+        console.log('Assigned: ' + assigned);
+        unAssigned = totalOrderQuantity - assigned;
+        $('#unassigned').html(0);
+        if (unAssigned <= 0) {
+            alertify.success('There is no unassigned quantity for new variant');
+        } else {
+            var defaultVariantName = '';
+            var projectModel = $('#hdnProductModel').val();
+            var projectModelParts = projectModel.split(" ");
+            if (projectModelParts.length >= 2) {
+                defaultVariantName = projectModelParts[0] + ' ' + projectModelParts[1];
+            }
+            var row = '<tr>' +
+                '<td class="text-center hidden"><input type="text" class="form-control variantId"/></td>' +
+                '<td class="text-center"><input type="text" readonly="" value="' + projectModel.trim() + '" class="form-control text-center projectModel"/></td>' +
+                '<td class="text-center"><input type="text" readonly="" value="' + defaultVariantName.trim() + '" class="form-control text-center prefix"/></td>' +
+                //'<td class="text-center"><input type="number" min="1" class="form-control text-center ramRomVariant"/></td>' +
+                '<td class="text-center"><input type="text" class="form-control text-center suffix"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center ramVendor"/></td>' +
+                                '<td class="text-center"><input type="text" value="" class="form-control text-center romVendor"/></td>' +
+                '<td class="text-center"><input type="number" min="0" value="' + unAssigned + '" class="form-control text-center variantQuantity"/></td>' +
+                '<td class="text-center"><input type="text" readonly="" value="' + defaultVariantName.trim() + '" class="form-control text-center projectVariantName"/></td>' +
+                '<td class="text-center"><span class="badge badge-warning">NEW</span></td>' +
+                '<td class="text-center" style="width:120px">' +
+                '<button type="button" class="btn btn-success btn-sm btnSave"><i class="fa fa-save"></i></button>' +
+                '<button type="button" class="btn btn-primary btn-sm btnRemove"><i class="fa fa-remove"></i></button>' +
+                '</td>' +
+                '<td class="text-center hidden"><input type="text" class="form-control addedBy"/></td>' +
+                '<td class="text-center hidden"><input type="text" class="form-control addedDate"/></td>' +
+                '</tr>';
+            $('#tblProjectVariant tbody').append(row);
+        }
+    }
+    
+    //--variant quantity change events ----
+    $(document).on('input', '.variantQuantity', function () {
+        //alert();
+        var assigned = 0;
+        var totalOrderQuantity = parseInt($('#lblOrderQuantity').html());
+        var unAssigned = 0;
+        $('#tblProjectVariant > tbody > tr').each(function () {
+            assigned = assigned + parseInt($(this).find('.variantQuantity').val());
+        });
+        console.log('Assigned(live change): ' + assigned);
+        unAssigned = totalOrderQuantity - assigned;
+        console.log('Unassigned:' + unAssigned);
+        $('#unassigned').html(unAssigned);
+        if (unAssigned <= 0) {
+            var selectedCellValue = parseInt($(document.activeElement).val());
+            $(document.activeElement).val(selectedCellValue + unAssigned);
+            alertify.error("You've reached MAX assign quantity");
+            $('#unassigned').html(0);
+        }
+    });
+    
+    //--suffix change events ----
+    $(document).on('input', '.suffix', function () {
+        var row = $(document.activeElement).parent().parent();
+        var prefix = row.find('.prefix').val();
+        var suffix = $(document.activeElement).val();
+        console.log(prefix + ' ' + suffix);
+        row.find('.projectVariantName').val(capitalizeFirstLetter(prefix.trim()) + ' ' + capitalizeFirstLetter(suffix.trim()));
+    });
+    
+    //---Remove row---
+    $(document).on('click', '.btnRemove', function () {
+        var row = $(this).closest('tr');
+        var variantId = row.find('.variantId').val();
+        var unAssigned = parseInt($('#unassigned').html());
+        var variantQuantity = parseInt(row.find('.variantQuantity').val());
+        if (variantId == '') {
+            row.remove();
+            $('#unassigned').html(unAssigned + variantQuantity);
+        } else {
+            var url = '@Url.Action("RemoveProjectVariantFromOrderDetail","Common")';
+            $.post(url, { variantId: variantId }, function (success) {
+                if (success) {
+                    alertify.success('Row removed from database.');
+                    row.remove();
+                    $('#unassigned').html(unAssigned + variantQuantity);
+                } else {
+                    console.log(success);
+                    alertify.error('Something went wrong!!');
+                }
+            });
+        }
+    });
+    
+    //---Save Variants in variant table---
+    $(document).on('click', '.btnSave', function () {
+        var row = $(this).closest('tr');
+        row.find('.btnSave').prop('disabled', true);
+        var urlSave = '@Url.Action("SaveProjectVariant","Common")';
+        var urlUpdate = '@Url.Action("UpdateProjectVariant","Common")';
+        var projectId = $('#projectId option:selected').val();
+        var variantId = row.find('.variantId').val();
+        var variantQuantity = row.find('.variantQuantity').val();
+        var variantName = row.find('.projectVariantName').val();
+        var ramVendor = row.find('.ramVendor').val();
+        var romVendor = row.find('.romVendor').val();
+        var addedBy;
+        var addedDate;
+        var date;
+        if (variantId != '') {
+            addedBy = row.find('.addedBy').val();
+            addedDate = row.find('.addedDate').val(); //---format date---
+            var dateString = addedDate == null ? '' : addedDate;
+            var seconds = parseInt(dateString.replace(/\/Date\(([0-9]+)[^+]\//i, "$1"));
+            date = new Date(seconds);
+            date = formatDate(date) == 'NaN-NaN-NaN' ? '01-01-0001' : formatDate(date);
+            console.log(addedBy+' >> '+date);
+            //-----
+            $.post(urlUpdate, { variantId: variantId, projectId: projectId, variantQuantity: variantQuantity, variantName: variantName.trim(), addedBy: addedBy, addedByDate: date,ramVendor:ramVendor,romVendor:romVendor }, function(response) {
+                alertify.success('Updated');
+                row.find('.btnSave').prop('disabled', false);
+            });
+        } else {
+            $.post(urlSave, { projectId: projectId, variantQuantity: variantQuantity, variantName: variantName.trim(), ramVendor: ramVendor, romVendor: romVendor }, function (response) {
+                if (response == "Variant already exists!!!") {
+                    alertify.error(response);
+                    row.find('.btnSave').prop('disabled', false);
+                } else {
+                    alertify.success('Saved');
+                    console.log(response.Id);
+                    row.find('.variantId').val(response.Id);
+                    row.find('.addedBy').val(response.AddedBy);
+                    row.find('.addedDate').val(response.AddedDate);
+                    row.find('.badge').removeClass('badge-warning');
+                    row.find('.badge').addClass('badge-success');
+                    row.find('.badge').html('SAVED');
+                    row.find('.btnSave').prop('disabled', false);
+                }
+            });
+        }
+    });
+    
+    //--format json date--
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [day, month, year].join('-');
+    }
+</script>
+

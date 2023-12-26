@@ -1,0 +1,325 @@
+﻿@model IEnumerable<ProjectManagement.Models.GeneralIncidentModel>
+
+@{
+    ViewBag.Title = "GeneralInciedntForAssign";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident List Forwarded to Me
+        </div>
+        <div class="tools"></div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered dtTable" id="tblIncident" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Reffered To</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Added By</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in Model)
+                        {
+                            <tr id="@i.GeneralIncidentId">
+                                <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                                <td class="text-center">@i.GeneralIncidentTitle</td>
+                                <td class="text-center">@i.GeneralIncidentCategories</td>
+                                <td class="text-center">@i.RoleDescription</td>
+                                <td class="text-center">@i.GeneralIncidentDetails</td>
+                                <td class="text-center">@i.AddedDate</td>
+                                <td class="text-center">@i.AddedByName</td>
+                                <td class="text-center"><span class="badge badge-primary badge-roundless"><label id="">@i.Status</label></span></td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails ">Details</button>
+                                    @if (@i.Status != "PARTIALSUBMIT")
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnSolve">Solve</button>
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDeny">Deny</button>
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnforward">Forward</button>
+                                    }
+                                    @if (@i.Status == "PARTIALSUBMIT")
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnSubmit">Submit</button>
+                                    }
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident List Assigned to Me
+        </div>
+        <div class="tools"></div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered dtTable" id="tblIncident" role="grid" aria-describedby="sample_1_info">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Added By</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.assign)
+                        {
+                            <tr id="@i.GeneralIncidentId">
+                                <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                                <td class="text-center">@i.GeneralIncidentTitle</td>
+                                <td class="text-center">@i.GeneralIncidentCategories</td>
+                                <td class="text-center">@i.GeneralIncidentDetails</td>
+                                <td class="text-center">@i.AddedDate</td>
+                                <td class="text-center">@i.AddedByName</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails ">Details</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnSolve">Solve</button>
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDeny">Deny</button>
+                                    @if (@i.Status != "ASSIGNED")
+                                    {
+                                        <button class="btn btn-sm sbold uppercase btn-outline red-haze btnforward">Forward</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="portlet-body">
+    <!-- /.modal -->
+    @*============================================================================ solve/deny =======================================================================*@
+    <div id="solveModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold"> Suggest Solution or Deny incident</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="modalincidentId" />
+                                <input type="hidden" id="solutionOrDeny" />
+                                <p>
+                                    Remarks:
+                                    @*<input type="text" class="form-control" id="modalSolution" />*@
+                                    <textarea id="modalSolution" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success submitSolution">Submit</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*============================================================================ forward =======================================================================*@
+    <div id="forwardModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Forward</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="modalincidentId" />
+                                <p>
+                                    Select Department:
+
+                                    <select class="form-control" id="department">
+                                        @if (ViewBag.Roles != null)
+                                        {
+                                            foreach (var i in ViewBag.Roles)
+                                            {
+                                                <option value="@i.RoleName">@i.RoleDescription</option>
+                                            }
+                                        }
+                                    </select>
+                                </p>
+                                <p>
+                                    Remark:
+                                    <textarea id="modalForwardRemark" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success forward">Forward</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @*============================================================================ SUBMIT =======================================================================*@
+    <div id="submitModal" class="modal fade" tabindex="-1" aria-hidden="true">
+        @*@Html.Partial("_HwChipsetIcPartial", Model)*@
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title bold">Submit</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="scroller" style="height: 300px" data-always-visible="1" data-rail-visible1="1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="modalincidentId" />
+                                <p>
+                                    Remarks:
+                                    <textarea id="modalSubmitRemark" class="col-md-12 form-control"></textarea>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success submit">Submit</button>
+                    <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                    @*<button type="button" class="btn green">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $('.btnSolve').on('click', function () {
+            var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('solution');
+            //alert($('#modalincidentId').val());
+            $('#solveModal').modal('show');
+        });
+
+        $('.btnDeny').on('click', function () {
+            var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('deny');
+            //alert($('#modalincidentId').val());
+            $('#solveModal').modal('show');
+        });
+
+        $('.submitSolution').on('click', function () {
+            var solution = $('#modalSolution').val();
+            var incidentid = $('#modalincidentId').val();
+            var type = $('#solutionOrDeny').val();
+            var url = '../GeneralIncident/PostSolution';
+            if (solution == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { solution: solution, type: type, incidentid: incidentid }, function (data) {
+                    $('#modalSolution').empty();
+                    alertify.success('Saved');
+                    $('#solveModal').modal('hide');
+                });
+                $('table#tblIncident tr#' + incidentid).remove();
+            }
+        });
+
+        $('.btnforward').on('click', function () {
+            var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('deny');
+            //alert($('#modalincidentId').val());
+            $('#forwardModal').modal('show');
+        });
+
+        $('.forward').on('click', function () {
+            var remark = $('#modalForwardRemark').val();
+            var incidentid = $('#modalincidentId').val();
+            var role = $('#department :selected').val();
+            var url = '../GeneralIncident/ForwardIncident';
+            if (remark == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { remark: remark, forwardrole: role, incidentid: incidentid }, function (data) {
+                    $('#modalSolution').empty();
+                    alertify.success('Saved');
+                    $('#forwardModal').modal('hide');
+                });
+                $('table#tblIncident tr#' + incidentid).remove();
+            }
+        });
+
+        $('.btnDetails').on('click', function () {
+            //var rowindex = $(this).closest('tr').index();
+            //console.log(rowindex);
+            var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+            //alert(incidentid);
+            var url = '@Url.Action("GeneralIncidentDetails", "GeneralIncident")?incidentId=' + incidentid;
+            window.location.href = url;
+        });
+        
+        $('.btnSubmit').on('click', function () {
+            var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+            $('#modalincidentId').val(incidentid);
+            $('#solutionOrDeny').val('deny');
+            //alert($('#modalincidentId').val());
+            $('#submitModal').modal('show');
+        });
+        
+        $('.submit').on('click', function () {
+            var remark = $('#modalSubmitRemark').val();
+            var incidentid = $('#modalincidentId').val();
+            var url = '../GeneralIncident/SubmitIncident';
+            if (remark == '') {
+                alertify.set('notifier', 'position', 'top-center');
+                alertify.success("Remarks field can't be empty");
+            } else {
+                $.post(url, { remark: remark, incidentid: incidentid }, function (data) {
+                    $('#modalSubmitRemark').empty();
+                    alertify.success('Saved');
+                    $('#submitModal').modal('hide');
+                });
+                $('table#tblIncident tr#' + incidentid).remove();
+            }
+        });
+    });
+</script>
+

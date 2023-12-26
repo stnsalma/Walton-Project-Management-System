@@ -1,0 +1,272 @@
+﻿@using Newtonsoft.Json
+<style type="text/css">
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: rgba( 255, 255, 255, .8 ) url('../../Content/images/ajax-loader.gif') 50% 50% no-repeat;
+    }
+
+    .cust-scrollable {
+        max-height: 653px;
+        overflow-y: scroll;
+    }
+
+    .scrollerHeight {
+        height: 428px;
+    }
+
+    #opinionForm.loading {
+        overflow: hidden;
+    }
+
+    #opinionForm.loading .modal {
+        display: block;
+    }
+</style>
+
+
+<script src="~/Scripts/management_scripts/management_dashboard.js"></script>
+
+<div id="comment_div">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-dark hide"></i>
+                        <span class="caption-subject font-dark bold uppercase">Comments</span>
+                    </div>
+
+                </div>
+                <div class="portlet-body">
+
+                    @using (Ajax.BeginForm("CreateOpinion", "Common", FormMethod.Post, new AjaxOptions { OnSuccess = "opinion_success", OnBegin = "AjaxBegin", OnComplete = "AjaxComplete", OnFailure = "AjaxFailure", LoadingElementId = "modal" }, new { @id = "opinionForm" }))
+                    {
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @*@Html.DropDownList("partialPostProjectId", Enumerable.Empty<SelectListItem>(), new { @class = "form-control", Required = "required" })*@
+                                    @Html.Hidden("partialPostProjectId")
+                                </div>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.TextArea("OpinionText", new { @class = "form-control", Required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <div class="col-md-12">
+                                    <input class="btn sbold btn-outline blue" type="submit" value="Post" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal"><!-- Place at bottom of page --></div>
+
+                    }
+                </div>
+                <hr/>
+                <div class="portlet-body" id="most_recent_body">
+                    <div class="pre-scrollable" id="most_recent"></div>
+                </div>
+                
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@*<div id="most_recent_div">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="icon-share font-dark hide"></i>
+                        <span class="caption-subject font-dark bold uppercase">Most Recent</span>
+                    </div>
+
+                </div>
+                <div class="portlet-body" id="most_recent_body">
+                    <div class="cust-scrollable" id="most_recent_live"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+
+
+
+
+<script type="text/javascript">
+    var idList = [];
+    function get_most_recent_comment(pId) {
+        $.post('@Url.Action("GetRecentComments", "Common")', { projectId: pId }, function (data) {
+            //console.log(data);
+            var parsed = JSON.parse(data);
+            $('#most_recent').empty();
+            if (!parsed.length) {
+                $('#most_recent').empty();
+                var nothingToShow = "<div><h2>No comments available for this Project</h2></div>";
+                //$("#most_recent div").removeClass('pre-scrollable');
+                $('#most_recent').append($(nothingToShow));
+            } else {
+                //if (!$("#most_recent div").hasClass("pre-scrollable")) alert("No");
+                $('#most_recent').empty();
+
+                $.each(parsed, function (index, value) {
+                    var dd = moment(value.AddedDate).format('llll');
+                    var liVariable = '<div class=mt-comments><div class=mt-comment><div class=mt-comment-img><img alt="" class="img-circle img-responsive" src= ' + value.WebServerUrl + '></div><div class=mt-comment-body><div class=mt-comment-info><span class=mt-comment-author>' + value.UserFullName + '</span> <span class=mt-comment-date>' + dd + '</span></div><div class=mt-comment-text>' + value.OpinionText + '</div><div class="mt-comment-details"><span class="mt-comment-status mt-comment-status-pending">' + value.ProjectName + '</span></div></div></div></div>';
+                    $('#most_recent').append($(liVariable));
+
+                });
+            }
+
+
+        });
+    }
+
+    function get_running_comments_on_page_load() {
+        $.get('@Url.Action("GetLatestHundredComment", "Common")', function (data) {
+            var parsed = JSON.parse(data);
+            $('#most_recent_live').empty();
+            idList = [];
+            $.each(parsed, function (index, value) {
+                var dd = moment(value.AddedDate).format('llll');
+                var liVariable = '<div class=mt-comments><div class=mt-comment><div class=mt-comment-img><img alt="" class="img-circle img-responsive" src= ' + value.WebServerUrl + '></div><div class=mt-comment-body><div class=mt-comment-info><span class=mt-comment-author>' + value.UserFullName + '</span> <span class=mt-comment-date>' + dd + '</span></div><div class=mt-comment-text>' + value.OpinionText + '</div><div class="mt-comment-details"><span class="mt-comment-status mt-comment-status-pending">' + value.ProjectName + '</span></div></div></div></div>';
+                $('#most_recent_live').append($(liVariable));
+                idList.push(value.OpinionId);
+            });
+            console.log(idList);
+            var div = document.getElementById('most_recent_live');
+            $('#most_recent_live').animate({
+                scrollTop: div.scrollHeight - div.clientHeight
+            }, 3000);
+            setInterval(Function("get_periodically_comments_as_feed();"), 5000);
+        });
+    }
+    function get_periodically_comments_as_feed() {
+
+        $.get('@Url.Action("GetLatestHundredComment", "Common")', function (data) {
+
+            var parsed = JSON.parse(data);
+            $.each(parsed, function (index, value) {
+                if ($.inArray(value.OpinionId, idList) < 0) {
+
+                    var dd = moment(value.AddedDate).format('llll');
+                    var liVariable = '<div class=mt-comments><div class=mt-comment><div class=mt-comment-img><img alt="" class="img-circle img-responsive" src= ' + value.WebServerUrl + '></div><div class=mt-comment-body><div class=mt-comment-info><span class=mt-comment-author>' + value.UserFullName + '</span> <span class=mt-comment-date>' + dd + '</span></div><div class=mt-comment-text>' + value.OpinionText + '</div><div class="mt-comment-details"><span class="mt-comment-status mt-comment-status-pending">' + value.ProjectName + '</span></div></div></div></div>';
+                    $('#most_recent_live').append($(liVariable));
+                    idList.push(value.OpinionId);
+                    var div = document.getElementById('most_recent_live');
+                    $('#most_recent_live').animate({
+                        scrollTop: div.scrollHeight - div.clientHeight
+                    }, 3000);
+                }
+
+            });
+
+        });
+
+    }
+    if ($('#partialPostProjectId').val()=="") {
+        $('#comment_div').hide();
+    }
+    var pId = 0;
+    //if (project != null) pid = parseInt(project);
+    $(function () {
+        @*$.post('@Url.Action("GetProjects", "Common")', {}, function (data) {
+            var mySelect = $('#partialPostProjectId');
+            mySelect.empty();
+            mySelect.append($('<option></option>').val("").html("--Select--"));
+            for (var i in data) {
+                mySelect.append($('<option></option>').val(data[i].ProjectMasterId).html(data[i].ProjectName));
+            }
+
+        });*@
+        get_most_recent_comment(0);//zero denoted for all projects data
+        get_running_comments_on_page_load();
+
+        $('#ProjectMasterId').on('change', function () {
+            //alert('dfvdf drg erg er ge');
+            var project = $('#ProjectMasterId').val();
+            $('#partialPostProjectId').val(project);
+            if (project == "") {
+                console.log('khali');
+                get_recent_notifications_as_feed();
+                $('#most_recent_div').show();
+                $('#comment_div').hide();
+            } else {
+                console.log('PPP id ' + project);
+                //$('.dashboardFeed').remove();
+                get_project_wise_recent_notifications_as_feed(parseInt(project));
+                $('#most_recent_div').hide();
+                $('#comment_div').show();
+            }
+            var projectId = parseInt($(this).val());
+            if (isNaN(projectId)) projectId = 0;
+            get_most_recent_comment(projectId);
+        });
+        
+        $('#ProjectName').on('change', function () {
+            //alert('dfvdf drg erg er ge');
+            //var project = $('#ProjectMasterId').val();
+            var projectname = $('#ProjectName').val();
+            //$('#partialPostProjectId').val(project);
+            if (projectname == "") {
+                console.log('khali');
+                get_recent_notifications_as_feed();
+                $('#most_recent_div').show();
+                $('#comment_div').hide();
+            } 
+        });
+    });
+
+
+
+    function opinion_success(data) {
+        if (data == "y") {
+            alertify.success("Successfully Posted");
+            $('#OpinionText').val("");
+            var projectId = parseInt($('#partialPostProjectId').val());
+            if (isNaN(projectId)) projectId = 0;
+            get_most_recent_comment(projectId);
+        }
+        else if (data == "n") {
+            alertify.error("Error Occured");
+            $('#partialPostProjectId').addClass("btn-outline red");
+            $("#OpinionText").addClass("btn-outline red");
+        }
+
+    }
+    function AjaxBegin() {
+        console.log("Ajax has been started");
+        //$('#opinionForm').addClass("loading");
+    }
+    function AjaxComplete() {
+        //$('#opinionForm').removeClass("loading");
+    }
+    function AjaxFailure() {
+        $('#opinionForm').removeClass("loading");
+        alertify.alert("Please select a project");
+        $('#partialPostProjectId').addClass("btn-outline red");
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+

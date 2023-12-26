@@ -1,0 +1,233 @@
+﻿@model ProjectManagement.ViewModels.ProjectManager.BTRCRegistrationVM
+@{
+    ViewBag.Title = "BTRC Registration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
+<div class="row">
+    <div class="portlet light bordered">
+        <div class="portlet-title">
+            <div class="row">
+                <div class="caption font-dark">
+                    <i class="icon-settings font-dark"></i>
+                    <span class="caption-subject bold uppercase">BTRC IMEI Registration</span>
+                </div>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <label class="control-label col-lg-3 ">Start Date <span class="required"> * </span>:</label>
+
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(model => model.StartDate, new { @class = "form-control date_picker" })
+                    </div>
+                    <label class="control-label col-lg-2 ">End Date <span class="required"> * </span>:</label>
+
+                    <div class="col-lg-3">
+                        @Html.TextBoxFor(model => model.EndDate, new { @class = "form-control date_picker" })
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+
+                <label class="control-label col-md-3">Select Model<span class="required"> * </span></label>
+                <div class="col-md-3">
+                    @if (ViewBag.BTRCModels != null)
+                    {
+                        <table id="selectedmodels">
+                            @for (int idx = 0; idx < ViewBag.BTRCModels.Count; idx++)
+                            {
+                                var chkid = "checkbox1_3_" + idx + '"';
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="@("checkbox1_3_" + idx)" name="@ViewBag.BTRCModels[idx].Text" class="md-check" value="@ViewBag.BTRCModels[idx].Value" />
+                                        <label for="@("checkbox1_3_" + idx)">
+                                            <span></span>
+                                            <span class="check"></span>
+                                            <span class="box"></span>
+                                            @ViewBag.BTRCModels[idx].Text
+                                        </label>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        
+                    }
+
+                </div>
+            </div>
+            <br />
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    @*<div class="col-lg-3 col-lg-offset-3">
+                        <button id="btnSync" class="btn btn-success btn-circle">Sync IMEIs</button>
+                    </div>*@
+                    <div class="col-lg-2 col-lg-offset-3">
+                        <button id="btnExport" class="btn btn-success btn-circle">Export Excel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @*<hr />
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h5>Export History(Last 10 Records)</h5>
+                    <table class="table table-bordered table-striped table-condensed flip-content" id="ExportLogTable">
+                        <thead class="flip-content">
+                            <tr>
+                                <th> Model Names </th>
+                                <th> From Date </th>
+                                <th> To Date</th>
+                                <th> Export Date</th>
+                                <th> File Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.BTRCModels != null)
+                                {
+                                    foreach (var project in ViewBag.BTRCModels)
+                                    {
+                                        <tr>
+                                            <td> @project.Models </td>
+                                            <td> @project.FromDate </td>
+                                            <td> @project.ToDate </td>
+                                            <td> @project.ExportDate </td>
+                                            <td> @project.FileName </td>
+
+                                        </tr>
+                                    }
+                                }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+    <div id="successModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" data-attention-animation="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p id="successModalText"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn green">Ok</button>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+    <div id="LoadModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" data-attention-animation="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Database is getting Updated. It May take time. Please wait!</p>
+                </div>
+                <div class="row">
+                    <div class="progress progress-striped active col-lg-6 col-lg-offset-3">
+                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only"> 100% Complete (success) </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#btnSync').on('click', function () {
+        var fromdate = $('#StartDate').val();
+        var enddate = $('#EndDate').val();
+        var modelname = $('#ModelName').children("option:selected").val();
+       
+        var model = {};
+        var favorite = [];
+        $.each($('input[type=checkbox]:checked'), function () {
+            var _value = $(this).val();
+            var name =$(this).attr("name");
+            var model = {
+                Text: name,
+                Value: _value,
+                Selected: true
+            };
+            favorite.push(model);
+        });
+        
+        event.preventDefault();
+
+        $('#LoadModal').modal('show');
+        $.ajax({
+            url: '@Url.Action("SaveBTRCData", "ProjectManager")',
+            type: 'POST',
+            dataType: 'json',
+            data: { sdate: fromdate, edate: enddate, models: favorite },
+            success: function (result) {
+                if (result.Success) {
+                    $('#LoadModal').modal('hide');
+                    $('#successModal').modal('show');
+                    $(".modelname option:selected").remove();
+                    $("#successModalText").empty();
+                    $('#successModalText').append("IMEI Sync have been Done!");
+                }
+            }
+        });
+    });
+    @*$('#btnget').on('click', function () {
+        var fromdate = $('#StartDate').val();
+        var enddate = $('#EndDate').val();
+        console.log(fromdate + ':' + enddate);
+
+        $.ajax({
+            url: '@Url.Action("GetModelsBarCodeInv", "ProjectManager")',
+            type: 'GET',
+            data: { sdate: fromdate, edate: enddate },
+            DataType: 'json',
+            success: function (data) {
+                $('.modelname').children('option:not(:first)').remove();
+                $.each(data, function (key, value) {
+                    $('.modelname')
+                        .append($("<option></option>")
+                        .attr("value", value.ModelID)
+                        .text(value.ProjectModel));
+                });
+                $('#successModal').modal('show');
+                $("#successModalText").empty();
+                $('#successModalText').append("New Models Found to Update the Information");
+            }
+        });
+    });*@
+
+    $('#btnExport').on('click', function () {
+        var fromdate = $('#StartDate').val();
+        var enddate = $('#EndDate').val();
+        var model = {};
+        var favorite = [];
+        $.each($('input[type=checkbox]:checked'), function () {
+            //var _value = $(this).val();
+            var name = $(this).attr("name");
+           // var model = {name};
+            //    Text: name,
+            ////    Value: _value,
+            ////    Selected: true
+            //};
+            favorite.push(name);
+        });
+        var url = '@Url.Action("GetExcel", "ProjectManager")';
+        url = url + '?sdate=' + fromdate + '&edate=' + enddate + '&models=' + favorite;
+        console.log(url);
+        window.open(url, '_blank');
+
+    });
+</script>

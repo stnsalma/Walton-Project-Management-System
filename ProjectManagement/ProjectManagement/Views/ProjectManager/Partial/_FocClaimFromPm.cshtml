@@ -1,0 +1,27 @@
+﻿@*<h2>_FocClaimFromPm</h2>*@
+@model ProjectManagement.Models.ProjectMasterModel
+
+<tr class="tableTrCls">
+    @using (Html.BeginCollectionItem("AssignProjectsViewModel.ProjectMasterModelp"))
+    {
+        <td id="IsRemoved" class="IsRemoved" style="display:none">
+            <input id="IsRemoved" name="issueList1[@Model.IsRemoved].IsRemoved" class="form-control IsRemoved" value="@Model.IsRemoved" readonly />
+        </td>
+        <td id="bomType" class="bomType">
+            <input id="bomType" name="issueList1[@Model.IsRemoved].BOMType" class="form-control bomType" value="@Model.BOMType" readonly />
+        </td>
+        <td id="bomName" class="bomName" style="width:300px;">
+            <input id="bomName" name="issueList1[@Model.IsRemoved].BOMName" class="form-control bomName" value="@Model.BOMName" readonly />
+        </td>
+        <td id="quantity" class="quantity">
+            <input id="quantity" name="issueList1[@Model.IsRemoved].ItemQuantity" class="form-control quantity" value="@Model.ItemQuantity" readonly />
+        </td>
+        <td id="colors" class="colors">
+            <input id="colors" name="issueList1[@Model.IsRemoved].Color" class="form-control colors" value="@Model.Color" readonly />
+        </td>
+        <td style="width:15%;" id="remarks" class="remarks">
+            <input id="bomRemarks" name="issueList1[@Model.IsRemoved].BomRemarks" class="form-control bomRemarks" value="@Model.BomRemarks" readonly />
+        </td>
+        <td><button type="button" id="removeProductRow1" class="btn btn-primary" onclick="removeDetailRow1($(this).closest('tr'))">Remove</button></td>
+    }
+</tr>

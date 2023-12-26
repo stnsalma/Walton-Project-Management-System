@@ -1,0 +1,305 @@
+﻿@model ProjectManagement.Models.BulkUpdateModel
+@{
+    ViewBag.Title = "ProjectBulkUpdate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+@*@{
+        ViewBag.Title = "Project";
+    }*@
+<link href="~/assets/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/assets/global/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#SupplierId').on('change', function () {
+            $('#SupplierName').val($('#SupplierId option:selected').text());
+        });
+    });
+    $(document).on('invalid-form.validate', 'form', function () {
+        var button = $(this).find('input[type="submit"]');
+        setTimeout(function () {
+            button.removeAttr('disabled');
+        }, 1);
+    });
+    $(document).on('submit', 'form', function () {
+        var button = $(this).find('input[type="submit"]');
+        setTimeout(function () {
+            button.attr('disabled', 'disabled');
+        }, 0);
+    });
+
+    $(document).ready(function () {
+        //camera
+        $("#CameraVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'camera' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.CameraVendor };
+                    }));
+                });
+            }
+        });
+        //rom
+        $("#RomVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'rom' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.RomVendor };
+                    }));
+                });
+            }
+        });
+        //ram
+        $("#RamVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'ram' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.RamVendor };
+                    }));
+                });
+            }
+        });
+        //pcba
+        $("#PcbaFinalVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'pcba' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.PcbaFinalVendor };
+                    }));
+                });
+            }
+        });
+        //tp
+        $("#TpFinalVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'tp' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.TpFinalVendor };
+                    }));
+                });
+            }
+        });
+        //lcd
+        $("#LcdFinalVendor").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'lcd' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.LcdFinalVendor };
+                    }));
+                });
+            }
+        });
+        //earphone
+        $("#EarphoneSupplierName").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'earphone' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.EarphoneSupplierName };
+                    }));
+                });
+            }
+        });
+        //charger
+        $("#ChargerSupplierName").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'charger' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.ChargerSupplierName };
+                    }));
+                });
+            }
+        });
+        //battery
+        $("#BatterySupplierName").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'battery' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.BatterySupplierName };
+                    }));
+                });
+            }
+        });
+        //housing
+        $("#HousingFinalVendorName").autocomplete({
+            delay: 100,
+            source: function (request, response) {
+                var url = '@Url.Action("GetVendors", "Commercial")';
+                $.post(url, { vendor: request.term, type: 'housing' }, function (data) {
+                    console.log(data);
+                    response($.map(data, function (item) {
+                        return { value: item.HousingFinalVendorName };
+                    }));
+                });
+            }
+        });
+    });
+</script>
+@using (Html.BeginForm("ProjectBulkUpdate", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+
+    <div class="portlet light portlet-fit portlet-form bordered">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="icon-settings font-red"></i>
+                <span class="caption-subject font-red sbold uppercase">Project Information</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Project Name</label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("Projects", new SelectList(ViewBag.Projects, "Value", "Text"), new { @class = "form-control ddChosen", @onchange = "GetPurchaseOrders(this.options[this.selectedIndex].text);" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Select Which Order To Load</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model=>model.ProjectId, new SelectList(new List<SelectListItem>()),new { @class = "form-control"})
+                                @*<select name="multiple" id="purchaseOrders" class="form-control"></select>*@
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Select Which Order To Update</label>
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(model => model.ProjectOrders, new SelectList(new List<SelectListItem>()), new { @multiple = "multiple" })
+                                @*<select name="multiple" id="purchaseOrders1" class="form-control" multiple></select>*@
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input type="submit" value="Update" class="btn btn-circle red-mint btn-outline sbold uppercase" />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+}
+
+<style>
+    .date_picker {
+        width: 100%;
+    }
+</style>
+<script type="text/javascript">
+    var serialCount;
+    function GetPurchaseOrders(ths) {
+        var projectName = ths;
+        var url = '@Url.Action("GetPurcahseOrders", "Commercial")';
+        $.post(url, { projectName: projectName },
+            function (data) {
+                var len = data.length;
+                $('#ProjectId').empty();
+                $('#ProjectOrders').empty();
+                $('#ProjectId').append('<option value="">Select</option>');
+                for (var i = 0; i < len; i++) {
+                    $('#ProjectId').append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    $('#ProjectOrders').append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                }
+                $('#ProjectOrders').trigger("chosen:updated");
+            });
+    }
+
+
+    $(function() {
+
+        $('#ProjectOrders').chosen({
+            disable_search_threshold: 10,
+            no_results_text: "Oops, nothing found!",
+            width: "100%"
+        });
+
+    });
+</script>
+

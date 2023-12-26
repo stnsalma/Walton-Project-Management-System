@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ProjectManagement.Models.SpareNameModel>
+@{
+    ViewBag.Title = "SpareList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Spare List</div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Spare Name</th>
+                                <th>PIR</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var v in Model)
+                            {
+                                <tr>
+                                    <td>@v.SpareId</td>
+                                    <td>@v.SparePartsName</td>
+                                    <td>@Html.TextBox("pir", @v.ProposedImportRatio,new{@class="form-control txtPir",type="number"})</td>
+                                    <td>@v.SpareType</td>
+                                    <td>
+                                        <button class="btn btn-warning btnUpdate">Update</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<script>
+    $('.btnUpdate').on('click', function() {
+        var row = $(this).closest('tr');
+        var spareId = row.find('td:first').html();
+        var pir = row.find('.txtPir').val();
+        console.log(spareId + ">>>" + pir);
+        var url = '@Url.Action("UpdateSpare","Spare")';
+        $.post(url, { spareId: spareId, pir: pir }, function (data) {
+            console.log(data);
+            if (data == true) {
+                alertify.success("Updated Successfully");
+            } else {
+                alertify.error("Somthing went wrong!!!");
+            }
+        });
+    });
+</script>
+

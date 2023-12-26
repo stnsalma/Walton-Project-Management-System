@@ -1,0 +1,958 @@
+﻿@*<h2>DailyPlan</h2>*@
+@using System.Configuration
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+
+<link href="~/Content/New_2019/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/New_2019/dataTables.fixedHeader.min.js"></script>
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+     .thing {
+         word-break: break-all;
+     }
+
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    .fixedHeader-floating {
+        left: 131px !important;
+    }
+    blink {
+        -webkit-animation: 2s linear infinite condemned_blink_effect;
+    }
+</style>
+<div class="note note-danger">
+    <p style="color: green;font-size: 20px;"> Daily Plan</p>
+</div>
+
+<div class="portlet box red-haze">
+    <div class="portlet-title">
+        <div class="caption">
+            Plan
+        </div>
+    </div>
+    <div class="portlet-body">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-3">
+                    <div class="col-lg-3" style="color: brown;">Unit</div>
+                    <div class="col-lg-9">
+                        @if (ViewBag.GetProductionType != null)
+                        {
+                            @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Month</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlMonths != null)
+                        {
+                            @Html.DropDownListFor(model => model.MonNum1, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-5" style="color: brown;">Select Year</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.ddlYears != null)
+                        {
+                            @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+
+                        }
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+                    <div class="col-lg-4"> </div>
+
+                    <div class="form-actions col-lg-4">
+                        <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href='@Url.Action("DailyPlan", "Production")?MonNum1=' + $('option:selected', $('#DDDMonth')).val() + '&year=' + $('option:selected', $('#DDDYear')).val() + '&productionType=' + $('option:selected', $('#ProType')).val() " />
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<div>
+
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption col-lg-3" style="color: brown;">
+                    <span class="caption-subject #569450 sbold uppercase"> Show Data</span>
+                </div>
+                <div class="col-lg-6" style="color: green;">
+                    @if (ViewBag.DailySaved != null)
+                    {
+                        if (ViewBag.DailySaved.Count == 0)
+                        {
+                           
+                            <button type="button" class="btn btn-danger saveFullTable" id="saveFullTable" style="font-weight: bold">
+                                <span class="blink">PLEASE MUST SAVE DATA BEFORE UPDATE</span> 
+                            </button>
+                        }
+
+                    }
+
+                </div>
+                <div class="col-lg-3"></div>
+            </div>
+            <div class="portlet box">
+                <div class="portlet-body">
+                    <div class="table-responsive table-scrollable">
+                        <table id="tbl3" class="table-bordered tbl3">
+                            <tbody>
+                                <tr>
+                                    <td style="display: none"></td>
+                                    <td style="width:230px !important;text-align: center">Date</td>
+                                    @if (ViewBag.GetLine != null)
+                                    {
+                                        foreach (var item1 in ViewBag.GetLine)
+                                        {
+                                            <td style="width: auto; text-align: center">
+                                                <table class="tbl4" style="font-size: 14px; border: 1px solid black; width: 300px !important">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="allLines" id="allLines" colspan="3" style="border:1px solid black;text-align: left;font-weight: bold;padding-left: 10px">@item1.Line</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            @if (ViewBag.GetShiftSavedData != null)
+                                                            {
+                                                                foreach (var items in ViewBag.GetShiftSavedData)
+                                                                {
+                                                                    if (@item1.Line == items.Line)
+                                                                    {
+                                                                        <td style="text-align: left;font-size: 12px;">
+                                                                            <table style="font-size: 12px; border: 1px solid black; width: 300px !important; ">
+
+                                                                                <tbody>
+                                                                                    <tr style="color: black;">
+
+                                                                                        @if (@items.Shift_1 != null)
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; text-align: center; float: left">Shift_1</td>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; display: none; text-align: center; float: left; ">Shift_1</td>
+                                                                                        }
+                                                                                        @if (@items.Shift_2 != null)
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; text-align: center; float: left; ">Shift_2</td>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; display: none; text-align: center; float: left; ">Shift_2</td>
+                                                                                        }
+
+                                                                                        @if (@items.Shift_3 != null)
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; text-align: center; float: left; ">Shift_3</td>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <td style="border: 1px solid black; width: 80px; display: none; text-align: center; float: left; ">Shift_3</td>
+                                                                                        }
+
+                                                                                        <td style="border: 1px solid black; width: 50px;text-align: center; float: left; "></td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </td>
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        }
+                                    } @*//end line//*@
+
+    </tr>
+                                @if(ViewBag.DailySaved !=null)
+                                {
+                                    if (ViewBag.DailySaved.Count == 0)
+                                    {
+
+                                        foreach (var dailyShift in ViewBag.GetDailyShiftData)
+                                        {
+
+                                            <tr class="tableTrCls1">
+
+                                                <td style="display: none">@dailyShift.TotalDays</td>
+                                                <td style="text-align: left; font-size: 12px; width: 230px !important;">
+                                                    @dailyShift.AllDays
+                                                </td>
+                                                @if (ViewBag.GetLine != null)
+                                                {
+                                                    foreach (var lines in ViewBag.GetLine)
+                                                    {
+                                                        if (ViewBag.GetShiftSavedData != null)
+                                                        {
+                                                            foreach (var shifts in ViewBag.GetShiftSavedData)
+                                                            {
+                                                                if (@lines.Line == @shifts.Line)
+                                                                {
+                                                                    <td style="text-align: left; font-size: 12px;">
+                                                                        <table id="tbl5" style="font-size: 12px; border: 1px solid black; width: 300px !important;">
+                                                                            <tbody>
+                                                                                <tr class="tableTrCls1" style="color: blue;">
+                                                                                    <td class="todayDates" style="display: none">@dailyShift.TotalDays.ToString("yyyy-MM-dd")</td>
+                                                                                    <td class="allLines" style="display: none">@lines.Line</td>
+
+                                                                                    @if (ViewBag.GetDailyShiftData1 != null)
+                                                                                    {
+                                                                                        foreach (var dailyShift1 in ViewBag.GetDailyShiftData1)
+                                                                                        {
+                                                                                            if (@dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line && @shifts.Shift_1 != null)
+                                                                                            {
+
+                                                                                                if (@dailyShift.Holidays == @dailyShift1.Holidays //2020-04
+                                                                                                    && @dailyShift.Holidays != null && @dailyShift1.Holidays != null
+                                                                                                    && @dailyShift1.Shift_1 != null && @dailyShift1.ProductionType != null && @dailyShift1.Line != null
+                                                                                                    && @dailyShift1.Line == @shifts.Line && @dailyShift1.EffectiveDate != null &&
+                                                                                                    @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+
+                                                                                                    if (@dailyShift1.Shift_1 == "Holiday" || @dailyShift1.Shift_1 == "Weekend" || @dailyShift1.Shift_1 == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_1
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_1
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays != null && @dailyShift1.Holidays != null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-02
+                                                                                                         && @dailyShift1.Shift_1 == null && @dailyShift1.Line == null && @dailyShift1.ProductionType == null
+                                                                                                         && @dailyShift1.EffectiveDate == null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                @*<td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                        @dailyShift1.Holidays
+                                                                                                    </td>*@
+                                                                                                    if (@dailyShift1.Holidays == "Holiday" || @dailyShift1.Holidays == "Weekend" || @dailyShift1.Holidays == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Holidays
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Holidays
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-06
+                                                                                                         && @dailyShift1.Shift_1 != null && @dailyShift1.Line != null && @dailyShift1.Line == @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType != null && @dailyShift1.EffectiveDate != null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    if (@dailyShift1.Shift_1 == "Holiday" || @dailyShift1.Shift_1 == "Weekend" || @dailyShift1.Shift_1 == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_1
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_1
+                                                                                                        </td>
+                                                                                                    }
+
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-10
+                                                                                                         && @dailyShift1.Shift_1 == null && @dailyShift1.Line == null && @dailyShift1.Line != @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType == null && @dailyShift1.EffectiveDate == null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                        @shifts.Shift_1
+                                                                                                    </td>
+
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-10
+                                                                                                         && @dailyShift1.Shift_1 != null && @dailyShift1.Line != null && @dailyShift1.Line != @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType != null && @dailyShift1.EffectiveDate != null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                        @shifts.Shift_1
+                                                                                                    </td>
+
+                                                                                                }
+
+
+                                                                                            }
+                                                                                            if (@dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line && @shifts.Shift_2 != null)
+                                                                                            {
+
+                                                                                                if (@dailyShift.Holidays == @dailyShift1.Holidays //2020-04
+                                                                                                    && @dailyShift.Holidays != null && @dailyShift1.Holidays != null
+                                                                                                    && @dailyShift1.Shift_2 != null && @dailyShift1.ProductionType != null && @dailyShift1.Line != null
+                                                                                                    && @dailyShift1.Line == @shifts.Line && @dailyShift1.EffectiveDate != null &&
+                                                                                                    @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+
+                                                                                                    if (@dailyShift1.Shift_2 == "Holiday" || @dailyShift1.Shift_2 == "Weekend" || @dailyShift1.Shift_2 == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_2
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_2
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays != null && @dailyShift1.Holidays != null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-02
+                                                                                                         && @dailyShift1.Shift_2 == null && @dailyShift1.Line == null && @dailyShift1.ProductionType == null
+                                                                                                         && @dailyShift1.EffectiveDate == null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+
+                                                                                                    if (@dailyShift1.Holidays == "Holiday" || @dailyShift1.Holidays == "Weekend" || @dailyShift1.Holidays == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Holidays
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Holidays
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-06
+                                                                                                         && @dailyShift1.Shift_2 != null && @dailyShift1.Line != null && @dailyShift1.Line == @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType != null && @dailyShift1.EffectiveDate != null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    if (@dailyShift1.Shift_2 == "Holiday" || @dailyShift1.Shift_2 == "Weekend" || @dailyShift1.Shift_2 == "Production Halt")
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_2
+                                                                                                        </td>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                            @dailyShift1.Shift_2
+                                                                                                        </td>
+                                                                                                    }
+
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-10
+                                                                                                         && @dailyShift1.Shift_2 == null && @dailyShift1.Line == null && @dailyShift1.Line != @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType == null && @dailyShift1.EffectiveDate == null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                        @shifts.Shift_2
+                                                                                                    </td>
+
+                                                                                                }
+                                                                                                else if (@dailyShift.Holidays == null && @dailyShift1.Holidays == null && @dailyShift.Holidays == @dailyShift1.Holidays //2020-10
+                                                                                                         && @dailyShift1.Shift_2 != null && @dailyShift1.Line != null && @dailyShift1.Line != @shifts.Line
+                                                                                                         && @dailyShift1.ProductionType != null && @dailyShift1.EffectiveDate != null
+                                                                                                         && @dailyShift.TotalDays == @dailyShift1.TotalDays && @lines.Line == @shifts.Line)
+                                                                                                {
+                                                                                                    <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                                        @shifts.Shift_2
+                                                                                                    </td>
+
+                                                                                                }
+
+
+                                                                                            }
+                                                                                        }
+
+                                                                                    }
+
+                                                                                    @*<td style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 50px">
+                                                                                        <button type="button" class="btn btn-success btnOpenModal" id="btnOpenModal" style="width: 40px; height: 30px;">
+                                                                                            <span class="glyphicon glyphicon-edit" style="width: 10px; height: 10px"></span>
+                                                                                        </button>
+                                                                                    </td>*@
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+
+                                                                }
+
+                                                            }
+                                                        }
+
+
+
+                                                    }
+
+                                                }
+
+                                            </tr>
+
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var dailyShift in ViewBag.GetDailyShiftData)
+                                        {
+
+                                            <tr class="tableTrCls1">
+
+                                                <td style="display: none">@dailyShift.TotalDays</td>
+                                                <td style="text-align: left; font-size: 12px; width: 230px !important;">
+                                                    @dailyShift.AllDays
+                                                </td>
+                                                @if (ViewBag.GetLine != null)
+                                                {
+                                                    foreach (var lines in ViewBag.GetLine)
+                                                    {
+
+                                                        foreach (var dSaved in ViewBag.DailySaved)
+                                                        {
+                                                            if (dailyShift.TotalDays == dSaved.EffectiveDate && @lines.Line == @dSaved.Line)
+                                                            {
+                                                                <td style="text-align: left; font-size: 12px;">
+                                                                    <table id="tbl5" style="font-size: 12px; border: 1px solid black; width: 300px !important;">
+                                                                        <tbody>
+                                                                            <tr class="tableTrCls1" style="color: blue;">
+                                                                                <td class="todayDates" style="display: none">@dailyShift.TotalDays.ToString("yyyy-MM-dd")</td>
+                                                                                <td class="allLines" style="display: none">@lines.Line</td>
+                                                                                @if (@dSaved.Shift_1 != null)
+                                                                                {
+                                                                                    if (@dSaved.Shift_1 == "Holiday" || @dSaved.Shift_1 == "Weekend" || @dSaved.Shift_1 == "Production Halt")
+                                                                                    {
+                                                                                        <td class="ids" style="display: none">@dSaved.Id</td>
+                                                                                        <td class="sft_1" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_1
+                                                                                        </td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <td class="ids" style="display: none">@dSaved.Id</td>
+                                                                                        <td class="sft_1" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_1
+                                                                                        </td>
+                                                                                    }
+                                                                                }
+
+                                                                                @if (@dSaved.Shift_2 != null)
+                                                                                {
+                                                                                    if (@dSaved.Shift_2 == "Holiday" || @dSaved.Shift_2 == "Weekend" || @dSaved.Shift_2 == "Production Halt")
+                                                                                    {
+
+                                                                                        <td class="sft_2" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_2
+                                                                                        </td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <td class="sft_2" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_2
+                                                                                        </td>
+                                                                                    }
+                                                                                }
+
+                                                                                @if (@dSaved.Shift_3 != null)
+                                                                                {
+                                                                                    if (@dSaved.Shift_3 == "Holiday" || @dSaved.Shift_3 == "Weekend" || @dSaved.Shift_3 == "Production Halt")
+                                                                                    {
+
+                                                                                        <td class="sft_3" style="border: 1px solid red; font-weight: bold; color: red; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_3
+                                                                                        </td>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+
+                                                                                        <td class="sft_3" style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 80px;">
+                                                                                            @dSaved.Shift_3
+                                                                                        </td>
+                                                                                    }
+                                                                                }
+                                                                                <td style="border: 1px solid black; text-align: center; float: left; padding: 4px; width: 50px">
+                                                                                    <button type="button" class="btn btn-success btnOpenModal" id="btnOpenModal" style="width: 40px; height: 30px;">
+                                                                                        <span class="glyphicon glyphicon-edit" style="width: 10px; height: 10px"></span>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+
+                                                            }
+
+                                                        }
+
+
+                                                    }
+
+                                                }
+
+                                            </tr>
+
+
+                                        }
+
+                                    }
+                                }
+
+                              
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<div class="modal fade " id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="font-weight: bold;color: black;">
+                    Edit
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group" style="display:none">
+                        <label class="control-label">Line Ids :</label>
+                        <input name="lineIds" id="lineIds" type="text" class="form-control" disabled="disabled" style="color: red;font-weight: bold">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Date (yyyy-mm-dd) :</label>
+                        <input name="dateName" id="dateName" type="text" class="form-control" disabled="disabled" style="color: red;font-weight: bold">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Line Name :</label>
+                        <input name="lineName" id="lineName" type="text" class="form-control" disabled="disabled" style="color: red;font-weight: bold">
+                    </div>
+                    <div class="form-group">
+                        @*<div class="col-lg-12">
+                                <div class="col-lg-3" style="text-align: left; float: left; margin-left: -25px">  Shift_1 :</div>
+                                <div class="col-lg-9" style="float: left;margin-left: -60px">
+                                    <input name="shift_11" id="shift_11" class="form-control" disabled="disabled" style="float: left;color: red;font-weight: bold" /><br /><br />
+                                </div>
+
+                            </div>*@
+                        <label class="control-label"> Shift_1 :</label>
+                        <select name="issueList[0].shift_1" id="shift_1" class="form-control input-large shift_1"></select>
+
+                    </div>
+                    <div class="form-group sift_2_hide" id="sift_2_hide">
+                        @*<div class="col-lg-12">
+                                <div class="col-lg-3" style="text-align: left; float: left; margin-left: -25px">  Shift_2 :</div>
+                                <div class="col-lg-9" style="float: left;margin-left: -60px">
+                                    <input name="shift_22" id="shift_22" class="form-control" disabled="disabled" style="float: left;color: red;font-weight: bold" /><br /><br />
+                                </div>
+                            </div>*@
+                        <label class="control-label"> Shift_2 :</label>
+                        <select name="issueList[0].shift_2" id="shift_2" class="form-control input-large shift_2"></select>
+                    </div>
+                    <div class="form-group sift_3_hide" id="sift_3_hide">
+                        @*<div class="col-lg-12">
+                                <div class="col-lg-3" style="text-align: left; float: left; margin-left: -25px">  Shift_3 :</div>
+                                <div class="col-lg-9" style="float: left;margin-left: -60px">
+                                    <input name="shift_33" id="shift_33" class="form-control" disabled="disabled" style="float: left;color: red;font-weight: bold" /><br /><br />
+                                </div>
+                            </div>*@
+                        <label class="control-label"> Shift_3 :</label>
+                        <select name="issueList[0].shift_3" id="shift_3" class="form-control input-large shift_3"></select>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                <input type="submit" id="saveModalData" class="btn green saveModalData" value="Save changes" />
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<script>
+    var data1;
+    var obj11 = {};
+    obj11.productionType11 = $("select#ProType").val();
+    function blink_text() {
+        $('.blink').fadeOut(20);
+        $('.blink').fadeIn(500);
+    }
+    setInterval(blink_text, 2000);
+
+    function load1() {
+        if (obj11.productionType11 != "") {
+
+            data1 = JSON.stringify(obj11);
+            console.log(data1);
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetAllTeam", "Production")',
+                data: data1,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data1) {
+                    var shift1 = data1;
+                    var elem1 = $("#shift_1");
+                    elem1.empty();
+
+                    var elem2 = $("#shift_2");
+                    elem2.empty();
+
+                    var elem3 = $("#shift_3");
+                    elem3.empty();
+
+                    $.each(shift1.list, function (idx, obj) {
+
+                        elem1.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                        elem2.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+                        elem3.append('<option value="' + obj.Value + '">' + obj.Text + '</option>');
+
+                    });
+                    elem1.append('<option value="Holiday">Holiday</option>');
+                    elem1.append('<option value="Weekend">Weekend</option>');
+                    elem1.append('<option value="Production Halt">Production Halt</option>');
+
+                    elem2.append('<option value="Holiday">Holiday</option>');
+                    elem2.append('<option value="Weekend">Weekend</option>');
+                    elem2.append('<option value="Production Halt">Production Halt</option>');
+
+                    elem3.append('<option value="Holiday">Holiday</option>');
+                    elem3.append('<option value="Weekend">Weekend</option>');
+                    elem3.append('<option value="Production Halt">Production Halt</option>');
+
+                }
+            });
+        }
+    }
+
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+
+        var currentRow;
+        var index = 0;
+        load1();
+        $("body").on("click", "#tbl3 .btnOpenModal", function () {
+
+            var $row = $(this).closest("tr");
+
+            //todayDates
+            var todayDates = $row.find(".todayDates").text();
+            var allLines = $row.find(".allLines").text();
+            var idss = $row.find(".ids").text();
+
+            // alert(todayDates);
+            var sft_1 = $row.find(".sft_1").text().trim();
+
+            // alert("hii1:" + sft_1);
+            var sft_2 = $row.find(".sft_2").text().trim();
+
+            // alert("hii2:" + sft_2);
+
+            var sft_3 = $row.find(".sft_3").text().trim();
+
+            // alert("hii3:" + allLines + "," + todayDates + "," + sft_1 + "," + sft_2 + "," + sft_3);
+
+            $('#draggable').modal();
+            $('#dateName').val(todayDates);
+            $('#lineName').val(allLines);
+            $('#lineIds').val(idss);
+
+            //$('#shift_11').val(sft_1);
+            //$('#shift_22').val(sft_2);
+
+            //if (sft_3 == "") {
+            //    //sift_3_hide
+            //    document.getElementById("sift_3_hide").style.display = "none";
+
+            //} else {
+            //    $('#shift_33').val(sft_3);
+            //    document.getElementById("sift_3_hide").style.display = "block";
+            //}
+            $('#shift_1').val(sft_1);
+            // $('#shift_2').val(sft_2);
+            if (sft_2 == "") {
+                //sift_3_hide
+                document.getElementById("sift_2_hide").style.display = "none";
+
+            } else {
+                $('#shift_2').val(sft_2);
+                document.getElementById("sift_2_hide").style.display = "block";
+            }
+            if (sft_3 == "") {
+                //sift_3_hide
+                document.getElementById("sift_3_hide").style.display = "none";
+
+            } else {
+                $('#shift_3').val(sft_3);
+                document.getElementById("sift_3_hide").style.display = "block";
+            }
+
+        });
+        //saveFullTable
+        $('.saveFullTable').on('click', function () {
+            $('#loading').show();
+            var arrSub = [];
+            var obj1 = new Object();
+            var obj2 = new Object();
+            var objS1 = new Object();
+            var objS2 = new Object();
+            var objS3 = new Object();
+
+            var objYear = new Object();
+            var objMonth = new Object();
+            var objMonNum = new Object();
+            var objPhoneType = new Object();
+
+            var monType = document.getElementById('DDDMonth');
+            var month = monType.options[monType.selectedIndex].text;
+            var monNum = monType.options[monType.selectedIndex].value;
+            var yearType = document.getElementById('DDDYear');
+            var year = yearType.options[yearType.selectedIndex].value;
+            var proUnit = $("select#ProType").val();
+
+
+            objYear.Year = year;
+            objMonNum.MonNum = monNum;
+            objMonth.Month = month;
+            objPhoneType.ProductUnit = proUnit;
+
+
+            //var obj = {};
+            //var todayDates;
+            //var allLines;
+            //var sft_1;
+            //var sft_2;
+            //var sft_3;
+            $("#tbl5 tr.tableTrCls1").each(function () {
+
+                var $row = $(this).closest("tr");
+
+                var todayDates = $row.find(".todayDates").text();
+                obj1.TodaysDate = todayDates;
+                var allLines = $row.find(".allLines").text();
+                obj2.Line = allLines;
+
+                // alert(todayDates);
+                var sft_1 = $row.find(".sft_1").text().trim();
+
+                objS1.Shift_1 = sft_1;
+
+
+                // alert("hii1:" + sft_1);
+                var sft_2 = $row.find(".sft_2").text().trim();
+
+                objS2.Shift_2 = sft_2;
+
+                // alert("hii2:" + sft_2);
+
+                var sft_3 = $row.find(".sft_3").text().trim();
+
+                objS3.Shift_3 = sft_3;
+
+                var obj3Final = new Object();
+                obj3Final.AllShift = obj1.TodaysDate + "," + obj2.Line + "," + objS1.Shift_1 + "," + objS2.Shift_2 + "," + objS3.Shift_3 + ","
+                    + objYear.Year + "," + objMonNum.MonNum + "," + objMonth.Month + "," + objPhoneType.ProductUnit;
+                arrSub.push(obj3Final);
+
+            });
+
+            console.log("arrSub:" + arrSub);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveDailyPlan", "Production")',
+                // data: { arrMain: arrSub },
+                data: "{arrMain:'" + JSON.stringify(arrSub) + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    if (data.data == "ok") {
+
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Daily Plan Saved Successfully.",
+                        }).show();
+                        $('#loading').hide();
+                        window.location.reload();
+                    }
+                }
+            });
+
+        });
+
+        $('.saveModalData').on('click', function () {
+            $('#loading').show();
+            $('#draggable').modal('hide');
+            // obj11.productionType11 = $("select#ProType").val();
+            var ids;
+            var date1;
+            var line1;
+            var shift1;
+            var shift2;
+            var shift3;
+            var proUnit;
+            var year;
+
+            var monType = document.getElementById('DDDMonth');
+            var month = monType.options[monType.selectedIndex].text;
+            var monNum = monType.options[monType.selectedIndex].value;
+
+            var obj = {};
+
+            ids = $('#lineIds').val();
+            date1 = $('#dateName').val();
+            line1 = $('#lineName').val();
+            shift1 = $('#shift_1').val();
+            if (shift1 == "0") {
+                shift1 = "";
+            }
+            shift2 = $('#shift_2').val();
+            if (shift2 == "0") {
+                shift2 = "";
+            }
+            shift3 = $('#shift_3').val();
+            if (shift3 == "0") {
+                shift3 = "";
+            }
+            proUnit = $("select#ProType").val();
+            monNum = monNum;
+            month = month;
+            year = $("select#DDDYear").val();
+
+            $('#loading').show();
+
+            obj.Id = ids;
+            obj.EffectiveDate = date1;
+            obj.Line = line1;
+            obj.Shift_1 = shift1;
+            obj.Shift_2 = shift2;
+            obj.Shift_3 = shift3;
+            obj.ProductionType = proUnit;
+            obj.MonNum = monNum;
+            obj.Month = month;
+            obj.Year = year;
+
+            $.ajax({
+                url: '@Url.Action("UpdateDailyPlan", "Production")',
+                type: 'POST',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    console.log("data :" + data);
+                    if (data == "OK") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Successfully Saved",
+                        }).show();
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                    if (data == "Okis") {
+                        alertify.dialog('alert').set({
+                            'title': '   ',
+                            'transition': 'zoom',
+                            'message': "Successfully Updated",
+                        }).show();
+                        window.location.reload(true);
+                        $('#loading').hide();
+                    }
+                }
+            });
+
+            event.preventDefault(); //Prevent the default submit
+        });
+    });
+    $(document).ready(function () {
+        //var t = $('#tbl3').DataTable({
+        //    "columnDefs": [{
+        //        "searchable": false,
+        //        "orderable": true,
+        //        "targets": 0
+        //    }],
+
+        //    "paging": false,
+        //    "fixedHeader": {
+        //        header: true,
+        //        footer: true
+        //    }
+
+        //});
+        var t = $('#tbl3').DataTable({
+            //"columnDefs": [{
+            //    "searchable": false,
+            //    "orderable": false,
+            //    "targets": 0
+            //}],
+            "paging": false,
+            //"lengthMenu": [[ 30, 50, -1], [30, 50, "All"]],
+            "fixedHeader": {
+                header: true,
+                footer: true
+            },
+            "order": [[2, 'asc']]
+        });
+    });
+
+</script>

@@ -1,0 +1,772 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WALTON.MRPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ArchivedScheduleDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScheduleID" Type="bigint" Nullable="false" />
+          <Property Name="MonthNumber" Type="int" />
+          <Property Name="Year" Type="int" />
+          <Property Name="CellPhoneType" Type="int" />
+          <Property Name="ScheduledQty" Type="bigint" />
+        </EntityType>
+        <EntityType Name="BomProductModel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Model" Type="nvarchar(max)" />
+          <Property Name="ProductTypeId" Type="bigint" />
+          <Property Name="ProductTypeName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="BOMs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BomProductModelId" Type="bigint" />
+          <Property Name="InventoryItemId" Type="nvarchar" MaxLength="50" />
+          <Property Name="InventoryItemCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Component" Type="nvarchar" MaxLength="50" />
+          <Property Name="RequiredPerUnit" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="SpareItemCode" Type="nvarchar" MaxLength="500" />
+          <Property Name="SpareDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="ItemType" Type="nvarchar" MaxLength="50" />
+          <Property Name="AssemblyCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Company" Type="nvarchar" MaxLength="50" />
+          <Property Name="Uom" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProductType" Type="nvarchar" MaxLength="500" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" />
+          <Property Name="BOMType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItemCost" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="BomVersion" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddedDate" Type="date" />
+          <Property Name="AddedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DailyProductionCapacity">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CellPhoneType" Type="nvarchar" MaxLength="50" />
+          <Property Name="DailyCapacity" Type="int" />
+        </EntityType>
+        <EntityType Name="DailyScheduleDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScheduleID" Type="bigint" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Model" Type="nvarchar" MaxLength="150" />
+          <Property Name="Quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="MasterSchedule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PhaseID" Type="bigint" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="250" />
+          <Property Name="ProjectID" Type="bigint" />
+          <Property Name="Product" Type="uniqueidentifier" />
+          <Property Name="ProjectModel" Type="nvarchar" MaxLength="250" />
+          <Property Name="ProjectVarientName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TotalOrderQuantity" Type="int" />
+          <Property Name="ScheduleStatus" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="AddedBy" Type="bigint" />
+          <Property Name="AddedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Phase">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PhaseName" Type="nvarchar" MaxLength="250" />
+          <Property Name="StartMonthNumber" Type="int" />
+          <Property Name="StartMonth" Type="nvarchar" MaxLength="50" />
+          <Property Name="EndMonthNumber" Type="int" />
+          <Property Name="EndMonth" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="PipelineStages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PipelineTitle" Type="nvarchar" MaxLength="250" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Sequence" Type="int" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="ProductTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AddedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddedDate" Type="date" />
+        </EntityType>
+        <EntityType Name="SafetyLevel">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DailyLevel" Type="float" />
+          <Property Name="MonthlyLevel" Type="float" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="ScheduleDetails">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScheduleID" Type="bigint" Nullable="false" />
+          <Property Name="MonthNumber" Type="int" />
+          <Property Name="Year" Type="int" />
+          <Property Name="CellPhoneType" Type="int" />
+          <Property Name="ScheduledQty" Type="bigint" />
+        </EntityType>
+        <EntityType Name="StockCategories">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StockCategoryName" Type="nvarchar" MaxLength="250" />
+          <Property Name="OracleSubInventoryCode" Type="nvarchar" MaxLength="150" />
+          <Property Name="EntityStatus" Type="int" />
+        </EntityType>
+        <EntityType Name="TimeLinePhase">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShortName" Type="nvarchar" MaxLength="50" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="250" />
+          <Property Name="Sequence" Type="int" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="TimeLineTaskLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ScheduleID" Type="bigint" Nullable="false" />
+          <Property Name="TimeLinePhaseID" Type="bigint" />
+          <Property Name="IsDone" Type="bit" />
+        </EntityType>
+        <EntityType Name="UOMs">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Symbol" Type="nvarchar" MaxLength="50" />
+          <Property Name="UOM" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="WaltonOffDays">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OffDayTitle" Type="nvarchar" MaxLength="250" />
+          <Property Name="FromDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="DaysCount" Type="int" />
+          <Property Name="EntityStatus" Type="int" />
+        </EntityType>
+        <Association Name="FK_ArchivedScheduleDetails_MasterSchedule">
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="1" />
+          <End Role="ArchivedScheduleDetails" Type="Self.ArchivedScheduleDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterSchedule">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ArchivedScheduleDetails">
+              <PropertyRef Name="ScheduleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOMs_BOMs">
+          <End Role="BomProductModel" Type="Self.BomProductModel" Multiplicity="0..1" />
+          <End Role="BOMs" Type="Self.BOMs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BomProductModel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BOMs">
+              <PropertyRef Name="BomProductModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MasterSchedule_Phase">
+          <End Role="Phase" Type="Self.Phase" Multiplicity="1" />
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MasterSchedule">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduleDetails_MasterSchedule">
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="1" />
+          <End Role="ScheduleDetails" Type="Self.ScheduleDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterSchedule">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ScheduleDetails">
+              <PropertyRef Name="ScheduleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="WALTONMRPModelStoreContainer">
+          <EntitySet Name="ArchivedScheduleDetails" EntityType="Self.ArchivedScheduleDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BomProductModel" EntityType="Self.BomProductModel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BOMs" EntityType="Self.BOMs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DailyProductionCapacity" EntityType="Self.DailyProductionCapacity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DailyScheduleDetails" EntityType="Self.DailyScheduleDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MasterSchedule" EntityType="Self.MasterSchedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Phase" EntityType="Self.Phase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PipelineStages" EntityType="Self.PipelineStages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductTypes" EntityType="Self.ProductTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SafetyLevel" EntityType="Self.SafetyLevel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScheduleDetails" EntityType="Self.ScheduleDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StockCategories" EntityType="Self.StockCategories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TimeLinePhase" EntityType="Self.TimeLinePhase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TimeLineTaskLog" EntityType="Self.TimeLineTaskLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UOMs" EntityType="Self.UOMs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WaltonOffDays" EntityType="Self.WaltonOffDays" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ArchivedScheduleDetails_MasterSchedule" Association="Self.FK_ArchivedScheduleDetails_MasterSchedule">
+            <End Role="MasterSchedule" EntitySet="MasterSchedule" />
+            <End Role="ArchivedScheduleDetails" EntitySet="ArchivedScheduleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOMs_BOMs" Association="Self.FK_BOMs_BOMs">
+            <End Role="BomProductModel" EntitySet="BomProductModel" />
+            <End Role="BOMs" EntitySet="BOMs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MasterSchedule_Phase" Association="Self.FK_MasterSchedule_Phase">
+            <End Role="Phase" EntitySet="Phase" />
+            <End Role="MasterSchedule" EntitySet="MasterSchedule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduleDetails_MasterSchedule" Association="Self.FK_ScheduleDetails_MasterSchedule">
+            <End Role="MasterSchedule" EntitySet="MasterSchedule" />
+            <End Role="ScheduleDetails" EntitySet="ScheduleDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WALTON.MRPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ArchivedScheduleDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleID" Type="Int64" Nullable="false" />
+          <Property Name="MonthNumber" Type="Int32" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="CellPhoneType" Type="Int32" />
+          <Property Name="ScheduledQty" Type="Int64" />
+          <NavigationProperty Name="MasterSchedule" Relationship="Self.FK_ArchivedScheduleDetails_MasterSchedule" FromRole="ArchivedScheduleDetails" ToRole="MasterSchedule" />
+        </EntityType>
+        <EntityType Name="BomProductModel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Model" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProductTypeId" Type="Int64" />
+          <Property Name="ProductTypeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BOMs" Relationship="Self.FK_BOMs_BOMs" FromRole="BomProductModel" ToRole="BOMs" />
+        </EntityType>
+        <EntityType Name="BOM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BomProductModelId" Type="Int64" />
+          <Property Name="InventoryItemId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="InventoryItemCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Component" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RequiredPerUnit" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="SpareItemCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SpareDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ItemType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AssemblyCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Company" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Uom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductType" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BOMType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCost" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="BomVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddedDate" Type="DateTime" Precision="0" />
+          <Property Name="AddedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="BomProductModel" Relationship="Self.FK_BOMs_BOMs" FromRole="BOMs" ToRole="BomProductModel" />
+        </EntityType>
+        <EntityType Name="DailyProductionCapacity">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CellPhoneType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DailyCapacity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="DailyScheduleDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleID" Type="Int64" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <Property Name="Model" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="MasterSchedule">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhaseID" Type="Int64" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectID" Type="Int64" />
+          <Property Name="Product" Type="Guid" />
+          <Property Name="ProjectModel" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectVarientName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TotalOrderQuantity" Type="Int32" />
+          <Property Name="ScheduleStatus" Type="Int32" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="AddedBy" Type="Int64" />
+          <Property Name="AddedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ArchivedScheduleDetails" Relationship="Self.FK_ArchivedScheduleDetails_MasterSchedule" FromRole="MasterSchedule" ToRole="ArchivedScheduleDetails" />
+          <NavigationProperty Name="Phase" Relationship="Self.FK_MasterSchedule_Phase" FromRole="MasterSchedule" ToRole="Phase" />
+          <NavigationProperty Name="ScheduleDetails" Relationship="Self.FK_ScheduleDetails_MasterSchedule" FromRole="MasterSchedule" ToRole="ScheduleDetails" />
+        </EntityType>
+        <EntityType Name="Phase">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PhaseName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="StartMonthNumber" Type="Int32" />
+          <Property Name="StartMonth" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EndMonthNumber" Type="Int32" />
+          <Property Name="EndMonth" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
+          <NavigationProperty Name="MasterSchedules" Relationship="Self.FK_MasterSchedule_Phase" FromRole="Phase" ToRole="MasterSchedule" />
+        </EntityType>
+        <EntityType Name="PipelineStage">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PipelineTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Sequence" Type="Int32" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="ProductType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AddedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddedDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="SafetyLevel">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DailyLevel" Type="Double" />
+          <Property Name="MonthlyLevel" Type="Double" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="ScheduleDetail">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleID" Type="Int64" Nullable="false" />
+          <Property Name="MonthNumber" Type="Int32" />
+          <Property Name="Year" Type="Int32" />
+          <Property Name="CellPhoneType" Type="Int32" />
+          <Property Name="ScheduledQty" Type="Int64" />
+          <NavigationProperty Name="MasterSchedule" Relationship="Self.FK_ScheduleDetails_MasterSchedule" FromRole="ScheduleDetails" ToRole="MasterSchedule" />
+        </EntityType>
+        <EntityType Name="StockCategory">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StockCategoryName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="OracleSubInventoryCode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EntityStatus" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TimeLinePhase">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShortName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Sequence" Type="Int32" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="TimeLineTaskLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ScheduleID" Type="Int64" Nullable="false" />
+          <Property Name="TimeLinePhaseID" Type="Int64" />
+          <Property Name="IsDone" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="UOM">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Symbol" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UOM1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="WaltonOffDay">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OffDayTitle" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FromDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="DaysCount" Type="Int32" />
+          <Property Name="EntityStatus" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_ArchivedScheduleDetails_MasterSchedule">
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="1" />
+          <End Role="ArchivedScheduleDetails" Type="Self.ArchivedScheduleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterSchedule">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ArchivedScheduleDetails">
+              <PropertyRef Name="ScheduleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BOMs_BOMs">
+          <End Role="BomProductModel" Type="Self.BomProductModel" Multiplicity="0..1" />
+          <End Role="BOMs" Type="Self.BOM" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="BomProductModel">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="BOMs">
+              <PropertyRef Name="BomProductModelId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MasterSchedule_Phase">
+          <End Role="Phase" Type="Self.Phase" Multiplicity="1" />
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Phase">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MasterSchedule">
+              <PropertyRef Name="PhaseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScheduleDetails_MasterSchedule">
+          <End Role="MasterSchedule" Type="Self.MasterSchedule" Multiplicity="1" />
+          <End Role="ScheduleDetails" Type="Self.ScheduleDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MasterSchedule">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ScheduleDetails">
+              <PropertyRef Name="ScheduleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MRPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ArchivedScheduleDetails" EntityType="Self.ArchivedScheduleDetail" />
+          <EntitySet Name="BomProductModels" EntityType="Self.BomProductModel" />
+          <EntitySet Name="BOMs" EntityType="Self.BOM" />
+          <EntitySet Name="DailyProductionCapacities" EntityType="Self.DailyProductionCapacity" />
+          <EntitySet Name="DailyScheduleDetails" EntityType="Self.DailyScheduleDetail" />
+          <EntitySet Name="MasterSchedules" EntityType="Self.MasterSchedule" />
+          <EntitySet Name="Phases" EntityType="Self.Phase" />
+          <EntitySet Name="PipelineStages" EntityType="Self.PipelineStage" />
+          <EntitySet Name="ProductTypes" EntityType="Self.ProductType" />
+          <EntitySet Name="SafetyLevels" EntityType="Self.SafetyLevel" />
+          <EntitySet Name="ScheduleDetails" EntityType="Self.ScheduleDetail" />
+          <EntitySet Name="StockCategories" EntityType="Self.StockCategory" />
+          <EntitySet Name="TimeLinePhases" EntityType="Self.TimeLinePhase" />
+          <EntitySet Name="TimeLineTaskLogs" EntityType="Self.TimeLineTaskLog" />
+          <EntitySet Name="UOMs" EntityType="Self.UOM" />
+          <EntitySet Name="WaltonOffDays" EntityType="Self.WaltonOffDay" />
+          <AssociationSet Name="FK_ArchivedScheduleDetails_MasterSchedule" Association="Self.FK_ArchivedScheduleDetails_MasterSchedule">
+            <End Role="MasterSchedule" EntitySet="MasterSchedules" />
+            <End Role="ArchivedScheduleDetails" EntitySet="ArchivedScheduleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BOMs_BOMs" Association="Self.FK_BOMs_BOMs">
+            <End Role="BomProductModel" EntitySet="BomProductModels" />
+            <End Role="BOMs" EntitySet="BOMs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MasterSchedule_Phase" Association="Self.FK_MasterSchedule_Phase">
+            <End Role="Phase" EntitySet="Phases" />
+            <End Role="MasterSchedule" EntitySet="MasterSchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScheduleDetails_MasterSchedule" Association="Self.FK_ScheduleDetails_MasterSchedule">
+            <End Role="MasterSchedule" EntitySet="MasterSchedules" />
+            <End Role="ScheduleDetails" EntitySet="ScheduleDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WALTONMRPModelStoreContainer" CdmEntityContainer="MRPEntities">
+          <EntitySetMapping Name="ArchivedScheduleDetails">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.ArchivedScheduleDetail">
+              <MappingFragment StoreEntitySet="ArchivedScheduleDetails">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="MonthNumber" ColumnName="MonthNumber" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="CellPhoneType" ColumnName="CellPhoneType" />
+                <ScalarProperty Name="ScheduledQty" ColumnName="ScheduledQty" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BomProductModels">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.BomProductModel">
+              <MappingFragment StoreEntitySet="BomProductModel">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductTypeId" ColumnName="ProductTypeId" />
+                <ScalarProperty Name="ProductTypeName" ColumnName="ProductTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BOMs">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.BOM">
+              <MappingFragment StoreEntitySet="BOMs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BomProductModelId" ColumnName="BomProductModelId" />
+                <ScalarProperty Name="InventoryItemId" ColumnName="InventoryItemId" />
+                <ScalarProperty Name="InventoryItemCode" ColumnName="InventoryItemCode" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Component" ColumnName="Component" />
+                <ScalarProperty Name="RequiredPerUnit" ColumnName="RequiredPerUnit" />
+                <ScalarProperty Name="SpareItemCode" ColumnName="SpareItemCode" />
+                <ScalarProperty Name="SpareDescription" ColumnName="SpareDescription" />
+                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
+                <ScalarProperty Name="AssemblyCode" ColumnName="AssemblyCode" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="Uom" ColumnName="Uom" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="BOMType" ColumnName="BOMType" />
+                <ScalarProperty Name="ItemCost" ColumnName="ItemCost" />
+                <ScalarProperty Name="BomVersion" ColumnName="BomVersion" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyProductionCapacities">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.DailyProductionCapacity">
+              <MappingFragment StoreEntitySet="DailyProductionCapacity">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CellPhoneType" ColumnName="CellPhoneType" />
+                <ScalarProperty Name="DailyCapacity" ColumnName="DailyCapacity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailyScheduleDetails">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.DailyScheduleDetail">
+              <MappingFragment StoreEntitySet="DailyScheduleDetails">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MasterSchedules">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.MasterSchedule">
+              <MappingFragment StoreEntitySet="MasterSchedule">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PhaseID" ColumnName="PhaseID" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="Product" ColumnName="Product" />
+                <ScalarProperty Name="ProjectModel" ColumnName="ProjectModel" />
+                <ScalarProperty Name="ProjectVarientName" ColumnName="ProjectVarientName" />
+                <ScalarProperty Name="TotalOrderQuantity" ColumnName="TotalOrderQuantity" />
+                <ScalarProperty Name="ScheduleStatus" ColumnName="ScheduleStatus" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Phases">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.Phase">
+              <MappingFragment StoreEntitySet="Phase">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PhaseName" ColumnName="PhaseName" />
+                <ScalarProperty Name="StartMonthNumber" ColumnName="StartMonthNumber" />
+                <ScalarProperty Name="StartMonth" ColumnName="StartMonth" />
+                <ScalarProperty Name="EndMonthNumber" ColumnName="EndMonthNumber" />
+                <ScalarProperty Name="EndMonth" ColumnName="EndMonth" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PipelineStages">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.PipelineStage">
+              <MappingFragment StoreEntitySet="PipelineStages">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="PipelineTitle" ColumnName="PipelineTitle" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductTypes">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.ProductType">
+              <MappingFragment StoreEntitySet="ProductTypes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AddedBy" ColumnName="AddedBy" />
+                <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SafetyLevels">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.SafetyLevel">
+              <MappingFragment StoreEntitySet="SafetyLevel">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DailyLevel" ColumnName="DailyLevel" />
+                <ScalarProperty Name="MonthlyLevel" ColumnName="MonthlyLevel" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScheduleDetails">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.ScheduleDetail">
+              <MappingFragment StoreEntitySet="ScheduleDetails">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="MonthNumber" ColumnName="MonthNumber" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="CellPhoneType" ColumnName="CellPhoneType" />
+                <ScalarProperty Name="ScheduledQty" ColumnName="ScheduledQty" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StockCategories">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.StockCategory">
+              <MappingFragment StoreEntitySet="StockCategories">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="StockCategoryName" ColumnName="StockCategoryName" />
+                <ScalarProperty Name="OracleSubInventoryCode" ColumnName="OracleSubInventoryCode" />
+                <ScalarProperty Name="EntityStatus" ColumnName="EntityStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeLinePhases">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.TimeLinePhase">
+              <MappingFragment StoreEntitySet="TimeLinePhase">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeLineTaskLogs">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.TimeLineTaskLog">
+              <MappingFragment StoreEntitySet="TimeLineTaskLog">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="TimeLinePhaseID" ColumnName="TimeLinePhaseID" />
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UOMs">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.UOM">
+              <MappingFragment StoreEntitySet="UOMs">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Symbol" ColumnName="Symbol" />
+                <ScalarProperty Name="UOM1" ColumnName="UOM" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WaltonOffDays">
+            <EntityTypeMapping TypeName="WALTON.MRPModel.WaltonOffDay">
+              <MappingFragment StoreEntitySet="WaltonOffDays">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="OffDayTitle" ColumnName="OffDayTitle" />
+                <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="DaysCount" ColumnName="DaysCount" />
+                <ScalarProperty Name="EntityStatus" ColumnName="EntityStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

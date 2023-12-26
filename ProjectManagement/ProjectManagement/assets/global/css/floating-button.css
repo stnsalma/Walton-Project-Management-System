@@ -1,0 +1,111 @@
+﻿/*=============two float on top===========*/
+
+.tile, .tile1 {
+  z-index: 10;
+  position: fixed;
+  bottom: 2%; /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+  left: 2%; /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+}
+.float {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 64px;
+  background-color: #39cece;
+  color: #FFF;
+  cursor: pointer;
+  border-radius: 50px;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+  z-index: 1000;
+  animation: bot-to-top 2s ease-out;
+}
+.tile1 .float {
+  background-color: #e75b5b;
+}
+.soc a {
+  color: #FFF;
+  border-radius: 50%;
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  line-height: 53px;
+  padding: 0px;
+  font-size: 20px;
+  display: inline-block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  transition: all .5s;
+}
+.soc a:hover {
+  box-shadow: 2px 2px 3px #999;
+}
+a.facebook {
+  background-color: #4E71A8;
+  animation-delay: .5s;
+}
+a.google-plus {
+  animation-delay: .7s;
+  background-color: #E3411F;
+}
+a.twitter {
+  animation-delay: .15s;
+  background-color: #1CB7EB;
+}
+.pad .facebook {
+  left: 70px;
+}
+.pad .google-plus {
+  left: 130px;
+}
+.pad .twitter {
+  left: 190px;
+}
+.my-float {
+  font-size: 28px;
+  /*margin-bottom: 5px;*/
+}
+/*.tile1 .float {
+  font-size: 24px;
+}*/
+.menu-share i {
+  animation: rotate-in 0.5s;
+}
+
+/* .tile .menu-share:hover > i{
+	animation: rotate-out 0.5s;
+} */
+
+@keyframes rotate-in {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-out {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+
+.modal1 {
+    display: none;
+    position: fixed;
+    z-index: 1500;
+    top: 50px;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /*background: rgba( 255, 255, 255, .8 );*/
+}
+
+

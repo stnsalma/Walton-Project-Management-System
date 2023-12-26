@@ -1,0 +1,295 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+<style>
+    div.scrollmenu {
+        background-color: #778899;
+        overflow: auto;
+        white-space: nowrap;
+    }
+
+        div.scrollmenu a {
+            display: inline-block;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            text-decoration: none;
+        }
+
+            div.scrollmenu a:hover {
+                background-color: #777;
+            }
+</style>
+
+
+<link href="~/Content/fileinput.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm("HwTestHousingInfo", "Hardware", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.HwTestHousingInfoModel.HwQcAssignId, new { @Value = @ViewBag.HwQcAssignId })
+    @Html.HiddenFor(model => model.HwTestHousingInfoModel.HwQcInchargeAssignId, new { @Value = @ViewBag.HwQcInchargeAssignId })
+    @Html.HiddenFor(model => model.HwTestHousingInfoModel.Added)
+    @Html.HiddenFor(model => model.HwTestHousingInfoModel.AddedDate)
+    @Html.HiddenFor(model => model.HwTestCustomModel.HwTestHousingInfoId, new { @Value = @ViewBag.HwTestCustomModel.HwTestHousingInfoId })
+    @Html.HiddenFor(model => model.HwTestHousingInfoModel.QcDocUploadPath)
+    <input type="hidden" id="hdnHwQcAssignId" value="@ViewBag.HwQcAssignId">
+    <div class="page-head">
+        <div class="page-title">
+            <h1>
+                Welcome! @ViewBag.UserInfo.UserFullName
+                @*<small>only projects which passed QC</small>*@
+            </h1>
+        </div>
+        <div class="action">
+            @if (ViewBag.FgFlag == 1)
+            {
+                @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.Flag, new { @Value = ViewBag.FgFlag })
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwFgTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+            else
+            {
+                <a class="btn green btn-outline btn-circle btn-sm pull-right jquery-word-export" onclick="location.href='@Url.Action("HwTestNavigation", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">
+                    <i class="fa fa-arrow-circle-o-right"></i>
+                    Go to Nav Page
+                </a>
+            }
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="scrollmenu">
+                <a onclick="location.href='@Url.Action("HwTestPCBMaterial", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">PCB</a>
+                <a onclick="location.href='@Url.Action("HwTestPcbAComponentInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">PCBA</a>
+                <a onclick="location.href='@Url.Action("HwTestCameraInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Camera</a>
+                <a onclick="location.href='@Url.Action("HwTestTpLcdInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">TP+LCD</a>
+                <a onclick="location.href='@Url.Action("HwTestSoundInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Sound</a>
+                <a onclick="location.href='@Url.Action("HwTestFPCandSIMSlotInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">FPC & SimSlot</a>
+                <a onclick="location.href='@Url.Action("HwTestBatteryInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery</a>
+                <a onclick="location.href='@Url.Action("HwTestChargerInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger</a>
+                <a onclick="location.href='@Url.Action("HwTestUsbCableInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB</a>
+                <a onclick="location.href='@Url.Action("HwTestEarphoneInterfaceInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'">Earphone</a>
+                <a onclick="location.href='@Url.Action("HwTestChargingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charging</a>
+                <a onclick="location.href='@Url.Action("HwTestHousingInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Housing</a>
+                <a onclick="location.href='@Url.Action("HwTestCrossMatchInfo", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Cross Match</a>
+                <a onclick="location.href='@Url.Action("HwTestOverall", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Overall</a>
+                @if (ViewBag.FgFlag == 1)
+                {
+                    <a onclick="location.href='@Url.Action("HwFgBatteryTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Battery Cycle Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgChargerTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">Charger Test</a>
+                    <a onclick="location.href='@Url.Action("HwFgUsbCableTest", "Hardware")?hwQcAssignId='+$('#hdnHwQcAssignId').val()+'&hwqcinchargeassignId='+'@ViewBag.HwQcInchargeAssignId'+'&projectName='+'@Html.DisplayFor(model=>model.ProjectMasterModel.ProjectName)'+'&flag='+'@ViewBag.FgFlag'">USB Cable Test</a>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-list"></i>Hardware Test : @Html.DisplayFor(model => model.ProjectMasterModel.ProjectName, new { @class = "control-label" })
+            </div>
+            <div class="tools">
+                <a class="collapse" href="javascript:;" data-original-title="" title=""> </a>
+
+                <a class="reload" href="javascript:;" data-original-title="" title=""> </a>
+                <a class="fullscreen" href="#" data-original-title="" title=""> </a>
+
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-body">
+                        <h4 class="bold"><i class="fa fa-building"></i>Housing Info</h4>
+                        <hr />
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("A Housing", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(model => model.HwTestHousingInfoModel.Housing_A, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Yes",Value = "True"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "No",Value = "False"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestHousingInfoModel.Housing_A)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("B Housing", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(model => model.HwTestHousingInfoModel.Housing_B, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Yes",Value = "True"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "No",Value = "False"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestHousingInfoModel.Housing_B)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("C Housing", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.DropDownListFor(model => model.HwTestHousingInfoModel.Housing_C, new List<SelectListItem>
+                                        {
+                                            new SelectListItem()
+                                            {
+                                                Text = "Yes",Value = "True"
+                                            },
+                                            new SelectListItem()
+                                            {
+                                                Text = "No",Value = "False"
+                                            }
+                                        }, "select", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.HwTestHousingInfoModel.Housing_C)
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Recommendation", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestHousingInfoModel.Recommendation, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(model => model.HwTestHousingInfoModel.Recommendation)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.Label("Comment", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.TextAreaFor(model => model.HwTestHousingInfoModel.Comment, new { @class = "form-control", @rows = 3 })
+                                            @Html.ValidationMessageFor(model => model.HwTestHousingInfoModel.Comment)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">File Upload</label>
+                                        <div class="col-md-8">
+                                            @Html.TextBoxFor(model => model.HwTestHousingInfoModel.HwQcDocUpload, new { type = "file", @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-md-4"></div>
+                                    <div class="col-md-8">
+                                        <div class="file-preview-thumbnails">
+                                            <div class="container-fluid">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="">
+
+
+
+                                                        @if (@Model.HwTestHousingInfoModel == null || @Model.HwTestHousingInfoModel.QcDocUploadPath == null || @Model.HwTestHousingInfoModel.QcDocUploadPath == "../Content/UploadImage/")
+                                                        {
+
+                                                            <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                                        }
+
+                                                        else if (@Model.HwTestHousingInfoModel.ImageExtension == ".jpg" || @Model.HwTestHousingInfoModel.ImageExtension == ".png" || @Model.HwTestHousingInfoModel.ImageExtension == ".jpeg")
+                                                        {
+
+                                                            <img src="@Model.HwTestHousingInfoModel.QcDocUploadPath" class=" file-preview-image img-responsive" title="" alt="" style="width:auto;height:160px;" />
+
+                                                        }
+                                                        else if (@Model.HwTestHousingInfoModel.ImageExtension == ".pdf")
+                                                        {
+
+                                                            <embed class="file-preview-image img-responsive" id="filePath" src="@Model.HwTestHousingInfoModel.QcDocUploadPath" width="auto" height="400px" type="application/pdf" />
+
+                                                        }
+
+
+
+                                                    </div>
+                                                    <div class="file-thumbnail-footer">
+
+                                                        <div class="file-actions">
+                                                            <div class="file-footer-buttons">
+
+                                                                <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                            </div>
+
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            @if (@ViewBag.HwTestCustomModel.HwTestHousingInfoId == null)
+                                            {
+                                                <input type="submit" value="Save" class="btn btn-default" id="btnsave" />
+                                            }
+                                            else
+                                            {
+                                                <input type="submit" value="Update" class="btn btn-default" id="btnupdate" />
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<script>
+    $(function () {
+        //var msg = $('#hdnSuccess').val();
+        var msg = ('@(TempData["message"])');
+        if (msg !== "") {
+            alertify.notify(msg, 'success', 5, function () { console.log("dismiss"); });
+        }
+    });
+</script>

@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "IncidentSolvedDeniedByMe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident List Solved/Denied By Me
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered dtTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Referred to</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.incidents)
+                    {
+                    <tr>
+                        <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                        <td class="text-center">@i.GeneralIncidentTitle</td>
+                        <td class="text-center">@i.GeneralIncidentCategories</td>
+                        <td class="text-center">@i.GeneralIncidentDetails</td>
+                        <td class="text-center">@i.AddedDate</td>
+                        <td class="text-center">
+                            @if (i.DiscloseDate != null)
+                                {
+                                <span class="bold" style="color: green">DISCLOSED</span>
+                                }
+                                else
+                                {
+                                <span class="bold" style="color: red">RUNNING</span>
+                                }
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails">Details</button>
+                        </td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('#multiple').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+
+    $('.btnDetails').on('click', function () {
+        //var rowindex = $(this).closest('tr').index();
+        //console.log(rowindex);
+        var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+        //alert(incidentid);
+        var url = '@Url.Action("GeneralIncidentDetails", "GeneralIncident")?incidentId=' + incidentid;
+        window.location.href = url;
+    });
+</script>
+
+
+

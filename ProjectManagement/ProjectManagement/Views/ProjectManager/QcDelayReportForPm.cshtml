@@ -1,0 +1,272 @@
+﻿@*<h2>QcDelayReportForPm</h2>*@
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Software.VmAllIncentiveList
+
+<script src="~/Scripts/moment.js"></script>
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/FileSaver/FileSaver.js"></script>
+<script src="~/Scripts/FileSaver/jquery.wordexport.js"></script>
+<script src="~/Scripts/jquery.table2excel.min.js"></script>
+<style>
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+<div class="note note-success">
+    <p style="color: green;font-size: 20px;"> Qc Delay Report </p>
+</div>
+<div class="row">
+    <div class="col-md-2">
+
+        <button class="btn green btn-outline btn-circle btn-sm pull-left" onclick="tableToExcel('table2excel', '@Request.Params["Name"]')">
+            <i class="fa fa-save"></i>
+            Export to Excel
+        </button>
+    </div>
+
+    <button class="btn green btn-outline btn-circle btn-sm pull-right pdf" id="pdf">
+        <i class="fa fa-save"></i>
+        Export as PDF
+    </button>
+</div>
+<br />
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Report
+        </div>
+    </div>
+    <div class="portlet-body" style="display: block;">
+       <p style="color: red"> Note:</p> 1. Project Name, StartDate, EndDate. 2. Project Type, StartDate, EndDate.<br/>
+        3. StartDate, EndDate. 4. StartDate, EndDate, Select Person.
+        <br /><br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">Select Project</div>
+                    <div class="col-lg-7">
+                        @if (Model != null && Model.ProjectMasterModels.Any())
+                        {
+                            @Html.DropDownListFor(model => model.ProjectName, new SelectList(ViewBag.ProjectLists, "Value", "Text"), new { @class = "form-control ddChosen", @id = "ProjectName" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">Project Type</div>
+                    <div class="col-lg-7">
+                        @Html.DropDownListFor(model => model.ProjectType,
+                        new SelectList(new List<object>
+                            {
+                                new {value = "0", text = "Select"},
+                                new {value = "Smart", text = "Smart"},
+                                new {value = "Feature", text = "Feature"},
+
+                            }, "value", "text", Model.ProjectType), new { @class = "form-control", @id = "ProjectType" })
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">StartDate</div>
+                    <div class="col-lg-7">
+                        <input class="form-control date_picker" name="StartDate" id="StartDate" value="@Model.StartDate" type="text" placeholder="yyyy-mm-dd">
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">EndDate</div>
+                    <div class="col-lg-7">
+                        <input class="form-control date_picker" name="EndDate" id="EndDate" value="@Model.EndDate" type="text" placeholder="yyyy-mm-dd">
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-1"></div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;">Select Person</div>
+                    <div class="col-lg-7">
+                        @if (ViewBag.CmnUserModelsList !=null)
+                        {
+                            @Html.DropDownListFor(model => model.EmployeeCode, new SelectList(ViewBag.CmnUserModelsList, "Value", "Text"), new { @class = "form-control ddChosen", @id = "EmployeeCode" })
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-lg-5" style="color: brown;"></div>
+                    <div class="col-lg-7">
+                        
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+            </div>
+        </div>
+        <br /><br /><br />
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-4" style="text-align: center">
+                </div>
+                <div class="col-md-4" style="text-align: center">
+                    <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSearch" value="SEARCH" onclick="location.href = '@Url.Action("QcDelayReportForPm", "ProjectManager")?ProjectName=' + $('option:selected', $('#ProjectName')).val() + '&ProjectType=' + $('option:selected', $('#ProjectType')).val() + '&StartDate=' + $('#StartDate').val() + '&EndDate=' + $('#EndDate').val() +'&EmployeeCode=' + $('#EmployeeCode').val()+'' ">
+                </div>
+                <div class="col-md-4" style="text-align: center">
+                </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="row">
+            <div class="col-md-12 table2excel" id="table2excel">
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="col-lg-12">
+                            <div class="caption font-dark">
+                                <i class="icon-settings font-dark"></i>
+                                <span class="caption-subject bold uppercase" style="color: red">Delay Report</span>
+                            </div>
+                            <div class="tools"> </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <table class="table table-striped table-bordered table-hover table-both-scroll tbl1" id="tbl1">
+                            <thead>
+                                <tr class="trClsforSize1">
+                                    <th>#</th>
+                                    <th style="text-align: left;font-size: 12px"> ProjectName </th>
+                                    <th style="text-align: left;font-size: 12px"> Project<br />Type </th>
+                                    <th style="text-align: left;font-size: 12px"> PM <br />Comment </th>
+                                    <th style="text-align: left;font-size: 12px"> Project<br />Sample<br />Type </th>
+                                    <th style="text-align: left;font-size: 12px"> Sample<br />No. </th>
+                                    <th style="text-align: left;font-size: 12px">Sofware Version Name </th>
+                                    <th style="text-align: left;font-size: 12px">Software<br />Version<br />Number </th>
+                                    <th style="text-align: left;font-size: 12px">New<br />Issue</th>
+                                    <th style="text-align: left;font-size: 12px">Status</th>
+                                    <th style="text-align: left;font-size: 12px">PM to QC <br />Assign Time </th>
+                                    <th style="text-align: left;font-size: 12px">Qc<br />Finish<br />Time </th>
+                                    <th style="text-align: left;font-size: 12px">Feedback<br />Delay </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.GetQcDelayReport != null)
+                                {
+                                    foreach (var item in ViewBag.GetQcDelayReport)
+                                    {
+                                        <tr style="text-align: center" class="trClsforSize" id="trClsforSize">
+                                            <td></td>
+                                            <td style="text-align: left"> @item.ProjectName</td>
+                                            <td style="text-align: left"> @item.ProjectType</td>
+
+                                            <td style="text-align: left">@item.PmToQcHeadAssignComment</td>
+                                            <td style="text-align: left">@item.ProjectManagerSampleType</td>
+                                            <td style="text-align: left">@item.ProjectManagerSampleNo</td>
+                                            <td style="text-align: left">@item.SoftwareVersionName</td>
+                                            <td style="text-align: left">@item.SoftwareVersionNo</td>
+                                            <td style="text-align: left">@item.NewIssue</td>
+                                            <td style="text-align: left">@item.Status</td>
+                                            <td style="text-align: left">
+                                                @if (@item.PmToQcHeadAssignTime != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.PmToQcHeadAssignTime)}
+                                            </td>
+                                            <td style="text-align: left">
+                                                @if (@item.SwQcFinishedTime != null)
+                                                {@String.Format("{0:yyyy-MM-dd}", @item.SwQcFinishedTime)}
+                                            </td>
+                                            <td style="text-align: left">@item.FeedbackDuration</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EXAMPLE TABLE PORTLET-->
+                <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            </div>
+
+        </div>
+        <br /><br />
+    </div>
+</div>
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    //$('#StartDate').datepicker({
+    //    format: 'yyyy-mm-dd',
+    //    autoclose: true
+    //});
+    //$('#EndDate').datepicker({
+    //    format: 'yyyy-mm-dd',
+    //    autoclose: true
+    //});
+    $(document).ready(function () {
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+           // "paging": true,
+            //"scrollY": true,
+            //"scrollX": true,
+           "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+    $("#pdf").on("click", function () {
+        var divContents = $("#PDFWrapper").html();
+        var printWindow = window.open('', '', 'height=400,width=800');
+        printWindow.document.write('<html><head><title></title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(divContents);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    });
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+          , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+          , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+          , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            //window.location.href = uri + base64(format(template, ctx))
+            var link = document.createElement("a");
+            link.download = 'QcDelayReport' + '.xls';
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+        }
+    })()
+</script>

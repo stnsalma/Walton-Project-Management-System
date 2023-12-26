@@ -1,0 +1,549 @@
+﻿@using System.Web.Mvc.Html
+@using Microsoft.Ajax.Utilities
+@model ProjectManagement.Models.NinetyFiveProductionRewardModel
+@*<h2>CmPenaltiesAndReward</h2>*@
+<style>
+    .table {
+        font-size: 13px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-2">
+
+        <button class="btn green btn-outline btn-circle btn-sm pull-left" onclick="tableToExcel('table2excel', '@Request.Params["Name"]')">
+            <i class="fa fa-save"></i>
+            Export to Excel
+        </button>
+    </div>
+
+    @*<button class="btn green btn-outline btn-circle btn-sm pull-right pdf" id="pdf">
+        <i class="fa fa-save"></i>
+        Export as PDF
+    </button>*@
+</div>
+<br/>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption" style="font-size: 13px;color: red">
+                    Select Month & Year
+                </div>
+                <div class="tools">
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="reload"> </a>
+                </div>
+            </div>
+            <div class="portlet box green-haze">
+                <div class="portlet-body table-scrollable table-responsive">
+                    <div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-5">
+                                <div class="col-lg-5" style="color: brown;">Select Month</div>
+                                <div class="col-lg-7">
+                                    @if (ViewBag.ddlMonths != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.Month, new SelectList(ViewBag.ddlMonths, "Value", "Text"), new { @class = "DDDMonthCls1 form-control", @id = "DDDMonth" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="col-lg-5" style="color: brown;">Select Year</div>
+                                <div class="col-lg-7">
+                                    @if (ViewBag.ddlYears != null)
+                                    {
+                                        @Html.DropDownListFor(model => model.Year, new SelectList(ViewBag.ddlYears, "Value", "Text"), new { @class = "DDDYearCls1 form-control", @id = "DDDYear" })
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-1"></div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-actions">
+                            <div class="row">
+                                <div class="col-md-4" style="text-align: center">
+                                </div>
+                             
+                                <div class="col-md-4" style="text-align: center">
+                                    <input class="btn sbold uppercase btn-outline blue" type="submit" id="btnSearch" value="SEARCH" onclick="location.href = '@Url.Action("CmPenaltiesAndReward", "Commercial")?MonNum=' + $('option:selected', $('#DDDMonth')).val() + '&Year=' + $('option:selected', $('#DDDYear')).val() + '' ">
+                                </div>
+                                <div class="col-md-4" style="text-align: center">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="table2excel" id="table2excel">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="font-size: 13px;color: red">
+                        Total Reward & Penalties    
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+                <div class="portlet box green-haze">
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <div>
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblRewardPenalties11" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                <thead>
+                                    <tr>
+                                        <th>Total<br /> Reward</th>
+                                        <th>Total<br />Penalties</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @if (ViewBag.GetRewardAndPenalties != null)
+                                    {
+                                        foreach (var items in ViewBag.GetRewardAndPenalties)
+                                        {
+                                            if (@items.TotalReward1 != null && @items.TotalDeduction1 != null)
+                                            {
+                                                <tr>
+                                                    <td><input id="tRewards" value="@items.TotalReward1" disabled="disabled" /></td>
+                                                    <td><input id="tPenalties" value="@items.TotalDeduction1" disabled="disabled" /></td>
+
+                                                </tr>
+                                            }
+
+                                        }
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="font-size: 13px;color: red">
+                        Policy No.1: **For CKD and SKD Projects 150 Days [PoDate to Material arrive after deadline per day 70 tk will be deducted, if arrive before deadline per day 350tk will be rewarded]
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+                <div class="portlet box green-haze">
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <div>
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblPoPenaltiesData" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>ProjectName</th>
+                                        <th>Project<br />Type</th>
+                                        <th>Shipment<br />Type</th>
+                                        <th>Orders</th>
+                                        <th>Po___Date</th>
+                                        <th>Warehouse<br />Entrydate</th>
+                                        <th>DaysDiff</th>
+                                        <th>Effective<br />Days<br />CKD/SKD</th>
+                                        <th>Deduct<br />Point</th>
+                                        <th>DaysDiff<br />ForDeduct</th>
+                                        <th>Amount<br />Deduct</th>
+                                        <th>Reward<br />Point</th>
+                                        <th>DaysDiff<br />ForReward</th>
+                                        <th>Amount<br />Reward</th>
+                                        <th>IsFinal<br />Shipment?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.CmPenaltiesAndRewardCkdSkd != null)
+                                    {
+                                        foreach (var items in ViewBag.CmPenaltiesAndRewardCkdSkd)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>@items.ProjectName</td>
+                                                <td>@items.ProjectType</td>
+                                                <td>@items.ShipmentType</td>
+                                                <td>@items.Orders Order</td>
+                                                <td>
+                                                    @if (@items.PoDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                                </td>
+                                                <td>
+                                                    @if (@items.WarehouseEntryDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                                </td>
+                                                <td>@items.DaysDiff</td>
+                                                <td>@items.EffectiveDays</td>
+                                                <td>@items.DeductPoint</td>
+                                                <td>@items.DaysDiffForDeduct</td>
+                                                <td>@items.AmountDeduct</td>
+                                                <td>@items.RewardPoint</td>
+                                                <td>@items.DaysDiffForReward</td>
+                                                <td>@items.AmountReward</td>
+                                                <td>@items.IsFinalShipment</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="font-size: 13px;color: red">
+                        Policy No.1: **For Repeat Order Projects if Sea-100 Days and if Air-80 Days [PoDate to Material arrive after deadline per day 70 tk will be deducted, if arrive before deadline per day 350tk will be rewarded]
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+                <div class="portlet box green-haze">
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <div>
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblRepeat" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>ProjectName</th>
+                                        <th>Project<br />Type</th>
+                                        <th>Shipment<br />Type</th>
+                                        <th>Orders</th>
+                                        <th>Po___Date</th>
+                                        <th>Warehouse<br />Entrydate</th>
+                                        <th>DaysDiff</th>
+                                        <th>Effective<br />Days<br />Sea/Air</th>
+                                        <th>Deduct<br />Point</th>
+                                        <th>DaysDiff<br />ForDeduct</th>
+                                        <th>Amount<br />Deduct</th>
+                                        <th>Reward<br />Point</th>
+                                        <th>DaysDiff<br />ForReward</th>
+                                        <th>Amount<br />Reward</th>
+                                        <th>IsFinal<br />Shipment?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.CmPenaltiesAndRewardRepeatOrder != null)
+                                    {
+                                        foreach (var items in ViewBag.CmPenaltiesAndRewardRepeatOrder)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>@items.ProjectName</td>
+                                                <td>@items.ProjectType</td>
+                                                <td>@items.ShipmentType</td>
+                                                <td>@items.Orders Order</td>
+                                                <td>
+                                                    @if (@items.PoDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.PoDate)}
+                                                </td>
+                                                <td>
+                                                    @if (@items.WarehouseEntryDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                                </td>
+                                                <td>@items.DaysDiff</td>
+
+                                                <td>@items.EffectiveDays</td>
+                                                <td>@items.DeductPoint</td>
+                                                <td>@items.DaysDiffForDeduct</td>
+                                                <td>@items.AmountDeduct</td>
+                                                <td>@items.RewardPoint</td>
+                                                <td>@items.DaysDiffForReward</td>
+                                                <td>@items.AmountReward</td>
+                                                <td>@items.IsFinalShipment</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="font-size: 13px;color: red">
+                        Policy No.6: **If 95% of any model will be produced within 45 days-CKD and 30 days-SKD from the date of Factory Receive then 2100TK will be rewarded.
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+                <div class="portlet box green-haze">
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <div>
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblProReward" style="overflow-y: auto;overflow-x: auto;width: 400px;font-size: 14px;">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>ProjectName</th>
+                                        <th>Sourcing<br />Type</th>
+                                        <th>Orders</th>
+                                        <th>Warehouse<br />EntryDate</th>
+                                        <th>Extended<br />Warehouse<br />Date</th>
+                                        <th>Order<br />Quantity</th>
+                                        <th>Total<br />Production<br />Quantity</th>
+                                        <th>Effective<br />Days<br />CKD/SKD</th>
+                                        <th>Reward<br />Percentage</th>
+                                        <th>Existed<br />Percentage</th>
+                                        <th>Reward<br />Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.CmRewardNinetyFiveProduction != null)
+                                    {
+                                        foreach (var items in ViewBag.CmRewardNinetyFiveProduction)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>@items.ProjectModel</td>
+                                                <td>@items.SourcingType</td>
+                                                <td>@items.WpmsOrders</td>
+                                                <td>
+                                                    @if (@items.WarehouseEntryDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                                </td>
+                                                <td>
+                                                    @if (@items.ExtendedWarehouseDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.ExtendedWarehouseDate)}
+                                                </td>
+                                                <td>@items.OrderQuantity</td>
+                                                <td>@items.TotalProductionQuantity</td>
+                                                <td>@items.EffectiveDays</td>
+                                                <td>@items.RewardPercentage</td>
+                                                <td>@items.ExistedPercentage</td>
+                                                <td>@items.RewardAmount</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption" style="font-size: 13px;color: red">
+                        Policy No.7: **If 95% of a Lot(Model Wise) Sale Out within 4 months from Warehouse Receive Date then 3500TK will be rewarded.
+                    </div>
+                    <div class="tools">
+                        <a href="javascript:;" class="collapse"> </a>
+                        <a href="javascript:;" class="reload"> </a>
+                    </div>
+                </div>
+                <div class="portlet box green-haze">
+                    <div class="portlet-body table-scrollable table-responsive">
+                        <div>
+                            <table class="table table-bordered table-striped table-condensed flip-content" id="tblSalesOutReward" style="overflow-y: auto;overflow-x: auto;width: 400px">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>ProjectName</th>
+                                        <th>Orders</th>
+                                        <th>Warehouse<br />EntryDate</th>
+                                        <th>Extended<br />Warehouse<br />Date</th>
+                                        <th>Effective<br />Days<br />CKD/SKD</th>
+                                        <th>Order<br />Quantity</th>
+                                        <th>Total<br />SalesOut</th>
+                                        <th>Reward<br />Percentage</th>
+                                        <th>Existed<br />Percentage</th>
+                                        <th>Reward<br />Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.CmRewardNinetyFiveSalesOut != null)
+                                    {
+                                        foreach (var items in ViewBag.CmRewardNinetyFiveSalesOut)
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>@items.ProjectModel</td>
+                                                <td>@items.Orders</td>
+                                                <td>
+                                                    @if (@items.WarehouseEntryDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.WarehouseEntryDate)}
+                                                </td>
+                                                <td>
+                                                    @if (@items.ExtendedWarehouseDate != null)
+                                                    {@String.Format("{0:yyyy-MM-dd}", @items.ExtendedWarehouseDate)}
+                                                </td>
+                                                <td>@items.EffectiveDays</td>
+                                                <td>@items.OrderQuantity</td>
+                                                <td>@items.TotalSalesOut</td>
+                                                <td>@items.RewardPercentage</td>
+                                                <td>@items.ExistedPercentage</td>
+                                                <td>@items.RewardAmount</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btnSearch").on('click', function (e) {
+        e.preventDefault();
+        var proMon = document.getElementById('DDDMonth');
+        var proMonText = proMon.options[proMon.selectedIndex].text;
+        var MonNum2 = proMon.options[proMon.selectedIndex].value;
+
+        if (proMonText == "SELECT MONTH") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Month must",
+            }).show();
+            return false;
+        }
+        //
+        var proYear = document.getElementById('DDDYear');
+        var proYearText = proYear.options[proYear.selectedIndex].text;
+        var Year2 = proYear.options[proYear.selectedIndex].value;
+        if (proYearText == "SELECT YEAR") {
+            alertify.dialog('alert').set({
+                'title': '   ',
+                'transition': 'zoom',
+                'message': "Please select Year must",
+            }).show();
+            return false;
+        }
+    });
+    $(document).ready(function () {
+
+        var t = $('#tblPoPenaltiesData').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            "paging": false
+            //"lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            //"fixedHeader": {
+            //    header: true,
+            //    footer: true
+            //}
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        //tblRepeat
+        var t1 = $('#tblRepeat').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            // "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "paging": false
+
+        });
+        t1.on('order.dt search.dt', function () {
+            t1.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        //tblProReward
+        var t2 = $('#tblProReward').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            // "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "paging": false
+
+        });
+        t2.on('order.dt search.dt', function () {
+            t2.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        //tblSalesOutReward
+        var t3 = $('#tblSalesOutReward').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            }],
+            // "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
+            "paging": false
+
+        });
+        t3.on('order.dt search.dt', function () {
+            t3.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+    });
+    //$("#pdf").on("click", function () {
+    //    var divContents = $("#PDFWrapper").html();
+    //    var printWindow = window.open('', '', 'height=400,width=800');
+    //    printWindow.document.write('<html><head><title></title>');
+    //    printWindow.document.write('</head><body >');
+    //    printWindow.document.write(divContents);
+    //    printWindow.document.write('</body></html>');
+    //    printWindow.document.close();
+    //    printWindow.print();
+    //});
+    var tableToExcel = (function () {
+        var uri = 'data:application/vnd.ms-excel;base64,'
+            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+
+        return function (table, name) {
+            if (!table.nodeType) table = document.getElementById(table)
+            var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+            //window.location.href = uri + base64(format(template, ctx))
+            var link = document.createElement("a");
+            link.download = 'RewardOrPenaltiesCM' + '.xls';
+            link.href = uri + base64(format(template, ctx));
+            link.click();
+        }
+    })()
+</script>

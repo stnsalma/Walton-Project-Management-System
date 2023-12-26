@@ -1,0 +1,125 @@
+﻿@model ProjectManagement.Models.LC_IDH_Final_BOMModel
+@{
+    ViewBag.Title = "IdhFinalBomUpload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">Upload BOM</div>
+    </div>
+    <div class="portlet-body">
+        @using (Html.BeginForm("UploadIdhBOMExcel", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" ,@id="formId"}))
+        {
+            @Html.HiddenFor(x=>x.VariantId)
+            <div class="row">
+                <div class="col-md-6">
+                    <select name="" id="ddlLcForModel" class="form-control">
+                        <option value="Select">Select</option>
+                        @if (ViewBag.Variants != null)
+                        {
+                            foreach (var i in ViewBag.Variants)
+                            {
+                                <option value="@i.Id">@i.ProjectModel</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(x => x.BomFile, new { @class = "form-control", type = "file",id="txtFileUpload" })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-success" id="btnUpload" />
+                </div>
+            </div>
+        }
+        <br/>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered" id="tblExistingBom">
+                    <thead>
+                        <tr>
+                            <th>Variant Name</th>
+                            <th>Material Coding</th>
+                            <th>Material Name</th>
+                            <th>Specification</th>
+                            <th>Inventory Code</th>
+                            <th>Vendor</th>
+                            <th>Total Quantity</th>
+                            <th>Per Unit Quantity</th>
+                            <th>Unit Of Measurement</th>
+                            <th>Extra Order Per Unit Qty</th>
+                            <th>Extra Order Total Qty</th>
+                            <th>Per Uint Qty With Wastage</th>
+                            <th>Total Qty With Wastage</th>
+                            <th>Used in</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $('select').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+
+    $('#formId').on('submit', function(e) {
+        var variant = $('#ddlLcForModel option:selected').text();
+        if (variant == 'Select') {
+            alertify.error("Please select a variant first!!!");
+            e.preventDefault();
+        }
+        console.log($('#txtFileUpload').val());
+        if ($('#txtFileUpload').val() == '') {
+            alertify.error("Please select a excel document!!!");
+            e.preventDefault();
+        }
+    });
+
+    $('#ddlLcForModel').on('change', function () {
+        $('#tblExistingBom tbody').empty();
+        var variantId = $('#ddlLcForModel option:selected').val();
+        $('#VariantId').val(variantId);
+        console.log($('#VariantId').val());
+        var url = '@Url.Action("IdhBomExists","Commercial")';
+        $.post(url, { variantId: variantId }, function (data) {
+            var row = '';
+            for(var i=0;i<data.length;i++) {
+                row =row + '<tr>'
+                    + '<td>' + data[i].variantName + '</td>'
+                    + '<td>' + data[i].MaterialCoding + '</td>'
+                    + '<td>' + data[i].MaterialName + '</td>'
+                    + '<td>' + data[i].Specification + '</td>'
+                    + '<td>' + data[i].InventoryCode + '</td>'
+                    + '<td>' + data[i].Vendor + '</td>'
+                    + '<td>' + data[i].TotalQuantity + '</td>'
+                    + '<td>' + data[i].PerUnitQuantity + '</td>'
+                    + '<td>' + data[i].UnitOfMeasurement + '</td>'
+                    + '<td>' + data[i].ExtraOrderPerUnitQuantity + '</td>'
+                    + '<td>' + data[i].ExtraOrderQuantity + '</td>'
+                    + '<td>' + data[i].PerUnitQuantityConsideringWastage + '</td>'
+                    + '<td>' + data[i].TotalQuantityConsideringWastage + '</td>'
+                    + '<td>' + data[i].UsedIn + '</td>'
+                    + '<td>' + data[i].Remarks + '</td>'
+                    + '</tr>';
+            }
+            $('#tblExistingBom tbody').append(row);
+        });
+    });
+</script>

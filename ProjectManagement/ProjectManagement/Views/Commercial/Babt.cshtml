@@ -1,0 +1,122 @@
+﻿@model ProjectManagement.Models.BabtRawModel
+@{
+    ViewBag.Title = "Babt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>BABT</h2>
+
+@{
+    if (TempData["message"] != null)
+    {
+        var msgType = TempData["messageType"];
+        var msg = TempData["message"];
+        if ((int)msgType == 1)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 2)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+
+        }
+        else if ((int)msgType == 3)
+        {
+            TempData["message"] = null;
+            TempData["messageType"] = 0;
+            <div class="alert alert-info alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+                <strong>Message:</strong> @msg
+            </div>
+        }
+    }
+
+}
+@using (Html.BeginForm("Babt", "Commercial", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                TAC Info
+            </div>
+
+        </div>
+        <div class="portlet-body form">
+            <div class="form-body">
+                @Html.HiddenFor(model => model.BabtRawId)
+                @Html.HiddenFor(model => model.Added)
+                @Html.HiddenFor(model => model.AddedDate)
+                @Html.HiddenFor(model => model.Updated)
+                @Html.HiddenFor(model => model.UpdatedDate)
+                @Html.HiddenFor(model=> model.ProjectMasterId)
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">TAC</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.TacNo, new { @class = "form-control", @type = "number" })
+                                @Html.ValidationMessageFor(model => model.TacNo, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Projects</label>
+                            <div class="col-lg-9">
+                                @*@Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "Value", "Text"), "Select One", new { @class = "form-control ddChosen" })
+                                @Html.ValidationMessageFor(model => model.ProjectMasterId, String.Empty, new { @style = "color:red;!important", })*@
+                                @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectName, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">TAC Request Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.RequestDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.RequestDate, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">TAC Receive Date</label>
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(model => model.ReceiveDate, new { @class = "form-control date_picker" })
+                                @Html.ValidationMessageFor(model => model.ReceiveDate, String.Empty, new { @style = "color:red;!important", })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input class="btn sbold uppercase btn-outline blue" type="submit" value="Save" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+

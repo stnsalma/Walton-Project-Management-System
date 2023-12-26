@@ -1,0 +1,539 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectMasterModel>
+
+@{
+    ViewBag.Title = "ProjectAlive";
+}
+<div class="portlet light bordered">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-share font-red-sunglo"></i>
+            <span class="caption-subject font-red-sunglo bold uppercase">ReStart Project</span>
+        </div>
+        
+    </div>
+    <div class="portlet-body">
+        <div class="clearfix">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Select a project
+                    </h3>
+                </div>
+                <div class="panel-body table-scrollable">
+                    <table id="tbl" class="table table-striped  table-bordered table-hover dtTable">
+                        <thead class="success">
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.ProjectMasterId)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.ProjectTypeId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SupplierModelName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectType)
+                            </th>
+
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.OsName)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.OsVersion)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.DisplaySize)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.DisplayName)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.ProcessorName)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.ProcessorClock)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.Chipset)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.FrontCamera)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.BackCamera)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.Ram)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.Rom)
+                            </th>
+                            <th class="hiddenColumn">
+                                @Html.DisplayNameFor(model => model.Battery)
+                            </th>
+                            <th>
+                                Action
+                            </th></thead>
+
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.ProjectMasterId)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.ProjectTypeId)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProjectName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SupplierName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SupplierModelName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ProjectType)
+                                    </td>
+
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.OsName)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.OsVersion)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.DisplaySize)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.DisplayName)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.ProcessorName)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.ProcessorClock)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.Chipset)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.FrontCamera)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.BackCamera)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.Ram)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.Rom)
+                                    </td>
+                                    <td class="hiddenColumn">
+                                        @Html.DisplayFor(modelItem => item.Battery)
+                                    </td>
+                                    <td>
+
+                                        <div class="form-group">
+                                            <button id="btnDetails" type="button" class="btn purple">
+                                                <span class="glyphicon glyphicon-question-sign"></span> Details
+                                            </button>
+                                            <button id="btnReopen" type="button" class="btn green">
+                                                <span class="glyphicon glyphicon-plus-sign"></span> Reopen Project
+                                            </button>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<!-- END PANELS PORTLET-->
+<div class="table-responsive">
+
+</div>
+<div id="divResponse">
+</div>
+
+<div>
+    @{
+        AjaxOptions options = new AjaxOptions();
+        options.HttpMethod = "POST";
+        options.OnBegin = "OnBeginRequest";
+        options.OnSuccess = "OnSuccessRequest";
+        options.OnComplete = "OnCompleteRequest";
+        options.OnFailure = "OnFailureRequest";
+        //  options.Confirm = "Do you want to Add Country ?";
+        options.UpdateTargetId = "divResponse";
+        options.InsertionMode = InsertionMode.Replace;
+    }
+    @using (Ajax.BeginForm("ProjectAlive", "Management", options))
+    {    
+        @*<div class="modal fade" id="ReopenModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                       
+                    </div>
+                    <div class="modal-body">
+                        
+                        <div class="row">
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <input name="rowNumber" id="rowNumber" type="text" class="form-control" disabled="">
+                            </div>
+                            <div class="col-lg-2"></div>
+                        </div>
+
+
+                        <div class="row">
+
+                            
+                            <div class="form-group">
+                                <label>Select Concerns</label>
+                                <select name="concerns" id="concerns" class="form-control input-large">
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Commercial">Commercial</option>
+
+                                </select>
+                            </div>
+
+
+                            
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label>Additional Reminder</label>
+                                    <textarea name="comment" class="form-control input" rows="3"></textarea>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-2"></div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn" tyle="width: 10%" value="Save" /><span class="glyphicon glyphicon-question-sign"></span>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>*@
+
+    <div class="modal fade" id="ReopenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="z-index: 10040;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    
+                    <div class="portlet box blue">
+                        <div class="caption">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="portlet-title">
+                           
+                            <div class="caption modal-title">
+                                <label id="lblReopenModal"></label>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-body">
+                   
+                    <div class="row">
+                       
+                        <div class="col-lg-12">
+                            <label>Row Id</label>
+                            <input name="rowNumber" id="rowNumber" type="text" class="form-control" disabled="">
+                        </div>
+                   
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Select Concerns</label>
+                                <select name="concerns" id="concerns" class="form-control input-large">
+                                    <option value="Hardware">Hardware</option>
+                                    <option value="Commercial">Commercial</option>
+
+                                </select>
+                            </div>
+
+                        </div>
+                      
+
+
+                        </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label>Additional Reminder</label>
+                                <textarea id="comment" name="comment" class="form-control input" rows="3" placeholder="Insert Additional Information"></textarea>
+                            </div>
+
+
+                        </div>
+                        
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <input type="submit" value="Save" style="background-color:#44c767;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:28px;
+    border:1px solid #020a03;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:17px;
+    padding:9px 13px;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #2f6627;" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="z-index: 10040;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <div class="portlet box blue">
+                    <div class="portlet-title">
+                        @*<button type="button" class="close remove" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                        @*<h4 class="modal-title" id="exampleModalLabel">Details</h4>*@
+
+                        <div class="caption modal-title">
+                            <label id="lblprojectName"></label>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>OsName</label>
+                                <input name="OsName" id="OsName" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>OsVersion</label>
+                                <input name="OsVersion" id="OsVersion" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>DisplaySize</label>
+                                <input name="DisplaySize" id="DisplaySize" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>DisplayName</label>
+                                <input name="DisplayName" id="DisplayName" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>ProcessorName </label>
+                                <input name="ProcessorName" id="ProcessorName" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>ProcessorClock</label>
+                                <input name="ProcessorClock" id="ProcessorClock" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Chipset</label>
+                                <input name="Chipset" id="Chipset" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>FrontCamera</label>
+                                <input name="FrontCamera" id="FrontCamera" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>BackCamera</label>
+                                <input name="BackCamera" id="BackCamera" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ram</label>
+                                <input name="Ram" id="Ram" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+                    <!--/row-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Rom</label>
+                                <input name="Rom" id="Rom" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Battery</label>
+                                <input name="Battery" id="Battery" type="text" class="form-control" disabled="">
+                            </div>
+                        </div>
+                        <!--/span-->
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button id="btnClose" type="button" class="btn btn-danger" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-ok-circle"></span> Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function OnBeginRequest() {
+        console.log('On Begin');
+
+    }
+    function OnCompleteRequest() {
+        console.log('On Completed');
+    }
+    function OnSuccessRequest() {
+        console.log('On Success');
+        //$('#ReopenModal').modal('hide');
+        var rowNumber = document.getElementById("rowNumber").value;
+        console.log(rowNumber);
+
+        var table = document.getElementById("tbl");
+        table.deleteRow(rowNumber);
+        document.getElementById("rowNumber").value = 0;
+        alertify.alert('success', 'ProjectSaved Successfully', function () {
+            alertify.success('Ok');
+           
+        });
+        $('#ReopenModal').modal('hide');
+    }
+    function OnFailureRequest() {
+        console.log('On Failure');
+    }
+    $(function () {
+        $('.btn').on('click', function (e) {
+            e.preventDefault();
+            $('#comment').val('');
+            //
+            var projectName = $.trim($(this).closest('tr').find('td:eq(2)').text());
+            console.log(projectName);
+            $('#lblprojectName,#lblReopenModal').html(projectName);
+            
+            $('#OsName').val($.trim( $(this).closest('tr').find('td:eq(7)').text()));
+            $('#OsVersion').val($.trim($(this).closest('tr').find('td:eq(8)').text()));
+            $('#DisplaySize').val($.trim($(this).closest('tr').find('td:eq(9)').text()));
+            $('#DisplayName').val($.trim($(this).closest('tr').find('td:eq(10)').text()));
+            $('#ProcessorName').val($.trim($(this).closest('tr').find('td:eq(11)').text()));
+            $('#ProcessorClock').val($.trim($(this).closest('tr').find('td:eq(12)').text()));
+            $('#Chipset').val($.trim($(this).closest('tr').find('td:eq(13)').text()));
+            $('#FrontCamera').val($.trim($(this).closest('tr').find('td:eq(14)').text()));
+            $('#BackCamera').val($.trim($(this).closest('tr').find('td:eq(15)').text()));
+            $('#Ram').val($.trim($(this).closest('tr').find('td:eq(16)').text()));
+            $('#Rom').val($.trim($(this).closest('tr').find('td:eq(17)').text()));
+            $('#Battery').val($.trim($(this).closest('tr').find('td:eq(18)').text())+' mAh');
+            //
+
+
+            var buttonid = $(this).attr('id');
+            if (buttonid == "btnDetails") {
+                $('#detailsModal').modal({
+                    show: true,
+                    backdrop: 'static'
+                });
+                //console.log('btnDetails');
+
+            } else if (buttonid == "btnReopen") {
+                $('#row').val(1);
+                $('#ReopenModal').modal({
+                    show: true,
+                    backdrop: 'static'
+                });
+            }
+            var currentRowNumber = $(this).closest('tr').index();
+            $('#rowNumber').val(currentRowNumber);
+            //currentRow.remove();
+
+        });
+        //$('input[type=submit]').on('change', function (e) {
+        //    e.preventDefault();
+        //    alert('hi');
+        //});
+    });
+</script>

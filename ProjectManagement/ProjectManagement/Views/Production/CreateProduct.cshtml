@@ -1,0 +1,443 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Production.VmCapacityPlanning
+@*<h2>CreateProduct</h2>*@
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    /*.page-container-bg-solid page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed .page-header-fixed{}*/
+    /*
+    .navbar-fixed-top {
+        position: relative;
+    }*/
+    .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: absolute;
+    }
+</style>
+@using (@Html.BeginForm("CreateProduct", "Production", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="portlet box blue-chambray">
+        <div class="portlet-title">
+            <div class="caption">
+                Load Product
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <div class="col-lg-5" style="color: black;font-weight:bold">Production Unit</div>
+                        <div class="col-lg-7">
+                            @if (ViewBag.GetProductionType != null)
+                            {
+                                @Html.DropDownListFor(model => model.ProductionType, new SelectList(ViewBag.GetProductionType, "Value", "Text"), new { @class = "ProTypeCls1 form-control", @id = "ProType" })
+
+                            }
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="col-lg-4"> </div>
+                        <div class="form-actions col-lg-4">
+                            <input type="button" id="btnSearch" class="btn sbold uppercase btn-outline blue" value="Load" onclick="location.href = '@Url.Action("CreateProduct", "Production")?productionType=' + $('option:selected', $('#ProType')).val()" />
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            Saved Product
+                        </div>
+
+                        <div class="tools" style="background-color:dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+
+                    <div class="portlet-body">
+                        <div class="table-scrollable">
+                            <table id="tbl3" class="tbl3" style="width:600px;border: 2px solid black">
+                                <thead class="flip-content">
+                                    <tr style="border: 1px solid black;color: blue;font-weight: bold">
+                                        <th style="display: none; border: 1px solid black">Id</th>
+                                        <th style="border: 1px solid black;text-align:left">Product<br/>Name</th>
+                                        <th style="border: 1px solid black;text-align:left">Product<br/>Family</th>
+                                        <th style="border: 1px solid black; text-align: left">Change<br />OverTime</th>
+                                        <th style="border: 1px solid black; text-align: left">Category<br />Name</th>
+                                        <th style="border: 1px solid black; text-align: left">Production<br />Unit</th>
+                                        <th style="text-align: center; border: 1px solid black">Delete </th>
+                                    </tr>
+                                </thead>
+                                <tbody style="border: 1px solid black">
+
+                                    @if (ViewBag.GetProductForUpdate != null)
+                                        {
+                                            foreach (var items in ViewBag.GetProductForUpdate)
+                                            {
+                                                <tr style="border: 1px solid black">
+                                                    <td style="display: none;border: 1px solid black" class="teamId">@items.Id</td>
+                                                    <td style="border: 1px solid black">@items.ProductName</td>
+                                                    <td style="border: 1px solid black">@items.ProductFamily</td>
+                                                    <td style="border: 1px solid black">@items.ChangeOverTime</td>
+                                                    <td style="border: 1px solid black">@items.CategoryName</td>
+                                                    <td style="border: 1px solid black">@items.ProductionType</td>
+                                                    <td style="border: 1px solid black; text-align: center;padding:4px">
+                                                        <button type="submit" class="btn btn-danger removeBtns" id="removeBtns">
+                                                            <span class="glyphicon glyphicon-remove"></span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="portlet light bordered">
+                <div class="portlet box">
+                    <div class="portlet-title">
+                        <div class="caption" style="color:black;font-weight: bold;">
+                            Create Product
+                        </div>
+                        <div class="tools" style="background-color: dimgray;">
+                            <a title="" data-original-title="" href="javascript:;" class="collapse"> </a>
+                            <a title="" data-original-title="" href="#portlet-config" data-toggle="modal" class="config"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="reload"> </a>
+                            <a title="" data-original-title="" href="javascript:;" class="remove"> </a>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+
+                        <div class="table-scrollable table-responsive">
+                            <table id="tblSmart" class="table table-bordered table-striped table-condensed flip-content" style="display: block;width: 600px">
+                                <thead class="flip-content">
+                                    <tr>
+                                        <th style="display: none;">Index</th>
+                                        <th style="display: none;">IsRemoved</th>
+                                        <th class="numeric"><button class="btn btn-circle btn-success" id="addMore1"><span class="glyphicon glyphicon-plus"></span>Add</button></th>
+                                        <th> Product <br/>Name</th>
+                                        <th> Product <br/>Family</th>
+                                        <th> Change <br/>Over Time </th>
+                                        <th> Category </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tableTrCls1" id="tableTrCls1">
+                                        <td style="display: none;">0</td>
+                                        <td style="display: none;"><input type="text" name="issueList1[0].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                                        <td class="numeric">
+                                            <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input name="issueList1[0].ProductName" id="ProductName" type="text" class="form-control input-medium" placeholder="Create Product" />
+                                            </div>
+                                        </td>
+                                        <td class="numeric">
+                                            <select name="issueList1[0].ProductFamily" class="form-control input-medium">
+                                                <option value="">SELECT</option>
+                                                <option>Smartphone</option>
+                                                <option>Featurephone</option>
+                                                <option>Charger</option>
+                                                <option>Battery</option>
+                                                <option>Earphone</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input name="issueList1[0].ChangeOverTime" id="ChangeOverTime" type="text" class="form-control input-medium" placeholder="Change Over Time" />
+                                            </div>
+                                        </td>
+                                        <td class="numeric">
+                                            <div class="col-md-11">
+                                                <table class="Category11" id="hh1">
+                                                    <tr id="trIdForCategory">
+                                                        <td class="Categories11" id="CategoriesId11">
+
+                                                            <div class="col-md-9" id="fileIdForCr">
+                                                                <input type="text" name="issueList1[0].Category" class="form-control" id="Category" placeholder="Category Name" />
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" id="removeProductRow" class="btn btn-circle btn-danger center col-md-2" onclick="removeDetailRow($(this).closest('tr'));">
+                                                                    @*<span><i class="fa fa-times" aria-hidden="true"></i></span>*@
+                                                                    <i class="fa fa-times" aria-hidden="true" style="margin: -48px"></i>
+                                                                </button>
+                                                            </div>
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="col-sm-1">
+                                                    <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success col-md-2" onclick="javascript: addField('issueList1[0].Category', $(this).closest('tr'));">
+                                                        <span><i class="fa fa-plus" aria-hidden="true" style="margin: -48px"></i></span>
+                                                    </button><br />
+                                                </div>
+                                                <div class="col-sm-6"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div>
+                        <input type="text" name="productionType" id="productionType" value="" style="display: none;" />
+                        <input type="text" name="pro_id" id="pro_id" value="" style="display: none;" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading" style="display: none;text-align: center;">
+        <img src="~/img/loading-spinner-grey.gif" />
+    </div>
+    <div class="form-actions">
+        <button id="btnSubmit" type="submit" class="btn blue">Submit</button>
+    </div>
+}
+<script>
+    var currentRow;
+    function addField(id, td) {
+        td.find('.Category11').append($("<tr id='trIdForCategory'><td class='Categories11' id='CategoriesId11'><div class='col-md-9' id='fileIdForCr'><input type='text' name='" + id + "' class='form-control' id='Category' placeholder='Category Name'/></div> <div class='col-md-2'><button type='button' id='removeProductRow' class='btn btn-circle btn-danger col-md-2' onclick=removeDetailRow($(this).closest('tr'));> <span><i class='fa fa-times' aria-hidden='true' style='margin:-48px'></i></span></button></div><br /><br /></td></tr>"));
+    }
+    $(function () {
+        var index = 0;
+        $('#btnSearch').on('click', function (e) {
+            e.preventDefault();
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Production Unit",
+                }).show();
+                return false;
+            }
+        });
+
+        //removeBtn
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            $(this).parent().parent().find('td:eq(1)').find('.IsRemoved').val(1);
+
+            $(this).parent().parent().addClass('hiddenColumn');
+            $(this).parent().parent().remove();
+        });
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Production Unit",
+                }).show();
+                return false;
+            }
+            alertify.confirm('Confirm message', 'Do you want to Save this?', function () {
+                $('#loading').show();
+                alertify.success('Ok');
+
+                var obj = [];
+                obj.productionType = $("select#ProType").val();
+               
+                $('#productionType').val(obj.productionType);
+
+                $('#form1').trigger('submit');
+                $('#loading').hide();
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+
+        });
+        $('#addMore1').on('click', function (e) {
+            e.preventDefault();
+            moment.locale("de");
+
+            //var issueScenario;
+
+            var proType = document.getElementById('ProType');
+            var proTypeText = proType.options[proType.selectedIndex].text;
+            var proTypeValue = proType.options[proType.selectedIndex].value;
+            if (proTypeText == "SELECT UNIT") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Production Unit",
+                }).show();
+                return false;
+            }
+
+            index++;
+
+            //////////////Code for multiline///////////
+            var tr = multiline(function () {
+
+                /*
+               <tr class="tableTrCls1" id="tableTrCls1">
+                    <td style="display: none;">$#</td>
+                    <td style="display: none;"><input type="text" name="issueList1[$#].IsRemoved" class="IsRemoved form-control input-small" value="0" /></td>
+                    <td class="numeric">
+                        <button class="btn btn-circle btn-danger removeBtn">Remove</button>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input name="issueList1[$#].ProductName" id="ProductName" type="text" class="form-control input-medium" placeholder="Create Product" />
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <select name="issueList1[$#].ProductFamily" class="form-control input-medium">
+                            <option value="">SELECT</option>
+                            <option>Smartphone</option>
+                            <option>Featurephone</option>
+                            <option>Charger</option>
+                            <option>Battery</option>
+                            <option>Earphone</option>
+                        </select>
+                    </td>
+                     <td>
+                        <div class="form-group">
+                            <input name="issueList1[$#].ChangeOverTime" id="ChangeOverTime" type="text" class="form-control input-medium" placeholder="Change Over Time" />
+                        </div>
+                    </td>
+                    <td class="numeric">
+                        <div class="col-md-11">
+                            <table class="Category11" id="hh1">
+                                <tr id="trIdForCategory">
+                                    <td class="Categories11" id="CategoriesId11">
+
+                                        <div class="col-md-9" id="fileIdForCr">
+                                            <input type="text" name="issueList1[$#].Category" class="form-control" id="Category" placeholder="Category Name"/>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" id="removeProductRow" class="btn btn-circle btn-danger center col-md-2" onclick="removeDetailRow($(this).closest('tr'));">
+                                                <span><i class="fa fa-times" aria-hidden="true" style="margin: -48px"></i></span>
+                                                                  
+                                            </button>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-sm-1">
+                                <button type="button" id="upPlusBt" class="btn btn-group-circle btn-success center col-md-2" onclick="javascript: addField('issueList1[$#].Category', $(this).closest('tr'));">
+                                    <span><i class="fa fa-plus" aria-hidden="true" style="margin: -48px"></i></span>
+                                </button><br />
+                            </div>
+                            <div class="col-sm-6"></div>
+                        </div>
+                      </td>
+               </tr>
+             */
+            });
+            var rIndex = index.toString();
+            var replaceTr = tr.toString();
+            replaceTr = replaceTr.split("$#").join(rIndex);
+
+            $('#tblSmart > tbody:last').append(replaceTr);
+
+        });
+    });
+    function removeDetailRow(element) {
+        $(element).remove();
+    }
+    $(document).ready(function () {
+        
+        var t = $('#tbl3').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "paging": false,
+            "order": [[3, 'desc']]
+        });
+
+        $("body").on("click", "#tbl3 .removeBtns", function () {
+
+            event.preventDefault();
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl3');
+            var row = $(this).closest("tr");
+
+            var teamId = $.trim(table.rows[rowIndex].cells[0].innerHTML);
+            var inactiveObj = {};
+            inactiveObj.Id = teamId;
+            $('#pro_id').val(teamId);
+            alertify.confirm('Delete A Product', 'Do you want to Delete this Product?', function () {
+                alertify.success('Successfully Deleted.');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("InActiveProduct", "Production")',
+                    data: '{inactiveObj:' + JSON.stringify(teamId) + '}',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.data == "OK") {
+                            alertify.dialog('alert').set({
+                                'title': '   ',
+                                'transition': 'zoom',
+                                'message': "Successfully Deleted",
+                            }).show();
+
+                            $('#loading').hide();
+                            row.hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }
+            , function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+        });
+    });
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

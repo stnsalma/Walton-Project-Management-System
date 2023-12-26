@@ -1,0 +1,557 @@
+﻿@*<h2>ChinaQcInspectionClearanceApproval</h2>*@
+@model ProjectManagement.ViewModels.ProjectManager.VmChinaQcInspectionsClearance
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet box widget-bg-color-gray">
+            <div class="portlet-title">
+                <div class="caption">
+                    Pending List for Approval
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <br />
+                <div class="col-lg-12 table-responsive  table-scrollable">
+                    <table class="table table-striped table-bordered table-hover tbl1" id="tbl1">
+                        <thead>
+                            <tr class="trClsforSize" style="font-weight: bold">
+                                <th style="text-align: center; font-size: 12px; "> #</th>
+                                <th style="text-align: center; font-size: 12px; display: none"> Id </th>
+                                <th style="text-align: center; font-size: 12px; display: none"> ProjectMasterId </th>
+                                <th style="text-align: center; font-size: 12px;"> ProjectName </th>
+                                <th style="text-align: center; font-size: 12px"> Order<br />Number </th>
+                                <th style="text-align: center; font-size: 12px;width:130px !important"> Inspection<br />StartDate </th>
+                                <th style="text-align: center; font-size: 12px"> Materials <br />Type </th>
+                                <th style="text-align: center; font-size: 12px"> LOT No. </th>
+                                <th style="text-align: center; font-size: 12px"> LOT Quantity </th>
+                                <th style="text-align: center; font-size: 12px"> No of <br />Time of <br />Inspection </th>
+                                <th style="text-align: center; font-size: 12px;"> Inspection Status </th>
+                                <th style="text-align: center; font-size: 12px"> Clearance Status </th>
+                                <th style="text-align: center; font-size: 12px"> Requested By </th>
+                                <th style="text-align: center; font-size: 12px; width: 130px !important"> Request Date </th>
+                                <th style="text-align: center; font-size: 12px">Inspection Report</th>
+                                <th style="text-align: center; font-size: 12px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model != null && Model.ChinaQcInspectionsClearanceModels4.Any())
+                            {
+                                for (int i = 0; i < Model.ChinaQcInspectionsClearanceModels4.Count; i++)
+                                {
+                                    <tr class="trClsforSize" style="text-align: center">
+                                        <td style=""></td>
+                                        <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].Id)</td>
+                                        <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ProjectMasterId)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ProjectName)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].Orders)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].InspectionStartDate, "{0:yyyy-MM-dd}")</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].MaterialType)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].LotNo)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].LotQuantity)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].NoOfTimeOfInspection)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].InspectionStatus)</td>
+                                        <td>
+                                            @if (Model.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus == "PENDING")
+                                            {
+                                                <p style="color:blue;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].ClearanceStatus)</p>
+                                            }
+                                        </td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].Name)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels4[i].AddedDate, "{0:yyyy-MM-dd}")</td>
+                                        <td>
+                                            <div class="file-preview-thumbnails" style="width: 400px !important">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.ChinaQcInspectionsClearanceModels4[i].InspectionAttachment, new { @class = "clsRmv" })
+                                                        @if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails != null && Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                        @for (int m = 0; m < Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails.Count; m++)
+                                                                        {
+                                                                            if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".jpg" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".png" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".mp4" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".jpeg" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".txt" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".xls" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".wav")
+                                                                            {
+                                                                                @*<td style="border:2px solid black;">*@
+                                                                                <div class="col-lg-4" style="width:150px;border:1px solid black;float:left;height:auto;">
+                                                                                    <embed class="" src="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath" style="width: 80px;height: 80px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" style="width: 80px;text-align: center" href="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath"><p style="width: 60px;text-align:center">Download</p></a>
+                                                                                </div>
+                                                                                <div class="col-lg-4"></div>
+                                                                                @*</td>*@
+
+                                                                            }
+                                                                            if (Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".zip" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".pdf" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".docx" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".xlsx" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".rar" || Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].Extention == ".pptx")
+                                                                            {
+                                                                                var urls = Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last2 = urls[k].Split('-').Last();
+                                                                                    var lastNameForM2 = Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath;
+
+                                                                                    lastNameForM2 = Path.GetFileName(last2);
+                                                                                    @*<td style="border:2px solid black;">*@
+                                                                                    <div class="col-lg-4" style="width: 150px; border: 1px solid black; float: left; height: auto;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM2, new { style = "width:80px;height:80px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.ChinaQcInspectionsClearanceModels4[i].FilesDetails[m].FilePath" style="width: 80px;text-align:center;" target="_blank"><p style="width: 60px">Download</p></a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-4"></div>
+                                                                                    @*</td>*@
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btnApprove" id="btnApprove">
+                                                APPROVED
+                                            </button>
+                                            <br />
+                                            <br />
+                                            <button type="button" class="btn btn-danger btnNotApprove" id="btnNotApprove">
+                                                NOT APPROVED
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="portlet box widget-bg-color-gray">
+            <div class="portlet-title">
+                <div class="caption">
+                    Acknowledgement List
+                </div>
+            </div>
+            <div class="portlet-body form">
+                <br />
+                <div class="col-lg-12 table-responsive  table-scrollable">
+                    <table class="table table-striped table-bordered table-hover tbl2" id="tbl2">
+                        <thead>
+                            <tr class="trClsforSize" style="font-weight: bold">
+                                <th style="text-align: center; font-size: 12px; "> #</th>
+                                <th style="text-align: center; font-size: 12px; display: none"> Id </th>
+                                <th style="text-align: center; font-size: 12px; display: none"> ProjectMasterId </th>
+                                <th style="text-align: center; font-size: 12px;"> ProjectName </th>
+                                <th style="text-align: center; font-size: 12px"> Order<br />Number </th>
+                                <th style="text-align: center; font-size: 12px;width:130px !important"> Inspection<br />StartDate </th>
+                                <th style="text-align: center; font-size: 12px"> Materials <br />Type </th>
+                                <th style="text-align: center; font-size: 12px"> LOT No. </th>
+                                <th style="text-align: center; font-size: 12px"> LOT Quantity </th>
+                                <th style="text-align: center; font-size: 12px"> No of <br />Time of <br />Inspection </th>
+                                <th style="text-align: center; font-size: 12px;"> Inspection Status </th>
+                                <th style="text-align: center; font-size: 12px;"> Requested by </th>
+                                <th style="text-align: center; font-size: 12px; width: 130px !important"> Request Date </th>
+                                <th style="text-align: center; font-size: 12px"> Clearance Status </th>
+                                <th style="text-align: center; font-size: 12px"> My Status </th>
+                                <th style="text-align: center; font-size: 12px">Remarks </th>
+
+                                <th style="text-align: center; font-size: 12px">Inspection Report</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (Model != null && Model.ChinaQcInspectionsClearanceModels1.Any())
+                            {
+                                for (int i = 0; i < Model.ChinaQcInspectionsClearanceModels1.Count; i++)
+                                {
+                                    <tr class="trClsforSize" style="text-align: center">
+                                        <td style=""></td>
+                                        <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Id)</td>
+                                        <td style="display:none">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ProjectMasterId)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ProjectName)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Orders)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].InspectionStartDate, "{0:yyyy-MM-dd}")</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].MaterialType)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].LotNo)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].LotQuantity)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].NoOfTimeOfInspection)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].InspectionStatus)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Name)</td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].AddedDate, "{0:yyyy-MM-dd}")</td>
+                                        <td>
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "PENDING")
+                                            {
+                                                <p style="color:blue;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                            }
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "NOTAPPROVED")
+                                            {
+                                                <p style="color:red;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                            }
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "APPROVED")
+                                            {
+                                                <p style="color:green;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].MyStatus == "PENDING")
+                                            {
+                                                <p style="color:blue;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].MyStatus)</p>
+                                            }
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].MyStatus == "NOTAPPROVED")
+                                            {
+                                                <p style="color:red;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].MyStatus)</p>
+                                            }
+                                            @if (Model.ChinaQcInspectionsClearanceModels1[i].MyStatus == "APPROVED")
+                                            {
+                                                <p style="color:green;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].MyStatus)</p>
+                                            }
+                                        </td>
+                                        <td>@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Remarks)</td>
+
+                                        <td>
+                                            <div class="file-preview-thumbnails" style="width: 400px !important">
+                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                    <div class="col-lg-12">
+
+                                                        @Html.HiddenFor(model => model.ChinaQcInspectionsClearanceModels1[i].InspectionAttachment, new { @class = "clsRmv" })
+                                                        @if (Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails != null && Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails.Any())
+                                                        {
+                                                            <table>
+                                                                <tr>
+                                                                    <td>
+                                                                        @for (int m = 0; m < Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails.Count; m++)
+                                                                        {
+                                                                            if (Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".jpg" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".png" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".mp4" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".jpeg" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".txt" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".xls" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".wav")
+                                                                            {
+                                                                                <div class="col-lg-4" style="width:150px;border:1px solid black;float:left;height:auto;">
+                                                                                    <embed class="" src="@Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].FilePath" style="width: 80px;height: 80px" />
+                                                                                    <br />
+                                                                                    <a target="_blank" style="width: 80px;text-align: center" href="@Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].FilePath"><p style="width: 60px;text-align:center">Download</p></a>
+                                                                                </div>
+                                                                                <div class="col-lg-4"></div>
+                                                                            }
+                                                                            if (Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".zip" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".pdf" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".docx" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".xlsx" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".rar" || Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].Extention == ".pptx")
+                                                                            {
+                                                                                var urls = Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                                for (int k = 0; k < urls.Count; k++)
+                                                                                {
+                                                                                    var last2 = urls[k].Split('-').Last();
+                                                                                    var lastNameForM2 = Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].FilePath;
+
+                                                                                    lastNameForM2 = Path.GetFileName(last2);
+
+                                                                                    <div class="col-lg-4" style="width: 150px; border: 1px solid black; float: left; height: auto;">
+                                                                                        @Html.TextAreaFor(model => lastNameForM2, new { style = "width:80px;height:80px;", disabled = "disabled" })
+                                                                                        <br />
+                                                                                        <a href="@Model.ChinaQcInspectionsClearanceModels1[i].FilesDetails[m].FilePath" style="width: 80px;text-align:center;" target="_blank"><p style="width: 60px">Download</p></a>
+                                                                                    </div>
+                                                                                    <div class="col-lg-4"></div>
+
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="deniedModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color:red;font-weight: bold;text-align: center">Not Approved Reason</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Project Name:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblIds" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectId" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectName" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Reason:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="4" name="remarks" id="remarks"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnDeclined" id="btnDeclined">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="approvedModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color:red;font-weight: bold;text-align: center"> Approved Reason if any</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Project Name:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblIds1" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectId1" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectName1" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Reason:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" rows="4" name="remarks1" id="remarks1"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2">Cancel</button>
+                <button type="button" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnModalApprove" id="btnModalApprove">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+        var t = $('#tbl1').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[5, 10, 20, 30, 50, -1], [5, 10, 20, 30, 50, "All"]],
+            "order": [[1, 'desc']]
+        });
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        var t1 = $('#tbl2').DataTable({
+            "columnDefs": [{
+                "searchable": false,
+                "orderable": true,
+                "targets": 0
+            }],
+            "lengthMenu": [[5, 10, 20, 30, 50, -1], [5, 10, 20, 30, 50, "All"]],
+            "order": [[1, 'desc']]
+        });
+        t1.on('order.dt search.dt', function () {
+            t1.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $('#btnCancel2').on('click', function () {
+            $('.modal-backdrop').hide();
+            $('body').removeClass('modal-backdrop fade in');
+            $('.modal').removeClass('modal-backdrop fade in');
+            $('#remarks').val("");
+        });
+        $("body").on("click", "#tbl1 #btnNotApprove", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl1');
+
+            var ids = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var proIds = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var proName = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+
+
+            $('#lblIds').val(ids);
+            $('#lblprojectName').val(proName);
+            $('#lblprojectId').val(proIds);
+            $('#deniedModal').modal();
+        });
+        $("body").on("click", "#tbl1 #btnApprove", function () {
+
+            var rowIndex = $(this).closest('tr').index() + 1;
+            var table = document.getElementById('tbl1');
+
+            var ids = $.trim(table.rows[rowIndex].cells[1].innerHTML);
+            var proIds = $.trim(table.rows[rowIndex].cells[2].innerHTML);
+            var proName = $.trim(table.rows[rowIndex].cells[3].innerHTML);
+
+
+            $('#lblIds1').val(ids);
+            $('#lblprojectName1').val(proName);
+            $('#lblprojectId1').val(proIds);
+            $('#approvedModal').modal();
+        });
+        $('#btnDeclined').on('click', function () {
+            $('#loading').show();
+            var ids = $('#lblIds').val();
+            var proName = $('#lblprojectName').val();
+            var proIds = $('#lblprojectId').val();
+            var sStatus = "NOTAPPROVED";
+            var remarks = $('#remarks').val();
+            alertify.confirm('Declined Confirmation', 'Do you want to Decline this?', function () {
+                alertify.success('Successfully Declined.');
+                $.ajax({
+                    url: '@Url.Action("SaveChinaShipmentClearance", "Common")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { ids: ids, proIds: proIds, sStatus: sStatus, remarks: remarks },
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "OK") {
+                            window.location = '@Url.Action("ChinaQcInspectionClearanceApproval", "Common")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });//end
+                event.preventDefault(); //Prevent the default submit
+            }, function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+        });
+        //$("body").on("click", "#tbl1 #btnModalApprove", function () {
+        $('#btnModalApprove').on('click', function () {
+            $('#loading').show();
+            var ids = $('#lblIds1').val();
+            var proName = $('#lblprojectName1').val();
+            var proIds = $('#lblprojectId1').val();
+            var sStatus = "APPROVED";
+            var remarks = $('#remarks1').val();
+            alertify.confirm('Approve Confirmation', 'Do you want to Approve this?', function () {
+                alertify.success('Successfully Done.');
+                $.ajax({
+                    url: '@Url.Action("SaveChinaShipmentClearance", "Common")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { ids: ids, proIds: proIds, sStatus: sStatus, remarks: remarks },
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "OK") {
+                            window.location = '@Url.Action("ChinaQcInspectionClearanceApproval", "Common")';
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });//end
+                event.preventDefault(); //Prevent the default submit
+            }, function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+        });
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>

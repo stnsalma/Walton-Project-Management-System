@@ -1,0 +1,812 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.ProjectManager.AssignProjectsViewModel
+
+<h2>Raw Material Inspection</h2>
+@*<script src="~/Scripts/moment.js"></script>*@
+<script src="~/Content/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<link href="~/Content/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+@*datatable *@
+<link href="~/assets/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/layout.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/layouts/layout4/css/themes/light.min.css" rel="stylesheet" type="text/css" id="style_color" />
+<link href="~/assets/layouts/layout4/css/custom.min.css" rel="stylesheet" type="text/css" />
+
+<style>
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        padding: 10px;
+    }
+
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="col-sm-3" style="font-weight: bold">
+            INSPECTION DETAILS
+        </div>
+        <div class="col-sm-3">
+            <input type="button" class="btn sbold uppercase btn-outline" value="Back To List" onclick="location.href='@Url.Action("RawMaterialInspectionList", "ProjectManager")'" />
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        @using (Html.BeginForm("RawMaterialInspection", "ProjectManager", FormMethod.Post, new { id = "rawMaterialForm", enctype = "multipart/form-data" }))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-body">
+                                <div class="row">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-11">
+                                            @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(ViewBag.Projects, "ProjectMasterId", "ProjectName"), "Select One", new { @class = "form-control ddChosen" })
+                                        </div>
+                                        <div class="col-md-1">
+                                            <input type="button" class="btn sbold uppercase btn-outline blue" id="loadPro" value="Load Project" onclick="location.href='@Url.Action("RawMaterialInspection", "ProjectManager")?ProjectMasterId='+ $('option:selected', $('#ProjectMasterId')).val()" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Project Model</label>
+                                            <div class="col-md-9">
+                                                <input id="ProjectMasterId" name="issueList[0].ProjectMasterId" class="form-control ProjectMasterId" value="@Model.ProjectMasterModel.ProjectMasterId" style="display: none;" />
+                                                <input id="ProjectPurchaseOrderFormId" name="issueList[0].ProjectPurchaseOrderFormId" class="form-control ProjectPurchaseOrderFormId" value="@Model.ProjectMasterModel.ProjectPurchaseOrderFormId" style="display: none;" />
+                                                <input id="ProjectName" name="issueList[0].ProjectName" class="form-control ProjectName" value="@Model.ProjectMasterModel.ProjectName" readonly />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Project Type</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(model => model.ProjectMasterModel.ProjectType, new { @class = "form-control", @disabled = "true" })*@
+                                                <input id="ProjectType" name="issueList[0].ProjectType" class="form-control ProjectType" value="@Model.ProjectMasterModel.ProjectType" readonly />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Orders</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(model => model.ProjectMasterModel.OrderNuber, new { @disabled = "true", @class = "form-control" })*@
+                                                <input id="OrderNuber" name="issueList[0].OrderNuber" class="form-control OrderNuber" value="@Model.ProjectMasterModel.OrderNuber" readonly />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">PoCategory</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(model => model.ProjectMasterModel.PoCategory, new { @disabled = "true", @class = "form-control" })*@
+                                                <input id="PoCategory" name="issueList[0].PoCategory" class="form-control PoCategory" value="@Model.ProjectMasterModel.PoCategory" readonly />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">PoQuantity</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(model => model.ProjectMasterModel.PoQuantity, new { @disabled = "true", @class = "form-control" })*@
+                                                <input id="PoQuantity" name="issueList[0].PoQuantity" class="form-control PoQuantity" value="@Model.ProjectMasterModel.PoQuantity" readonly />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Lot No.**</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(model => model.LotNumber, new { @type = "number", min = 0, @class = "form-control" })*@
+                                                <input id="LotNumber" name="issueList[0].LotNumber" class="form-control LotNumber" value="@Model.LotNumber" type="number" min=0 />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3">Lot Quantity**</label>
+                                                <div class="col-md-9">
+                                                    @*@Html.TextBoxFor(model => model.LotQuantity, new { @type = "number", min = 0, @class = "form-control" })*@
+                                                    <input id="LotQuantity" name="issueList[0].LotQuantity" class="form-control LotQuantity" value="@Model.LotQuantity" type="number" min=0 />
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="control-label col-md-3">PM ClearanceDate**</label>
+                                        <div class="col-md-9">
+                                            @*@Html.TextBoxFor(model => model.ProjectManagerClearanceDate, new { Value = Model.ProjectManagerClearanceDate.HasValue ? Model.ProjectManagerClearanceDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })*@
+                                            <input class="form-control" name="issueList[0].ProjectManagerClearanceDate" id="ProjectManagerClearanceDate" value="@Model.ProjectManagerClearanceDate" type="text" placeholder="yyyy-mm-dd">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" style="color:red">Inspection Starting Date**</label>
+                                                <div class="col-md-9">
+                                                    <input class="form-control" name="issueList[0].InspectionStartingDate" id="InspectionStartingDate" value="@Model.InspectionStartingDate" type="text" placeholder="yyyy-mm-dd">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="control-label col-md-3" style="color:red">Major Delay Reason**</label>
+                                        <div class="col-md-9">
+                                            <textarea name="issueList[0].MajorDelayReason" id="MajorDelayReason" class="form-control" rows="4" placeholder="Major Delay Reason"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">100% Material <br />Pass On China IQC?**</label>
+                                            <div class="col-md-9">
+                                                @*@Html.DropDownListFor(model => model.ChinaIqcPassHundredPercent,
+                                                    new SelectList(
+                                                        new List<object>
+                                                        {
+                                                            new {value = "0", text = "Select"},
+                                                            new {value = "No", text = "No"},
+                                                            new {value = "Yes", text = "Yes"}
+                                                        }, "value", "text", Model.ChinaIqcPassHundredPercent), new { @class = "form-control" })*@
+                                                <select name="issueList[0].ChinaIqcPassHundredPercent" class="form-control ChinaIqcPassHundredPercent" id="ChinaIqcPassHundredPercent">
+                                                    <option value="0">SELECT</option>
+                                                    <option value="No">No</option>
+                                                    <option value="Yes">Yes</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">No Of Time Inspection**</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(i => i.NoOfTimeInspection, new { @type = "number", min = 0, @class = "form-control" })*@
+                                                <input id="NoOfTimeInspection" name="issueList[0].NoOfTimeInspection" class="form-control NoOfTimeInspection" value="@Model.NoOfTimeInspection" type="number" min=0 />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Management Approved?**</label>
+                                            <div class="col-md-9">
+                                                @*@Html.DropDownListFor(model => model.ManagementApproval,
+                                                    new SelectList(
+                                                        new List<object>
+                                                        {
+                                                            new {value = "0", text = "Select"},
+                                                            new {value = "No", text = "No"},
+                                                            new {value = "Yes", text = "Yes"}
+                                                        }, "value", "text", Model.ManagementApproval), new { @class = "form-control" })*@
+                                                <select name="issueList[0].ManagementApproval" class="form-control ManagementApproval" id="ManagementApproval">
+                                                    <option value="0">SELECT</option>
+                                                    <option value="No">No</option>
+                                                    <option value="Yes">Yes</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Management Approve Date**</label>
+                                            <div class="col-md-9">
+                                                @*@Html.TextBoxFor(i => i.ManagementApprovalDate, new { Value = Model.ManagementApprovalDate.HasValue ? Model.ManagementApprovalDate.Value.ToString("yyyy-MM-dd") : "", @class = "form-control date_picker" })*@
+                                                <input class="form-control" name="issueList[0].ManagementApprovalDate" id="ManagementApprovalDate" value="@Model.ManagementApprovalDate" type="text" placeholder="yyyy-mm-dd">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Supporting Document**</label>
+                                            <div class="col-md-9">
+                                                <div class="col-md-11">
+                                                    <table class="File11" id="hh1">
+                                                        <tr id="trIdForFile">
+                                                            <td class="filesss" id="filesId">
+
+                                                                <div class="col-md-9" id="fileIdForCr">
+                                                                    <input type="file" name="issueList[0].FileId" id="FileId1" />
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <button type="button" id="removeProductRow" class="btn btn-circle btn-danger" onclick="removeDetailRow($(this).closest('tr'));">
+                                                                        <span><i class="fa fa-times" aria-hidden="true"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                <br /><br />
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Inspection Remarks</label>
+                                            <div class="col-md-9">
+                                                <textarea name="issueList[0].InspectionRemarks" class="form-control" rows="3" placeholder="Remarks"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" style="color:red">Hardware Sample Receive<br/>(Days After PO)**</label>
+                                                <div class="col-md-9">
+                                                    <textarea class="form-control" name="issueList[0].HardwareSampleReceive" id="HardwareSampleReceive" rows="2" placeholder="Ex: 40 Days or N/A"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="control-label col-md-3" style="color:red">Inspection Major Fail Items</label>
+                                        <div class="col-md-9">
+                                            <textarea name="issueList[0].InspectionMajorFailItems" id="InspectionMajorFailItems" class="form-control" rows="3" placeholder="Inspection Major Fail Items"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" style="color:red">Order Color Ratio With Qty**</label>
+                                                <div class="col-md-9">
+                                                    <textarea class="form-control" name="issueList[0].OrderColorRatioWithQty" id="OrderColorRatioWithQty" rows="2" placeholder="Order Color Ratio With Quantity"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        @*<label class="control-label col-md-3" style="color:red">Inspection Major Fail Items</label>
+                                        <div class="col-md-9">
+                                            <textarea name="issueList[0].InspectionMajorFailItems" id="InspectionMajorFailItems" class="form-control" rows="3" placeholder="Inspection Major Fail Items"></textarea>
+                                        </div>*@
+                                    </div>
+                                </div>
+                                <br />
+                                @*<div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" style="color:red">Sourcing Approved?**</label>
+                                            <div class="col-md-9">
+                                                <select name="issueList[0].SourcingApproval" class="form-control SourcingApproval" id="SourcingApproval">
+                                                    <option value="0">SELECT</option>
+                                                    <option value="No">No</option>
+                                                    <option value="Yes">Yes</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+
+                                    </div>
+                                </div>*@
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-4" style="text-align: right">
+                                        <input type="checkbox" id="forFoc" class="forFoc" name="focs" value="focs_CheckBx">
+                                    </div>
+                                    <div class="col-lg-8" style="text-align: left;font-weight: bold">
+                                        Is Foc Available?
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="portlet box blue" id="focClaimDetails" style="display: none;">
+                                <div class="portlet-title">
+                                    <div class="caption">
+                                        BOM DETAILS
+                                    </div>
+
+                                </div>
+                                <div class="portlet-body form">
+                                    <div class="row"></div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+
+                                                <label class="control-label col-md-3" style="color:red">BOM Type**</label>
+                                                <div class="col-md-9">
+                                                    @*@Html.DropDownListFor(model => model.BOMType, new SelectList(ViewBag.AllBOMType, "BOMType", "BOMType"), "Select One", new { @class = "form-control ddChosen", @id = "bomsType", @onchange = "LoadBomName()" })*@
+                                                    @Html.DropDownListFor(model => model.BOMType,
+                                                        new SelectList(
+                                                            new List<object>
+                                                            {
+                                                                new {value = "0", text = "Select"},
+                                                                new {value = "EBOM", text = "EBOM"},
+                                                                new {value = "SKDBOM", text = "SKDBOM"},
+                                                                new {value = "OTHERS", text = "OTHERS"},
+                                                            }, "value", "text", Model.BOMType), new { @class = "form-control", @id = "bomsType", @onchange = "LoadBomName()" })
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-2" style="color:red">Item Name**</label>
+                                                <div class="col-md-10" id="existedBom" style="display: none">
+                                                    @if (ViewBag.ProjectBomName != null)
+                                                    {
+                                                        @Html.DropDownListFor(model => model.BOMName, new SelectList(ViewBag.ProjectBomName, "Value", "Text"), "Select One", new { @class = "form-control" })
+
+                                                    }
+                                                </div>
+                                                <div class="col-md-10" id="othersBom" style="display: none">
+                                                    @Html.TextAreaFor(model => model.BOMName, new { @type = "text", @class = "form-control", @id = "BOMName2" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+
+                                                <label class="control-label col-md-3" style="color:red">Foc Quantity**</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(i => i.ItemQuantity, new { @type = "text", @class = "form-control" })
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" style="color:red">Color</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(model => model.Color, new { @type = "text", @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3" style="color:red">Remarks</label>
+                                                <div class="col-md-9">
+                                                    @Html.TextAreaFor(model => model.BomRemarks, new { @type = "text", @class = "form-control" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            @*<div class="form-group">
+                                                    <label class="control-label col-md-3" style="color:red">Color</label>
+                                                    <div class="col-md-9">
+                                                        @Html.TextBoxFor(model => model.Color, new { @type = "text", @class = "form-control" })
+                                                    </div>
+                                                </div>*@
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br /><br />
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4">
+                                            <button id="btnAddForFoc" class="btn btn-lg blue m-icon-big"><i class="fa fa-plus-circle" aria-hidden="true"></i>Add</button>
+                                        </div>
+                                    </div>
+                                    <br /><br /><br />
+                                    <br /><br />
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="portlet light bordered">
+                                                <div class="portlet box green-haze">
+                                                    <div class="portlet-body">
+                                                        <div class="table-scrollable table-responsive" style="overflow-y: auto;overflow-x: auto">
+
+                                                            <table class="table table-bordered table-striped table-condensed flip-content tblFoc" id="tblFoc" style="overflow-y: auto;overflow-x: auto">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="display:none">IsRemoved</th>
+                                                                        <th>BOM_Type</th>
+                                                                        <th style="width:300px;"> Item_Name</th>
+                                                                        <th>Foc_Quantity</th>
+                                                                        <th>Color</th>
+                                                                        <th style="width:15%;">Remarks </th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="tBodyFoc" class="tBodyFoc" style="overflow-y: auto;overflow-x: auto">
+
+                                                                    @foreach (var swQcOthers in Model.ProjectMasterModels)
+                                                                    {
+                                                                        Html.RenderPartial("~/Views/ProjectManager/Partial/_FocClaimFromPm.cshtml", swQcOthers);
+                                                                    }
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br /><br />
+                                </div>
+                            </div>
+                            <br /><br /><br /><br />
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <input type="submit" id="btnSubmit" class="btn sbold uppercase btn-outline blue" value="Save" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br /><br />
+                            <br /><br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="text" name="focChk1" id="focChk1" value="" style="display:none;" />
+            <div id="loading" style="display: none;text-align: center;">
+                <img src="~/img/loading-spinner-grey.gif" />
+            </div>
+        }
+    </div>
+</div>
+<script>
+    function removeDetailRow(element) {
+        $('#FileId1').val("");
+    }
+    function removeDetailRow1(element1) {
+        $(element1).remove();
+    }
+    function LoadBomName() {
+        $('#loading').show();
+        var selectedPersonText = document.getElementById('ProjectMasterId');
+        var proId = selectedPersonText.options[selectedPersonText.selectedIndex].value;
+
+        var selectedBoms = document.getElementById('bomsType');
+        var bomsTypes = selectedBoms.options[selectedBoms.selectedIndex].text;
+
+        var projectNames = $('#ProjectName').val();
+
+        if (bomsTypes != "OTHERS") {
+            document.getElementById('existedBom').style.display = "block";
+            document.getElementById('othersBom').style.display = "none";
+
+            $.ajax({
+                url: '@Url.Action("GetBomName", "ProjectManager")',
+                type: "POST",
+                dataType: "JSON",
+                data: { proId: proId, bomsTypes: bomsTypes, projectNames: projectNames },
+                success: function (data) {
+
+                    console.log(data);
+                    $('#BOMName').empty();
+                    $('#BOMName').append($('<option>', {
+                        value: '',
+                        text: 'Select One'
+                    }));
+                    var items = $.parseJSON(data);
+                    $.each(items, function (i, item) {
+                        $('#BOMName').append($('<option>', {
+                            value: item.Value,
+                            text: item.Text
+                        }));
+                    });
+                    $("#BOMName").chosen();
+                    $("#BOMName").trigger("chosen:updated");
+                    $('#loading').hide();
+                }
+            });
+        }
+        else {
+            document.getElementById('existedBom').style.display = "none";
+            document.getElementById('othersBom').style.display = "block";
+            $('#loading').hide();
+        }
+    }
+    var focChk = false;
+    $(document).ready(function () {
+
+        $('#ProjectManagerClearanceDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        $('#InspectionStartingDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        $('#ManagementApprovalDate').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+        ///new//
+        $("#forFoc").on('change', function () {
+            if ($(this).is(':checked')) {
+                $(this).attr('value', 'true');
+                document.getElementById('focClaimDetails').style.display = "block";
+            }
+            else {
+                $(this).attr('value', 'false');
+                document.getElementById('focClaimDetails').style.display = "none";
+            }
+            focChk = $('#forFoc').val();
+            console.log("focChk :" + focChk);
+        });
+        if ($("#forFoc").is(':checked')) {
+            $("#forFoc").attr('value', 'true');
+            $("#forFoc").prop("checked", true);
+            document.getElementById('focClaimDetails').style.display = "block";
+
+        } else {
+            $("#forFoc").attr('value', 'false');
+            $("#forFoc").prop("checked", false);
+            document.getElementById('focClaimDetails').style.display = "none";
+        }
+        focChk = $('#forFoc').val();
+        console.log("focChk :" + focChk);
+
+        ////////////////////
+        var IsRemoved = 0;
+        $("#btnAddForFoc").on('click', function (e) {
+            e.preventDefault();
+
+            var bomsType = $('#bomsType option:selected').text();
+            console.log("bomsType :" + bomsType);
+
+            var bomName;
+
+            if (bomsType == "Select") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select BOM Type",
+                }).show();
+                return false;
+            }
+            else if (bomsType == "OTHERS") {
+                bomName = $('#BOMName2').val();
+
+                if (bomName == "") {
+                    alertify.dialog('alert').set({
+                        'title': '   ',
+                        'transition': 'zoom',
+                        'message': "Please must Input Item Name",
+                    }).show();
+                    return false;
+                }
+            }
+            else {
+                bomName = $('#BOMName option:selected').text();
+            }
+
+            var BOMQuantity = $('#ItemQuantity').val();
+            console.log("BOMQuantity  :" + BOMQuantity);
+
+            if (BOMQuantity == "") {
+                BOMQuantity = "0";
+            }
+
+            if (BOMQuantity == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Foc Quantity",
+                }).show();
+                return false;
+            }
+
+            var color = $('#Color').val();
+            console.log("color  :" + color);
+
+            var remarks = $('#BomRemarks').val();
+
+            //
+            $.post('@Url.Action("AddFocClaimFromPm", "ProjectManager")', {
+                IsRemoved: IsRemoved,
+                bomsType: bomsType,
+                bomName: bomName,
+                BOMQuantity: BOMQuantity,
+                color: color,
+                remarks: remarks
+            }, function (data) {
+                console.log(data);
+                $('#tBodyFoc').append(data);
+                IsRemoved++;
+            });
+
+
+            $('#BOMName2').val("");
+            $('#Color').val("");
+            $('#BomRemarks').val("");
+            $('#ItemQuantity').val("");
+        });
+        //
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+
+            var LotNumber = $('#LotNumber').val();
+            if (LotNumber == "") {
+                LotNumber = "0";
+            }
+            if (LotNumber == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Lot No.",
+                }).show();
+                return false;
+            }
+
+            var LotQuantity = $('#LotQuantity').val();
+            if (LotQuantity == "") {
+                LotQuantity = "0";
+            }
+            if (LotQuantity == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Lot Quantity.",
+                }).show();
+                return false;
+            }
+
+            var ProjectManagerClearanceDate = $('#ProjectManagerClearanceDate').val();
+            if (ProjectManagerClearanceDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select PM ClearanceDate.",
+                }).show();
+                return false;
+            }
+            var InspectionStartingDate = $('#InspectionStartingDate').val();
+            if (InspectionStartingDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Inspection Starting Date.",
+                }).show();
+                return false;
+            }
+            var MajorDelayReason = $('#MajorDelayReason').val();
+            if (MajorDelayReason == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Major Delay Reason.",
+                }).show();
+                return false;
+            }
+            var ChinaIqcPassHundredPercent = $('#ChinaIqcPassHundredPercent').val();
+            if (ChinaIqcPassHundredPercent == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select 100% Material Pass On China IQC.",
+                }).show();
+                return false;
+            }
+            var NoOfTimeInspection = $('#NoOfTimeInspection').val();
+            if (NoOfTimeInspection == "") {
+                NoOfTimeInspection = "0";
+            }
+            if (NoOfTimeInspection == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select No Of Time Inspection.",
+                }).show();
+                return false;
+            }
+            var ManagementApproval = $('#ManagementApproval').val();
+            if (ManagementApproval == "0") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must select Management Approval.",
+                }).show();
+                return false;
+            }
+            var ManagementApprovalDate = $('#ManagementApprovalDate').val();
+            if (ManagementApproval == "Yes" && ManagementApprovalDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must Select Management Approval Date.",
+                }).show();
+                return false;
+            }
+            
+            var HardwareSampleReceive = $('#HardwareSampleReceive').val();
+            if (HardwareSampleReceive == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please must input Hardware Sample Receive.",
+                }).show();
+                return false;
+            }
+
+            $('#loading').show();
+            alertify.confirm('Confirm message', 'Do you want to Save this?', function () {
+
+                alertify.success('Ok');
+                // refresh();
+                $('#focChk1').val(focChk);
+
+
+                $('#rawMaterialForm').trigger('submit');
+                $('#loading').hide();
+            }, function () {
+                alertify.error('Cancel');
+
+            });
+
+        });
+    });
+    //function refresh() {
+    //    $.blockUI({ message: '<h1><img src="~/img/loading-spinner-grey.gif" /> LOADING..</h1>' });
+    //    setTimeout(function () {
+    //        window.location.reload();
+
+    //    }, 1000);
+    //}
+</script>

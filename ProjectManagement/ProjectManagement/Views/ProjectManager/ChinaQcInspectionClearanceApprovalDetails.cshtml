@@ -1,0 +1,258 @@
+﻿@*<h2>ChinaQcInspectionClearanceApprovalDetails</h2>*@
+@using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical
+@model ProjectManagement.ViewModels.ProjectManager.VmChinaQcInspectionsClearance
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+    #loading {
+        width: 100%;
+        height: 100%;
+        top: 70px;
+        left: 0;
+        position: fixed;
+        display: block;
+        opacity: 0.7;
+        background-color: #fff;
+        z-index: 999;
+        text-align: center;
+    }
+</style>
+@using (@Html.BeginForm("ChinaQcInspectionClearanceApprovalDetails", "ProjectManager", FormMethod.Post, new { enctype = "multipart/form-data", id = "form1" }))
+{
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box widget-bg-color-gray">
+                <div class="portlet-title">
+                    <div class="col-lg-12 caption" style="text-align: center">
+                        APPROVAL STATUS
+                    </div>
+                </div>
+                <div class="portlet-body form">
+                    <div class="col-lg-12">
+                        <br />
+                        @if (ViewBag.GetQcInspections != null)
+                        {
+                        <div class="col-lg-4"></div>
+                        <div style="text-align: center;font-weight: bold;color:brown" class="col-lg-4">Over All Status : @ViewBag.GetQcInspections.ClearanceStatus </div>
+                        <div class="col-lg-4"></div>
+                        }
+                        <br />
+                        <br />
+                    </div>
+                    <br />
+                    <div class="col-lg-12 table-responsive  table-scrollable">
+                        <table class="table table-striped table-bordered table-hover tbl1" id="tbl1" style="border: 1px solid black;">
+                            <thead style="border: 1px solid black">
+                                <tr class="trClsforSize" style="font-weight: bold; border: 1px solid black;">
+                                    <th style="text-align: left; font-size: 17px; display: none"> Id </th>
+                                    <th style="text-align: left; font-size: 17px; display: none"> ProjectMasterId </th>
+                                    <th style="text-align: left; font-size: 17px; border: 1px solid black"> Role Details </th>
+                                    <th style="text-align: left; font-size: 17px; border: 1px solid black; "> Name </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> ID </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> Request Status </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> Approval Status </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> Request Date </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> Time of Action </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black"> Time Delay </th>
+                                    <th style="text-align: left; font-size: 17px;border: 1px solid black">Remarks </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.ChinaQcInspectionsClearanceModels1.Any())
+                                {
+                                    for (int i = 0; i < Model.ChinaQcInspectionsClearanceModels1.Count; i++)
+                                    {
+                                <tr class="trClsforSize" style="text-align: center">
+                                    <td style="display: none">
+                                        @Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Id)
+                                        <input class="form-control" name="issueList[0].Id" id="Id" value="@Model.ChinaQcInspectionsClearanceModels1[i].Id" style="width: 110px !important" type="text">
+
+                                    </td>
+                                    <td style="display: none">
+                                        @Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ProjectMasterId)
+                                        <input class="form-control" name="issueList[0].ProjectMasterId" id="ProjectMasterId" value="@Model.ChinaQcInspectionsClearanceModels1[i].ProjectMasterId" style="width: 110px !important" type="text">
+                                    </td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].RoleDetails)</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Name)</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].EmployeeCode)</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].RequestSent)</td>
+                                    <td style="text-align: left;border: 1px solid black">
+                                        @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "PENDING")
+                                                {
+                                                <p style="color:blue;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                                }
+                                        @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "NOTAPPROVED")
+                                                {
+                                                <p style="color:red;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                                }
+                                        @if (Model.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus == "APPROVED")
+                                                {
+                                                <p style="color:green;font-weight: bold">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].ClearanceStatus)</p>
+                                                }
+                                    </td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].RequestDate, "{0:yyyy-MM-dd}")</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].TimeOfAction, "{0:yyyy-MM-dd}")</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].TimeDelay) Days</td>
+                                    <td style="text-align: left;border: 1px solid black">@Html.DisplayFor(x => x.ChinaQcInspectionsClearanceModels1[i].Remarks)</td>
+                                </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet box widget-bg-color-gray">
+                <div class="portlet-body form">
+                    <div class="col-lg-12 table-responsive  table-scrollable" style="height: 50px">
+                        @if (ViewBag.GetQcInspections != null)
+                        {
+                            if (@ViewBag.GetQcInspections.ClearanceStatus != "APPROVED" && @ViewBag.GetQcInspections.ClearanceStatus != "NOTAPPROVED")
+                            {
+                                <div class="col-lg-3"></div>
+                                <div class="col-lg-3" style="text-align: right">
+                                    <button type="button" class="btn btn-success btnClearance" id="btnClearance" style="margin-right: 0px">
+                                        Shipment Clearance
+                                    </button>
+                                </div>
+                                <div class="col-lg-3" style="text-align: left">
+                                    <button type="button" class="btn btn-danger btnDenied" id="btnDenied" style="margin-left: 0px">
+                                        Shipment Denied
+                                    </button>
+                                </div>
+                                <div class="col-lg-3"></div>
+                            }
+                        }
+
+                        <br />
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="deniedModal" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                <h4 class="modal-title" style="color:red;font-weight: bold;text-align: center">Not Approved Reason</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="#" id="" class="form-horizontal">
+                            <div class="form-body">
+                                @*<div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Project Name:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="lblIds" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectId" class="form-control" style="border: none;display: none" />
+                                            <input type="text" id="lblprojectName" class="form-control" style="border: none" />
+                                        </div>
+                                    </div>
+                                </div>*@
+                                <div class="form-group col-lg-12">
+                                    <div class="form-group col-lg-12">
+                                        <label class="control-label col-md-4">
+                                            Reason:
+                                        </label>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" name="issueList[0].Remarks" rows="4" name="Remarks" id="Remarks"></textarea>
+                                            @*<input class="form-control" name="issueList[0].Remarks" rows="4" id="Remarks" value="" style="width: 110px !important" type="text">*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-dismiss="modal" class="btn btn-circle default btn-outline btnCancel2" id="btnCancel2">Cancel</button>
+                @*<button type="submit" data-dismiss="modal" class="btn btn-circle blue  btn-outline btnDeclined" id="btnDeclined">Confirm</button>*@
+                <button type="submit" class="btn btn-danger btnDeclined" id="btnDeclined" style="margin-left: 0px">
+                    Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<div id="loading" style="display: none;text-align: center;">
+    <img src="~/img/loading-spinner-grey.gif" />
+</div>
+<script>
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+    $(document).ready(function () {
+        $(".btnDenied").click(function () {
+       // $("body").on("click", "#tbl1 #btnDenied", function () {
+
+            var ids = $("#Id").val();
+            var projectMasterId = $("#ProjectMasterId").val();
+
+            //$('#lblIds').val(ids);
+            //$('#lblprojectName').val(proName);
+            //$('#lblprojectId').val(proIds);
+            $('#deniedModal').modal();
+        });
+        $(".btnClearance").click(function () {
+            $('#loading').show();
+            var ids = $("#Id").val();
+            var projectMasterId = $("#ProjectMasterId").val();
+            // alert("Id :" + ids + " projectMasterId :" + projectMasterId);
+            alertify.confirm('Shipment Confirmation', 'Do you want to Approve this?', function () {
+                alertify.success('Successfully Approved.');
+                $.ajax({
+                    url: '@Url.Action("SaveChinaShipmentClearance", "ProjectManager")',
+                    type: "POST",
+                    dataType: "JSON",
+                    data: { ids: ids },
+                    success: function (data) {
+                        console.log(data);
+                        if (data == "OK") {
+                            window.location = '@Url.Action("ChinaQcInspectionClearanceApprovalDetails", "ProjectManager")?ids=' + ids;
+                            window.location.reload(true);
+                            $('#loading').hide();
+                        }
+                    }
+                });
+                event.preventDefault(); //Prevent the default submit
+            }, function () {
+                alertify.error('Cancel');
+                $('#loading').hide();
+            });
+
+        });
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>

@@ -1,0 +1,263 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.ViewModels.Hardware.VmHardwareTest
+
+
+<script src="~/Scripts/tinymce/tinymce.min.js"></script>
+
+
+<div class="page-head">
+    <div class="page-title">
+        <h1>
+            Welcome! @ViewBag.UserInfo.UserFullName
+            @*<small>only projects which passed QC</small>*@
+        </h1>
+    </div>
+</div>
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i>QC Passed Project
+        </div>
+
+    </div>
+    <div class="portlet-body form">
+        <div class="row"></div>
+        <div class="row">
+            @Html.Partial("_HwProjectBasicInfo", Model)
+            @*@{Html.RenderAction("_HwProjectBasicInfo","Hardware", new{hwQcInchargeAssignId=2})}*@
+            @Html.Hidden("lol", "select project", new { @id = "notific8_show" })
+        </div>
+    </div>
+</div>
+
+
+
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-bars"></i>Uploaded Document
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <br />
+                        <div class="portlet light bordered">
+                            <div class="row">
+                                <table class="table table-bordered table-hover" id="tblHwQcForward">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center"> # </th>
+                                            <th class="text-center"> Done By </th>
+                                            <th class="text-center">Project Name</th>
+                                            <th class="text-center"> Uploaded Document </th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.QcPassedQcAssigns)
+                                        {
+                                            <tr>
+                                                <td class="text-center"></td>
+                                                <td class="hidden hwQcInchargeAssignId">@item.HwQcInchargeAssignId</td>
+                                                <td class="text-center">@item.UserFullName</td>
+                                                <td class="text-center">@item.ProjectName</td>
+                                                <td class="text-center">
+                                                    <div class="row">
+
+                                                        <div class="file-preview-thumbnails">
+                                                            <div class="col-lg-offset-2">
+                                                                <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                                                    <div class="">
+
+
+
+                                                                        @if (@Model.HwQcAssignModel.QcDocUploadPath == null || @Model.HwQcAssignModel.QcDocUploadPath == "../Content/UploadImage/")
+                                                                        {
+
+                                                                            <img src="~/assets/layouts/layout4/img/no-image.png" class=" file-preview-image img-responsive" title="" alt="" style="width: 330px; height: 160px;" />
+
+                                                                        }
+
+                                                                        else if (@Model.HwQcAssignModel.ImageExtension == ".jpg" || @Model.HwQcAssignModel.ImageExtension == ".png" || @Model.HwQcAssignModel.ImageExtension == ".jpeg")
+                                                                        {
+
+                                                                            <img src="@Model.HwQcAssignModel.QcDocUploadPath" class=" file-preview-image" title="" alt="" style="width:auto;height:160px;" />
+
+                                                                        }
+                                                                        else if (@Model.HwQcAssignModel.ImageExtension == ".pdf")
+                                                                        {
+
+                                                                            <embed class="" src="@Model.HwQcAssignModel.QcDocUploadPath" width="160px" height="160px" type="application/pdf" />
+
+                                                                        }
+
+
+
+                                                                    </div>
+                                                                    <div class="file-thumbnail-footer">
+
+
+                                                                        <div class="file-actions">
+                                                                            <div class="file-footer-buttons">
+
+                                                                                <button type="button" class="btn btn-xs btn-default btnFilePreview" title="View Details" id="btnFilePreviewBootImage"><i class="glyphicon glyphicon-search "></i></button>
+                                                                            </div>
+
+                                                                            <div class="clearfix"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td class="text-center">
+
+                                                    <button class="btn btn-primary green btn-outline btn-circle btn-sm btnHwTestDetails">Details</button>
+                                                    <button class="btn btn-primary green btn-outline btn-circle btn-sm btnDownload"><i class="fa fa-download"></i>Downloads</button>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <label class="control-label bold">Remarks :</label>
+                                @Html.TextAreaFor(model => model.HwQcInchargeAssignModel.Remark, new { @class = "form-control", @id = "txtRemark" })
+                                <br />
+                                <button class="btn btn-transparent green btn-outline btn-circle btn-sm btnFinishedGoodsForward">Forward</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--Modal Start-->
+
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview</h4>
+                <h4 class="modal-title" id="btnModalDataChangeLabel" style="display:none">Modal title</h4>
+            </div>
+            <div class="modal-body" id="modelBody">
+                @*<embed src="@Model.IndividualProjectViewModel.PmBootImageAnimationModel.ImageUpload1" style="width:500px; height:375px;" frameborder="0"></embed>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!--Modal End-->
+
+
+<script>
+    //get Automatic Serial number column in the HTML Table
+    $('#tblHwQcForward tr').each(function (index) {
+        $(this).find('td:nth-child(1)').html(index++);
+    });
+
+
+    //text editor
+    //tinymce.init({
+    //    selector: 'textarea',
+    //    entity_encoding: "named"
+    //});
+
+    //Load project basic info
+    $('#btnLoadProject').click(function () {
+        //alert('e');
+        var url = '@Url.Action("HwQcInchargeFinishedGoodsForward", "Hardware")?projectId=' + $('option:selected', $('#single')).val();
+        window.location.href = url;
+    });
+
+
+    $("[class*=btnFinishedGoodsForward]").click(function (e) {
+
+        //alert($(this).closest("tr").find($("[class*=hwQcAssignId]")).html());
+        var hwqcinchargeassignid = $("[class*=hwQcInchargeAssignId]").html();
+        var remark = $('#txtRemark').val();
+        console.log(remark);
+        var url = '@Url.Action("HwQcInchargeFinishedGoodsForward", "Hardware")?hwqcinchargeassignid=' + hwqcinchargeassignid + '&projectId=' + $('option:selected', $('#single')).val() + '&remark=' + remark;
+        console.log(url);
+        if (hwqcinchargeassignid > 0) {
+            alertify.confirm("Do you want to forward this project?", function () {
+                alertify.success('Ok'); window.location.href = url;
+            }, function () {
+                alertify.error('cancelled');
+            });
+        } else {
+            alertify.alert("Please select a project");
+        }
+    });
+
+    $('[class*="btnDownload"]').click(function () {
+        //alert();
+
+        currentRow = $(this).closest('tr');
+        var projectName = $(this).closest('tr').find('td:eq(3)').text().trim();
+        var hwQcInchargeAssignId = $(this).closest('tr').find('td:eq(1)').text().trim();
+        var url = '@Url.Action("GetAllDoc", "Hardware")?hwQcInchargeAssignId=' + hwQcInchargeAssignId + '&projectName=' + projectName;
+        window.open(url);
+
+    });
+
+
+    $("[class*=btnHwTestDetails]").click(function (e) {
+        //e.preventDefault();
+        //alert();
+        var tableId = $(this).closest('table').prop('id');
+        if (tableId === "tblHwQcForward") {
+            var hwqcinchargeassignid = $(this).closest("tr").find($("[class*=hwQcInchargeAssignId]")).html();
+            var url = '@Url.Action("HwDisplayFgReport", "Hardware")?hwQcInchargeAssignId=' + hwqcinchargeassignid;
+            window.location.href = url;
+        }
+    });
+    //==============================================================================================================
+    $("[class*=btnFilePreview]").click(function (e) {
+        var tableId = $(this).closest('table').prop('id');
+        if (tableId === "tblHwQcForward") {
+            var btnId = $(this).attr('id');
+            var modalData = "";
+            console.log(btnId);
+            $('#filePreviewModal').modal();
+
+
+            modalData += '<embed src="@Model.HwQcAssignModel.QcDocUploadPath" style="width:500px; height:375px;" frameborder="0"></embed>';
+            document.getElementById("modelBody").innerHTML = modalData;
+
+        }
+
+    });
+
+    function htmlEncode(value) {
+        var encodedValue = $('<div />').text(value).html();
+        return encodedValue;
+    }
+</script>
+

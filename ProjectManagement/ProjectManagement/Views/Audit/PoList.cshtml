@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ProjectManagement.Models.ProjectPurchaseOrderFormModel>
+    @{
+        ViewBag.Title = "PoList";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">PO List</div>
+                </div>
+                <div class="portlet-body">
+
+                    <table class="table table-striped table-scrollable table-bordered table-hover dtTable" id="sample_1">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>P.O No</th>
+                                <th>P.O Type</th>
+                                <th>Order Quantity</th>
+                                <th>Company</th>
+                                <th>P.O Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr class="dfNeed">
+                                        <td>@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PurchaseOrderNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoCategory)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CompanyName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PoDate)</td>
+
+                                    </tr>
+                                }
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>

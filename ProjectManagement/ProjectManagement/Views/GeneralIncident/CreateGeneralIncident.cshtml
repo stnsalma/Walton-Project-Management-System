@@ -1,0 +1,235 @@
+﻿@using System.Web.Mvc.Html
+@model ProjectManagement.Models.GeneralIncidentModel
+@{
+    ViewBag.Title = "CreateGeneralIncident";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("CreateGeneralIncident", "GeneralIncident", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.GeneralIncidentCategories)
+    @Html.HiddenFor(model => model.Issues)
+    <div class="portlet box blue">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-cogs"></i>Create Incident
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Incident Title", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(@i => i.GeneralIncidentTitle, new { @class = "form-control", required ="required" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Forward to", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(@i => i.RefferedRole, new SelectList(ViewBag.Roles, "Value", "Text"), "Select One", new { @class = "form-control", required = "required" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Category", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @*@Html.DropDownListFor(@i => i.RefferedRole, new SelectList(ViewBag.Roles, "RoleName", "RoleDescription"), "Select One", new { @class = "form-control" })*@
+                            <select name="multiple" id="multiple" class="form-control" multiple>
+                                @if (ViewBag.categories != null)
+                                {
+                                    foreach (var i in ViewBag.categories)
+                                    {
+                                        <option value="@i.GeneralIncidentCategoryName">@i.GeneralIncidentCategoryName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            @Html.Label("Model", new { @class = "" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(i => i.ModelName, new SelectList(ViewBag.models, "ModelName", "ModelName"), "Select One", new { @class = "form-control ddChosen" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">@Html.Label("Issues", new { @class = "" })</div>
+                        <div class="col-md-11">
+                            <select name="multiple" id="multipleIssues" class="form-control" multiple>
+                                @if (ViewBag.issues != null)
+                                {
+                                    foreach (var i in ViewBag.issues)
+                                    {
+                                        <option value="@i.IssueName">@i.IssueName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-1">@Html.Label("Incident Details", new { @class = "" })</div>
+                        <div class="col-md-11">
+                            @Html.TextAreaFor(@i => i.GeneralIncidentDetails, new { @class = "form-group col-md-12" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-1">File Upload</label>
+                        <div class="col-md-11">
+                            @Html.TextBoxFor(model => model.FileUpload, new { type = "file", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <button class="btn btn-success" onclick="showData();">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="portlet box blue">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-cogs"></i>Incident List Created by Me
+        </div>
+        <div class="tools">
+            <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+            <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+            <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="table-scrollable">
+                <table class="table table-bordered dtTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Referred to</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Details</th>
+                            <th class="text-center">Added Date</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var i in ViewBag.incidents)
+                        {
+                            <tr>
+                                <td class="hiddenColumn">@i.GeneralIncidentId</td>
+                                <td class="text-center">@i.GeneralIncidentTitle</td>
+                                <td class="text-center">@i.RefferedRole</td>
+                                <td class="text-center">@i.GeneralIncidentCategories</td>
+                                <td class="text-center">@i.GeneralIncidentDetails</td>
+                                <td class="text-center">@i.AddedDate</td>
+                                <td class="text-center">
+                                    @if (i.Status == "NEW")
+                                    {
+                                        <span class="bold" style="color: skyblue">NEW</span>
+                                    }
+                                    @if(i.Status == "FORWARDED")
+                                    {
+                                        <span class="bold" style="color: red">FORWARDED</span>
+                                    }
+                                    @if (i.Status == "PARTIALSUBMIT")
+                                    {
+                                        <span class="bold" style="color: green">PARTIALSUBMIT</span>
+                                    }
+                                    @if (i.Status == "SUBMITTED")
+                                    {
+                                        <span class="bold" style="color: orange">SUBMITTED</span>
+                                    }
+                                    @if (i.Status == "DISCLOSED")
+                                    {
+                                        <span class="bold" style="color: purple">DISCLOSED</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm sbold uppercase btn-outline red-haze btnDetails">Details</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.ddChosen').chosen();
+    $('#multiple').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+    
+    $('#multipleIssues').chosen({
+        disable_search_threshold: 10,
+        no_results_text: "Oops, nothing found!",
+        width: "100%"
+    });
+
+    function showData() {
+        var categories = $('#multiple').val();
+        //alert(categories);
+        $('#GeneralIncidentCategories').val(categories);
+        var issues = $('#multipleIssues').val();
+        //alert(issues);
+        $('#Issues').val(issues);
+    }
+
+    $('.btnDetails').on('click', function () {
+        //var rowindex = $(this).closest('tr').index();
+        //console.log(rowindex);
+        var incidentid = $(this).closest('tr').find('td:eq(0)').text();
+        //alert(incidentid);
+        var url = '@Url.Action("GeneralIncidentDetails", "GeneralIncident")?incidentId=' + incidentid;
+        window.location.href = url;
+    });
+</script>

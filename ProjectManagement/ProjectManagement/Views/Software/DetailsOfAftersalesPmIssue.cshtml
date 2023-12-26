@@ -1,0 +1,270 @@
+﻿@using System.Web.Mvc.Html
+@using ProjectManagement.Infrastructures.Helper
+@using ProjectManagement.Models
+@model ProjectManagement.ViewModels.Software.VmAftersalesPmIssueVerification
+@*<h2>DetailsOfAftersalesPmIssue</h2>*@
+<style>
+    .page-header-fixed .page-container {
+        margin-top: 0px;
+    }
+
+    .navbar-fixed-top {
+        position: relative;
+    }
+</style>
+<div style="background: gray;border: 2px solid blue;color: white;font-weight: bold;font-size: 20px;padding: 20px;text-align: center">
+    <h6>Aftersales Pm Issue Verification Details</h6>
+</div>
+<br />
+<div style="background: white; border: 2px solid green;padding: 2px">
+    <div style="border-bottom: 2px solid blue;color: black;font-weight: bold;font-size: 20px;padding: 10px">
+        <h1>Issue Status :</h1>
+    </div>
+    <br />
+    <table style="border: 2px solid blueviolet">
+        <thead>
+            <tr style="border: 2px solid black;padding: 20px;color: green;font-weight: bold">
+                <td style="border: 2px solid black;padding: 20px">Status</td>
+                <td style="border: 2px solid black;padding: 20px">Start Date</td>
+                <td style="border: 2px solid black;padding: 20px">End Date</td>
+                <td style="border: 2px solid black;padding: 20px">Multiple <br />Assign<br />Count</td>
+                <td style="border: 2px solid black;padding: 20px">DateDiff</td>
+                <td style="border: 2px solid black;padding: 20px">Event</td>
+                <td style="border: 2px solid black;padding: 20px">Remarks</td>
+            </tr>
+        </thead>
+        <tbody>
+
+            @if (Model != null && Model.AftersalesPm_ValidationReportModels.Any())
+            {
+                for (int i = 0; i < Model.AftersalesPm_ValidationReportModels.Count; i++)
+                {
+                    if (Model.AftersalesPm_ValidationReportModels[i].IssueVerificationId > 0)
+                    {
+                        <tr style="border: 2px solid black;padding: 20px">
+                            <td style="border: 2px solid black; padding: 20px; font-weight: bold; color:saddlebrown; ">
+                                @Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].LogStatus)
+                            </td>
+                            <td style="border: 2px solid black;padding: 20px">
+                                @Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].StartDate)
+                            </td>
+                            <td style="border: 2px solid black;padding: 20px">@Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].EndDate)</td>
+                            <td style="border: 2px solid black;padding: 20px">@Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].AssignCount)</td>
+                            <td style="border: 2px solid black;padding: 20px">@Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].DateDiff)</td>
+                            <td style="border: 2px solid black;padding: 20px">
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "SUBMITTED")
+                                {
+                                    <p>Provide faulty handsets to QC</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "ACCEPTED")
+                                {
+                                    <p>Issue Recieved by QC</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "VALIDATED")
+                                {
+                                    <p>1. Issue Validation and Root cause analysis</p><br />
+                                    <p>2. Provide Logs to ASPM</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "NOTVALIDATED")
+                                {
+                                    <p>Issue is not validated</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "ForwardToSupplier")
+                                {
+                                    <p>Issue Forward To Supplier</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "QCAPPROVED")
+                                {
+                                    <p>Qc Approved to Forward Supplier</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "QCDECLINED")
+                                {
+                                    <p>Qc Declined to Forward Supplier</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "CONFIRMED")
+                                {
+                                    <p>Confirmed by ASPM</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "ForwardedForFullSwCheck")
+                                {
+                                    <p>Assigned to QC for Full Software Check</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "FullSoftwareConfirmed")
+                                {
+                                    <p>Full Software Check is Confirmed by ASPM</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "ForwardedForFOTATest")
+                                {
+                                    <p>Assigned to QC for FOTA Test Result</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "FOTATestConfirmed")
+                                {
+                                    <p>FOTA Test is Confirmed by ASPM</p>
+                                }
+                                @if (@Model.AftersalesPm_ValidationReportModels[i].LogStatus == "CLOSED")
+                                {
+                                    <p>Issue Closed by ASPM</p>
+                                }
+                            </td>
+                            <td style="border: 2px solid black;padding: 20px">@Html.DisplayFor(x => x.AftersalesPm_ValidationReportModels[i].Remarks)</td>
+                        </tr>
+                    }
+                }
+            }
+
+        </tbody>
+    </table>
+    <br />
+    <div style="border-bottom: 2px solid blue;color: black;font-weight: bold;font-size: 20px;padding: 10px">
+        <h1>Issue Validation and Root cause analysis report :</h1>
+    </div>
+    <br />
+    <table style="border: 2px solid blueviolet">
+        <thead>
+            <tr style="border: 2px solid black;padding: 20px;color: green;font-weight: bold">
+                <td style="border: 2px solid black;padding: 20px">Project Name</td>
+                <td style="border: 2px solid black;padding: 20px">SW <br />Version</td>
+                @*<td style="border: 2px solid black;padding: 20px">SoftNo.</td>*@
+                <td style="border: 2px solid black;padding: 20px">Issue Details</td>
+                <td style="border: 2px solid black;padding: 20px">No of MP HS check</td>
+                <td style="border: 2px solid black;padding: 20px">Found in Golden HS?</td>
+                <td style="border: 2px solid black;padding: 20px">Found in MP HS?</td>
+                <td style="border: 2px solid black;padding: 20px">Validated?</td>
+                <td style="border: 2px solid black;padding: 20px">Issue/Requirement</td>
+                <td style="border: 2px solid black;padding: 20px">Remarks</td>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.ValidationAndRootCauseAnalysis)
+            {
+                <tr style="border: 2px solid black;padding: 20px">
+                    <td style="border: 2px solid black; padding: 20px;  ">
+                        @item.ModelName
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.SoftwareVersionName
+                    </td>
+                    @*<td style="border: 2px solid black;padding: 20px">
+                            @item.SoftwareVersionNo
+                        </td>*@
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.IssueDetails
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.NumberOfMpHsCheck
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.FoundInGoldenHs
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.FoundInMpHs
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.ValidationResult
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.IssueOrRequirement
+                    </td>
+                    <td style="border: 2px solid black;padding: 20px">
+                        @item.Remarks
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div style="border-bottom: 2px solid blue;color: black;font-weight: bold;font-size: 20px;padding: 10px">
+        <h1>Supllier FeedBack :</h1>
+    </div>
+    <br />
+    <table style="border: 2px solid blueviolet">
+        <thead>
+            <tr style="border: 2px solid black;padding: 20px;color: green;font-weight: bold">
+                <td style="border: 2px solid black;padding: 20px">Details</td>
+                <td style="border: 2px solid black;padding: 20px">Attachment</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.AftersalesPm_SupplierFeedBackModels.Any())
+            {
+
+                for (int i = 0; i < Model.AftersalesPm_SupplierFeedBackModels.Count; i++)
+                {
+                    <tr style="border: 2px solid black; padding: 20px">
+                        <td style="border: 2px solid black; padding: 20px;">
+                            @Model.AftersalesPm_SupplierFeedBackModels[i].Details
+                        </td>
+                        <td>
+                            <div class="file-preview-thumbnails">
+                                <div class="">
+                                    <div class="file-preview-frame file-preview-initial" id="preview-1475130072371-init_0" data-fileindex="init_0" data-template="image">
+                                        <div class="col-lg-12">
+
+                                            @Html.HiddenFor(model => model.AftersalesPm_SupplierFeedBackModels[i].Attachment, new { @class = "clsRmv" })
+
+
+                                            @if (Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails != null && Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails.Any())
+                                            {
+                                                <table>
+                                                    <tr>
+                                                        @for (int m = 0; m < Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails.Count; m++)
+                                                        {
+                                                            if (Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".jpg" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".png" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".mp4"
+                                                                || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".jpeg" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".txt" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".xls" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".wav")
+                                                            {
+                                                                <td style="border: 2px solid black;">
+                                                                    <div class="col-lg-2">
+                                                                        <embed class="" src="@Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].FilePath" style="width: 40px; height: 60px" />
+                                                                        <br />
+                                                                        <a target="_blank" href="@Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].FilePath">Download</a>
+                                                                    </div>
+                                                                    <div class="col-lg-2" style="width: 50px;"></div>
+                                                                </td>
+
+                                                            }
+                                                            if (Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".zip" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".pdf" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".docx" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".xlsx" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".rar" || Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].Extention == ".pptx")
+                                                            {
+                                                                var urls = Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].FilePath.Split('|').ToList();
+
+                                                                for (int k = 0; k < urls.Count; k++)
+                                                                {
+                                                                    var last = urls[k].Split('-').Last();
+                                                                    var lastNameForM = Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].FilePath;
+
+                                                                    lastNameForM = Path.GetFileName(last);
+                                                                    <td>
+                                                                        <div class="col-lg-2" style="width: 40px; height: 60px;">
+                                                                            @Html.TextAreaFor(model => lastNameForM, new { style = "width:40px;height:60px;", disabled = "disabled" })
+                                                                            <br />
+                                                                            <a href="@Model.AftersalesPm_SupplierFeedBackModels[i].FilesDetails[m].FilePath" target="_blank">Download</a>
+                                                                        </div>
+                                                                        <div class="col-lg-2" style="width: 50px;"></div>
+                                                                    </td>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tr>
+                                                </table>
+
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    /////sample_1 /////
+    $(function () {
+        $("body:first").addClass("page-sidebar-closed");
+        $("ul.page-sidebar-menu").addClass("page-sidebar-menu-closed");
+    });
+</script>

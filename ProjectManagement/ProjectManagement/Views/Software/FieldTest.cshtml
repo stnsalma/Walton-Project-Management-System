@@ -1,0 +1,647 @@
+﻿@using System.Diagnostics
+@using System.Web.Mvc.Html
+@using ProjectManagement.DAL.DbModel
+@using ProjectManagement.Infrastructures.Helper
+
+@using ProjectManagement.Models
+@using ProjectManagement.ViewModels.Software
+@model ProjectManagement.ViewModels.Software.VmSwQcSpecificationModified
+
+
+@{
+    ViewBag.Title = "FieldTest";
+}
+<script src="~/Scripts/sindresorhus_multiline/browser.js"></script>
+
+<h2>FieldTest</h2>
+<div class="portlet box green">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-picture"></i>Project select & Assign
+        </div>
+
+    </div>
+
+    <div class="portlet-body" style="display: block;">
+        <div class="row">
+
+            <div class="col-lg-2">
+                Select Project
+            </div>
+            <div class="col-lg-8">
+                @if (Model != null && Model.ProjectMasterModelsList.Any())
+                {
+                    <div>
+                        @Html.DropDownListFor(model => model.ProjectMasterId, new SelectList(@Model.ProjectMasterModelsList, "ProjectMasterId", "ProjectName"), "Select Project", new { @class = "dropForProject form-control", Value = @Model.ProjectMasterModel.ProjectName })
+
+
+                    </div>
+                  
+                }
+
+            </div>
+            @*<div class="col-lg-2"></div>*@
+        </div>
+        <br />
+
+<div class="row">
+
+    <div class="col-lg-2">
+        Assign Persons
+    </div>
+    <div class="col-lg-8">
+        <select id="ddlUsers" multiple class="form-control">
+
+            @{
+                Debug.Assert(@Model != null, "@Model != null");
+            }
+            @foreach (CmnUserModel user in @Model.CmnUserModels)
+            {
+                <option value="@user.CmnUserId">@user.UserFullName _ @user.EmployeeCode</option>
+            }
+        </select>
+    </div>
+
+
+</div>
+        </div></div>
+       
+        <br />
+        <div class="portlet box red">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-picture"></i>Field Test
+                </div>
+
+            </div>
+
+            <div class="portlet-body" style="display: block;">
+                <div class="table-scrollable">
+                    <table id="tbl" class="table table-condensed table-hover table-bordered">
+                        <tr>
+
+                            <th>
+                                TestDate
+                            </th>
+                            <th>
+                                Location
+                            </th>
+                            <th>
+                                Severity
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Condition                           
+                            <th>
+                                Condition Ref
+                                <div class="row"></div>
+                            </th>
+                          
+                            <th>
+                                Remarks
+                            </th>
+
+                            <th><button class="btn btn-circle btn-success" id="addmore"><span class="glyphicon glyphicon-plus"></span>Add More</button></th>
+                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <input id="TestDate" type="text" class="form-control input-small TestDate" placeholder="yyyy-mm-dd" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control Location" id="Location" rows="4" cols="10" placeholder="Add location"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control Severity" id="Severity" rows="4" cols="10" placeholder="Add Severity"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control Description" id="Description" rows="4" cols="15" placeholder="Add Description"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="Condtions" class="Condtions">
+                                        <div class="row">
+                                            <div class="col-lg-1">TT</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall TTDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall TTBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">RB</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall RBDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall RBBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">BL</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall BLDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall BLBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">AT</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall ATDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall ATBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div id="ConditionRef" class="ConditionRef">
+                                        <div class="row">
+                                            <div class="col-lg-1">TT</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall TTDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall TTBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">RB</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall RBDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall RBBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">BL</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall BLDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall BLBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-1">AT</div>
+
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall ATDbm" placeholder="Dbm" />
+                                            </div>
+                                            <div class="col-lg-1"></div>
+                                            <div class="col-lg-2">
+                                                <input type="text" class="form-control  input-xsmall ATBar" placeholder="Bar" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control Remarks" id="Remarks" rows="4" cols="20" placeholder="Add Remarks"></textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-circle btn-danger removeBtn">Remove</button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="portlet light bordered">
+            <div class="form-group">
+                <label>Compared With</label>
+                <textarea class="form-control" id="ComparedWith"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Issue Of</label>
+                <textarea class="form-control" id="IssueOf"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Comment</label>
+                <textarea class="form-control" id="COMMENT"></textarea>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <button type="submit" id="btnSubmit" class="btn blue">Submit</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+<script>
+
+    $(function () {
+        $('#ddlUsers').chosen();
+        var format = function (str, col) {
+            col = typeof col === 'object' ? col : Array.prototype.slice.call(arguments, 1);
+
+            return str.replace(/\{\{|\}\}|\{(\w+)\}/g, function (m, n) {
+                if (m == "{{") { return "{"; }
+                if (m == "}}") { return "}"; }
+                return col[n];
+            });
+        };
+        $(document).on('focus', '.TestDate', function (e) {
+
+            $(this).datepicker({
+                //format: 'mm/dd/yyyy',
+                format: 'yyyy-mm-dd',
+                autoclose: true
+            });
+        });
+        $(document).on('click', '.removeBtn', function (e) {
+            e.preventDefault();
+            //alert('remove btn clicked');
+            $(this).parent().parent().remove();
+
+        });
+
+
+        $('#addmore').on('click', function (e) {
+            e.preventDefault();
+            var tr = multiline(function () {
+                /*
+              <tr>
+                        <td>
+                            <div class="form-group">
+                                <input id="TestDate" type="text" class="form-control input-small TestDate" placeholder="yyyy-mm-dd" />
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <textarea class="form-control Location" id="Location" rows="4" cols="10" placeholder="Add location"></textarea>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <textarea class="form-control Severity" id="Severity" rows="4" cols="10" placeholder="Add Severity"></textarea>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <textarea class="form-control Description" id="Description" rows="4" cols="15" placeholder="Add Description"></textarea>
+                            </div>
+                        </td>
+                        <td>
+                            <div id="Condtions" class="Condtions">
+                                <div class="row">
+                                    <div class="col-lg-1">TT</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall TTDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall TTBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">RB</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall RBDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall RBBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">BL</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall BLDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall BLBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">AT</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall ATDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall ATBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div id="ConditionRef" class="ConditionRef">
+                                <div class="row">
+                                    <div class="col-lg-1">TT</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall TTDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall TTBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">RB</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall RBDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall RBBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">BL</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall BLDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall BLBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-1">AT</div>
+
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall ATDbm" placeholder="Dbm" />
+                                    </div>
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-2">
+                                        <input type="text" class="form-control  input-xsmall ATBar" placeholder="Bar" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <textarea class="form-control Remarks" id="Remarks" rows="4" cols="20" placeholder="Add Remarks"></textarea>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-circle btn-danger removeBtn">Remove</button>
+                        </td>
+                    </tr>
+
+*/
+            });
+            $('#tbl tr:last').after(tr);
+            //    $('#tbl tr:last').append(tr);
+        });
+
+        //alertify.confirm('Confirm message', 'Do you want to finally submit this project to PM?', function () {
+        //    alertify.success('Ok');
+
+        //    window.location = '/Software/SwInchargeProjectSubmit';
+
+        //}
+        //       , function () {
+        //           alertify.error('Cancel');
+
+        //       });
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            var proSelectId = document.getElementById('ProjectMasterId');
+
+            console.log(proSelectId);
+            var selecteddropText = proSelectId.options[proSelectId.selectedIndex].text;
+            var selecteddropValue = proSelectId.options[proSelectId.selectedIndex].value;
+            console.log(selecteddropText);
+            console.log(selecteddropValue);
+
+            if (selecteddropText == "Select Project") {
+                // alert("Please select Project must..........");
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please select Project must",
+                }).show();
+                return false;
+            }
+            var users = $('#ddlUsers').val();
+            if ($.isEmptyObject(users)) {
+                //alert('User is empty');
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "User is empty",
+                }).show();
+                return false;
+            }
+
+            var testDate;
+
+            $("#tbl tr").each(function() {
+
+                testDate = $.trim($(this).find('#TestDate').val());
+
+            });
+            console.log("testDate:   " + testDate);
+            if (testDate == null || testDate == "undefined" || testDate == "") {
+                alertify.dialog('alert').set({
+                    'title': '   ',
+                    'transition': 'zoom',
+                    'message': "Please Add TestDate.",
+                }).show();
+                return false;
+            }
+
+            alertify.confirm('Confirm message', 'Do you want to finally submit this project to PM?', function () {
+                alertify.success('Ok');
+
+                var detailsObjectList = [];
+
+                $("#tbl tr").each(function (index) {
+                    if (index != 0) {
+
+                        var TestDate = $(this).find('.TestDate').val();
+                        var Location = $(this).find('.Location').val();
+                        var Severity = $(this).find('.Severity').val();
+                        var Description = $(this).find('.Description').val();
+                        var Remarks = $(this).find('.Remarks').val();
+                        //TT
+                        var Condition_Op_TT_dbm = $(this).find('.Condtions').find('.TTDbm').val();
+                        var Condition_Op_TT_Bar = $(this).find('.Condtions').find('.TTBar').val();
+                        //RB
+                        var Condition_Op_RB_dbm = $(this).find('.Condtions').find('.RBDbm').val();
+                        var Condition_Op_RB_Bar = $(this).find('.Condtions').find('.RBBar').val();
+                        //BL
+                        var Condition_Op_BL_dbm = $(this).find('.Condtions').find('.BLDbm').val();
+                        var Condition_Op_BL_Bar = $(this).find('.Condtions').find('.BLBar').val();
+                        //AT
+                        var Condition_Op_AT_dbm = $(this).find('.Condtions').find('.ATDbm').val();
+                        var Condition_Op_AT_Bar = $(this).find('.Condtions').find('.ATBar').val();
+
+
+                        //TT
+                        var Ref_Op_TT_dbm = $(this).find('.ConditionRef').find('.TTDbm').val();
+                        var Ref_Op_TT_Bar = $(this).find('.ConditionRef').find('.TTBar').val();
+                        //RB
+                        var Ref_Op_RB_dbm = $(this).find('.ConditionRef').find('.RBDbm').val();
+                        var Ref_Op_RB_Bar = $(this).find('.ConditionRef').find('.RBBar').val();
+                        //BL
+                        var Ref_Op_BL_dbm = $(this).find('.ConditionRef').find('.BLDbm').val();
+                        var Ref_Op_BL_Bar = $(this).find('.ConditionRef').find('.BLBar').val();
+                        //AT
+                        var Ref_Op_AT_dbm = $(this).find('.ConditionRef').find('.ATDbm').val();
+                        var Ref_Op_AT_Bar = $(this).find('.ConditionRef').find('.ATBar').val();
+
+
+                        var detailsObject = {};
+                        detailsObject.TestDate = TestDate;
+                        detailsObject.Location = Location;
+                        detailsObject.Severity = Severity;
+                        detailsObject.Description = Description;
+                        detailsObject.Remarks = Remarks;
+
+                        detailsObject.Condition_Op_TT_dbm = Condition_Op_TT_dbm;
+                        detailsObject.Condition_Op_TT_Bar = Condition_Op_TT_Bar;
+
+                        detailsObject.Condition_Op_RB_dbm = Condition_Op_RB_dbm;
+                        detailsObject.Condition_Op_RB_Bar = Condition_Op_RB_Bar;
+
+                        detailsObject.Condition_Op_BL_dbm = Condition_Op_BL_dbm;
+                        detailsObject.Condition_Op_BL_Bar = Condition_Op_BL_Bar;
+
+                        detailsObject.Condition_Op_AT_dbm = Condition_Op_AT_dbm;
+                        detailsObject.Condition_Op_AT_Bar = Condition_Op_AT_Bar;
+
+
+
+                        detailsObject.Ref_Op_TT_dbm = Ref_Op_TT_dbm;
+                        detailsObject.Ref_Op_TT_Bar = Ref_Op_TT_Bar;
+
+                        detailsObject.Ref_Op_RB_dbm = Ref_Op_RB_dbm;
+                        detailsObject.Ref_Op_RB_Bar = Ref_Op_RB_Bar;
+
+                        detailsObject.Ref_Op_BL_dbm = Ref_Op_BL_dbm;
+                        detailsObject.Ref_Op_BL_Bar = Ref_Op_BL_Bar;
+
+                        detailsObject.Ref_Op_AT_dbm = Ref_Op_AT_dbm;
+                        detailsObject.Ref_Op_AT_Bar = Ref_Op_AT_Bar;
+
+                        console.log("detailsObject : " + detailsObject);
+
+                        detailsObjectList.push(detailsObject);
+
+                        console.log("detailsObjectList : " + detailsObjectList);
+
+
+                    }
+                });
+
+
+                // console.log("detailsObject : " + detailsObject);
+
+                // detailsObjectList.push(detailsObject);
+
+                // console.log("detailsObjectList : " + detailsObjectList);
+
+
+
+                var obj = {};
+                obj.projectMasterId = $("select#ProjectMasterId").val();      
+                console.log(obj.projectMasterId);
+
+                obj.ComparedWith = $('#ComparedWith').val();
+                obj.IssueOf = $('#IssueOf').val();
+                obj.COMMENT = $('#COMMENT').val();
+                obj.ddlUsers = users;
+                obj.details = detailsObjectList;
+
+                console.log("obj :" + obj);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("FieldTest","Software")',
+                         
+                    data: JSON.stringify(obj),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+
+                    async: false,
+                    success: function (data) {
+                        if (!data.success) {
+                            if (data.errors.name) {
+                                //  $('.throw_error').fadeIn(1000).html(data.errors.name);
+                            }
+                        }
+                        else {
+                            //  $('#success').fadeIn(1000).append('<p>' + data.posted + '</p>');
+                        }
+                    }
+                    
+                });
+                event.preventDefault(); //Prevent the default submit
+
+                window.location = '@Url.Action("FieldTest","Software")';
+
+            }
+                , function () {
+                    alertify.error('Cancel');
+
+                });
+
+
+
+        });
+
+             
+    });
+    $(document).on('submit', 'form', function () {
+        var buttons = $(this).find('[type="submit"]');
+        if ($(this).valid()) {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', true);
+            });
+        } else {
+            buttons.each(function (btn) {
+                $(buttons[btn]).prop('disabled', false);
+            });
+        }
+    });
+</script>

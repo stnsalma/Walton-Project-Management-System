@@ -1,0 +1,76 @@
+﻿@using System.Web.Mvc.Html
+@using System.Web.UI.WebControls
+@using Newtonsoft.Json
+@model ProjectManagement.ViewModels.Hardware.VmHardwareDetailTest
+
+
+@{
+    ViewBag.Title = "GetAllDoc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("GetAllDoc", "Hardware"))
+{
+    @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.HwQcInchargeAssignId)
+    @Html.HiddenFor(model => model.HwQcAssignCustomMasterModel.ProjectName)
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-file-archive-o"></i>Files available for Download, Project: <b>@Html.DisplayFor(model => model.HwQcAssignCustomMasterModel.ProjectName)</b>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="form-group">
+                <label class="mt-checkbox">
+                    <i class="fa fa-file-o"></i>
+                    Select All
+                    <input value="1" id="selectall" name="all" type="checkbox">
+                    <span></span>
+                </label>
+                <hr/>
+                <div class="mt-checkbox-list">
+                    @foreach (var file in ViewBag.Files)
+                    {
+                        <label class="mt-checkbox">
+                            <i class="fa fa-file"></i>
+                            @Path.GetFileNameWithoutExtension(file.QcDocUploadPath)
+                            <input value="@file.QcDocUploadPath" class="selectfile" name="files" type="checkbox">
+                            <span></span>
+                        </label>
+                    }
+                </div>
+            </div>
+            @*@foreach (var file in ViewBag.Files)
+            {
+                <input type="checkbox" name="files" value="@file.QcDocUploadPath" /> @:&nbsp;
+                @Path.GetFileNameWithoutExtension(file.QcDocUploadPath) <br />
+            }*@
+            <div>
+                @foreach (var file in ViewBag.Files)
+                {
+                    if (file == null)
+                    {
+                        @Html.Raw("No docs to download")
+                        break;
+                    }
+                    else
+                    {
+                        <button class="btn btn-success"><i class="fa fa-download"></i> Download</button>
+                        break;
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(function() {
+        $("#selectall").click(function () {
+            $(".selectfile").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+
+

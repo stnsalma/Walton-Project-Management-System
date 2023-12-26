@@ -1,0 +1,76 @@
+﻿@model ProjectManagement.ViewModels.Home.VmUpdateUserProfile
+@Html.HiddenFor(x => x.CmnUserModel.IsUserInfoUpdated)
+@using (Html.BeginForm("UpdateUser", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CmnUserModel.CmnUserId)
+    @Html.HiddenFor(model=>model.CmnUserModel.Password)
+    @Html.HiddenFor(model=>model.CmnUserModel.RoleName)
+    @Html.HiddenFor(model=>model.CmnUserModel.UserName)
+    @Html.HiddenFor(model=>model.CmnUserModel.IsActive)
+    @Html.HiddenFor(model=>model.CmnUserModel.EmployeeCode)
+    @Html.HiddenFor(model=>model.CmnUserModel.AssignRoles)
+    @Html.HiddenFor(model=>model.CmnUserModel.ProfilePictureUrl)
+    @Html.HiddenFor(model=>model.CmnUserModel.UserFullName)
+    @Html.HiddenFor(model=>model.CmnUserModel.Email)
+    @Html.HiddenFor(model=>model.CmnUserModel.MobileNumber)
+    @Html.HiddenFor(model=>model.CmnUserModel.Designation)
+                                                           
+    <div class="row">
+        <div class="col-lg-12">
+            
+            
+            
+            <div class="col-lg-9">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CmnUserModel.UserFullName, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.CmnUserModel.UserFullName, new { @class = "form-control", disabled="true"})
+                    @Html.ValidationMessageFor(model => model.CmnUserModel.UserFullName, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CmnUserModel.Email, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.CmnUserModel.Email, new { @class = "form-control", disabled = "true" })
+                    @Html.ValidationMessageFor(model => model.CmnUserModel.Email, "", new { @class = "text-danger" })
+
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CmnUserModel.MobileNumber, new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.CmnUserModel.MobileNumber, new { @class = "form-control", disabled = "true" })
+                    @Html.ValidationMessageFor(model => model.CmnUserModel.MobileNumber, "", new { @class = "text-danger" })
+
+                </div>
+
+                <div class="form-group">
+
+                    @Html.LabelFor(model => model.CmnUserModel.Designation, new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.CmnUserModel.Designation, new { @class = "form-control", disabled = "true" })
+                    @Html.ValidationMessageFor(model => model.CmnUserModel.Designation, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CmnUserModel.ProfilePictureFile, new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.CmnUserModel.ProfilePictureFile, new { @class = "form-control", type = "file" })
+                </div>
+
+
+
+
+                <div class="margin-top-10">
+                    <input type="submit" class="btn green" value="Change UserInfo" />
+                    <a href="javascript:;" class="btn default"> Cancel </a>
+                </div>
+
+            </div>
+            <div class="col-lg-3">
+                @*<img src="@Url.Content(@Model.CmnUserModel.WebServerUrl)" class="img-responsive img-rounded" alt="@Model.CmnUserModel.UserFullName">*@
+                <img alt="" class="img-responsive img-rounded" src="@Url.Action("UserPhotos", "Home")" />
+            </div>
+
+        </div>
+        
+
+    </div>
+  
+}
